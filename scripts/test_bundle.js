@@ -1092,15 +1092,19 @@
                 drawScreenWideCelebrationFireworks(ctx2d, cssW, cssH, timeNow, focusAnim.progress * 0.95);
             }
 
-            // 5. Arka Plandaki Diğer Sinyallerin Çizimi (Smooth Karartma Oranıyla)
+            // 5. Arka Plandaki Sinyallerin Çizimi (Odaktaki sinyal için pürüzsüz 1 - progress cross-fade)
             const otherAlpha = Math.max(0.12, 1.0 - (focusAnim.progress * 0.84));
 
             for (const sig of calculatedSignals) {
                 if (sig.index < viewStart - 8 || sig.index > viewEnd + 8) continue;
-                if (activeFocusSig && sig.index === activeFocusSig.index && focusAnim.progress > 0.01) continue; // Odaktaki sinyali en üstte smooth çizeceğiz
+                
+                const isCurrentFocused = (activeFocusSig && sig.index === activeFocusSig.index);
+                // Odaktaki sinyalin normal statik rozeti aniden kaybolmaz, yumuşakça şeffaflaşır:
+                const sigAlpha = isCurrentFocused ? Math.max(0.0, (1.0 - focusAnim.progress)) : otherAlpha;
+                if (sigAlpha <= 0.002) continue;
 
                 ctx2d.save();
-                ctx2d.globalAlpha = otherAlpha;
+                ctx2d.globalAlpha = sigAlpha;
 
                 const candleCenter = sig.index + 0.5;
                 const screenX = Math.round(((candleCenter - viewStart) / visibleCount) * cssW);
@@ -1201,7 +1205,7 @@
                 ctx2d.restore();
             }
 
-            // 6. 🌟 SAF GPU SMOOTH ODAK MODU (PÜRÜZSÜZ BÜYÜYEN MUM & YATAYDA MUMU ORTALAYAN TP/SL ROZETLERİ)
+            // 6. 🌟 SAF GPU SMOOTH ODAK MODU (PÜRÜZSÜZ FADE-IN VE SCALE İLE BELİREN ELEMANLAR)
             if (activeFocusSig && focusAnim.progress > 0.002) {
                 const sig = activeFocusSig;
                 const candleCenter = sig.index + 0.5;
@@ -1223,6 +1227,8 @@
                     const prog = focusAnim.progress;
 
                     ctx2d.save();
+                    // Tüm odak katmanı prog (0.0 -> 1.0) ile pürüzsüzce şeffaflıktan belirir ve kaybolur
+                    ctx2d.globalAlpha = Math.min(1.0, prog);
 
                     // A. DİKEY PARLAK IŞIK SÜTUNU (SPOTLIGHT BEAM - HIZLI GPU GRADYANI)
                     const beamGrad = ctx2d.createLinearGradient(screenX, 0, screenX, cssH);
@@ -1318,8 +1324,8 @@
                     const tpText = `🎯 TP HEDEFİ: $${sig.tp.toFixed(1)} (+%${targetPnlPct}) ${isTpWin ? '🏆 KAZANDI' : ''}`;
                     ctx2d.font = 'bold 12.5px "SF Pro Text", "Segoe UI", sans-serif';
                     const tpMetrics = ctx2d.measureText(tpText);
-                    const tpW = Math.round(tpMetrics.width) + 18;
-                    const tpH = 24;
+                    const tpW = Math.round((tpMetrics.width + 18) * (0.90 + 0.10 * prog));
+                    const tpH = Math.round(24 * (0.90 + 0.10 * prog));
                     ctx2d.beginPath();
                     ctx2d.roundRect(badgeCenterX - tpW / 2, tpY - tpH / 2, tpW, tpH, 6);
                     ctx2d.fill();
@@ -1336,8 +1342,8 @@
                     const slText = `🛡️ STOP LOSS: $${sig.sl.toFixed(1)} (-%${riskPnlPct}) ${isSlLoss ? '❌ STOP' : ''}`;
                     ctx2d.font = 'bold 12.5px "SF Pro Text", "Segoe UI", sans-serif';
                     const slMetrics = ctx2d.measureText(slText);
-                    const slW = Math.round(slMetrics.width) + 18;
-                    const slH = 24;
+                    const slW = Math.round((slMetrics.width + 18) * (0.90 + 0.10 * prog));
+                    const slH = Math.round(24 * (0.90 + 0.10 * prog));
                     ctx2d.beginPath();
                     ctx2d.roundRect(badgeCenterX - slW / 2, slY - slH / 2, slW, slH, 6);
                     ctx2d.fill();
@@ -1351,8 +1357,8 @@
                     const entryText = `⚡ GİRİŞ: $${sig.price.toFixed(1)} | R:R 1 : ${sig.rrRatio.toFixed(2)}`;
                     ctx2d.font = 'bold 11px "SF Pro Text", "Segoe UI", sans-serif';
                     const entryMetrics = ctx2d.measureText(entryText);
-                    const entryW = Math.round(entryMetrics.width) + 16;
-                    const entryH = 20;
+                    const entryW = Math.round((entryMetrics.width + 16) * (0.90 + 0.10 * prog));
+                    const entryH = Math.round(20 * (0.90 + 0.10 * prog));
 
                     // Mumun solunda hafif boşluk bırakan hedef X koordinatı:
                     const entryTargetLeftX = Math.round(screenX - (candleW / 2) - (entryW / 2) - 12);
@@ -1697,7 +1703,7 @@
 
                 const sigAtCandle = calculatedSignals.find(s => s.index === cIdx);
                 if (sigAtCandle) {
-                    signalInspector.style.display = 'flex';
+                    signalInspector.classList.add('active');
                     inspType.innerText = `⚡ ${sigAtCandle.label}`;
                     inspType.style.color = sigAtCandle.isBuy ? '#10b981' : '#ef4444';
                     inspRr.innerText = `R:R: 1 : ${sigAtCandle.rrRatio.toFixed(2)}`;
@@ -1723,8 +1729,10 @@
                     inspSl.innerText = `🛡️ SL: $${sigAtCandle.sl.toFixed(2)}`;
                     inspExtra.innerText = sigAtCandle.extraInfo || '';
                 } else {
-                    signalInspector.style.display = 'none';
+                    signalInspector.classList.remove('active');
                 }
+            } else {
+                signalInspector.classList.remove('active');
             }
 
             if (isFinite(minPrice) && isFinite(maxPrice) && maxPrice > minPrice) {
@@ -1740,12 +1748,12 @@
             hoveredCandleIdx = -1;
             mouseCssX = -1000;
             mouseCssY = -1000;
+            signalInspector.classList.remove('active');
             if (!isChartDragging && !isPriceDragging) {
                 mousePixelX = -1000;
                 mousePixelY = -1000;
                 crosshairPriceTag.style.display = 'none';
                 crosshairTimeTag.style.display = 'none';
-                signalInspector.style.display = 'none';
             }
         });
 
