@@ -2627,12 +2627,12 @@
                 viewStart = nStart;
                 viewEnd = nEnd;
 
-                // 2. Dikey Fiyat Serbest Kaydırma (Y-Axis Free Pan)
+                // 2. Dikey Fiyat Serbest Kaydırma (Y-Axis Free Pan - Doğal El Hareketi Yönü)
                 const deltaPy = e.clientY - chartDragStartY;
                 const currentPriceSpan = maxPrice - minPrice;
                 if (currentPriceSpan > 0 && rect.height > 0) {
                     const pricePerPixel = currentPriceSpan / rect.height;
-                    priceOffset = origPriceOffset - (deltaPy * pricePerPixel);
+                    priceOffset = origPriceOffset + (deltaPy * pricePerPixel);
                 }
 
                 updateVisibleBacktestSummary();
