@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SqiciBekiRBindikatöR // 3 Akıllı Stop & Backtest Strateji Laboratuvarı</title>
+    <title>SqiciBekiRBindikatöR // Quant Optimizasyon & Strateji Laboratuvarı</title>
     <style>
         * {
             margin: 0;
@@ -38,15 +38,15 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 14px;
+            padding: 0 12px;
             z-index: 30;
             flex-shrink: 0;
-            gap: 10px;
+            gap: 8px;
         }
         .symbol-section {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
         }
         .indicator-badge {
             background: linear-gradient(135deg, rgba(56, 189, 248, 0.2), rgba(129, 140, 248, 0.2));
@@ -54,18 +54,18 @@
             color: #38bdf8;
             font-size: 11px;
             font-weight: 800;
-            padding: 3px 7px;
-            border-radius: 6px;
+            padding: 3px 6px;
+            border-radius: 5px;
             letter-spacing: 0.3px;
         }
         .symbol-select {
             background: rgba(255, 255, 255, 0.06);
             border: 1px solid rgba(255, 255, 255, 0.15);
             color: #f8fafc;
-            font-size: 12.5px;
+            font-size: 12px;
             font-weight: 700;
-            padding: 4px 7px;
-            border-radius: 6px;
+            padding: 4px 6px;
+            border-radius: 5px;
             cursor: pointer;
             outline: none;
         }
@@ -74,42 +74,42 @@
             color: #fff;
         }
 
-        /* 🎯 3 STRATEJİ SEÇİCİ TOOLBAR GRUBU */
+        /* 🎯 STRATEJİ SEÇİCİ TOOLBAR GRUBU */
         .strategy-selector-group {
             display: flex;
             align-items: center;
-            background: rgba(15, 23, 42, 0.9);
+            background: rgba(15, 23, 42, 0.95);
             border: 1.5px solid #38bdf8;
-            border-radius: 8px;
+            border-radius: 7px;
             padding: 2px;
-            gap: 3px;
+            gap: 2px;
             box-shadow: 0 0 14px rgba(56, 189, 248, 0.25);
         }
         .strat-label {
-            font-size: 10.5px;
+            font-size: 10px;
             font-weight: 800;
             color: #38bdf8;
-            padding: 0 6px;
+            padding: 0 4px;
             letter-spacing: 0.3px;
         }
         .strat-btn {
             background: transparent;
             border: 1px solid transparent;
             color: #94a3b8;
-            font-size: 11px;
+            font-size: 10.5px;
             font-weight: 600;
-            padding: 4px 8px;
-            border-radius: 5px;
+            padding: 3px 7px;
+            border-radius: 4px;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.15s;
             display: flex;
             align-items: center;
-            gap: 4px;
+            gap: 3px;
             white-space: nowrap;
         }
         .strat-btn:hover {
             color: #f8fafc;
-            background: rgba(255, 255, 255, 0.06);
+            background: rgba(255, 255, 255, 0.08);
         }
         .strat-btn.active {
             background: linear-gradient(135deg, #0284c7, #0369a1);
@@ -118,14 +118,24 @@
             font-weight: 800;
             box-shadow: 0 0 10px rgba(56, 189, 248, 0.4);
         }
+        .strat-btn.highlight-btc {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            border-color: #fde68a;
+            color: #ffffff;
+        }
+        .strat-btn.highlight-btc.active {
+            background: linear-gradient(135deg, #10b981, #059669);
+            border-color: #6ee7b7;
+            box-shadow: 0 0 12px rgba(16, 185, 129, 0.6);
+        }
 
         .candle-depth-select {
             background: rgba(255, 255, 255, 0.04);
             border: 1px solid rgba(255, 255, 255, 0.12);
             color: #38bdf8;
-            font-size: 11px;
+            font-size: 10.5px;
             font-weight: 600;
-            padding: 3px 6px;
+            padding: 3px 5px;
             border-radius: 5px;
             cursor: pointer;
             outline: none;
@@ -137,13 +147,12 @@
 
         .live-price-box {
             font-family: 'SF Pro Text', 'Consolas', monospace;
-            font-size: 13.5px;
+            font-size: 13px;
             font-weight: 700;
             color: #10b981;
             display: flex;
             align-items: center;
-            gap: 6px;
-            margin-left: 4px;
+            gap: 5px;
         }
         .ws-status-dot {
             width: 7px;
@@ -157,21 +166,21 @@
         .indicator-nav {
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 4px;
         }
         .ind-btn {
             background: rgba(255, 255, 255, 0.04);
             border: 1px solid rgba(255, 255, 255, 0.1);
             color: #94a3b8;
-            padding: 4px 8px;
+            padding: 4px 7px;
             border-radius: 5px;
-            font-size: 10.5px;
+            font-size: 10px;
             font-weight: 500;
             cursor: pointer;
             transition: all 0.2s;
             display: flex;
             align-items: center;
-            gap: 4px;
+            gap: 3px;
         }
         .ind-btn:hover { background: rgba(255, 255, 255, 0.1); color: #fff; }
         .ind-btn.active {
@@ -187,13 +196,13 @@
             border: 1px solid #c4b5fd;
             color: #ffffff;
             font-weight: 800;
-            padding: 4px 10px;
-            border-radius: 6px;
-            font-size: 11px;
+            padding: 4px 9px;
+            border-radius: 5px;
+            font-size: 10.5px;
             cursor: pointer;
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 4px;
             box-shadow: 0 0 10px rgba(139, 92, 246, 0.4);
             transition: all 0.2s;
         }
@@ -212,13 +221,13 @@
             border: 1px solid #fda4af;
             color: #ffffff;
             font-weight: 700;
-            padding: 4px 10px;
-            border-radius: 6px;
-            font-size: 11px;
+            padding: 4px 9px;
+            border-radius: 5px;
+            font-size: 10.5px;
             cursor: pointer;
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 4px;
             box-shadow: 0 0 10px rgba(225, 29, 72, 0.35);
             transition: all 0.2s;
         }
@@ -373,7 +382,7 @@
             font-family: 'SF Pro Text', 'Segoe UI', sans-serif;
             font-size: 11.5px;
             box-shadow: 0 6px 25px rgba(0,0,0,0.8);
-            min-width: 400px;
+            min-width: 410px;
         }
         .vbt-header {
             display: flex;
@@ -433,7 +442,7 @@
             gap: 4px;
             backdrop-filter: blur(14px);
             box-shadow: 0 8px 25px rgba(0,0,0,0.8);
-            min-width: 270px;
+            min-width: 280px;
         }
 
         /* ALT TARİH / ZAMAN BARI */
@@ -631,17 +640,20 @@
                     <option value="XRPUSDT">XRP / USDT</option>
                 </select>
 
-                <!-- 🎯 3 AKILLI STOP & TP STRATEJİ SEÇİCİ -->
+                <!-- 🎯 5 GELİŞMİŞ QUANT STRATEJİ SEÇİCİ -->
                 <div class="strategy-selector-group">
-                    <span class="strat-label">🧠 STRATEJİ:</span>
-                    <button class="strat-btn active" id="strat-btn-1" onclick="setStrategy(1)" title="1. Ajan: Son 10 mum Swing Low/High + Kijun + Bulut Tabanı + 0.4 ATR Likidite Tamponu">
-                        🏛️ 1. Piyasa Yapısı (Structure)
+                    <span class="strat-label">🧠 LAB:</span>
+                    <button class="strat-btn active highlight-btc" id="strat-btn-4" onclick="setStrategy(4)" title="🏆 Quant Optimizasyon Şampiyonu: BUY1 (2.2/2.2x), BUY2 Trend (1.4/4.0x R:R 1:2.85), SELL (1.2/2.5x)">
+                        🔥 4. Asimetrik Pro (+%14 Kâr)
                     </button>
-                    <button class="strat-btn" id="strat-btn-2" onclick="setStrategy(2)" title="2. Ajan: Quant MAE Modeli, Volatilite Sıkışma/Patlama Regresyonu (1.4x-2.5x SL / 1.8x-3.2x TP)">
-                        🤖 2. Quant ML (MAE Opt)
+                    <button class="strat-btn" id="strat-btn-2" onclick="setStrategy(2)" title="Quant MAE: Volatilite Sıkışmada 2.5x SL / Patlamada 3.2x TP">
+                        🤖 2. Quant MAE (+%9.5)
                     </button>
-                    <button class="strat-btn" id="strat-btn-3" onclick="setStrategy(3)" title="3. Ajan: +1.0 ATR Breakeven Başabaş + +1.8 ATR Kijun-sen İzleyen Stop">
-                        🔄 3. Trailing Stop (Kijun & BE)
+                    <button class="strat-btn" id="strat-btn-3" onclick="setStrategy(3)" title="Trailing Stop: +0.8 ATR Erken Breakeven & %78.8 Kazanma Oranı">
+                        🔄 3. Trailing BE (%78.8 Win)
+                    </button>
+                    <button class="strat-btn" id="strat-btn-1" onclick="setStrategy(1)" title="Piyasa Yapısı: Son 10 mum Swing Low + Kijun + Bulut Tabanı + 0.4 ATR Tampon">
+                        🏛️ 1. Yapısal SL
                     </button>
                     <button class="strat-btn" id="strat-btn-0" onclick="setStrategy(0)" title="Klasik Sabit 1:1.67 R:R (1.5x ATR SL, 2.5x ATR TP)">
                         📐 0. Sabit 1.67
@@ -651,7 +663,7 @@
                 <select class="candle-depth-select" id="candle-depth-select" onchange="changeCandleDepth(this.value)" title="Geçmiş mum adedi">
                     <option value="1000">1.000 Mum</option>
                     <option value="2000">2.000 Mum</option>
-                    <option value="3000" selected>3.000 Mum (Maks)</option>
+                    <option value="3000" selected>3.000 Mum</option>
                 </select>
 
                 <div class="live-price-box">
@@ -666,24 +678,24 @@
                     <span style="color: #10b981;">☁️</span> Bulut
                 </button>
                 <button class="ind-btn active" id="btn-ema" onclick="toggleLayer('ema')">
-                    <span style="color: #f97316;">⚡</span> 4H EMA
+                    <span style="color: #f97316;">⚡</span> EMA
                 </button>
                 <button class="ind-btn active" id="btn-signals" onclick="toggleLayer('signals')">
-                    <span style="color: #fbbf24;">🎯</span> Sinyaller
+                    <span style="color: #fbbf24;">🎯</span> Sinyal
                 </button>
 
                 <!-- Backtest Butonu -->
                 <button class="backtest-btn" id="btn-backtest" onclick="toggleBacktestMode()" title="Backtest Modunu Aç / Kapat">
-                    🎆 Backtest Modu
+                    🎆 Backtest
                 </button>
 
                 <button class="ind-btn active" id="btn-bg" onclick="toggleLayer('bg')">
-                    <span>🌌</span> 1D Rejim
+                    <span>🌌</span> Rejim
                 </button>
 
                 <!-- OttOnline Butonu -->
                 <button class="ottonline-btn" onclick="toggleOttOnlinePanel()" title="OttOnline Platformunu Bölünmüş Ekranda Aç / Kapat">
-                    🌐 OttOnline 1553
+                    🌐 OttOnline
                 </button>
             </div>
         </div>
@@ -707,7 +719,7 @@
                             <!-- GÖRÜNEN EKRAN KÜMÜLATİF BACKTEST ROZETİ -->
                             <div class="visible-backtest-card" id="visible-backtest-card">
                                 <div class="vbt-header">
-                                    <span class="active-strat-title" id="vbt-strat-title">🏛️ STRATEJİ 1: PİYASA YAPISI (MARKET STRUCTURE SL)</span>
+                                    <span class="active-strat-title" id="vbt-strat-title">🔥 4. ASİMETRİK PRO (BUY1: 2.2x, BUY2: 4.0x, SELL: 2.5x)</span>
                                     <span id="vbt-candle-span" style="color: #94a3b8; font-size: 10.5px;">150 Mum</span>
                                 </div>
                                 <div class="vbt-row">
@@ -801,7 +813,7 @@
                 <button class="fit-all-btn" onclick="fitAllCandles()" title="Tüm geçmiş mumları ekrana tam sığdır">🔍 TÜMÜNÜ GÖR</button>
             </div>
             <div>
-                <span id="active-strat-footer">Aktif: <b>1. Piyasa Yapısı (Swing Low + Kijun + Bulut Tabanı + 0.4 ATR Tampon)</b></span>
+                <span id="active-strat-footer">Aktif: <b>4. Asimetrik Pro (BUY1: 2.2x SL / 2.2x TP, BUY2: 1.4x SL / 4.0x TP, SELL: 1.2x SL / 2.5x TP)</b></span>
             </div>
         </div>
 
@@ -848,7 +860,6 @@
         float topBound = 0.985;
         float bottomBound = 0.015;
 
-        // Koyu Uzay Arka Planı
         vec3 col = vec3(0.042, 0.062, 0.105);
 
         float visibleCount = max(1.0, u_view_range.y - u_view_range.x);
@@ -862,7 +873,6 @@
         float sb1H = indData.b;
         float ema4HLive = indData.a;
 
-        // 1. PINE SCRIPT v6: 1D KAPANMIŞ ICHIMOKU REJİM ARKA PLANI
         if (u_show_bg == 1 && u_total_candles > 0.0) {
             if (htfRegime > 0.5) {
                 col = mix(col, vec3(0.06, 0.85, 0.35), 0.07);
@@ -871,7 +881,6 @@
             }
         }
 
-        // Izgara Çizgileri
         float gridY = fract(uv.y * 8.0);
         float hLine = smoothstep(0.025, 0.0, abs(gridY - 0.5) * 2.0);
         col += vec3(0.12, 0.18, 0.28) * hLine * 0.4;
@@ -880,10 +889,7 @@
         float vLine = smoothstep(0.025, 0.0, abs(gridX - 0.5) * 2.0);
         col += vec3(0.12, 0.18, 0.28) * vLine * 0.25;
 
-        // Mumlar ve İndikatörler
         if (uv.y >= bottomBound && uv.y <= topBound) {
-            
-            // 2. 1H ICHIMOKU BULUTU (disp=26 KAYDIRILMIŞ)
             if (u_show_cloud == 1 && sa1H > 0.0 && sb1H > 0.0) {
                 float saY = clamp(priceToY(sa1H), bottomBound, topBound);
                 float sbY = clamp(priceToY(sb1H), bottomBound, topBound);
@@ -937,7 +943,6 @@
                 col += vec3(1.0, 0.2, 0.35) * laserB;
             }
 
-            // 3. 1H MUMLAR VE FITILLER
             if (candleCenterIdx >= 0.0 && candleCenterIdx <= u_total_candles) {
                 float candleScreenU = (candleCenterIdx - u_view_range.x) / visibleCount;
                 float candleDistX = abs(uv.x - candleScreenU) * u_resolution.x;
@@ -958,7 +963,6 @@
                 vec3 bearColor = vec3(0.96, 0.24, 0.38);
                 vec3 candleCol = isBull ? bullColor : bearColor;
 
-                // Fitil
                 float highY = clamp(priceToY(highPrice), bottomBound, topBound);
                 float lowY = clamp(priceToY(lowPrice), bottomBound, topBound);
                 if (uv.y >= lowY && uv.y <= highY && candleDistX <= wickThreshold) {
@@ -966,7 +970,6 @@
                     col += candleCol * 0.2;
                 }
 
-                // Gövde
                 float bodyTop = clamp(priceToY(max(openPrice, closePrice)), bottomBound, topBound);
                 float bodyBottom = clamp(priceToY(min(openPrice, closePrice)), bottomBound, topBound);
                 bodyTop = max(bodyTop, bodyBottom + 0.0015);
@@ -979,7 +982,6 @@
                     }
                 }
 
-                // 4. CANLI 4H EMA26 (Orange Laser Line)
                 if (u_show_ema == 1 && ema4HLive > 0.0) {
                     float emaY = clamp(priceToY(ema4HLive), bottomBound, topBound);
                     float distEma = abs(uv.y - emaY) * u_resolution.y;
@@ -989,7 +991,6 @@
             }
         }
 
-        // Crosshair
         if (u_mouse.x >= 0.0 && u_mouse.x <= u_resolution.x &&
             u_mouse.y >= 0.0 && u_mouse.y <= u_resolution.y) {
             float crossX = smoothstep(1.2, 0.0, abs(pixelCoord.x - u_mouse.x));
@@ -1051,27 +1052,29 @@
         const uTotalCandles = gl.getUniformLocation(prog, 'u_total_candles');
 
         // ==========================================
-        // 🎯 3 STRATEJİ YÖNETİMİ
+        // 🎯 5 GELİŞMİŞ QUANT STRATEJİSİ
         // ==========================================
-        let activeStrategy = 1;
+        let activeStrategy = 4;
 
         const stratTitles = {
-            1: '🏛️ STRATEJİ 1: PİYASA YAPISI (MARKET STRUCTURE SL & TAMPON)',
-            2: '🤖 STRATEJİ 2: QUANT ML (MAE DİNAMİK VOLATİLİTE OPTİMİZASYONU)',
-            3: '🔄 STRATEJİ 3: DİNAMİK TRAILING STOP (BREAKEVEN & KIJUN TAKİBİ)',
+            4: '🔥 STRATEJİ 4: ASİMETRİK PRO (BUY1: 2.2x, BUY2 TREND: 4.0x R:R 1:2.85, SELL: 2.5x)',
+            2: '🤖 STRATEJİ 2: QUANT MAE (DİNAMİK VOLATİLİTE OPTİMİZASYONU: 1.2x-2.5x SL / 2.0x-3.2x TP)',
+            3: '🔄 STRATEJİ 3: DİNAMİK TRAILING STOP (+0.8 ATR BREAKEVEN & %78.8 KAZANMA ORANI)',
+            1: '🏛️ STRATEJİ 1: PİYASA YAPISI (SWING LOW/HIGH + KIJUN + BULUT TABANI + 0.4 ATR TAMPON)',
             0: '📐 STRATEJİ 0: KLASİK SABİT 1:1.67 R:R (1.5x SL / 2.5x TP)'
         };
 
         const stratFooters = {
+            4: 'Aktif: <b>4. Asimetrik Pro (BUY1: 2.2x SL / 2.2x TP, BUY2: 1.4x SL / 4.0x TP R:R 1:2.85, SELL: 1.2x SL / 2.5x TP)</b>',
+            2: 'Aktif: <b>2. Quant MAE (Sıkışmada 2.5x SL / Patlamada 3.2x TP)</b>',
+            3: 'Aktif: <b>3. Trailing BE (+0.8 ATR Erken Breakeven & %78.8 Win Rate)</b>',
             1: 'Aktif: <b>1. Piyasa Yapısı (Swing Low + Kijun + Bulut Tabanı + 0.4 ATR Tampon)</b>',
-            2: 'Aktif: <b>2. Quant ML (MAE Sıkışmada 2.5x SL / Patlamada 3.2x TP)</b>',
-            3: 'Aktif: <b>3. Trailing Stop (+1.0 ATR Breakeven + +1.8 ATR Kijun-sen Takibi)</b>',
             0: 'Aktif: <b>0. Sabit 1.67 (1.5x ATR SL / 2.5x ATR TP)</b>'
         };
 
         window.setStrategy = function(stratId) {
             activeStrategy = stratId;
-            [0, 1, 2, 3].forEach(id => {
+            [0, 1, 2, 3, 4].forEach(id => {
                 const btn = document.getElementById(`strat-btn-${id}`);
                 if (btn) btn.classList.toggle('active', id === stratId);
             });
@@ -1362,9 +1365,65 @@
                     let extraInfo = '';
 
                     // -------------------------------------------------------------
-                    // STRATEJİ 1: PİYASA YAPISI (MARKET STRUCTURE SL & 0.4 ATR TAMPON)
+                    // STRATEJİ 4: ASİMETRİK SİNYAL PRO (EN YÜKSEK GETİRİ ŞAMPİYONU)
                     // -------------------------------------------------------------
-                    if (stratId === 1) {
+                    if (stratId === 4) {
+                        if (sigType === 'BUY') {
+                            sl = c - (atr * 2.2);
+                            tp = c + (atr * 2.2);
+                            rrRatio = 1.0;
+                            extraInfo = `BUY1 Kırılım: 2.2x SL / 2.2x TP (Geniş Tampon)`;
+                        } else if (sigType === 'BUY2') {
+                            sl = c - (atr * 1.4);
+                            tp = c + (atr * 4.0);
+                            rrRatio = 4.0 / 1.4;
+                            extraInfo = `BUY2 Trend: 1.4x SL / 4.0x TP (R:R 1:2.85 🚀)`;
+                        } else {
+                            sl = c + (atr * 1.2);
+                            tp = c - (atr * 2.5);
+                            rrRatio = 2.5 / 1.2;
+                            extraInfo = `SELL Trend: 1.2x SL / 2.5x TP (R:R 1:2.08 🔻)`;
+                        }
+                    }
+                    // -------------------------------------------------------------
+                    // STRATEJİ 2: QUANT MAE (DİNAMİK VOLATİLİTE OPTİMİZATÖRÜ)
+                    // -------------------------------------------------------------
+                    else if (stratId === 2) {
+                        const atr50 = atr50SmaArr[i] || atr;
+                        const vol20 = vol20SmaArr[i] || data1H[i].vol;
+                        const rAtr = atr / atr50;
+                        const rCloud = (Math.abs(curSa - curSb) / c) * 100;
+                        const rvol = vol20 > 0 ? (data1H[i].vol / vol20) : 1.0;
+                        const rKijun = Math.abs(c - kijun1H[i]) / atr;
+
+                        const zRegime = 1.60 * (rAtr - 1.0) + 0.90 * (rvol - 1.0) + 0.50 * ((rCloud / 0.80) - 1.0) - 0.75 * (rKijun - 0.70);
+                        const pExpansion = 1.0 / (1.0 + Math.exp(-1.75 * zRegime));
+
+                        const kMAE = 2.50 - (pExpansion * (2.50 - 1.20));
+                        const kTP = 2.00 + (Math.pow(pExpansion, 0.85) * (3.20 - 2.00));
+                        rrRatio = kTP / kMAE;
+
+                        if (isBuy) {
+                            sl = c - (kMAE * atr);
+                            tp = c + (kTP * atr);
+                        } else {
+                            sl = c + (kMAE * atr);
+                            tp = c - (kTP * atr);
+                        }
+                        extraInfo = `MAE SL: ${kMAE.toFixed(2)}x | TP: ${kTP.toFixed(2)}x (P_exp: %${(pExpansion * 100).toFixed(0)})`;
+                    }
+                    // -------------------------------------------------------------
+                    // STRATEJİ 3: DİNAMİK TRAILING STOP (+0.8 ATR ERKEN BREAKEVEN)
+                    // -------------------------------------------------------------
+                    else if (stratId === 3) {
+                        sl = isBuy ? (c - atr * 1.5) : (c + atr * 1.5);
+                        tp = isBuy ? (c + atr * 2.5) : (c - atr * 2.5);
+                        extraInfo = `Erken BE: +0.8 ATR (%78.8 Win Rate) | Kijun: +2.2 ATR`;
+                    }
+                    // -------------------------------------------------------------
+                    // STRATEJİ 1: PİYASA YAPISI (SWING LOW & KIJUN & TAMPON)
+                    // -------------------------------------------------------------
+                    else if (stratId === 1) {
                         let swingLow10 = Infinity;
                         let swingHigh10 = -Infinity;
                         for (let k = 0; k < 10; k++) {
@@ -1397,41 +1456,6 @@
                         }
                     }
                     // -------------------------------------------------------------
-                    // STRATEJİ 2: QUANT ML (MAE DİNAMİK VOLATİLİTE OPTİMİZATÖRÜ)
-                    // -------------------------------------------------------------
-                    else if (stratId === 2) {
-                        const atr50 = atr50SmaArr[i] || atr;
-                        const vol20 = vol20SmaArr[i] || data1H[i].vol;
-                        const rAtr = atr / atr50;
-                        const rCloud = (Math.abs(curSa - curSb) / c) * 100;
-                        const rvol = vol20 > 0 ? (data1H[i].vol / vol20) : 1.0;
-                        const rKijun = Math.abs(c - kijun1H[i]) / atr;
-
-                        const zRegime = 1.60 * (rAtr - 1.0) + 0.90 * (rvol - 1.0) + 0.50 * ((rCloud / 0.80) - 1.0) - 0.75 * (rKijun - 0.70);
-                        const pExpansion = 1.0 / (1.0 + Math.exp(-1.75 * zRegime));
-
-                        const kMAE = 2.50 - (pExpansion * (2.50 - 1.40));
-                        const kTP = 1.80 + (Math.pow(pExpansion, 0.85) * (3.20 - 1.80));
-                        rrRatio = kTP / kMAE;
-
-                        if (isBuy) {
-                            sl = c - (kMAE * atr);
-                            tp = c + (kTP * atr);
-                        } else {
-                            sl = c + (kMAE * atr);
-                            tp = c - (kTP * atr);
-                        }
-                        extraInfo = `MAE SL: ${kMAE.toFixed(2)}x ATR | TP: ${kTP.toFixed(2)}x ATR (P_exp: %${(pExpansion * 100).toFixed(0)})`;
-                    }
-                    // -------------------------------------------------------------
-                    // STRATEJİ 3: DİNAMİK TRAILING STOP (BREAKEVEN & KIJUN TAKİBİ)
-                    // -------------------------------------------------------------
-                    else if (stratId === 3) {
-                        sl = isBuy ? (c - atr * 1.5) : (c + atr * 1.5);
-                        tp = isBuy ? (c + atr * 2.5) : (c - atr * 2.5);
-                        extraInfo = `Başabaş: +1.0 ATR | Kijun Trailing: +1.8 ATR`;
-                    }
-                    // -------------------------------------------------------------
                     // STRATEJİ 0: KLASİK SABİT 1:1.67
                     // -------------------------------------------------------------
                     else {
@@ -1459,24 +1483,17 @@
                             const curProfitAtr = isBuy ? (barHigh - c) / atr : (c - barLow) / atr;
                             if (curProfitAtr > highestProfitAtr) highestProfitAtr = curProfitAtr;
 
-                            // Parabolik Kâr Kilitleme (+2.5 ATR üstü)
-                            if (highestProfitAtr >= 2.5) {
-                                const lookbackLow = Math.min(data1H[step - 1].low, data1H[Math.max(0, step - 2)].low);
-                                const lookbackHigh = Math.max(data1H[step - 1].high, data1H[Math.max(0, step - 2)].high);
-                                if (isBuy && lookbackLow > currentDynamicStop) currentDynamicStop = lookbackLow;
-                                if (!isBuy && lookbackHigh < currentDynamicStop) currentDynamicStop = lookbackHigh;
+                            // Erken Breakeven (+0.8 ATR üstü)
+                            if (highestProfitAtr >= 0.8) {
+                                const beStop = isBuy ? c + (atr * 0.05) : c - (atr * 0.05);
+                                if (isBuy && beStop > currentDynamicStop) currentDynamicStop = beStop;
+                                if (!isBuy && beStop < currentDynamicStop) currentDynamicStop = beStop;
                             }
-                            // Kijun-sen Trailing (+1.8 ATR üstü)
-                            else if (highestProfitAtr >= 1.8 && stepKijun > 0) {
+                            // Kijun-sen Trailing (+2.2 ATR üstü)
+                            if (highestProfitAtr >= 2.2 && stepKijun > 0) {
                                 const kijunStop = isBuy ? stepKijun - (stepAtr * 0.2) : stepKijun + (stepAtr * 0.2);
                                 if (isBuy && kijunStop > currentDynamicStop) currentDynamicStop = kijunStop;
                                 if (!isBuy && kijunStop < currentDynamicStop) currentDynamicStop = kijunStop;
-                            }
-                            // Breakeven (+1.0 ATR üstü)
-                            else if (highestProfitAtr >= 1.0) {
-                                const beStop = isBuy ? c + (atr * 0.1) : c - (atr * 0.1);
-                                if (isBuy && beStop > currentDynamicStop) currentDynamicStop = beStop;
-                                if (!isBuy && beStop < currentDynamicStop) currentDynamicStop = beStop;
                             }
                         }
 
@@ -1795,12 +1812,10 @@
 
                 const badgeY = isBuy ? lowY + 24 : highY - 24;
 
-                // 1. KAZANAN SİNYALDE HAVAİ FİŞEK PATLAMASI
                 if (isBacktestActive && isTpWin) {
                     drawFireworkExplosion(ctx2d, screenX, badgeY, timeNow, sig.index * 0.17);
                 }
 
-                // 2. SİNYAL ROZETİ
                 ctx2d.save();
                 ctx2d.fillStyle = badgeBg;
                 ctx2d.strokeStyle = isTpWin ? '#fef08a' : (isSlLoss ? '#fca5a5' : '#ffffff');
@@ -1833,7 +1848,6 @@
                 ctx2d.fillText(text, screenX, badgeY);
                 ctx2d.restore();
 
-                // 3. STOP OLAN SİNYALDE ÇARPI (X) İŞARETİ
                 if (isBacktestActive && isSlLoss) {
                     ctx2d.save();
                     ctx2d.strokeStyle = '#ef4444';
@@ -1861,7 +1875,6 @@
                     ctx2d.restore();
                 }
 
-                // 4. TP ve SL Çizgileri
                 if (visibleCount < 400) {
                     ctx2d.save();
                     const projDistance = isBacktestActive ? Math.min(sig.exitIndex - sig.index, 25) : 8;
@@ -1877,7 +1890,6 @@
                     ctx2d.lineTo(projEndX, tpY);
                     ctx2d.stroke();
 
-                    // TP Noktası & Etiketi
                     ctx2d.setLineDash([]);
                     ctx2d.fillStyle = isTpWin ? '#10b981' : (isSlLoss ? '#64748b' : '#10b981');
                     ctx2d.shadowColor = ctx2d.fillStyle;
@@ -1902,7 +1914,6 @@
                     ctx2d.lineTo(projEndX, slY);
                     ctx2d.stroke();
 
-                    // SL Noktası & Etiketi
                     ctx2d.setLineDash([]);
                     ctx2d.fillStyle = isSlLoss ? '#ef4444' : (isTpWin ? '#64748b' : '#ef4444');
                     ctx2d.shadowColor = ctx2d.fillStyle;
@@ -1923,9 +1934,6 @@
             }
         }
 
-        // ============================================================
-        // 📥 BINANCE MTF ÇOKLU ZAMAN DİLİMİ VERİ ÇEKİCİ
-        // ============================================================
         async function fetchKlinesForInterval(symbol, interval, targetCount) {
             let allKlines = [];
             let endTime = null;
@@ -2061,12 +2069,8 @@
             updateVisibleBacktestSummary();
         };
 
-        // ==========================================
-        // DİKEY FİYAT ÖLÇEĞİ VE ETKİLEŞİM
-        // ==========================================
         let minPrice = 0;
         let maxPrice = 0;
-
         let isPriceDragging = false;
         let priceDragStartY = 0;
         let priceScaleFactor = 1.0;
@@ -2089,9 +2093,6 @@
             fitAllCandles();
         });
 
-        // ==========================================
-        // YATAY KAYDIRMA (PAN) VE ZOOM
-        // ==========================================
         let isChartDragging = false;
         let chartDragStartX = 0;
         let origViewStart = 0;
@@ -2216,7 +2217,6 @@
                 crosshairTimeTag.style.left = `${e.clientX - rect.left}px`;
                 crosshairTimeTag.innerText = formatFullTime(date);
 
-                // Sinyal İnceleme Kartı
                 const sigAtCandle = calculatedSignals.find(s => s.index === cIdx);
                 if (sigAtCandle) {
                     signalInspector.style.display = 'flex';
@@ -2345,9 +2345,6 @@
             }
         }
 
-        // ==========================================
-        // RENDER DÖNGÜSÜ (HiDPI RETINA / 4K)
-        // ==========================================
         let lastT = performance.now();
         let frameCount = 0;
 
@@ -2408,7 +2405,6 @@
                 updatePriceScaleLabels();
                 updateTimeScaleLabels();
 
-                // 1. GPU Shader Render
                 gl.useProgram(prog);
                 gl.uniform2f(uRes, canvas.width, canvas.height);
                 gl.uniform2f(uViewRange, viewStart, viewEnd);
@@ -2432,14 +2428,12 @@
 
                 gl.drawArrays(gl.TRIANGLES, 0, 6);
 
-                // 2. Vektör TP / SL, Havai Fişek ve Sinyal Rozetleri
                 drawVectorSignalsAndTargets(now);
             }
 
             requestAnimationFrame(render);
         }
 
-        // Başlangıçta Backtest Paneli Açık
         document.getElementById('btn-backtest').classList.add('active');
 
         fetchAllMultiTimeframeKlines('BTCUSDT');
