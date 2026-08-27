@@ -1298,7 +1298,7 @@
                     ctx2d.fillRect(screenX - candleW / 2, bodyTop, candleW, bodyHeight);
                     ctx2d.strokeRect(screenX - candleW / 2, bodyTop, candleW, bodyHeight);
 
-                    // E. YATAYDA MUMU ORTALAYAN DEVASA HOLOGRAFİK TP / SL ROZETLERİ
+                    // E. YATAYDA MUMU ORTALAYAN DEVASA HOLOGRAFİK TP / SL ROZETLERİ & SOLA KAYAN GİRİŞ ETİKETİ
                     const targetPnlPct = Math.abs((sig.tp - sig.price) / sig.price * 100).toFixed(2);
                     const riskPnlPct = Math.abs((sig.price - sig.sl) / sig.price * 100).toFixed(2);
 
@@ -1342,52 +1342,30 @@
                     ctx2d.textBaseline = 'middle';
                     ctx2d.fillText(slText, badgeCenterX, slY);
 
-                    // 3. Giriş Seviye Rozeti (Mumu Yatayda Ortalar)
-                    ctx2d.fillStyle = 'rgba(15, 23, 42, 0.96)';
-                    ctx2d.strokeStyle = '#fbbf24';
-                    ctx2d.lineWidth = 1.5;
-                    ctx2d.shadowColor = '#fbbf24';
-                    ctx2d.shadowBlur = 14;
+                    // 3. Giriş Seviye Rozeti (Mumun SOLUNA doğru kayar ve mumla arasında minik bir boşlukla hizalanır)
                     const entryText = `⚡ GİRİŞ: $${sig.price.toFixed(1)} | R:R 1 : ${sig.rrRatio.toFixed(2)}`;
                     ctx2d.font = 'bold 11px "SF Pro Text", "Segoe UI", sans-serif';
                     const entryMetrics = ctx2d.measureText(entryText);
                     const entryW = Math.round(entryMetrics.width) + 16;
                     const entryH = 20;
+
+                    // Mumun solunda hafif boşluk bırakan hedef X koordinatı:
+                    const entryTargetLeftX = Math.round(screenX - (candleW / 2) - (entryW / 2) - 12);
+                    const entryBadgeX = Math.round(baseProjEndX + (entryTargetLeftX - baseProjEndX) * prog);
+
+                    ctx2d.fillStyle = 'rgba(15, 23, 42, 0.96)';
+                    ctx2d.strokeStyle = '#fbbf24';
+                    ctx2d.lineWidth = 1.5;
+                    ctx2d.shadowColor = '#fbbf24';
+                    ctx2d.shadowBlur = 14;
                     ctx2d.beginPath();
-                    ctx2d.roundRect(badgeCenterX - entryW / 2, entryY - entryH / 2, entryW, entryH, 5);
+                    ctx2d.roundRect(entryBadgeX - entryW / 2, entryY - entryH / 2, entryW, entryH, 5);
                     ctx2d.fill();
                     ctx2d.stroke();
                     ctx2d.fillStyle = '#fef08a';
                     ctx2d.textAlign = 'center';
                     ctx2d.textBaseline = 'middle';
-                    ctx2d.fillText(entryText, badgeCenterX, entryY);
-
-                    // F. BÜYÜTÜLMÜŞ SİNYAL ETİKET ROZETİ (MUMUN HEMEN YANINDA / ÜSTÜNDE)
-                    const badgeY = isBuy ? lowY + 36 : highY - 36;
-                    const badgeColor = isBuy ? '#10b981' : '#ef4444';
-                    const badgeBg = isBuy ? 'rgba(16, 185, 129, 1.0)' : 'rgba(239, 68, 68, 1.0)';
-                    const badgeText = `⚡ ${sig.label.toUpperCase()}`;
-
-                    ctx2d.fillStyle = badgeBg;
-                    ctx2d.strokeStyle = '#ffffff';
-                    ctx2d.lineWidth = 2.5;
-                    ctx2d.shadowColor = badgeColor;
-                    ctx2d.shadowBlur = 14 + 18 * prog;
-
-                    ctx2d.font = 'bold 13px "SF Pro Text", "Segoe UI", sans-serif';
-                    const bMetrics = ctx2d.measureText(badgeText);
-                    const bW = Math.round(bMetrics.width) + 20;
-                    const bH = 26;
-
-                    ctx2d.beginPath();
-                    ctx2d.roundRect(screenX - bW / 2, badgeY - bH / 2, bW, bH, 7);
-                    ctx2d.fill();
-                    ctx2d.stroke();
-
-                    ctx2d.fillStyle = '#ffffff';
-                    ctx2d.textAlign = 'center';
-                    ctx2d.textBaseline = 'middle';
-                    ctx2d.fillText(badgeText, screenX, badgeY);
+                    ctx2d.fillText(entryText, entryBadgeX, entryY);
 
                     ctx2d.restore();
                 }
@@ -1547,9 +1525,12 @@
         let isPriceDragging = false;
         let priceDragStartY = 0;
         let priceScaleFactor = 1.0;
+        let priceOffset = 0; // 2D Dikey serbest kaydırma ofseti
+        let origPriceOffset = 0;
 
         window.resetPriceScale = function() {
             priceScaleFactor = 1.0;
+            priceOffset = 0;
         };
 
         priceAxisElem.addEventListener('mousedown', (e) => {
@@ -1567,10 +1548,11 @@
         });
 
         // ==========================================
-        // YATAY KAYDIRMA (PAN) VE ZOOM
+        // YATAY VE DİKEY 2D SERBEST KAYDIRMA (PAN) VE ZOOM
         // ==========================================
         let isChartDragging = false;
         let chartDragStartX = 0;
+        let chartDragStartY = 0;
         let origViewStart = 0;
         let origViewEnd = 0;
 
@@ -1598,21 +1580,23 @@
         const inspSl = document.getElementById('insp-sl');
         const inspExtra = document.getElementById('insp-extra');
 
-        function startPan(clientX) {
+        function startPan(clientX, clientY) {
             isChartDragging = true;
             chartDragStartX = clientX;
+            chartDragStartY = clientY;
             origViewStart = viewStart;
             origViewEnd = viewEnd;
+            origPriceOffset = priceOffset;
             canvasContainer.classList.add('grabbing');
             timeAxisElem.classList.add('grabbing');
         }
 
         canvasContainer.addEventListener('mousedown', (e) => {
-            startPan(e.clientX);
+            startPan(e.clientX, e.clientY);
         });
 
         timeAxisElem.addEventListener('mousedown', (e) => {
-            startPan(e.clientX);
+            startPan(e.clientX, e.clientY);
             e.preventDefault();
         });
 
@@ -1659,6 +1643,7 @@
             mousePixelY = (rect.bottom - e.clientY) * (canvas.height / rect.height);
 
             if (isChartDragging && totalCandles > 0) {
+                // 1. Yatay Zaman Kaydırma (X-Axis)
                 const deltaPx = e.clientX - chartDragStartX;
                 const candleSpan = origViewEnd - origViewStart;
                 const deltaCandles = (deltaPx / rect.width) * candleSpan;
@@ -1677,6 +1662,15 @@
 
                 viewStart = nStart;
                 viewEnd = nEnd;
+
+                // 2. Dikey Fiyat Serbest Kaydırma (Y-Axis Free Pan)
+                const deltaPy = e.clientY - chartDragStartY;
+                const currentPriceSpan = maxPrice - minPrice;
+                if (currentPriceSpan > 0 && rect.height > 0) {
+                    const pricePerPixel = currentPriceSpan / rect.height;
+                    priceOffset = origPriceOffset - (deltaPy * pricePerPixel);
+                }
+
                 updateVisibleBacktestSummary();
             }
 
@@ -1886,8 +1880,8 @@
                 const baseHalfSpan = (maxP - minP) / 2;
                 const scaledHalfSpan = (baseHalfSpan / priceScaleFactor) * 1.05;
 
-                minPrice = baseMid - scaledHalfSpan;
-                maxPrice = baseMid + scaledHalfSpan;
+                minPrice = baseMid - scaledHalfSpan + priceOffset;
+                maxPrice = baseMid + scaledHalfSpan + priceOffset;
 
                 updatePriceScaleLabels();
                 updateTimeScaleLabels();
