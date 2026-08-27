@@ -1176,47 +1176,6 @@
             document.getElementById(`btn-${name}`).classList.toggle('active', !!layers[name]);
         };
 
-        // ============================================================
-        // SQICIBEKIRBINDIKATÖR: ÇOKLU STRATEJİLİ HESAPLAMA MOTORU
-        // ============================================================
-        function calculateSqiciBekiR_MultiStrategy(data1H, data4H, data1D, stratId) {
-            const N1H = data1H.length;
-            const N4H = data4H.length;
-            const N1D = data1D.length;
-
-            const sa1H = new Float32Array(N1H);
-            const sb1H = new Float32Array(N1H);
-            const kijun1H = new Float32Array(N1H);
-            const ema4HLiveArr = new Float32Array(N1H);
-            const regime1DArr = new Float32Array(N1H);
-            const atrArr = new Float32Array(N1H);
-            const atr50SmaArr = new Float32Array(N1H);
-            const vol20SmaArr = new Float32Array(N1H);
-            const signals = [];
-
-            const convLen = 9;
-            const baseLen = 26;
-            const spanBLen = 52;
-            const disp = 26;
-            const emaLen = 26;
-            const emaCoeff = 2.0 / (emaLen + 1.0);
-
-            // 1. 1D GÜNLÜK ICHIMOKU REJİMİ
-            const sa1DRaw = new Float32Array(N1D);
-            const sb1DRaw = new Float32Array(N1D);
-
-            for (let i = 0; i < N1D; i++) {
-                let tH = -Infinity, tL = Infinity;
-                for (let j = 0; j < Math.min(i + 1, convLen); j++) {
-                    tH = Math.max(tH, data1D[i - j].high);
-                    tL = Math.min(tL, data1D[i - j].low);
-                }
-                const tenkan = (tH + tL) / 2;
-
-                let kH = -Infinity, kL = Infinity;
-                for (let j = 0; j < Math.min(i + 1, baseLen); j++) {
-                    kH = Math.max(kH, data1D[i - j].high);
-                    kL = Math.min(kL, data1D[i - j].low);
         // ==========================================
         // ⏱️ DİNAMİK MULTI-TIMEFRAME YAPILANDIRMASI
         // ==========================================
