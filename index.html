@@ -74,6 +74,38 @@
             color: #fff;
         }
 
+        /* ⏱️ ZAMAN DİLİMİ (TIMEFRAME) SEÇİCİ */
+        .tf-selector-group {
+            display: flex;
+            align-items: center;
+            background: rgba(15, 23, 42, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 6px;
+            padding: 2px;
+            gap: 2px;
+        }
+        .tf-btn {
+            background: transparent;
+            border: 1px solid transparent;
+            color: #94a3b8;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 3px 6px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+        .tf-btn:hover {
+            color: #f8fafc;
+            background: rgba(255, 255, 255, 0.08);
+        }
+        .tf-btn.active {
+            background: #38bdf8;
+            color: #0f172a;
+            font-weight: 800;
+            box-shadow: 0 0 10px rgba(56, 189, 248, 0.4);
+        }
+
         /* 🎯 STRATEJİ SEÇİCİ TOOLBAR GRUBU */
         .strategy-selector-group {
             display: flex;
@@ -640,6 +672,16 @@
                     <option value="XRPUSDT">XRP / USDT</option>
                 </select>
 
+                <!-- ⏱️ ZAMAN DİLİMİ (TIMEFRAME) SEÇİCİ -->
+                <div class="tf-selector-group">
+                    <button class="tf-btn" id="tf-btn-1m" onclick="changeTimeframe('1m')" title="⚡ 1-Dakika Scalping: 1m Mumlar + 5m EMA26 + 1H Rejim">⚡ 1m</button>
+                    <button class="tf-btn" id="tf-btn-3m" onclick="changeTimeframe('3m')" title="🔥 3-Dakika Turbo Day Trade: 3m Mumlar + 15m EMA26 + 1H Rejim">🔥 3m</button>
+                    <button class="tf-btn" id="tf-btn-5m" onclick="changeTimeframe('5m')" title="🚀 5-Dakika Hızlı Trade: 5m Mumlar + 15m EMA26 + 4H Rejim">🚀 5m</button>
+                    <button class="tf-btn" id="tf-btn-15m" onclick="changeTimeframe('15m')" title="🎯 15-Dakika Swing Day Trade: 15m Mumlar + 1H EMA26 + 1D Rejim">🎯 15m</button>
+                    <button class="tf-btn active" id="tf-btn-1h" onclick="changeTimeframe('1h')" title="📊 1-Saat Orijinal Pine v6 Swing: 1H Mumlar + 4H EMA26 + 1D Rejim">📊 1h</button>
+                    <button class="tf-btn" id="tf-btn-4h" onclick="changeTimeframe('4h')" title="🏛️ 4-Saat Trend Takibi: 4H Mumlar + 1D EMA26 + 1W Rejim">🏛️ 4h</button>
+                </div>
+
                 <!-- 🎯 5 GELİŞMİŞ QUANT STRATEJİ SEÇİCİ -->
                 <div class="strategy-selector-group">
                     <span class="strat-label">🧠 LAB:</span>
@@ -860,6 +902,7 @@
         float topBound = 0.985;
         float bottomBound = 0.015;
 
+        // Koyu Uzay Arka Planı
         vec3 col = vec3(0.042, 0.062, 0.105);
 
         float visibleCount = max(1.0, u_view_range.y - u_view_range.x);
@@ -1054,7 +1097,7 @@
         // ==========================================
         // 🎯 5 GELİŞMİŞ QUANT STRATEJİSİ
         // ==========================================
-        let activeStrategy = 4;
+        let activeStrategy = 4; // Varsayılan: 4 (En yüksek karlı Asimetrik Pro)
 
         const stratTitles = {
             4: '🔥 STRATEJİ 4: ASİMETRİK PRO (BUY1: 2.2x, BUY2 TREND: 4.0x R:R 1:2.85, SELL: 2.5x)',
@@ -1174,27 +1217,116 @@
                 for (let j = 0; j < Math.min(i + 1, baseLen); j++) {
                     kH = Math.max(kH, data1D[i - j].high);
                     kL = Math.min(kL, data1D[i - j].low);
+        // ==========================================
+        // ⏱️ DİNAMİK MULTI-TIMEFRAME YAPILANDIRMASI
+        // ==========================================
+        const TIMEFRAME_CONFIGS = {
+            '1m': {
+                baseTf: '1m', emaTf: '5m', regimeTf: '1h',
+                baseMs: 60 * 1000, emaMs: 5 * 60 * 1000, regimeMs: 60 * 60 * 1000,
+                label: '⚡ 1m Scalp Pro', emaLabel: '5M EMA26', regimeLabel: '1H ICHIMOKU'
+            },
+            '3m': {
+                baseTf: '3m', emaTf: '15m', regimeTf: '1h',
+                baseMs: 3 * 60 * 1000, emaMs: 15 * 60 * 1000, regimeMs: 60 * 60 * 1000,
+                label: '🔥 3m Turbo Trade', emaLabel: '15M EMA26', regimeLabel: '1H ICHIMOKU'
+            },
+            '5m': {
+                baseTf: '5m', emaTf: '15m', regimeTf: '4h',
+                baseMs: 5 * 60 * 1000, emaMs: 15 * 60 * 1000, regimeMs: 4 * 60 * 60 * 1000,
+                label: '🚀 5m Day Trade', emaLabel: '15M EMA26', regimeLabel: '4H ICHIMOKU'
+            },
+            '15m': {
+                baseTf: '15m', emaTf: '1h', regimeTf: '1d',
+                baseMs: 15 * 60 * 1000, emaMs: 60 * 60 * 1000, regimeMs: 24 * 60 * 60 * 1000,
+                label: '🎯 15m Short Swing', emaLabel: '1H EMA26', regimeLabel: '1D ICHIMOKU'
+            },
+            '1h': {
+                baseTf: '1h', emaTf: '4h', regimeTf: '1d',
+                baseMs: 60 * 60 * 1000, emaMs: 4 * 60 * 60 * 1000, regimeMs: 24 * 60 * 60 * 1000,
+                label: '📊 1h Swing (Pine v6)', emaLabel: '4H EMA26', regimeLabel: '1D ICHIMOKU'
+            },
+            '4h': {
+                baseTf: '4h', emaTf: '1d', regimeTf: '1w',
+                baseMs: 4 * 60 * 60 * 1000, emaMs: 24 * 60 * 60 * 1000, regimeMs: 7 * 24 * 60 * 60 * 1000,
+                label: '🏛️ 4h Macro Trend', emaLabel: '1D EMA26', regimeLabel: '1W ICHIMOKU'
+            }
+        };
+
+        let currentTimeframe = '1h';
+
+        window.changeTimeframe = function(tf) {
+            currentTimeframe = tf;
+            ['1m', '3m', '5m', '15m', '1h', '4h'].forEach(t => {
+                const btn = document.getElementById(`tf-btn-${t}`);
+                if (btn) btn.classList.toggle('active', t === tf);
+            });
+            fetchAllMultiTimeframeKlines(currentSymbol);
+        };
+
+        // ============================================================
+        // SQICIBEKIRBINDIKATÖR: ÇOKLU STRATEJİLİ HESAPLAMA MOTORU
+        // ============================================================
+        function calculateSqiciBekiR_MultiStrategy(dataBase, dataEma, dataRegime, stratId, tfKey) {
+            const tfCfg = TIMEFRAME_CONFIGS[tfKey || currentTimeframe] || TIMEFRAME_CONFIGS['1h'];
+            const N_base = dataBase.length;
+            const N_ema = dataEma.length;
+            const N_regime = dataRegime.length;
+
+            const saBase = new Float32Array(N_base);
+            const sbBase = new Float32Array(N_base);
+            const kijunBase = new Float32Array(N_base);
+            const emaLiveArr = new Float32Array(N_base);
+            const regimeArr = new Float32Array(N_base);
+            const atrArr = new Float32Array(N_base);
+            const atr50SmaArr = new Float32Array(N_base);
+            const vol20SmaArr = new Float32Array(N_base);
+            const signals = [];
+
+            const convLen = 9;
+            const baseLen = 26;
+            const spanBLen = 52;
+            const disp = 26;
+            const emaLen = 26;
+            const emaCoeff = 2.0 / (emaLen + 1.0);
+
+            // 1. ÜST REJİM ICHIMOKU BULUTU
+            const saRegimeRaw = new Float32Array(N_regime);
+            const sbRegimeRaw = new Float32Array(N_regime);
+
+            for (let i = 0; i < N_regime; i++) {
+                let tH = -Infinity, tL = Infinity;
+                for (let j = 0; j < Math.min(i + 1, convLen); j++) {
+                    tH = Math.max(tH, dataRegime[i - j].high);
+                    tL = Math.min(tL, dataRegime[i - j].low);
+                }
+                const tenkan = (tH + tL) / 2;
+
+                let kH = -Infinity, kL = Infinity;
+                for (let j = 0; j < Math.min(i + 1, baseLen); j++) {
+                    kH = Math.max(kH, dataRegime[i - j].high);
+                    kL = Math.min(kL, dataRegime[i - j].low);
                 }
                 const kijun = (kH + kL) / 2;
 
                 let sBH = -Infinity, sBL = Infinity;
                 for (let j = 0; j < Math.min(i + 1, spanBLen); j++) {
-                    sBH = Math.max(sBH, data1D[i - j].high);
-                    sBL = Math.min(sBL, data1D[i - j].low);
+                    sBH = Math.max(sBH, dataRegime[i - j].high);
+                    sBL = Math.min(sBL, dataRegime[i - j].low);
                 }
-                sa1DRaw[i] = (tenkan + kijun) / 2;
-                sb1DRaw[i] = (sBH + sBL) / 2;
+                saRegimeRaw[i] = (tenkan + kijun) / 2;
+                sbRegimeRaw[i] = (sBH + sBL) / 2;
             }
 
-            let lastRegime1D = 0;
-            const confirmedRegime1DByDay = [];
+            let lastRegime = 0;
+            const confirmedRegimeList = [];
 
-            for (let i = 0; i < N1D; i++) {
-                const shiftedA = (i >= disp) ? sa1DRaw[i - disp] : sa1DRaw[i];
-                const shiftedB = (i >= disp) ? sb1DRaw[i - disp] : sb1DRaw[i];
+            for (let i = 0; i < N_regime; i++) {
+                const shiftedA = (i >= disp) ? saRegimeRaw[i - disp] : saRegimeRaw[i];
+                const shiftedB = (i >= disp) ? sbRegimeRaw[i - disp] : sbRegimeRaw[i];
                 const cloudTop = Math.max(shiftedA, shiftedB);
                 const cloudBot = Math.min(shiftedA, shiftedB);
-                const c = data1D[i].close;
+                const c = dataRegime[i].close;
 
                 let rawRegime = 0;
                 if (c > cloudTop) rawRegime = 1;
@@ -1202,30 +1334,30 @@
                 else rawRegime = 0;
 
                 if (rawRegime === 1 || rawRegime === -1) {
-                    lastRegime1D = rawRegime;
+                    lastRegime = rawRegime;
                 }
 
-                confirmedRegime1DByDay.push({
-                    time: data1D[i].time,
-                    closeTime: data1D[i].time + 86400000 - 1,
-                    lastRegime: lastRegime1D
+                confirmedRegimeList.push({
+                    time: dataRegime[i].time,
+                    closeTime: dataRegime[i].time + tfCfg.regimeMs - 1,
+                    lastRegime: lastRegime
                 });
             }
 
-            // 2. 4H EMA26 HESAPLAMASI
-            const ema4HClosedArr = new Float32Array(N4H);
-            let pEma4H = data4H[0] ? data4H[0].close : 0;
-            for (let i = 0; i < N4H; i++) {
-                pEma4H = data4H[i].close * emaCoeff + pEma4H * (1.0 - emaCoeff);
-                ema4HClosedArr[i] = pEma4H;
+            // 2. ORTA VADE EMA26 HESAPLAMASI
+            const emaClosedArr = new Float32Array(N_ema);
+            let pEma = dataEma[0] ? dataEma[0].close : 0;
+            for (let i = 0; i < N_ema; i++) {
+                pEma = dataEma[i].close * emaCoeff + pEma * (1.0 - emaCoeff);
+                emaClosedArr[i] = pEma;
             }
 
-            // 3. 1H ATR (14) & SMA(ATR, 50) & SMA(Volume, 20)
+            // 3. BASE ATR (14) & SMA(ATR, 50) & SMA(Volume, 20)
             let prevAtr = 0;
-            for (let i = 0; i < N1H; i++) {
-                const h = data1H[i].high;
-                const l = data1H[i].low;
-                const pc = i > 0 ? data1H[i - 1].close : data1H[i].open;
+            for (let i = 0; i < N_base; i++) {
+                const h = dataBase[i].high;
+                const l = dataBase[i].low;
+                const pc = i > 0 ? dataBase[i - 1].close : dataBase[i].open;
                 const tr = Math.max(h - l, Math.abs(h - pc), Math.abs(l - pc));
                 if (i === 0) prevAtr = tr;
                 else if (i < 14) prevAtr = (prevAtr * i + tr) / (i + 1);
@@ -1239,104 +1371,104 @@
 
                 let volSum = 0;
                 const volLook = Math.min(i + 1, 20);
-                for (let k = 0; k < volLook; k++) volSum += data1H[i - k].vol;
+                for (let k = 0; k < volLook; k++) volSum += dataBase[i - k].vol;
                 vol20SmaArr[i] = volSum / volLook;
             }
 
-            // 4. 1H ICHIMOKU (disp = 26 KAYDIRILMIŞ)
-            const sa1HRaw = new Float32Array(N1H);
-            const sb1HRaw = new Float32Array(N1H);
+            // 4. BASE ICHIMOKU (disp = 26 KAYDIRILMIŞ)
+            const saBaseRaw = new Float32Array(N_base);
+            const sbBaseRaw = new Float32Array(N_base);
 
-            for (let i = 0; i < N1H; i++) {
+            for (let i = 0; i < N_base; i++) {
                 let tH = -Infinity, tL = Infinity;
                 for (let j = 0; j < Math.min(i + 1, convLen); j++) {
-                    tH = Math.max(tH, data1H[i - j].high);
-                    tL = Math.min(tL, data1H[i - j].low);
+                    tH = Math.max(tH, dataBase[i - j].high);
+                    tL = Math.min(tL, dataBase[i - j].low);
                 }
                 const tenkan = (tH + tL) / 2;
 
                 let kH = -Infinity, kL = Infinity;
                 for (let j = 0; j < Math.min(i + 1, baseLen); j++) {
-                    kH = Math.max(kH, data1H[i - j].high);
-                    kL = Math.min(kL, data1H[i - j].low);
+                    kH = Math.max(kH, dataBase[i - j].high);
+                    kL = Math.min(kL, dataBase[i - j].low);
                 }
                 const kijun = (kH + kL) / 2;
-                kijun1H[i] = kijun;
+                kijunBase[i] = kijun;
 
                 let sBH = -Infinity, sBL = Infinity;
                 for (let j = 0; j < Math.min(i + 1, spanBLen); j++) {
-                    sBH = Math.max(sBH, data1H[i - j].high);
-                    sBL = Math.min(sBL, data1H[i - j].low);
+                    sBH = Math.max(sBH, dataBase[i - j].high);
+                    sBL = Math.min(sBL, dataBase[i - j].low);
                 }
 
-                sa1HRaw[i] = (tenkan + kijun) / 2;
-                sb1HRaw[i] = (sBH + sBL) / 2;
+                saBaseRaw[i] = (tenkan + kijun) / 2;
+                sbBaseRaw[i] = (sBH + sBL) / 2;
             }
 
-            for (let i = 0; i < N1H; i++) {
-                sa1H[i] = (i >= disp) ? sa1HRaw[i - disp] : sa1HRaw[i];
-                sb1H[i] = (i >= disp) ? sb1HRaw[i - disp] : sb1HRaw[i];
+            for (let i = 0; i < N_base; i++) {
+                saBase[i] = (i >= disp) ? saBaseRaw[i - disp] : saBaseRaw[i];
+                sbBase[i] = (i >= disp) ? sbBaseRaw[i - disp] : sbBaseRaw[i];
             }
 
-            // 5. 1D REJİM VE 4H CANLI EMA EŞLEŞTİRMESİ
+            // 5. REJİM VE CANLI EMA EŞLEŞTİRMESİ
             let dIdx = 0;
-            let fourHIdx = 0;
+            let emaIdx = 0;
 
-            for (let i = 0; i < N1H; i++) {
-                const t1H = data1H[i].time;
-                const c1H = data1H[i].close;
+            for (let i = 0; i < N_base; i++) {
+                const tBase = dataBase[i].time;
+                const cBase = dataBase[i].close;
 
-                while (dIdx + 1 < confirmedRegime1DByDay.length && confirmedRegime1DByDay[dIdx + 1].closeTime <= t1H) {
+                while (dIdx + 1 < confirmedRegimeList.length && confirmedRegimeList[dIdx + 1].closeTime <= tBase) {
                     dIdx++;
                 }
-                regime1DArr[i] = confirmedRegime1DByDay[dIdx] ? confirmedRegime1DByDay[dIdx].lastRegime : 0;
+                regimeArr[i] = confirmedRegimeList[dIdx] ? confirmedRegimeList[dIdx].lastRegime : 0;
 
-                while (fourHIdx + 1 < N4H && (data4H[fourHIdx + 1].time + 14400000 - 1) <= t1H) {
-                    fourHIdx++;
+                while (emaIdx + 1 < N_ema && (dataEma[emaIdx + 1].time + tfCfg.emaMs - 1) <= tBase) {
+                    emaIdx++;
                 }
-                const prevClosedEma4H = ema4HClosedArr[fourHIdx] || c1H;
-                ema4HLiveArr[i] = emaCoeff * c1H + (1.0 - emaCoeff) * prevClosedEma4H;
+                const prevClosedEma = emaClosedArr[emaIdx] || cBase;
+                emaLiveArr[i] = emaCoeff * cBase + (1.0 - emaCoeff) * prevClosedEma;
             }
 
             // 6. SİNYAL VE SEÇİLEN STRATEJİYE GÖRE AKILLI SL / TP SİMÜLASYONU
             let prevBuy2Cond = false;
             let prevSell2Cond = false;
 
-            for (let i = 53; i < N1H; i++) {
-                const c = data1H[i].close;
-                const prevC = data1H[i - 1].close;
+            for (let i = 53; i < N_base; i++) {
+                const c = dataBase[i].close;
+                const prevC = dataBase[i - 1].close;
 
-                const curSa = sa1H[i];
-                const curSb = sb1H[i];
-                const prevSa = sa1H[i - 1];
-                const prevSb = sb1H[i - 1];
+                const curSa = saBase[i];
+                const curSb = sbBase[i];
+                const prevSa = saBase[i - 1];
+                const prevSb = sbBase[i - 1];
 
-                const top1H = Math.max(curSa, curSb);
-                const bot1H = Math.min(curSa, curSb);
-                const prevTop1H = Math.max(prevSa, prevSb);
-                const prevBot1H = Math.min(prevSa, prevSb);
+                const topBase = Math.max(curSa, curSb);
+                const botBase = Math.min(curSa, curSb);
+                const prevTopBase = Math.max(prevSa, prevSb);
+                const prevBotBase = Math.min(prevSa, prevSb);
 
-                const cur1DReg = regime1DArr[i];
-                const curEma4HLive = ema4HLiveArr[i];
+                const curRegime = regimeArr[i];
+                const curEmaLive = emaLiveArr[i];
                 const atr = atrArr[i] || 1;
 
-                const above4HEMA = c > curEma4HLive;
-                const below4HEMA = c < curEma4HLive;
+                const aboveEMA = c > curEmaLive;
+                const belowEMA = c < curEmaLive;
 
-                const bullish = (cur1DReg === 1) && above4HEMA;
-                const bearish = (cur1DReg === -1) && below4HEMA;
+                const bullish = (curRegime === 1) && aboveEMA;
+                const bearish = (curRegime === -1) && belowEMA;
 
-                const enterUp1H = (c > top1H) && (prevC <= prevTop1H);
-                const enterDown1H = (c < bot1H) && (prevC >= prevBot1H);
+                const enterUpBase = (c > topBase) && (prevC <= prevTopBase);
+                const enterDownBase = (c < botBase) && (prevC >= prevBotBase);
 
-                const above1HCloud = c > top1H;
-                const below1HCloud = c < bot1H;
+                const aboveCloud = c > topBase;
+                const belowCloud = c < botBase;
 
-                const buy2Cond = bullish && above1HCloud;
-                const sell2Cond = bearish && below1HCloud;
+                const buy2Cond = bullish && aboveCloud;
+                const sell2Cond = bearish && belowCloud;
 
-                const buySignal1 = bullish && enterUp1H;
-                const sellSignal1 = bearish && enterDown1H;
+                const buySignal1 = bullish && enterUpBase;
+                const sellSignal1 = bearish && enterDownBase;
                 const buySignal2 = buy2Cond && !prevBuy2Cond;
                 const sellSignal2 = sell2Cond && !prevSell2Cond;
 
@@ -1349,13 +1481,13 @@
                 let isBuy = true;
 
                 if (buySignal1) {
-                    isSignal = true; sigType = 'BUY'; sigLabel = 'BUY (1H Kırılım)'; isBuy = true;
+                    isSignal = true; sigType = 'BUY'; sigLabel = `BUY (${tfCfg.baseTf} Kırılım)`; isBuy = true;
                 } else if (sellSignal1) {
-                    isSignal = true; sigType = 'SELL'; sigLabel = 'SELL (1H Kırılım)'; isBuy = false;
+                    isSignal = true; sigType = 'SELL'; sigLabel = `SELL (${tfCfg.baseTf} Kırılım)`; isBuy = false;
                 } else if (buySignal2) {
-                    isSignal = true; sigType = 'BUY2'; sigLabel = 'BUY2 (Trend Aktivasyon)'; isBuy = true;
+                    isSignal = true; sigType = 'BUY2'; sigLabel = `BUY2 (${tfCfg.baseTf} Trend)`; isBuy = true;
                 } else if (sellSignal2) {
-                    isSignal = true; sigType = 'SELL2'; sigLabel = 'SELL2 (Trend Aktivasyon)'; isBuy = false;
+                    isSignal = true; sigType = 'SELL2'; sigLabel = `SELL2 (${tfCfg.baseTf} Trend)`; isBuy = false;
                 }
 
                 if (isSignal) {
@@ -1369,16 +1501,19 @@
                     // -------------------------------------------------------------
                     if (stratId === 4) {
                         if (sigType === 'BUY') {
+                            // BUY1: Kırılım esnasında retest payı (2.2x SL / 2.2x TP)
                             sl = c - (atr * 2.2);
                             tp = c + (atr * 2.2);
                             rrRatio = 1.0;
                             extraInfo = `BUY1 Kırılım: 2.2x SL / 2.2x TP (Geniş Tampon)`;
                         } else if (sigType === 'BUY2') {
+                            // BUY2: Trend onaylandı, dar SL + asimetrik devasa TP (1.4x SL / 4.0x TP)
                             sl = c - (atr * 1.4);
                             tp = c + (atr * 4.0);
                             rrRatio = 4.0 / 1.4;
                             extraInfo = `BUY2 Trend: 1.4x SL / 4.0x TP (R:R 1:2.85 🚀)`;
                         } else {
+                            // SELL1 & SELL2: Kısa yönlü hızlı hedefler (1.2x SL / 2.5x TP)
                             sl = c + (atr * 1.2);
                             tp = c - (atr * 2.5);
                             rrRatio = 2.5 / 1.2;
@@ -1466,17 +1601,17 @@
 
                     // BACKTEST MOTORU SİMÜLASYONU
                     let btStatus = 'OPEN';
-                    let exitIndex = N1H - 1;
+                    let exitIndex = N_base - 1;
                     let exitPrice = c;
                     let pnlPct = 0;
                     let currentDynamicStop = sl;
                     let highestProfitAtr = 0;
 
-                    for (let step = i + 1; step < N1H; step++) {
-                        const barHigh = data1H[step].high;
-                        const barLow = data1H[step].low;
+                    for (let step = i + 1; step < N_base; step++) {
+                        const barHigh = dataBase[step].high;
+                        const barLow = dataBase[step].low;
                         const stepAtr = atrArr[step] || atr;
-                        const stepKijun = kijun1H[step] || c;
+                        const stepKijun = kijunBase[step] || c;
 
                         // STRATEJİ 3 İÇİN TRAILING STOP GÜNCELLEMESİ
                         if (stratId === 3) {
@@ -1506,7 +1641,7 @@
                             } else if (hitSl && !hitTp) {
                                 btStatus = 'SL'; exitIndex = step; exitPrice = currentDynamicStop; break;
                             } else if (hitTp && hitSl) {
-                                if (data1H[step].close >= data1H[step].open) {
+                                if (dataBase[step].close >= dataBase[step].open) {
                                     btStatus = 'TP'; exitPrice = tp;
                                 } else {
                                     btStatus = 'SL'; exitPrice = currentDynamicStop;
@@ -1523,7 +1658,7 @@
                             } else if (hitSl && !hitTp) {
                                 btStatus = 'SL'; exitIndex = step; exitPrice = currentDynamicStop; break;
                             } else if (hitTp && hitSl) {
-                                if (data1H[step].close <= data1H[step].open) {
+                                if (dataBase[step].close <= dataBase[step].open) {
                                     btStatus = 'TP'; exitPrice = tp;
                                 } else {
                                     btStatus = 'SL'; exitPrice = currentDynamicStop;
@@ -1558,12 +1693,12 @@
                         exitPrice: exitPrice,
                         pnlPct: pnlPct,
                         extraInfo: extraInfo,
-                        time: data1H[i].time
+                        time: dataBase[i].time
                     });
                 }
             }
 
-            return { sa: sa1H, sb: sb1H, ema4H: ema4HLiveArr, regime1D: regime1DArr, atrArr, signals };
+            return { sa: saBase, sb: sbBase, ema4H: emaLiveArr, regime1D: regimeArr, atrArr, signals, tfCfg };
         }
 
         // ============================================================
@@ -1621,21 +1756,22 @@
         }
 
         function updateGpuTextures() {
-            totalCandles = candleData1H.length;
+            totalCandles = candleDataBase.length;
             if (totalCandles === 0) return;
 
-            const ind = calculateSqiciBekiR_MultiStrategy(candleData1H, candleData4H, candleData1D, activeStrategy);
+            const ind = calculateSqiciBekiR_MultiStrategy(candleDataBase, candleDataEma, candleDataRegime, activeStrategy, currentTimeframe);
             calculatedSignals = ind.signals;
+            const tfCfg = ind.tfCfg || TIMEFRAME_CONFIGS['1h'];
 
             const candleFloatArr = new Float32Array(totalCandles * 4);
             const indFloatArr = new Float32Array(totalCandles * 4);
 
             for (let i = 0; i < totalCandles; i++) {
                 const idx = i * 4;
-                candleFloatArr[idx + 0] = candleData1H[i].open;
-                candleFloatArr[idx + 1] = candleData1H[i].high;
-                candleFloatArr[idx + 2] = candleData1H[i].low;
-                candleFloatArr[idx + 3] = candleData1H[i].close;
+                candleFloatArr[idx + 0] = candleDataBase[i].open;
+                candleFloatArr[idx + 1] = candleDataBase[i].high;
+                candleFloatArr[idx + 2] = candleDataBase[i].low;
+                candleFloatArr[idx + 3] = candleDataBase[i].close;
 
                 indFloatArr[idx + 0] = ind.regime1D[i];
                 indFloatArr[idx + 1] = ind.sa[i];
@@ -1664,7 +1800,7 @@
             document.getElementById('total-candles-stat').innerText = totalCandles;
 
             const lastIdx = totalCandles - 1;
-            const lastClose = candleData1H[lastIdx].close;
+            const lastClose = candleDataBase[lastIdx].close;
             const lastReg = ind.regime1D[lastIdx];
             const lastEma = ind.ema4H[lastIdx];
 
@@ -1673,21 +1809,21 @@
             const hudTrend = document.getElementById('hud-trend');
 
             if (lastReg > 0.5) {
-                hudRegime.innerText = 'BOĞA (YEŞİL)';
+                hudRegime.innerText = `${tfCfg.regimeLabel}: BOĞA (YEŞİL)`;
                 hudRegime.className = 'hud-tag tag-bull';
             } else if (lastReg < -0.5) {
-                hudRegime.innerText = 'AYI (KIRMIZI)';
+                hudRegime.innerText = `${tfCfg.regimeLabel}: AYI (KIRMIZI)`;
                 hudRegime.className = 'hud-tag tag-bear';
             } else {
-                hudRegime.innerText = 'NÖTR';
+                hudRegime.innerText = `${tfCfg.regimeLabel}: NÖTR`;
                 hudRegime.className = 'hud-tag tag-bull';
             }
 
             if (lastClose >= lastEma) {
-                hudEma.innerText = 'ÜSTÜNDE (BOĞA)';
+                hudEma.innerText = `${tfCfg.emaLabel}: ÜSTÜNDE (BOĞA)`;
                 hudEma.className = 'hud-tag tag-bull';
             } else {
-                hudEma.innerText = 'ALTINDA (AYI)';
+                hudEma.innerText = `${tfCfg.emaLabel}: ALTINDA (AYI)`;
                 hudEma.className = 'hud-tag tag-bear';
             }
 
@@ -1784,7 +1920,7 @@
 
                 const candleCenter = sig.index + 0.5;
                 const screenX = Math.round(((candleCenter - viewStart) / visibleCount) * cssW);
-                const candle = candleData1H[sig.index];
+                const candle = candleDataBase[sig.index];
                 if (!candle) continue;
 
                 const entryY = getY(sig.price);
@@ -1812,10 +1948,12 @@
 
                 const badgeY = isBuy ? lowY + 24 : highY - 24;
 
+                // 1. KAZANAN SİNYALDE HAVAİ FİŞEK PATLAMASI
                 if (isBacktestActive && isTpWin) {
                     drawFireworkExplosion(ctx2d, screenX, badgeY, timeNow, sig.index * 0.17);
                 }
 
+                // 2. SİNYAL ROZETİ
                 ctx2d.save();
                 ctx2d.fillStyle = badgeBg;
                 ctx2d.strokeStyle = isTpWin ? '#fef08a' : (isSlLoss ? '#fca5a5' : '#ffffff');
@@ -1848,6 +1986,7 @@
                 ctx2d.fillText(text, screenX, badgeY);
                 ctx2d.restore();
 
+                // 3. STOP OLAN SİNYALDE ÇARPI (X) İŞARETİ
                 if (isBacktestActive && isSlLoss) {
                     ctx2d.save();
                     ctx2d.strokeStyle = '#ef4444';
@@ -1875,6 +2014,7 @@
                     ctx2d.restore();
                 }
 
+                // 4. TP ve SL Çizgileri
                 if (visibleCount < 400) {
                     ctx2d.save();
                     const projDistance = isBacktestActive ? Math.min(sig.exitIndex - sig.index, 25) : 8;
@@ -1890,6 +2030,7 @@
                     ctx2d.lineTo(projEndX, tpY);
                     ctx2d.stroke();
 
+                    // TP Noktası & Etiketi
                     ctx2d.setLineDash([]);
                     ctx2d.fillStyle = isTpWin ? '#10b981' : (isSlLoss ? '#64748b' : '#10b981');
                     ctx2d.shadowColor = ctx2d.fillStyle;
@@ -1914,6 +2055,7 @@
                     ctx2d.lineTo(projEndX, slY);
                     ctx2d.stroke();
 
+                    // SL Noktası & Etiketi
                     ctx2d.setLineDash([]);
                     ctx2d.fillStyle = isSlLoss ? '#ef4444' : (isTpWin ? '#64748b' : '#ef4444');
                     ctx2d.shadowColor = ctx2d.fillStyle;
@@ -1934,6 +2076,9 @@
             }
         }
 
+        // ============================================================
+        // 📥 BINANCE MTF ÇOKLU ZAMAN DİLİMİ VERİ ÇEKİCİ
+        // ============================================================
         async function fetchKlinesForInterval(symbol, interval, targetCount) {
             let allKlines = [];
             let endTime = null;
@@ -1975,22 +2120,27 @@
             }));
         }
 
+        let candleDataBase = [];
+        let candleDataEma = [];
+        let candleDataRegime = [];
+
         async function fetchAllMultiTimeframeKlines(symbol) {
+            const tfCfg = TIMEFRAME_CONFIGS[currentTimeframe] || TIMEFRAME_CONFIGS['1h'];
             loadingOverlay.style.display = 'block';
-            loadingOverlay.innerText = `⏳ Binance MTF (1D + 4H + 1H) Verileri Çekiliyor...`;
+            loadingOverlay.innerText = `⏳ Binance MTF (${tfCfg.label}) Verileri Çekiliyor...`;
 
             try {
-                const [data1H, data4H, data1D] = await Promise.all([
-                    fetchKlinesForInterval(symbol, '1h', requestedDepth),
-                    fetchKlinesForInterval(symbol, '4h', 1000),
-                    fetchKlinesForInterval(symbol, '1d', 500)
+                const [dataBase, dataEma, dataRegime] = await Promise.all([
+                    fetchKlinesForInterval(symbol, tfCfg.baseTf, requestedDepth),
+                    fetchKlinesForInterval(symbol, tfCfg.emaTf, 1000),
+                    fetchKlinesForInterval(symbol, tfCfg.regimeTf, 500)
                 ]);
 
-                candleData1H = data1H;
-                candleData4H = data4H;
-                candleData1D = data1D;
+                candleDataBase = dataBase;
+                candleDataEma = dataEma;
+                candleDataRegime = dataRegime;
 
-                totalCandles = candleData1H.length;
+                totalCandles = candleDataBase.length;
                 viewStart = Math.max(0, totalCandles - 150);
                 viewEnd = totalCandles;
 
@@ -1998,7 +2148,7 @@
                 connectWebSocket(symbol);
 
                 if (totalCandles > 0) {
-                    const last = candleData1H[totalCandles - 1];
+                    const last = candleDataBase[totalCandles - 1];
                     document.getElementById('price-val').innerText = last.close.toLocaleString('en-US', {minimumFractionDigits: 2});
                 }
             } catch (err) {
@@ -2011,7 +2161,8 @@
         function connectWebSocket(symbol) {
             if (ws) ws.close();
 
-            const streamName = `${symbol.toLowerCase()}@kline_1h`;
+            const tfCfg = TIMEFRAME_CONFIGS[currentTimeframe] || TIMEFRAME_CONFIGS['1h'];
+            const streamName = `${symbol.toLowerCase()}@kline_${tfCfg.baseTf}`;
             ws = new WebSocket(`wss://stream.binance.com:9443/ws/${streamName}`);
 
             ws.onopen = () => {
@@ -2033,11 +2184,11 @@
                     vol: parseFloat(k.v)
                 };
 
-                const lastIdx = candleData1H.length - 1;
-                if (lastIdx >= 0 && candleData1H[lastIdx].time === candle.time) {
-                    candleData1H[lastIdx] = candle;
+                const lastIdx = candleDataBase.length - 1;
+                if (lastIdx >= 0 && candleDataBase[lastIdx].time === candle.time) {
+                    candleDataBase[lastIdx] = candle;
                 } else {
-                    candleData1H.push(candle);
+                    candleDataBase.push(candle);
                     if (viewEnd >= totalCandles - 2) {
                         viewStart++;
                         viewEnd++;
@@ -2069,8 +2220,12 @@
             updateVisibleBacktestSummary();
         };
 
+        // ==========================================
+        // DİKEY FİYAT ÖLÇEĞİ VE ETKİLEŞİM
+        // ==========================================
         let minPrice = 0;
         let maxPrice = 0;
+
         let isPriceDragging = false;
         let priceDragStartY = 0;
         let priceScaleFactor = 1.0;
@@ -2093,6 +2248,9 @@
             fitAllCandles();
         });
 
+        // ==========================================
+        // YATAY KAYDIRMA (PAN) VE ZOOM
+        // ==========================================
         let isChartDragging = false;
         let chartDragStartX = 0;
         let origViewStart = 0;
@@ -2204,8 +2362,8 @@
             const visibleCount = Math.max(1, viewEnd - viewStart);
             const cIdx = Math.floor(viewStart + normX * visibleCount);
 
-            if (cIdx >= 0 && cIdx < totalCandles && candleData1H[cIdx]) {
-                const c = candleData1H[cIdx];
+            if (cIdx >= 0 && cIdx < totalCandles && candleDataBase[cIdx]) {
+                const c = candleDataBase[cIdx];
                 ohlcO.innerText = c.open.toFixed(2);
                 ohlcH.innerText = c.high.toFixed(2);
                 ohlcL.innerText = c.low.toFixed(2);
@@ -2313,7 +2471,7 @@
             for (let i = 0; i <= count; i++) {
                 const pct = i / count;
                 const candleIdx = Math.min(totalCandles - 1, Math.max(0, Math.floor(viewStart + pct * visibleCount)));
-                const c = candleData1H[candleIdx];
+                const c = candleDataBase[candleIdx];
                 if (c && c.time) {
                     const date = new Date(c.time);
                     const labelStr = formatTimeLabelWithYear(date);
@@ -2336,8 +2494,8 @@
             }
             priceLabelsContainer.innerHTML = html;
 
-            if (totalCandles > 0 && candleData1H[totalCandles - 1]) {
-                const lastClose = candleData1H[totalCandles - 1].close;
+            if (totalCandles > 0 && candleDataBase[totalCandles - 1]) {
+                const lastClose = candleDataBase[totalCandles - 1].close;
                 const lastCloseNorm = (lastClose - minPrice) / (maxPrice - minPrice);
                 const lastCloseTop = (1 - lastCloseNorm) * 100;
                 currentPriceBadge.style.top = `${lastCloseTop}%`;
@@ -2345,6 +2503,9 @@
             }
         }
 
+        // ==========================================
+        // RENDER DÖNGÜSÜ (HiDPI RETINA / 4K)
+        // ==========================================
         let lastT = performance.now();
         let frameCount = 0;
 
@@ -2384,9 +2545,9 @@
                 const endI = Math.min(totalCandles, Math.ceil(viewEnd));
 
                 for (let i = startI; i < endI; i++) {
-                    if (candleData1H[i]) {
-                        if (candleData1H[i].low < minP) minP = candleData1H[i].low;
-                        if (candleData1H[i].high > maxP) maxP = candleData1H[i].high;
+                    if (candleDataBase[i]) {
+                        if (candleDataBase[i].low < minP) minP = candleDataBase[i].low;
+                        if (candleDataBase[i].high > maxP) maxP = candleDataBase[i].high;
                     }
                 }
 
