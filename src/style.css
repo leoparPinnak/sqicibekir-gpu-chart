@@ -1,0 +1,401 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body, html {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: #060913;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    color: #cbd5e1;
+    user-select: none;
+}
+
+#app-root {
+    display: flex;
+    flex-direction: column;
+    width: 100vw;
+    height: 100vh;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* 1. ÜST TOOLBAR */
+.top-toolbar {
+    height: 48px;
+    background: #090e1e;
+    border-bottom: 1px solid #1e293b;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+    z-index: 30;
+    flex-shrink: 0;
+}
+.symbol-section {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.indicator-title-badge {
+    background: linear-gradient(135deg, rgba(56, 189, 248, 0.2), rgba(129, 140, 248, 0.2));
+    border: 1px solid #38bdf8;
+    color: #38bdf8;
+    font-size: 11.5px;
+    font-weight: 800;
+    padding: 3px 8px;
+    border-radius: 6px;
+    letter-spacing: 0.5px;
+}
+.symbol-select {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #f8fafc;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 4px 8px;
+    border-radius: 6px;
+    cursor: pointer;
+    outline: none;
+}
+.symbol-select option {
+    background: #0f172a;
+    color: #fff;
+}
+
+.tf-locked-badge {
+    background: rgba(16, 185, 129, 0.15);
+    border: 1px solid #10b981;
+    color: #10b981;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 5px;
+}
+
+.live-price-box {
+    font-family: 'Consolas', monospace;
+    font-size: 14.5px;
+    font-weight: 700;
+    color: #10b981;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-left: 6px;
+}
+.ws-status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #10b981;
+    box-shadow: 0 0 8px #10b981;
+    display: inline-block;
+}
+
+.indicator-nav {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.ind-btn {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #94a3b8;
+    padding: 5px 9px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+.ind-btn:hover { background: rgba(255, 255, 255, 0.1); color: #fff; }
+.ind-btn.active {
+    background: rgba(56, 189, 248, 0.2);
+    border-color: #38bdf8;
+    color: #38bdf8;
+    font-weight: 600;
+}
+
+/* 2. ANA GRAFİK GÖVDESİ */
+.chart-body {
+    position: relative;
+    flex: 1;
+    display: flex;
+    width: 100%;
+    height: calc(100vh - 48px - 26px);
+    overflow: hidden;
+    background: #060913;
+}
+
+.chart-viewport-column {
+    position: relative;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+}
+
+.canvas-container {
+    position: relative;
+    flex: 1;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    cursor: crosshair;
+}
+.canvas-container.grabbing, canvas.grabbing {
+    cursor: grabbing !important;
+}
+canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+    cursor: crosshair;
+}
+
+/* İndikatör Durum Kartı (HUD / Rejim Bilgisi) */
+.indicator-hud-card {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    z-index: 20;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    pointer-events: none;
+}
+.hud-row-main {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    background: rgba(9, 14, 30, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    padding: 5px 10px;
+    border-radius: 8px;
+    backdrop-filter: blur(10px);
+    font-family: 'Consolas', monospace;
+    font-size: 11.5px;
+    pointer-events: none;
+}
+.hud-tag {
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 10px;
+    text-transform: uppercase;
+}
+.tag-bull { background: rgba(16, 185, 129, 0.2); color: #10b981; border: 1px solid #10b981; }
+.tag-bear { background: rgba(239, 68, 68, 0.2); color: #ef4444; border: 1px solid #ef4444; }
+.tag-neutral { background: rgba(148, 163, 184, 0.2); color: #94a3b8; border: 1px solid #94a3b8; }
+
+.ohlc-tooltip {
+    display: flex;
+    gap: 10px;
+    font-family: 'Consolas', monospace;
+    font-size: 11.5px;
+    color: #94a3b8;
+    background: rgba(9, 14, 30, 0.75);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 4px 8px;
+    border-radius: 6px;
+    backdrop-filter: blur(8px);
+    pointer-events: none;
+}
+.ohlc-val { font-weight: 600; }
+.val-up { color: #10b981; }
+.val-down { color: #f43f5e; }
+
+.last-signal-banner {
+    background: rgba(15, 23, 42, 0.85);
+    border: 1px solid #fbbf24;
+    color: #fbbf24;
+    font-family: 'Consolas', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    backdrop-filter: blur(8px);
+    pointer-events: none;
+}
+
+/* ALT TARİH / ZAMAN BARI */
+.time-axis-bar {
+    height: 26px;
+    width: 100%;
+    background: #090e1e;
+    border-top: 1px solid #1e293b;
+    position: relative;
+    flex-shrink: 0;
+    overflow: hidden;
+    cursor: ew-resize;
+}
+.time-axis-bar.grabbing {
+    cursor: grabbing !important;
+}
+.time-scale-label {
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'Consolas', monospace;
+    font-size: 10.5px;
+    color: #718096;
+    white-space: nowrap;
+    pointer-events: none;
+    letter-spacing: 0.2px;
+}
+.time-scale-label b { color: #a0aec0; font-weight: 600; }
+.crosshair-time-tag {
+    position: absolute;
+    top: 0;
+    transform: translateX(-50%);
+    background: #38bdf8;
+    color: #0f172a;
+    font-family: 'Consolas', monospace;
+    font-size: 10.5px;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 0 0 3px 3px;
+    pointer-events: none;
+    display: none;
+    z-index: 20;
+    box-shadow: 0 0 10px rgba(56, 189, 248, 0.4);
+    white-space: nowrap;
+}
+
+/* SAĞ FİYAT SKALASI */
+.price-axis-sidebar {
+    width: 82px;
+    height: 100%;
+    background: #090e1e;
+    border-left: 1px solid #1e293b;
+    position: relative;
+    flex-shrink: 0;
+    overflow: hidden;
+    cursor: ns-resize;
+}
+.price-axis-sidebar:hover { background: #0d1428; }
+.price-scale-label {
+    font-family: 'Consolas', monospace;
+    font-size: 11px;
+    color: #64748b;
+    padding-left: 8px;
+    position: absolute;
+    transform: translateY(-50%);
+    white-space: nowrap;
+    pointer-events: none;
+}
+
+.crosshair-price-tag {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    background: #38bdf8;
+    color: #0f172a;
+    font-family: 'Consolas', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 6px;
+    transform: translateY(-50%);
+    pointer-events: none;
+    display: none;
+    z-index: 20;
+    box-shadow: 0 0 10px rgba(56, 189, 248, 0.4);
+}
+
+.current-price-badge {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    background: #10b981;
+    color: #ffffff;
+    font-family: 'Consolas', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 6px;
+    transform: translateY(-50%);
+    pointer-events: none;
+    z-index: 15;
+    box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+    transition: top 0.15s ease-out;
+}
+
+.axis-corner-reset {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 82px;
+    height: 26px;
+    background: #0b1122;
+    border-left: 1px solid #1e293b;
+    border-top: 1px solid #1e293b;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: 700;
+    color: #64748b;
+    cursor: pointer;
+    z-index: 25;
+}
+.axis-corner-reset:hover { color: #38bdf8; background: #1e293b; }
+
+.loading-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(15, 23, 42, 0.94);
+    border: 1px solid #38bdf8;
+    padding: 14px 24px;
+    border-radius: 10px;
+    font-weight: 600;
+    color: #38bdf8;
+    z-index: 40;
+    display: none;
+    box-shadow: 0 0 30px rgba(0,0,0,0.8);
+    pointer-events: none;
+}
+
+/* 3. ALT DURUM ÇUBUĞU */
+.bottom-statusbar {
+    height: 26px;
+    background: #090e1e;
+    border-top: 1px solid #1e293b;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 14px;
+    font-family: 'Consolas', monospace;
+    font-size: 11px;
+    color: #64748b;
+    z-index: 30;
+    flex-shrink: 0;
+}
+.status-left {
+    display: flex;
+    gap: 14px;
+}
+.status-highlight {
+    color: #38bdf8;
+    font-weight: 600;
+}
+.fit-all-btn {
+    background: rgba(56, 189, 248, 0.15);
+    border: 1px solid rgba(56, 189, 248, 0.4);
+    color: #38bdf8;
+    font-size: 10.5px;
+    padding: 1px 6px;
+    border-radius: 3px;
+    cursor: pointer;
+    margin-left: 8px;
+    font-family: sans-serif;
+}
+.fit-all-btn:hover { background: #38bdf8; color: #0f172a; }

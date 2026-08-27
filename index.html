@@ -1,0 +1,2268 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SqiciBekiRBindikatöR // %100 Birebir TradingView MTF Motoru</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
+        }
+        body, html {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #060913;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            color: #cbd5e1;
+            user-select: none;
+        }
+        
+        #app-root {
+            display: flex;
+            flex-direction: column;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        /* 1. ÜST TOOLBAR */
+        .top-toolbar {
+            height: 46px;
+            background: #0b1120;
+            border-bottom: 1px solid #1e293b;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+            z-index: 30;
+            flex-shrink: 0;
+        }
+        .symbol-section {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .indicator-badge {
+            background: linear-gradient(135deg, rgba(56, 189, 248, 0.2), rgba(129, 140, 248, 0.2));
+            border: 1px solid #38bdf8;
+            color: #38bdf8;
+            font-size: 11.5px;
+            font-weight: 800;
+            padding: 3px 8px;
+            border-radius: 6px;
+            letter-spacing: 0.3px;
+        }
+        .symbol-select {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #f8fafc;
+            font-size: 13px;
+            font-weight: 700;
+            padding: 4px 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            outline: none;
+        }
+        .symbol-select option {
+            background: #0f172a;
+            color: #fff;
+        }
+        
+        .timeframe-badge-active {
+            background: #38bdf8;
+            color: #0f172a;
+            font-size: 11px;
+            font-weight: 800;
+            padding: 4px 10px;
+            border-radius: 5px;
+            letter-spacing: 0.5px;
+        }
+
+        .candle-depth-select {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: #38bdf8;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 3px 6px;
+            border-radius: 5px;
+            cursor: pointer;
+            outline: none;
+        }
+        .candle-depth-select option {
+            background: #0f172a;
+            color: #fff;
+        }
+
+        .live-price-box {
+            font-family: 'SF Pro Text', 'Consolas', monospace;
+            font-size: 14.5px;
+            font-weight: 700;
+            color: #10b981;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-left: 6px;
+        }
+        .ws-status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #10b981;
+            box-shadow: 0 0 8px #10b981;
+            display: inline-block;
+        }
+
+        .indicator-nav {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .ind-btn {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #94a3b8;
+            padding: 5px 9px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .ind-btn:hover { background: rgba(255, 255, 255, 0.1); color: #fff; }
+        .ind-btn.active {
+            background: rgba(56, 189, 248, 0.2);
+            border-color: #38bdf8;
+            color: #38bdf8;
+            font-weight: 600;
+        }
+
+        /* BACKTEST BUTONU */
+        .backtest-btn {
+            background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+            border: 1px solid #c4b5fd;
+            color: #ffffff;
+            font-weight: 800;
+            padding: 5px 12px;
+            border-radius: 6px;
+            font-size: 11.5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 0 12px rgba(139, 92, 246, 0.4);
+            transition: all 0.2s;
+        }
+        .backtest-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 0 18px rgba(139, 92, 246, 0.7);
+        }
+        .backtest-btn.active {
+            background: linear-gradient(135deg, #10b981, #059669);
+            border-color: #6ee7b7;
+            box-shadow: 0 0 16px rgba(16, 185, 129, 0.6);
+        }
+
+        .ottonline-btn {
+            background: linear-gradient(135deg, #e11d48, #be123c);
+            border: 1px solid #fda4af;
+            color: #ffffff;
+            font-weight: 700;
+            padding: 5px 12px;
+            border-radius: 6px;
+            font-size: 11.5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 0 12px rgba(225, 29, 72, 0.35);
+            transition: all 0.2s;
+        }
+        .ottonline-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 0 16px rgba(225, 29, 72, 0.6);
+        }
+
+        /* 2. ANA GRAFİK VE BÖLÜNMÜŞ EKRAN GÖVDESİ */
+        .main-workspace {
+            position: relative;
+            flex: 1;
+            display: flex;
+            width: 100%;
+            height: calc(100vh - 46px - 26px);
+            overflow: hidden;
+            background: #070b18;
+        }
+
+        .chart-body {
+            position: relative;
+            flex: 1;
+            display: flex;
+            height: 100%;
+            overflow: hidden;
+            transition: flex 0.25s ease-in-out;
+        }
+
+        .chart-viewport-column {
+            position: relative;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .canvas-container {
+            position: relative;
+            flex: 1;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            cursor: crosshair;
+        }
+        .canvas-container.grabbing {
+            cursor: grabbing !important;
+        }
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        #overlay-canvas {
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        /* OTTONLINE BÖLÜNMÜŞ YAN PANEL */
+        .ottonline-panel {
+            width: 50%;
+            height: 100%;
+            background: #0b1122;
+            border-left: 2px solid #e11d48;
+            display: none;
+            flex-direction: column;
+            position: relative;
+            z-index: 25;
+            transition: all 0.25s ease-in-out;
+        }
+        .ottonline-panel.open {
+            display: flex;
+        }
+        .ottonline-header {
+            height: 38px;
+            background: #111827;
+            border-bottom: 1px solid #1e293b;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 12px;
+            font-size: 12px;
+            font-weight: 700;
+            color: #fda4af;
+        }
+        .ottonline-header-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .ottonline-action-btn {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #f8fafc;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .ottonline-action-btn:hover { background: rgba(255, 255, 255, 0.2); }
+        .ottonline-iframe {
+            width: 100%;
+            flex: 1;
+            border: none;
+            background: #ffffff;
+        }
+
+        /* HUD KARTLARI */
+        .hud-overlay-card {
+            position: absolute;
+            top: 10px;
+            left: 12px;
+            z-index: 20;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            pointer-events: none;
+        }
+        .hud-badge-row {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            background: rgba(11, 17, 32, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            padding: 4px 8px;
+            border-radius: 6px;
+            backdrop-filter: blur(10px);
+            font-family: 'SF Pro Text', 'Segoe UI', sans-serif;
+            font-size: 11px;
+            font-weight: 500;
+        }
+        .hud-tag {
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 10px;
+            letter-spacing: 0.2px;
+        }
+        .tag-bull { background: rgba(16, 185, 129, 0.25); color: #10b981; border: 1px solid #10b981; }
+        .tag-bear { background: rgba(239, 68, 68, 0.25); color: #ef4444; border: 1px solid #ef4444; }
+
+        /* GÖRÜNEN EKRAN KÜMÜLATİF ALL-IN BACKTEST ROZETİ */
+        .visible-backtest-card {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.96), rgba(30, 27, 75, 0.96));
+            border: 1.5px solid #38bdf8;
+            padding: 8px 12px;
+            border-radius: 8px;
+            backdrop-filter: blur(14px);
+            font-family: 'SF Pro Text', 'Segoe UI', sans-serif;
+            font-size: 11.5px;
+            box-shadow: 0 6px 25px rgba(0,0,0,0.8);
+            min-width: 380px;
+        }
+        .vbt-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 4px;
+        }
+        .vbt-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+        }
+        .bt-stat-badge {
+            font-weight: 800;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+        .bt-win { color: #10b981; background: rgba(16, 185, 129, 0.2); border: 1px solid #10b981; }
+        .bt-loss { color: #ef4444; background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; }
+        .pnl-badge-up { color: #10b981; font-weight: 800; font-size: 13px; text-shadow: 0 0 8px rgba(16, 185, 129, 0.6); }
+        .pnl-badge-down { color: #ef4444; font-weight: 800; font-size: 13px; text-shadow: 0 0 8px rgba(239, 68, 68, 0.6); }
+
+        .ohlc-tooltip {
+            display: flex;
+            gap: 10px;
+            font-family: 'SF Pro Text', 'Consolas', monospace;
+            font-size: 11.5px;
+            color: #94a3b8;
+            background: rgba(11, 17, 32, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            padding: 4px 8px;
+            border-radius: 6px;
+            backdrop-filter: blur(10px);
+        }
+        .ohlc-val { font-weight: 700; }
+        .val-up { color: #10b981; }
+        .val-down { color: #f43f5e; }
+
+        /* Sinyal İnceleyici Kartı */
+        .signal-inspector-card {
+            background: rgba(15, 23, 42, 0.96);
+            border: 1.5px solid #38bdf8;
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-family: 'SF Pro Text', 'Segoe UI', sans-serif;
+            font-size: 11.5px;
+            color: #f8fafc;
+            display: none;
+            flex-direction: column;
+            gap: 4px;
+            backdrop-filter: blur(14px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.8);
+            min-width: 240px;
+        }
+
+        /* ALT TARİH / ZAMAN BARI */
+        .time-axis-bar {
+            height: 26px;
+            width: 100%;
+            background: #090e1e;
+            border-top: 1px solid #1e293b;
+            position: relative;
+            flex-shrink: 0;
+            overflow: hidden;
+            cursor: ew-resize;
+            z-index: 15;
+        }
+        .time-axis-bar.grabbing {
+            cursor: grabbing !important;
+        }
+        .time-scale-label {
+            position: absolute;
+            top: 5px;
+            transform: translateX(-50%);
+            font-family: 'SF Pro Text', 'Segoe UI', sans-serif;
+            font-size: 11px;
+            color: #8da2c0;
+            white-space: nowrap;
+            pointer-events: none;
+            letter-spacing: 0.2px;
+        }
+        .time-scale-label b { color: #cbd5e1; font-weight: 700; }
+        .crosshair-time-tag {
+            position: absolute;
+            top: 0;
+            transform: translateX(-50%);
+            background: #38bdf8;
+            color: #0f172a;
+            font-family: 'SF Pro Text', 'Segoe UI', sans-serif;
+            font-size: 11px;
+            font-weight: 800;
+            padding: 2px 7px;
+            border-radius: 0 0 3px 3px;
+            pointer-events: none;
+            display: none;
+            z-index: 20;
+            box-shadow: 0 0 10px rgba(56, 189, 248, 0.4);
+            white-space: nowrap;
+        }
+
+        /* SAĞ FİYAT SKALASI */
+        .price-axis-sidebar {
+            width: 82px;
+            height: 100%;
+            background: #090e1e;
+            border-left: 1px solid #1e293b;
+            position: relative;
+            flex-shrink: 0;
+            overflow: hidden;
+            cursor: ns-resize;
+            z-index: 15;
+        }
+        .price-axis-sidebar:hover { background: #0d1428; }
+        .price-scale-label {
+            font-family: 'SF Pro Text', 'Segoe UI', sans-serif;
+            font-size: 11px;
+            font-weight: 600;
+            color: #7e90aa;
+            padding-left: 8px;
+            position: absolute;
+            transform: translateY(-50%);
+            white-space: nowrap;
+            pointer-events: none;
+        }
+
+        .crosshair-price-tag {
+            position: absolute;
+            left: 0;
+            width: 100%;
+            background: #38bdf8;
+            color: #0f172a;
+            font-family: 'SF Pro Text', 'Segoe UI', sans-serif;
+            font-size: 11px;
+            font-weight: 800;
+            padding: 3px 6px;
+            transform: translateY(-50%);
+            pointer-events: none;
+            display: none;
+            z-index: 20;
+            box-shadow: 0 0 10px rgba(56, 189, 248, 0.4);
+        }
+
+        .current-price-badge {
+            position: absolute;
+            left: 0;
+            width: 100%;
+            background: #10b981;
+            color: #ffffff;
+            font-family: 'SF Pro Text', 'Segoe UI', sans-serif;
+            font-size: 11px;
+            font-weight: 800;
+            padding: 3px 6px;
+            transform: translateY(-50%);
+            pointer-events: none;
+            z-index: 15;
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+            transition: top 0.15s ease-out;
+        }
+
+        .axis-corner-reset {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 82px;
+            height: 26px;
+            background: #0b1122;
+            border-left: 1px solid #1e293b;
+            border-top: 1px solid #1e293b;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10.5px;
+            font-weight: 800;
+            color: #7e90aa;
+            cursor: pointer;
+            z-index: 25;
+        }
+        .axis-corner-reset:hover { color: #38bdf8; background: #1e293b; }
+
+        .loading-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(15, 23, 42, 0.94);
+            border: 1px solid #38bdf8;
+            padding: 14px 24px;
+            border-radius: 10px;
+            font-weight: 600;
+            color: #38bdf8;
+            z-index: 40;
+            display: none;
+            box-shadow: 0 0 30px rgba(0,0,0,0.8);
+            pointer-events: none;
+        }
+
+        /* 3. ALT DURUM ÇUBUĞU */
+        .bottom-statusbar {
+            height: 26px;
+            background: #090e1e;
+            border-top: 1px solid #1e293b;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 14px;
+            font-family: 'SF Pro Text', 'Segoe UI', sans-serif;
+            font-size: 11px;
+            color: #7e90aa;
+            z-index: 30;
+            flex-shrink: 0;
+        }
+        .status-left {
+            display: flex;
+            gap: 14px;
+        }
+        .status-highlight {
+            color: #38bdf8;
+            font-weight: 700;
+        }
+        .fit-all-btn {
+            background: rgba(56, 189, 248, 0.15);
+            border: 1px solid rgba(56, 189, 248, 0.4);
+            color: #38bdf8;
+            font-size: 10.5px;
+            font-weight: 700;
+            padding: 1px 6px;
+            border-radius: 3px;
+            cursor: pointer;
+            margin-left: 8px;
+        }
+        .fit-all-btn:hover { background: #38bdf8; color: #0f172a; }
+    </style>
+</head>
+<body>
+
+    <div id="app-root">
+        
+        <!-- ÜST MENÜ -->
+        <div class="top-toolbar">
+            <div class="symbol-section">
+                <span class="indicator-badge">⚡ SqiciBekiRBindikatöR</span>
+
+                <select class="symbol-select" id="symbol-select" onchange="changeSymbol(this.value)">
+                    <option value="BTCUSDT">BTC / USDT</option>
+                    <option value="ETHUSDT">ETH / USDT</option>
+                    <option value="SOLUSDT">SOL / USDT</option>
+                    <option value="BNBUSDT">BNB / USDT</option>
+                    <option value="XRPUSDT">XRP / USDT</option>
+                </select>
+
+                <span class="timeframe-badge-active" title="Pine Script v6 gereği ana grafik 1 Saattir (1D Rejim + 4H EMA26 + 1H Sinyaller)">
+                    ⏱️ 1H Grafik (1D/4H/1H MTF)
+                </span>
+
+                <select class="candle-depth-select" id="candle-depth-select" onchange="changeCandleDepth(this.value)" title="Geçmiş mum adedi">
+                    <option value="1000">1.000 Mum</option>
+                    <option value="2000">2.000 Mum</option>
+                    <option value="3000" selected>3.000 Mum (Maksimum)</option>
+                </select>
+
+                <div class="live-price-box">
+                    <span class="ws-status-dot" id="ws-dot" title="Binance Canlı WebSocket"></span>
+                    <span id="price-val">Yükleniyor...</span>
+                </div>
+            </div>
+
+            <!-- İndikatör Katmanları & Backtest & OttOnline Butonu -->
+            <div class="indicator-nav">
+                <button class="ind-btn active" id="btn-cloud" onclick="toggleLayer('cloud')">
+                    <span style="color: #10b981;">☁️</span> 1H Bulut (disp=26)
+                </button>
+                <button class="ind-btn active" id="btn-ema" onclick="toggleLayer('ema')">
+                    <span style="color: #f97316;">⚡</span> Canlı 4H EMA26
+                </button>
+                <button class="ind-btn active" id="btn-signals" onclick="toggleLayer('signals')">
+                    <span style="color: #fbbf24;">🎯</span> Sinyaller
+                </button>
+
+                <!-- Backtest Butonu -->
+                <button class="backtest-btn" id="btn-backtest" onclick="toggleBacktestMode()" title="Backtest Modunu Aç / Kapat">
+                    🎆 Backtest Modu
+                </button>
+
+                <button class="ind-btn active" id="btn-bg" onclick="toggleLayer('bg')">
+                    <span>🌌</span> 1D HTF Rejim
+                </button>
+
+                <!-- OttOnline Butonu -->
+                <button class="ottonline-btn" onclick="toggleOttOnlinePanel()" title="OttOnline Platformunu Bölünmüş Ekranda Aç / Kapat">
+                    🌐 OttOnline 1553
+                </button>
+            </div>
+        </div>
+
+        <!-- ANA ÇALIŞMA ALANI -->
+        <div class="main-workspace">
+            
+            <!-- SOL: GRAFİK ALANI -->
+            <div class="chart-body" id="chart-body-wrapper">
+                <div class="chart-viewport-column">
+                    <div class="canvas-container" id="canvas-container">
+                        <div class="loading-overlay" id="loading-overlay">⏳ Binance MTF (1D + 4H + 1H) Verileri Yükleniyor...</div>
+
+                        <div class="hud-overlay-card">
+                            <div class="hud-badge-row">
+                                <span>1D HTF REJİM: <span id="hud-regime" class="hud-tag tag-bull">BOĞA (YEŞİL)</span></span>
+                                <span>CANLI 4H EMA26: <span id="hud-ema" class="hud-tag tag-bull">ÜSTÜNDE</span></span>
+                                <span>ANA YÖN (Pine v6): <span id="hud-trend" class="hud-tag tag-bull">GÜÇLÜ BOĞA 🚀</span></span>
+                            </div>
+
+                            <!-- GÖRÜNEN EKRAN KÜMÜLATİF BACKTEST ROZETİ -->
+                            <div class="visible-backtest-card" id="visible-backtest-card">
+                                <div class="vbt-header">
+                                    <span style="font-weight: 800; color: #38bdf8;">👁️ GÖRÜNEN EKRAN BACKTEST (PINE SCRIPT v6 BİREBİR)</span>
+                                    <span id="vbt-candle-span" style="color: #94a3b8; font-size: 10.5px;">150 Mum</span>
+                                </div>
+                                <div class="vbt-row">
+                                    <span>Görünen Sinyaller: <b id="vbt-total-sig" style="color: #f8fafc;">0</b> (🎯 <b id="vbt-tp-count" style="color: #10b981;">0</b> | ❌ <b id="vbt-sl-count" style="color: #ef4444;">0</b> | ⌛ <b id="vbt-open-count" style="color: #38bdf8;">0</b>)</span>
+                                    <span>Kazanma: <span class="bt-stat-badge bt-win" id="vbt-winrate">%0.0</span></span>
+                                </div>
+                                <div class="vbt-row" style="background: rgba(0,0,0,0.3); padding: 4px 6px; border-radius: 5px;">
+                                    <span>💰 <b>$1.000</b> İle Sırayla All-In Girilseydi:</span>
+                                    <span id="vbt-final-balance" class="pnl-badge-up">$1,000.00</span>
+                                </div>
+                                <div class="vbt-row">
+                                    <span>Kümülatif Net Kâr/Zarar:</span>
+                                    <span id="vbt-net-pnl" class="pnl-badge-up">+%0.00</span>
+                                </div>
+                            </div>
+
+                            <div class="ohlc-tooltip">
+                                <span>O: <span class="ohlc-val" id="ohlc-o">0.00</span></span>
+                                <span>H: <span class="ohlc-val" id="ohlc-h">0.00</span></span>
+                                <span>L: <span class="ohlc-val" id="ohlc-l">0.00</span></span>
+                                <span>C: <span class="ohlc-val" id="ohlc-c">0.00</span></span>
+                                <span>ATR(14): <span class="ohlc-val" id="ohlc-atr" style="color: #38bdf8;">0.00</span></span>
+                            </div>
+
+                            <!-- Sinyal İnceleyici Kartı -->
+                            <div class="signal-inspector-card" id="signal-inspector-card">
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <span id="insp-type" style="font-weight: 800; font-size: 12px;">⚡ SİNYAL: --</span>
+                                    <span id="insp-rr" style="color: #fbbf24; font-weight: 700;">R:R: 1 : 1.67</span>
+                                </div>
+                                <span id="insp-bt-result" style="font-weight: 800; display: none;">🏆 BACKTEST: TP BAŞARILI!</span>
+                                <span id="insp-entry" style="color: #94a3b8; font-size: 11px;">GİRİŞ: $0.00</span>
+                                <span id="insp-tp" style="color: #10b981; font-weight: 700;">🎯 TP (2.5 ATR): $0.00</span>
+                                <span id="insp-sl" style="color: #ef4444; font-weight: 700;">🛡️ SL (1.5 ATR): $0.00</span>
+                            </div>
+                        </div>
+
+                        <!-- WebGL 2.0 GPU Canvas -->
+                        <canvas id="glcanvas"></canvas>
+
+                        <!-- HiDPI Keskin Vektör & Havai Fişek Canvas -->
+                        <canvas id="overlay-canvas"></canvas>
+                    </div>
+
+                    <!-- ALT TARİH / ZAMAN BARI -->
+                    <div class="time-axis-bar" id="time-axis" title="Tarih alanında sürükleyerek kaydırın (Çift tık: Tümünü sığdır)">
+                        <div class="crosshair-time-tag" id="crosshair-time-tag">2026-08-28 00:00</div>
+                        <div id="time-labels-container"></div>
+                    </div>
+                </div>
+
+                <!-- SAĞ FİYAT SKALASI -->
+                <div class="price-axis-sidebar" id="price-axis" title="Yukarı/Aşağı sürükleyerek dikey ölçekleyin (Çift tık: Sıfırla)">
+                    <div class="current-price-badge" id="current-price-badge">0.00</div>
+                    <div class="crosshair-price-tag" id="crosshair-price-tag">0.00</div>
+                    <div id="price-labels-container"></div>
+                </div>
+
+                <!-- Sağ Alt Köşe: Ölçek Sıfırlama Butonu -->
+                <div class="axis-corner-reset" onclick="resetPriceScale()" title="Fiyat ölçeğini otomatik sıfırla">
+                    OTO 🔄
+                </div>
+            </div>
+
+            <!-- SAĞ: OTTONLINE 1553 BÖLÜNMÜŞ ÇALIŞMA PANELİ -->
+            <div class="ottonline-panel" id="ottonline-panel">
+                <div class="ottonline-header">
+                    <span>🌐 OttOnline 1553 Live Platform</span>
+                    <div class="ottonline-header-actions">
+                        <a href="https://www.ottonline1553.com.tr/" target="_blank" class="ottonline-action-btn" title="Yeni sekmede aç">
+                            ↗️ Yeni Sekmede Aç
+                        </a>
+                        <button class="ottonline-action-btn" onclick="toggleOttOnlinePanel()" title="Paneli Kapat">
+                            ✕ Kapat
+                        </button>
+                    </div>
+                </div>
+                <iframe id="ottonline-frame" class="ottonline-iframe" src="" allow="clipboard-read; clipboard-write;"></iframe>
+            </div>
+
+        </div>
+
+        <!-- ALT BİLGİ VE DURUM -->
+        <div class="bottom-statusbar">
+            <div class="status-left">
+                <span>KAYNAK: <span class="status-highlight">Binance Multi-Timeframe (1D + 4H + 1H)</span></span>
+                <span>GPU FPS: <span class="status-highlight" id="fps-stat">60</span></span>
+                <span>TOPLAM MUM: <span class="status-highlight" id="total-candles-stat">3000</span></span>
+                <span>GÖRÜNÜR: <span class="status-highlight" id="visible-candles-stat">150</span></span>
+                <button class="fit-all-btn" onclick="fitAllCandles()" title="Tüm geçmiş mumları ekrana tam sığdır">🔍 TÜMÜNÜ GÖR</button>
+            </div>
+            <div>
+                <span>Pine Script v6: <b>1D Kapanmış Rejim + 4H Canlı EMA26 + 1H Bulut (disp=26)</b></span>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ==================== VERTEX SHADER ==================== -->
+    <script id="vs" type="x-shader/x-vertex">#version 300 es
+    in vec2 a_position;
+    void main() {
+        gl_Position = vec4(a_position, 0.0, 1.0);
+    }
+    </script>
+
+    <!-- ==================== FRAGMENT SHADER ==================== -->
+    <script id="fs" type="x-shader/x-fragment">#version 300 es
+    precision highp float;
+
+    uniform vec2 u_resolution;
+    uniform vec2 u_view_range;
+    uniform vec2 u_price_range;
+    uniform vec2 u_mouse;
+    uniform float u_time;
+
+    uniform int u_show_cloud;
+    uniform int u_show_ema;
+    uniform int u_show_bg;
+
+    uniform sampler2D u_candle_tex;
+    uniform sampler2D u_ind_tex;
+    uniform float u_total_candles;
+
+    out vec4 fragColor;
+
+    float priceToY(float price) {
+        float diff = u_price_range.y - u_price_range.x;
+        if (diff <= 0.0001) diff = 1.0;
+        return (price - u_price_range.x) / diff;
+    }
+
+    void main() {
+        vec2 pixelCoord = gl_FragCoord.xy;
+        vec2 uv = pixelCoord / u_resolution;
+
+        float topBound = 0.985;
+        float bottomBound = 0.015;
+
+        // Koyu Uzay Arka Planı
+        vec3 col = vec3(0.042, 0.062, 0.105);
+
+        float visibleCount = max(1.0, u_view_range.y - u_view_range.x);
+        float currentCandleIdx = u_view_range.x + uv.x * visibleCount;
+        float candleCenterIdx = floor(currentCandleIdx) + 0.5;
+        float texCoordX = clamp(candleCenterIdx / max(1.0, u_total_candles), 0.0, 1.0);
+
+        vec4 indData = texture(u_ind_tex, vec2(texCoordX, 0.5));
+        float htfRegime = indData.r; // 1.0 = Bullish 1D (Yeşil), -1.0 = Bearish 1D (Kırmızı), 0 = Nötr
+        float sa1H = indData.g;     // 1H Senkou Span A (disp=26 ötelenmiş)
+        float sb1H = indData.b;     // 1H Senkou Span B (disp=26 ötelenmiş)
+        float ema4HLive = indData.a; // Canlı 4H EMA26
+
+        // 1. PINE SCRIPT v6: 1D KAPANMIŞ ICHIMOKU REJİM ARKA PLANI
+        if (u_show_bg == 1 && u_total_candles > 0.0) {
+            if (htfRegime > 0.5) {
+                // Yeşil Rejim
+                col = mix(col, vec3(0.06, 0.85, 0.35), 0.07);
+            } else if (htfRegime < -0.5) {
+                // Kırmızı Rejim
+                col = mix(col, vec3(0.95, 0.15, 0.25), 0.07);
+            }
+        }
+
+        // Izgara Çizgileri
+        float gridY = fract(uv.y * 8.0);
+        float hLine = smoothstep(0.025, 0.0, abs(gridY - 0.5) * 2.0);
+        col += vec3(0.12, 0.18, 0.28) * hLine * 0.4;
+
+        float gridX = fract(uv.x * 10.0);
+        float vLine = smoothstep(0.025, 0.0, abs(gridX - 0.5) * 2.0);
+        col += vec3(0.12, 0.18, 0.28) * vLine * 0.25;
+
+        // Mumlar ve İndikatörler
+        if (uv.y >= bottomBound && uv.y <= topBound) {
+            
+            // 2. 1H ICHIMOKU BULUTU (disp=26 KAYDIRILMIŞ)
+            if (u_show_cloud == 1 && sa1H > 0.0 && sb1H > 0.0) {
+                float saY = clamp(priceToY(sa1H), bottomBound, topBound);
+                float sbY = clamp(priceToY(sb1H), bottomBound, topBound);
+
+                float cloudTop = max(saY, sbY);
+                float cloudBot = min(saY, sbY);
+
+                if (uv.y >= cloudBot && uv.y <= cloudTop) {
+                    float relY = (uv.y - cloudBot) / max(0.001, cloudTop - cloudBot);
+                    bool isBullCloud = sa1H >= sb1H;
+
+                    float diag1 = sin(pixelCoord.x * 0.06 + pixelCoord.y * 0.06 - u_time * 3.5);
+                    float diag2 = cos(pixelCoord.x * 0.04 - pixelCoord.y * 0.04 + u_time * 2.2);
+                    float plasmaWave = sin(uv.x * 45.0 + sin(uv.y * 30.0 + u_time * 2.5) * 3.0 + u_time * 2.0);
+
+                    float pattern = smoothstep(-0.2, 0.8, diag1 * 0.5 + diag2 * 0.3 + plasmaWave * 0.2);
+                    float pulse = 0.5 + 0.5 * sin(u_time * 2.2 + uv.x * 15.0);
+                    float edgeAura = pow(1.0 - abs(relY - 0.5) * 2.0, 0.65);
+
+                    if (isBullCloud) {
+                        vec3 deepGreen = vec3(0.02, 0.45, 0.25);
+                        vec3 neonGreen = vec3(0.0, 1.0, 0.55);
+                        vec3 electricCyan = vec3(0.1, 0.9, 0.95);
+
+                        vec3 plasmaCol = mix(deepGreen, neonGreen, pattern);
+                        plasmaCol = mix(plasmaCol, electricCyan, diag1 * 0.35 + 0.35);
+
+                        float fillAlpha = 0.18 + pattern * 0.14 + pulse * 0.06 + (1.0 - edgeAura) * 0.08;
+                        col = mix(col, plasmaCol, fillAlpha);
+                        col += neonGreen * (0.05 * pattern);
+                    } else {
+                        vec3 deepRuby = vec3(0.5, 0.05, 0.15);
+                        vec3 neonRed = vec3(1.0, 0.15, 0.3);
+                        vec3 lavaOrange = vec3(1.0, 0.45, 0.1);
+
+                        vec3 plasmaCol = mix(deepRuby, neonRed, pattern);
+                        plasmaCol = mix(plasmaCol, lavaOrange, diag2 * 0.35 + 0.35);
+
+                        float fillAlpha = 0.18 + pattern * 0.14 + pulse * 0.06 + (1.0 - edgeAura) * 0.08;
+                        col = mix(col, plasmaCol, fillAlpha);
+                        col += neonRed * (0.05 * pattern);
+                    }
+                }
+
+                float dSa = abs(uv.y - saY) * u_resolution.y;
+                float dSb = abs(uv.y - sbY) * u_resolution.y;
+                float laserA = smoothstep(1.8, 0.0, dSa) * 0.8 + (0.06 / (dSa + 0.5)) * 0.4;
+                float laserB = smoothstep(1.8, 0.0, dSb) * 0.8 + (0.06 / (dSb + 0.5)) * 0.4;
+
+                col += vec3(0.1, 1.0, 0.55) * laserA;
+                col += vec3(1.0, 0.2, 0.35) * laserB;
+            }
+
+            // 3. 1H MUMLAR VE FITILLER
+            if (candleCenterIdx >= 0.0 && candleCenterIdx <= u_total_candles) {
+                float candleScreenU = (candleCenterIdx - u_view_range.x) / visibleCount;
+                float candleDistX = abs(uv.x - candleScreenU) * u_resolution.x;
+
+                float candleSlotPx = u_resolution.x / visibleCount;
+                float candleWidth = max(0.55, candleSlotPx * 0.72);
+                float wickThreshold = max(0.4, min(1.2, candleSlotPx * 0.35));
+
+                vec4 candleData = texture(u_candle_tex, vec2(texCoordX, 0.5));
+
+                float openPrice = candleData.r;
+                float highPrice = candleData.g;
+                float lowPrice = candleData.b;
+                float closePrice = candleData.a;
+
+                bool isBull = closePrice >= openPrice;
+                vec3 bullColor = vec3(0.06, 0.85, 0.55);
+                vec3 bearColor = vec3(0.96, 0.24, 0.38);
+                vec3 candleCol = isBull ? bullColor : bearColor;
+
+                // Fitil
+                float highY = clamp(priceToY(highPrice), bottomBound, topBound);
+                float lowY = clamp(priceToY(lowPrice), bottomBound, topBound);
+                if (uv.y >= lowY && uv.y <= highY && candleDistX <= wickThreshold) {
+                    col = mix(col, candleCol, 0.9);
+                    col += candleCol * 0.2;
+                }
+
+                // Gövde
+                float bodyTop = clamp(priceToY(max(openPrice, closePrice)), bottomBound, topBound);
+                float bodyBottom = clamp(priceToY(min(openPrice, closePrice)), bottomBound, topBound);
+                bodyTop = max(bodyTop, bodyBottom + 0.0015);
+
+                if (uv.y >= bodyBottom && uv.y <= bodyTop && candleDistX < candleWidth * 0.5) {
+                    col = mix(col, candleCol, 0.95);
+                    if (candleSlotPx > 6.0) {
+                        float edge = smoothstep(candleWidth * 0.5, candleWidth * 0.4, candleDistX);
+                        col += vec3(1.0) * (1.0 - edge) * 0.15;
+                    }
+                }
+
+                // 4. CANLI 4H EMA26 (Orange Laser Line)
+                if (u_show_ema == 1 && ema4HLive > 0.0) {
+                    float emaY = clamp(priceToY(ema4HLive), bottomBound, topBound);
+                    float distEma = abs(uv.y - emaY) * u_resolution.y;
+                    float lineEma = smoothstep(2.0, 0.0, distEma);
+                    col += vec3(1.0, 0.55, 0.0) * (lineEma + (0.06 / (distEma + 0.5)) * 0.6);
+                }
+            }
+        }
+
+        // Crosshair
+        if (u_mouse.x >= 0.0 && u_mouse.x <= u_resolution.x &&
+            u_mouse.y >= 0.0 && u_mouse.y <= u_resolution.y) {
+            float crossX = smoothstep(1.2, 0.0, abs(pixelCoord.x - u_mouse.x));
+            float crossY = smoothstep(1.2, 0.0, abs(pixelCoord.y - u_mouse.y));
+            col += vec3(0.4, 0.6, 0.8) * (crossX + crossY) * 0.35;
+        }
+
+        fragColor = vec4(col, 1.0);
+    }
+    </script>
+
+    <!-- ==================== JAVASCRIPT MOTORU ==================== -->
+    <script>
+        const canvas = document.getElementById('glcanvas');
+        const overlayCanvas = document.getElementById('overlay-canvas');
+        const canvasContainer = document.getElementById('canvas-container');
+        const timeAxisElem = document.getElementById('time-axis');
+        const priceAxisElem = document.getElementById('price-axis');
+        const ottonlinePanel = document.getElementById('ottonline-panel');
+        const ottonlineFrame = document.getElementById('ottonline-frame');
+        
+        const gl = canvas.getContext('webgl2', { alpha: false, depth: false, antialias: true });
+        const ctx2d = overlayCanvas.getContext('2d');
+
+        if (!gl) alert('WebGL 2.0 desteklenmiyor!');
+        gl.getExtension('EXT_color_buffer_float');
+
+        function createShader(gl, type, source) {
+            const s = gl.createShader(type);
+            gl.shaderSource(s, source.trim());
+            gl.compileShader(s);
+            return s;
+        }
+
+        const prog = gl.createProgram();
+        gl.attachShader(prog, createShader(gl, gl.VERTEX_SHADER, document.getElementById('vs').text));
+        gl.attachShader(prog, createShader(gl, gl.FRAGMENT_SHADER, document.getElementById('fs').text));
+        gl.linkProgram(prog);
+
+        const posBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, posBuffer);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, -1,1, 1,-1, 1,1]), gl.STATIC_DRAW);
+        const aPos = gl.getAttribLocation(prog, 'a_position');
+        gl.enableVertexAttribArray(aPos);
+        gl.vertexAttribPointer(aPos, 2, gl.FLOAT, false, 0, 0);
+
+        const uRes = gl.getUniformLocation(prog, 'u_resolution');
+        const uViewRange = gl.getUniformLocation(prog, 'u_view_range');
+        const uPriceRange = gl.getUniformLocation(prog, 'u_price_range');
+        const uMouse = gl.getUniformLocation(prog, 'u_mouse');
+        const uTime = gl.getUniformLocation(prog, 'u_time');
+
+        const uShowCloud = gl.getUniformLocation(prog, 'u_show_cloud');
+        const uShowEma = gl.getUniformLocation(prog, 'u_show_ema');
+        const uShowBg = gl.getUniformLocation(prog, 'u_show_bg');
+
+        const uCandleTex = gl.getUniformLocation(prog, 'u_candle_tex');
+        const uIndTex = gl.getUniformLocation(prog, 'u_ind_tex');
+        const uTotalCandles = gl.getUniformLocation(prog, 'u_total_candles');
+
+        // ==========================================
+        // BACKTEST DURUMU
+        // ==========================================
+        let isBacktestActive = true;
+
+        window.toggleBacktestMode = function() {
+            isBacktestActive = !isBacktestActive;
+            const btn = document.getElementById('btn-backtest');
+            const vbtCard = document.getElementById('visible-backtest-card');
+            btn.classList.toggle('active', isBacktestActive);
+            btn.innerText = isBacktestActive ? '🎆 Backtest: AÇIK' : '📊 Backtest Modu';
+            vbtCard.style.display = isBacktestActive ? 'flex' : 'none';
+        };
+
+        window.toggleOttOnlinePanel = function() {
+            const isOpen = ottonlinePanel.classList.toggle('open');
+            if (isOpen && !ottonlineFrame.src) {
+                ottonlineFrame.src = 'https://www.ottonline1553.com.tr/';
+            }
+        };
+
+        // ==========================================
+        // MULTI-TIMEFRAME BINANCE VERİ DEPOSU
+        // ==========================================
+        let currentSymbol = 'BTCUSDT';
+        let requestedDepth = 3000;
+        
+        let candleData1H = [];
+        let candleData4H = [];
+        let candleData1D = [];
+
+        let totalCandles = 0;
+        let calculatedSignals = [];
+
+        let candleTex = null;
+        let indTex = null;
+
+        let viewStart = 0;
+        let viewEnd = 0;
+        let ws = null;
+
+        const loadingOverlay = document.getElementById('loading-overlay');
+        const wsDot = document.getElementById('ws-dot');
+
+        const layers = { cloud: 1, ema: 1, signals: 1, bg: 1 };
+        window.toggleLayer = function(name) {
+            layers[name] = layers[name] ? 0 : 1;
+            document.getElementById(`btn-${name}`).classList.toggle('active', !!layers[name]);
+        };
+
+        // ============================================================
+        // SQICIBEKIRBINDIKATÖR: %100 BİREBİR TRADINGVIEW PINE SCRIPT v6
+        // ============================================================
+        function calculateSqiciBekiR_PineV6(data1H, data4H, data1D) {
+            const N1H = data1H.length;
+            const N4H = data4H.length;
+            const N1D = data1D.length;
+
+            const sa1H = new Float32Array(N1H);
+            const sb1H = new Float32Array(N1H);
+            const ema4HLiveArr = new Float32Array(N1H);
+            const regime1DArr = new Float32Array(N1H);
+            const atrArr = new Float32Array(N1H);
+            const signals = [];
+
+            const convLen = 9;
+            const baseLen = 26;
+            const spanBLen = 52;
+            const disp = 26; // Cloud forward shift (offset)
+            const emaLen = 26;
+            const emaCoeff = 2.0 / (emaLen + 1.0); // 2 / 27
+
+            // ------------------------------------------------------------
+            // ADIM 1: 1D GÜNLÜK ICHIMOKU REJİMİ (HTF 1D REGIME)
+            // ------------------------------------------------------------
+            const sa1DRaw = new Float32Array(N1D);
+            const sb1DRaw = new Float32Array(N1D);
+
+            for (let i = 0; i < N1D; i++) {
+                let tH = -Infinity, tL = Infinity;
+                for (let j = 0; j < Math.min(i + 1, convLen); j++) {
+                    tH = Math.max(tH, data1D[i - j].high);
+                    tL = Math.min(tL, data1D[i - j].low);
+                }
+                const tenkan = (tH + tL) / 2;
+
+                let kH = -Infinity, kL = Infinity;
+                for (let j = 0; j < Math.min(i + 1, baseLen); j++) {
+                    kH = Math.max(kH, data1D[i - j].high);
+                    kL = Math.min(kL, data1D[i - j].low);
+                }
+                const kijun = (kH + kL) / 2;
+
+                let sBH = -Infinity, sBL = Infinity;
+                for (let j = 0; j < Math.min(i + 1, spanBLen); j++) {
+                    sBH = Math.max(sBH, data1D[i - j].high);
+                    sBL = Math.min(sBL, data1D[i - j].low);
+                }
+                sa1DRaw[i] = (tenkan + kijun) / 2;
+                sb1DRaw[i] = (sBH + sBL) / 2;
+            }
+
+            // Pine Script: shiftedA = nz(senkouA[disp], senkouA)
+            let lastRegime1D = 0;
+            const confirmedRegime1DByDay = []; // Her günün kapanışındaki lastRegime1D
+
+            for (let i = 0; i < N1D; i++) {
+                const shiftedA = (i >= disp) ? sa1DRaw[i - disp] : sa1DRaw[i];
+                const shiftedB = (i >= disp) ? sb1DRaw[i - disp] : sb1DRaw[i];
+
+                const cloudTop = Math.max(shiftedA, shiftedB);
+                const cloudBot = Math.min(shiftedA, shiftedB);
+                const c = data1D[i].close;
+
+                let rawRegime = 0;
+                if (c > cloudTop) rawRegime = 1;
+                else if (c < cloudBot) rawRegime = -1;
+                else rawRegime = 0;
+
+                // Pine: if regime1D == 1 or regime1D == -1 => lastRegime1D := regime1D
+                if (rawRegime === 1 || rawRegime === -1) {
+                    lastRegime1D = rawRegime;
+                }
+
+                confirmedRegime1DByDay.push({
+                    time: data1D[i].time,
+                    closeTime: data1D[i].time + 86400000 - 1,
+                    lastRegime: lastRegime1D
+                });
+            }
+
+            // ------------------------------------------------------------
+            // ADIM 2: 4H EMA26 HESAPLAMASI (ISINMALI & GEÇMİŞ KAPANIŞLAR)
+            // ------------------------------------------------------------
+            const ema4HClosedArr = new Float32Array(N4H);
+            let pEma4H = data4H[0] ? data4H[0].close : 0;
+
+            for (let i = 0; i < N4H; i++) {
+                pEma4H = data4H[i].close * emaCoeff + pEma4H * (1.0 - emaCoeff);
+                ema4HClosedArr[i] = pEma4H;
+            }
+
+            // ------------------------------------------------------------
+            // ADIM 3: 1H ATR (14) HESAPLAMASI
+            // ------------------------------------------------------------
+            let prevAtr = 0;
+            for (let i = 0; i < N1H; i++) {
+                const h = data1H[i].high;
+                const l = data1H[i].low;
+                const pc = i > 0 ? data1H[i - 1].close : data1H[i].open;
+                const tr = Math.max(h - l, Math.abs(h - pc), Math.abs(l - pc));
+                if (i === 0) prevAtr = tr;
+                else if (i < 14) prevAtr = (prevAtr * i + tr) / (i + 1);
+                else prevAtr = (prevAtr * 13 + tr) / 14;
+                atrArr[i] = prevAtr;
+            }
+
+            // ------------------------------------------------------------
+            // ADIM 4: 1H ICHIMOKU (disp = 26 KAYDIRILMIŞ)
+            // ------------------------------------------------------------
+            const sa1HRaw = new Float32Array(N1H);
+            const sb1HRaw = new Float32Array(N1H);
+
+            for (let i = 0; i < N1H; i++) {
+                let tH = -Infinity, tL = Infinity;
+                for (let j = 0; j < Math.min(i + 1, convLen); j++) {
+                    tH = Math.max(tH, data1H[i - j].high);
+                    tL = Math.min(tL, data1H[i - j].low);
+                }
+                const tenkan = (tH + tL) / 2;
+
+                let kH = -Infinity, kL = Infinity;
+                for (let j = 0; j < Math.min(i + 1, baseLen); j++) {
+                    kH = Math.max(kH, data1H[i - j].high);
+                    kL = Math.min(kL, data1H[i - j].low);
+                }
+                const kijun = (kH + kL) / 2;
+
+                let sBH = -Infinity, sBL = Infinity;
+                for (let j = 0; j < Math.min(i + 1, spanBLen); j++) {
+                    sBH = Math.max(sBH, data1H[i - j].high);
+                    sBL = Math.min(sBL, data1H[i - j].low);
+                }
+
+                sa1HRaw[i] = (tenkan + kijun) / 2;
+                sb1HRaw[i] = (sBH + sBL) / 2;
+            }
+
+            // Pine: sa1H = nz(sa1HRaw[disp], sa1HRaw), sb1H = nz(sb1HRaw[disp], sb1HRaw)
+            for (let i = 0; i < N1H; i++) {
+                sa1H[i] = (i >= disp) ? sa1HRaw[i - disp] : sa1HRaw[i];
+                sb1H[i] = (i >= disp) ? sb1HRaw[i - disp] : sb1HRaw[i];
+            }
+
+            // ------------------------------------------------------------
+            // ADIM 5: 1H MUMLARINA 1D REJİM VE 4H CANLI EMA EŞLEŞTİRMESİ
+            // ------------------------------------------------------------
+            let dIdx = 0;
+            let fourHIdx = 0;
+
+            for (let i = 0; i < N1H; i++) {
+                const t1H = data1H[i].time;
+                const c1H = data1H[i].close;
+
+                // 1D Kapanmış Rejimini Bul: request.security(..., "1D", f_regime1D()[1])
+                while (dIdx + 1 < confirmedRegime1DByDay.length && confirmedRegime1DByDay[dIdx + 1].closeTime <= t1H) {
+                    dIdx++;
+                }
+                const cur1DRegime = confirmedRegime1DByDay[dIdx] ? confirmedRegime1DByDay[dIdx].lastRegime : 0;
+                regime1DArr[i] = cur1DRegime;
+
+                // 4H Kapanmış EMA26'yı Bul: request.security(..., "240", ta.ema(close, 26)[1])
+                while (fourHIdx + 1 < N4H && (data4H[fourHIdx + 1].time + 14400000 - 1) <= t1H) {
+                    fourHIdx++;
+                }
+                const prevClosedEma4H = ema4HClosedArr[fourHIdx] || c1H;
+
+                // Pine: ema4HLive = emaCoefficient * close + (1.0 - emaCoefficient) * previousEma4H
+                const ema4HLive = emaCoeff * c1H + (1.0 - emaCoeff) * prevClosedEma4H;
+                ema4HLiveArr[i] = ema4HLive;
+            }
+
+            // ------------------------------------------------------------
+            // ADIM 6: PINE SCRIPT v6 SİNYAL VE SABİT 1:1.67 R:R SİMÜLASYONU
+            // ------------------------------------------------------------
+            let prevBuy2Cond = false;
+            let prevSell2Cond = false;
+
+            const atrMult = 1.5;
+            const tpMult = 2.5;
+
+            for (let i = 53; i < N1H; i++) {
+                const c = data1H[i].close;
+                const prevC = data1H[i - 1].close;
+
+                const curSa = sa1H[i];
+                const curSb = sb1H[i];
+                const prevSa = sa1H[i - 1];
+                const prevSb = sb1H[i - 1];
+
+                const top1H = Math.max(curSa, curSb);
+                const bot1H = Math.min(curSa, curSb);
+                const prevTop1H = Math.max(prevSa, prevSb);
+                const prevBot1H = Math.min(prevSa, prevSb);
+
+                const cur1DReg = regime1DArr[i];
+                const curEma4HLive = ema4HLiveArr[i];
+                const atr = atrArr[i] || 1;
+
+                // Pine: bullish = lastRegime1D == 1 and above4HEMA
+                // Pine: bearish = lastRegime1D == -1 and below4HEMA
+                const above4HEMA = c > curEma4HLive;
+                const below4HEMA = c < curEma4HLive;
+
+                const bullish = (cur1DReg === 1) && above4HEMA;
+                const bearish = (cur1DReg === -1) && below4HEMA;
+
+                // Pine: enterUp1H = close > top1H and close[1] <= top1H[1]
+                // Pine: enterDown1H = close < bot1H and close[1] >= bot1H[1]
+                const enterUp1H = (c > top1H) && (prevC <= prevTop1H);
+                const enterDown1H = (c < bot1H) && (prevC >= prevBot1H);
+
+                const above1HCloud = c > top1H;
+                const below1HCloud = c < bot1H;
+
+                const buy2Cond = bullish && above1HCloud;
+                const sell2Cond = bearish && below1HCloud;
+
+                const buySignal1 = bullish && enterUp1H;
+                const sellSignal1 = bearish && enterDown1H;
+                const buySignal2 = buy2Cond && !prevBuy2Cond;
+                const sellSignal2 = sell2Cond && !prevSell2Cond;
+
+                prevBuy2Cond = buy2Cond;
+                prevSell2Cond = sell2Cond;
+
+                let isSignal = false;
+                let sigType = '';
+                let sigLabel = '';
+                let isBuy = true;
+
+                if (buySignal1) {
+                    isSignal = true; sigType = 'BUY'; sigLabel = 'BUY (1H Kırılım)'; isBuy = true;
+                } else if (sellSignal1) {
+                    isSignal = true; sigType = 'SELL'; sigLabel = 'SELL (1H Kırılım)'; isBuy = false;
+                } else if (buySignal2) {
+                    isSignal = true; sigType = 'BUY2'; sigLabel = 'BUY2 (Trend Aktivasyon)'; isBuy = true;
+                } else if (sellSignal2) {
+                    isSignal = true; sigType = 'SELL2'; sigLabel = 'SELL2 (Trend Aktivasyon)'; isBuy = false;
+                }
+
+                if (isSignal) {
+                    const sl = isBuy ? (c - atr * atrMult) : (c + atr * atrMult);
+                    const tp = isBuy ? (c + atr * tpMult) : (c - atr * tpMult);
+
+                    // Backtest forward scan
+                    let btStatus = 'OPEN';
+                    let exitIndex = N1H - 1;
+                    let exitPrice = c;
+                    let pnlPct = 0;
+
+                    for (let step = i + 1; step < N1H; step++) {
+                        const nextHigh = data1H[step].high;
+                        const nextLow = data1H[step].low;
+
+                        if (isBuy) {
+                            const hitTp = nextHigh >= tp;
+                            const hitSl = nextLow <= sl;
+
+                            if (hitTp && !hitSl) {
+                                btStatus = 'TP'; exitIndex = step; exitPrice = tp; break;
+                            } else if (hitSl && !hitTp) {
+                                btStatus = 'SL'; exitIndex = step; exitPrice = sl; break;
+                            } else if (hitTp && hitSl) {
+                                if (data1H[step].close >= data1H[step].open) {
+                                    btStatus = 'TP'; exitPrice = tp;
+                                } else {
+                                    btStatus = 'SL'; exitPrice = sl;
+                                }
+                                exitIndex = step;
+                                break;
+                            }
+                        } else {
+                            const hitTp = nextLow <= tp;
+                            const hitSl = nextHigh >= sl;
+
+                            if (hitTp && !hitSl) {
+                                btStatus = 'TP'; exitIndex = step; exitPrice = tp; break;
+                            } else if (hitSl && !hitTp) {
+                                btStatus = 'SL'; exitIndex = step; exitPrice = sl; break;
+                            } else if (hitTp && hitSl) {
+                                if (data1H[step].close <= data1H[step].open) {
+                                    btStatus = 'TP'; exitPrice = tp;
+                                } else {
+                                    btStatus = 'SL'; exitPrice = sl;
+                                }
+                                exitIndex = step;
+                                break;
+                            }
+                        }
+                    }
+
+                    if (isBuy) {
+                        pnlPct = ((exitPrice - c) / c) * 100;
+                    } else {
+                        pnlPct = ((c - exitPrice) / c) * 100;
+                    }
+
+                    signals.push({
+                        index: i,
+                        type: sigType,
+                        label: sigLabel,
+                        isBuy: isBuy,
+                        price: c,
+                        sl: sl,
+                        tp: tp,
+                        rrRatio: 1.67,
+                        btStatus: btStatus,
+                        exitIndex: exitIndex,
+                        exitPrice: exitPrice,
+                        pnlPct: pnlPct,
+                        time: data1H[i].time
+                    });
+                }
+            }
+
+            return { sa: sa1H, sb: sb1H, ema4H: ema4HLiveArr, regime1D: regime1DArr, atrArr, signals };
+        }
+
+        // ============================================================
+        // 📊 GÖRÜNEN EKRAN KÜMÜLATİF ALL-IN HESAPLAYICISI
+        // ============================================================
+        function updateVisibleBacktestSummary() {
+            if (!isBacktestActive || calculatedSignals.length === 0) return;
+
+            const visibleSignals = calculatedSignals.filter(s => s.index >= viewStart && s.index <= viewEnd);
+            const vSpan = Math.round(viewEnd - viewStart);
+            document.getElementById('vbt-candle-span').innerText = `${vSpan} Mum Aralığı`;
+
+            let tpCount = 0;
+            let slCount = 0;
+            let openCount = 0;
+
+            let initialCapital = 1000.0;
+            let currentCapital = initialCapital;
+
+            // Kronolojik sırayla All-In bileşik kâr hesaplama
+            for (const sig of visibleSignals) {
+                if (sig.btStatus === 'TP') tpCount++;
+                else if (sig.btStatus === 'SL') slCount++;
+                else openCount++;
+
+                if (sig.btStatus === 'TP' || sig.btStatus === 'SL') {
+                    const tradeReturnRatio = sig.pnlPct / 100.0;
+                    currentCapital = currentCapital * (1.0 + tradeReturnRatio);
+                }
+            }
+
+            const totalFinished = tpCount + slCount;
+            const winRate = totalFinished > 0 ? ((tpCount / totalFinished) * 100).toFixed(1) : '0.0';
+            const netPnlPct = (((currentCapital - initialCapital) / initialCapital) * 100);
+
+            document.getElementById('vbt-total-sig').innerText = visibleSignals.length;
+            document.getElementById('vbt-tp-count').innerText = tpCount;
+            document.getElementById('vbt-sl-count').innerText = slCount;
+            document.getElementById('vbt-open-count').innerText = openCount;
+            document.getElementById('vbt-winrate').innerText = `%${winRate}`;
+
+            const finalBalanceElem = document.getElementById('vbt-final-balance');
+            const netPnlElem = document.getElementById('vbt-net-pnl');
+
+            finalBalanceElem.innerText = `$${currentCapital.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+            
+            if (netPnlPct >= 0) {
+                finalBalanceElem.className = 'pnl-badge-up';
+                netPnlElem.className = 'pnl-badge-up';
+                netPnlElem.innerText = `+${netPnlPct.toFixed(2)}% (+$${(currentCapital - initialCapital).toFixed(2)}) 🚀`;
+            } else {
+                finalBalanceElem.className = 'pnl-badge-down';
+                netPnlElem.className = 'pnl-badge-down';
+                netPnlElem.innerText = `${netPnlPct.toFixed(2)}% (-$${(initialCapital - currentCapital).toFixed(2)}) 🔻`;
+            }
+        }
+
+        function updateGpuTextures() {
+            totalCandles = candleData1H.length;
+            if (totalCandles === 0) return;
+
+            const ind = calculateSqiciBekiR_PineV6(candleData1H, candleData4H, candleData1D);
+            calculatedSignals = ind.signals;
+
+            const candleFloatArr = new Float32Array(totalCandles * 4);
+            const indFloatArr = new Float32Array(totalCandles * 4);
+
+            for (let i = 0; i < totalCandles; i++) {
+                const idx = i * 4;
+                candleFloatArr[idx + 0] = candleData1H[i].open;
+                candleFloatArr[idx + 1] = candleData1H[i].high;
+                candleFloatArr[idx + 2] = candleData1H[i].low;
+                candleFloatArr[idx + 3] = candleData1H[i].close;
+
+                indFloatArr[idx + 0] = ind.regime1D[i]; // 1.0 (Yeşil), -1.0 (Kırmızı)
+                indFloatArr[idx + 1] = ind.sa[i];
+                indFloatArr[idx + 2] = ind.sb[i];
+                indFloatArr[idx + 3] = ind.ema4H[i];
+            }
+
+            if (!candleTex) candleTex = gl.createTexture();
+            gl.activeTexture(gl.TEXTURE0);
+            gl.bindTexture(gl.TEXTURE_2D, candleTex);
+            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA32F, totalCandles, 1, 0, gl.RGBA, gl.FLOAT, candleFloatArr);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+
+            if (!indTex) indTex = gl.createTexture();
+            gl.activeTexture(gl.TEXTURE1);
+            gl.bindTexture(gl.TEXTURE_2D, indTex);
+            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA32F, totalCandles, 1, 0, gl.RGBA, gl.FLOAT, indFloatArr);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+
+            document.getElementById('total-candles-stat').innerText = totalCandles;
+
+            const lastIdx = totalCandles - 1;
+            const lastClose = candleData1H[lastIdx].close;
+            const lastReg = ind.regime1D[lastIdx];
+            const lastEma = ind.ema4H[lastIdx];
+
+            const hudRegime = document.getElementById('hud-regime');
+            const hudEma = document.getElementById('hud-ema');
+            const hudTrend = document.getElementById('hud-trend');
+
+            if (lastReg > 0.5) {
+                hudRegime.innerText = 'BOĞA (YEŞİL)';
+                hudRegime.className = 'hud-tag tag-bull';
+            } else if (lastReg < -0.5) {
+                hudRegime.innerText = 'AYI (KIRMIZI)';
+                hudRegime.className = 'hud-tag tag-bear';
+            } else {
+                hudRegime.innerText = 'NÖTR';
+                hudRegime.className = 'hud-tag tag-bull';
+            }
+
+            if (lastClose >= lastEma) {
+                hudEma.innerText = 'ÜSTÜNDE (BOĞA)';
+                hudEma.className = 'hud-tag tag-bull';
+            } else {
+                hudEma.innerText = 'ALTINDA (AYI)';
+                hudEma.className = 'hud-tag tag-bear';
+            }
+
+            if (lastReg > 0.5 && lastClose >= lastEma) {
+                hudTrend.innerText = 'GÜÇLÜ BOĞA 🚀';
+                hudTrend.className = 'hud-tag tag-bull';
+            } else if (lastReg < -0.5 && lastClose < lastEma) {
+                hudTrend.innerText = 'GÜÇLÜ AYI 🔻';
+                hudTrend.className = 'hud-tag tag-bear';
+            } else {
+                hudTrend.innerText = 'NÖTR / DÖNÜŞ';
+                hudTrend.className = 'hud-tag tag-bull';
+            }
+
+            document.getElementById('ohlc-atr').innerText = ind.atrArr[lastIdx].toFixed(2);
+            updateVisibleBacktestSummary();
+        }
+
+        // ============================================================
+        // 🎆 HAVAİ FİŞEK VE PARÇACIK ANİMASYON MOTORU
+        // ============================================================
+        const fireworkColors = ['#10b981', '#38bdf8', '#fbbf24', '#f43f5e', '#a855f7', '#ec4899', '#00f2fe', '#ffffff'];
+
+        function drawFireworkExplosion(ctx, x, y, timeNow, seed) {
+            const particleCount = 14;
+            const cycle = (timeNow * 0.002 + seed * 1.3) % 1.0;
+            const radius = cycle * 34;
+            const alpha = Math.max(0, 1.0 - cycle * 1.1);
+
+            ctx.save();
+            for (let i = 0; i < particleCount; i++) {
+                const angle = (i / particleCount) * Math.PI * 2 + seed + (cycle * 0.8);
+                const sparkDist = radius * (0.6 + 0.4 * Math.sin(i * 3 + seed));
+                const px = Math.round(x + Math.cos(angle) * sparkDist);
+                const py = Math.round(y + Math.sin(angle) * sparkDist);
+                const color = fireworkColors[(i + Math.floor(seed * 10)) % fireworkColors.length];
+
+                ctx.fillStyle = color;
+                ctx.shadowColor = color;
+                ctx.shadowBlur = 8;
+                ctx.globalAlpha = alpha;
+
+                const size = (1.0 - cycle) * 2.8 + 0.8;
+                ctx.beginPath();
+                ctx.arc(px, py, size, 0, Math.PI * 2);
+                ctx.fill();
+
+                if (i % 2 === 0) {
+                    ctx.strokeStyle = color;
+                    ctx.lineWidth = 1;
+                    ctx.beginPath();
+                    ctx.moveTo(x, y);
+                    ctx.lineTo(px, py);
+                    ctx.stroke();
+                }
+            }
+
+            ctx.fillStyle = '#ffffff';
+            ctx.shadowColor = '#10b981';
+            ctx.shadowBlur = 14;
+            ctx.globalAlpha = Math.max(0, 1.0 - cycle * 2.0);
+            ctx.beginPath();
+            ctx.arc(x, y, 4, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.restore();
+        }
+
+        // ============================================================
+        // HiDPI DİNAMİK VEKTÖR TP / SL VE ROZET ÇİZİCİSİ
+        // ============================================================
+        function drawVectorSignalsAndTargets(timeNow) {
+            const cssW = canvasContainer.clientWidth;
+            const cssH = canvasContainer.clientHeight;
+
+            if (!ctx2d || !layers.signals || totalCandles === 0) {
+                ctx2d.clearRect(0, 0, cssW, cssH);
+                return;
+            }
+
+            ctx2d.clearRect(0, 0, cssW, cssH);
+
+            const visibleCount = viewEnd - viewStart;
+            if (visibleCount <= 0) return;
+
+            function getY(price) {
+                const diff = maxPrice - minPrice;
+                if (diff <= 0.0001) return cssH / 2;
+                return Math.round(cssH - ((price - minPrice) / diff) * cssH);
+            }
+
+            for (const sig of calculatedSignals) {
+                if (sig.index < viewStart - 8 || sig.index > viewEnd + 8) continue;
+
+                const candleCenter = sig.index + 0.5;
+                const screenX = Math.round(((candleCenter - viewStart) / visibleCount) * cssW);
+                const candle = candleData1H[sig.index];
+                if (!candle) continue;
+
+                const entryY = getY(sig.price);
+                const highY = getY(candle.high);
+                const lowY = getY(candle.low);
+                const tpY = getY(sig.tp);
+                const slY = getY(sig.sl);
+
+                const isBuy = sig.isBuy;
+                const isTpWin = sig.btStatus === 'TP';
+                const isSlLoss = sig.btStatus === 'SL';
+
+                let badgeColor = isBuy ? '#10b981' : '#ef4444';
+                let badgeBg = isBuy ? 'rgba(16, 185, 129, 0.95)' : 'rgba(239, 68, 68, 0.95)';
+
+                if (isBacktestActive) {
+                    if (isTpWin) {
+                        badgeColor = '#10b981';
+                        badgeBg = 'rgba(16, 185, 129, 0.95)';
+                    } else if (isSlLoss) {
+                        badgeColor = '#ef4444';
+                        badgeBg = 'rgba(150, 25, 35, 0.85)';
+                    }
+                }
+
+                const badgeY = isBuy ? lowY + 24 : highY - 24;
+
+                // 1. KAZANAN SİNYALDE HAVAİ FİŞEK PATLAMASI
+                if (isBacktestActive && isTpWin) {
+                    drawFireworkExplosion(ctx2d, screenX, badgeY, timeNow, sig.index * 0.17);
+                }
+
+                // 2. SİNYAL ROZETİ
+                ctx2d.save();
+                ctx2d.fillStyle = badgeBg;
+                ctx2d.strokeStyle = isTpWin ? '#fef08a' : (isSlLoss ? '#fca5a5' : '#ffffff');
+                ctx2d.lineWidth = isTpWin ? 2 : 1;
+                ctx2d.shadowColor = badgeColor;
+                ctx2d.shadowBlur = isTpWin ? 14 : 6;
+
+                let text = isBuy ? `▲ ${sig.type}` : `▼ ${sig.type}`;
+                if (isBacktestActive && isTpWin) {
+                    text += ' 🏆 TP';
+                }
+
+                ctx2d.font = 'bold 10.5px "SF Pro Text", "Segoe UI", sans-serif';
+                const textMetrics = ctx2d.measureText(text);
+                const textWidth = Math.round(textMetrics.width);
+
+                const rx = Math.round(screenX - textWidth / 2 - 7);
+                const ry = Math.round(badgeY - 10);
+                const rw = textWidth + 14;
+                const rh = 20;
+
+                ctx2d.beginPath();
+                ctx2d.roundRect(rx, ry, rw, rh, 5);
+                ctx2d.fill();
+                ctx2d.stroke();
+
+                ctx2d.fillStyle = '#ffffff';
+                ctx2d.textAlign = 'center';
+                ctx2d.textBaseline = 'middle';
+                ctx2d.fillText(text, screenX, badgeY);
+                ctx2d.restore();
+
+                // 3. STOP OLAN SİNYALDE ÇARPI (X) İŞARETİ
+                if (isBacktestActive && isSlLoss) {
+                    ctx2d.save();
+                    ctx2d.strokeStyle = '#ef4444';
+                    ctx2d.lineWidth = 3.5;
+                    ctx2d.shadowColor = '#ff0000';
+                    ctx2d.shadowBlur = 10;
+
+                    const crossSize = 10;
+                    ctx2d.beginPath();
+                    ctx2d.moveTo(screenX - crossSize, badgeY - crossSize);
+                    ctx2d.lineTo(screenX + crossSize, badgeY + crossSize);
+                    ctx2d.moveTo(screenX + crossSize, badgeY - crossSize);
+                    ctx2d.lineTo(screenX - crossSize, badgeY + crossSize);
+                    ctx2d.stroke();
+
+                    ctx2d.strokeStyle = '#ffffff';
+                    ctx2d.lineWidth = 1.5;
+                    ctx2d.beginPath();
+                    ctx2d.moveTo(screenX - crossSize, badgeY - crossSize);
+                    ctx2d.lineTo(screenX + crossSize, badgeY + crossSize);
+                    ctx2d.moveTo(screenX + crossSize, badgeY - crossSize);
+                    ctx2d.lineTo(screenX - crossSize, badgeY + crossSize);
+                    ctx2d.stroke();
+
+                    ctx2d.restore();
+                }
+
+                // 4. TP ve SL Çizgileri
+                if (visibleCount < 400) {
+                    ctx2d.save();
+                    const projDistance = isBacktestActive ? Math.min(sig.exitIndex - sig.index, 25) : 8;
+                    const projEndX = Math.round(Math.min(cssW - 90, screenX + (cssW / visibleCount) * Math.max(6, projDistance)));
+
+                    // TAKE PROFIT (2.5 ATR)
+                    ctx2d.strokeStyle = isTpWin ? '#10b981' : (isSlLoss ? 'rgba(100, 116, 139, 0.4)' : 'rgba(16, 185, 129, 0.8)');
+                    ctx2d.lineWidth = isTpWin ? 2 : 1.5;
+                    ctx2d.setLineDash(isSlLoss ? [2, 4] : [4, 3]);
+                    ctx2d.beginPath();
+                    ctx2d.moveTo(screenX, entryY);
+                    ctx2d.lineTo(screenX, tpY);
+                    ctx2d.lineTo(projEndX, tpY);
+                    ctx2d.stroke();
+
+                    // TP Noktası & Etiketi
+                    ctx2d.setLineDash([]);
+                    ctx2d.fillStyle = isTpWin ? '#10b981' : (isSlLoss ? '#64748b' : '#10b981');
+                    ctx2d.shadowColor = ctx2d.fillStyle;
+                    ctx2d.shadowBlur = isTpWin ? 10 : 6;
+                    ctx2d.beginPath();
+                    ctx2d.arc(projEndX, tpY, isTpWin ? 4.5 : 3.5, 0, Math.PI * 2);
+                    ctx2d.fill();
+
+                    ctx2d.font = 'bold 10.5px "SF Pro Text", "Segoe UI", sans-serif';
+                    ctx2d.textAlign = 'left';
+                    ctx2d.textBaseline = 'middle';
+                    const winBadge = isTpWin ? ` ✅ +${sig.pnlPct.toFixed(1)}%` : '';
+                    ctx2d.fillText(`🎯 TP (2.5x): ${sig.tp.toFixed(1)}${winBadge}`, projEndX + 6, tpY);
+
+                    // STOP LOSS (1.5 ATR)
+                    ctx2d.strokeStyle = isSlLoss ? '#ef4444' : (isTpWin ? 'rgba(100, 116, 139, 0.4)' : 'rgba(239, 68, 68, 0.8)');
+                    ctx2d.lineWidth = isSlLoss ? 2 : 1.5;
+                    ctx2d.setLineDash(isTpWin ? [2, 4] : [4, 3]);
+                    ctx2d.beginPath();
+                    ctx2d.moveTo(screenX, entryY);
+                    ctx2d.lineTo(screenX, slY);
+                    ctx2d.lineTo(projEndX, slY);
+                    ctx2d.stroke();
+
+                    // SL Noktası & Etiketi
+                    ctx2d.setLineDash([]);
+                    ctx2d.fillStyle = isSlLoss ? '#ef4444' : (isTpWin ? '#64748b' : '#ef4444');
+                    ctx2d.shadowColor = ctx2d.fillStyle;
+                    ctx2d.shadowBlur = isSlLoss ? 10 : 6;
+                    ctx2d.beginPath();
+                    ctx2d.arc(projEndX, slY, isSlLoss ? 4.5 : 3.5, 0, Math.PI * 2);
+                    ctx2d.fill();
+
+                    ctx2d.font = 'bold 10.5px "SF Pro Text", "Segoe UI", sans-serif';
+                    ctx2d.fillStyle = isSlLoss ? '#ef4444' : (isTpWin ? '#64748b' : '#ef4444');
+                    ctx2d.textAlign = 'left';
+                    ctx2d.textBaseline = 'middle';
+                    const lossBadge = isSlLoss ? ` ❌ -${Math.abs(sig.pnlPct).toFixed(1)}%` : '';
+                    ctx2d.fillText(`🛡️ SL (1.5x): ${sig.sl.toFixed(1)}${lossBadge}`, projEndX + 6, slY);
+
+                    ctx2d.restore();
+                }
+            }
+        }
+
+        // ============================================================
+        // 📥 BINANCE MTF ÇOKLU ZAMAN DİLİMİ VERİ ÇEKİCİ
+        // ============================================================
+        async function fetchKlinesForInterval(symbol, interval, targetCount) {
+            let allKlines = [];
+            let endTime = null;
+            const requestsNeeded = Math.ceil(targetCount / 1000);
+            const hosts = ['https://api.binance.com', 'https://data-api.binance.vision', 'https://api1.binance.com'];
+
+            for (let req = 0; req < requestsNeeded; req++) {
+                let chunk = null;
+                for (const host of hosts) {
+                    try {
+                        let url = `${host}/api/v3/klines?symbol=${symbol}&interval=${interval}&limit=1000`;
+                        if (endTime) url += `&endTime=${endTime}`;
+                        const res = await fetch(url);
+                        if (res.ok) {
+                            const data = await res.json();
+                            if (data && data.length > 0) {
+                                chunk = data;
+                                break;
+                            }
+                        }
+                    } catch (e) {}
+                }
+                if (!chunk || chunk.length === 0) break;
+                allKlines = chunk.concat(allKlines);
+                endTime = chunk[0][0] - 1;
+            }
+
+            const uniqueMap = new Map();
+            for (const k of allKlines) uniqueMap.set(k[0], k);
+            const sortedKlines = Array.from(uniqueMap.values()).sort((a, b) => a[0] - b[0]);
+
+            return sortedKlines.map(k => ({
+                time: k[0],
+                open: parseFloat(k[1]),
+                high: parseFloat(k[2]),
+                low: parseFloat(k[3]),
+                close: parseFloat(k[4]),
+                vol: parseFloat(k[5])
+            }));
+        }
+
+        async function fetchAllMultiTimeframeKlines(symbol) {
+            loadingOverlay.style.display = 'block';
+            loadingOverlay.innerText = `⏳ Binance MTF (1D + 4H + 1H) Verileri Çekiliyor...`;
+
+            try {
+                // 1H (3000 Mum), 4H (1000 Mum), 1D (500 Mum) paralel çekilir
+                const [data1H, data4H, data1D] = await Promise.all([
+                    fetchKlinesForInterval(symbol, '1h', requestedDepth),
+                    fetchKlinesForInterval(symbol, '4h', 1000),
+                    fetchKlinesForInterval(symbol, '1d', 500)
+                ]);
+
+                candleData1H = data1H;
+                candleData4H = data4H;
+                candleData1D = data1D;
+
+                totalCandles = candleData1H.length;
+                viewStart = Math.max(0, totalCandles - 150);
+                viewEnd = totalCandles;
+
+                updateGpuTextures();
+                connectWebSocket(symbol);
+
+                if (totalCandles > 0) {
+                    const last = candleData1H[totalCandles - 1];
+                    document.getElementById('price-val').innerText = last.close.toLocaleString('en-US', {minimumFractionDigits: 2});
+                }
+            } catch (err) {
+                console.error('MTF Veri Çekme Hatası:', err);
+            } finally {
+                loadingOverlay.style.display = 'none';
+            }
+        }
+
+        function connectWebSocket(symbol) {
+            if (ws) ws.close();
+
+            const streamName = `${symbol.toLowerCase()}@kline_1h`;
+            ws = new WebSocket(`wss://stream.binance.com:9443/ws/${streamName}`);
+
+            ws.onopen = () => {
+                wsDot.style.background = '#10b981';
+                wsDot.style.boxShadow = '0 0 8px #10b981';
+            };
+
+            ws.onmessage = (event) => {
+                const msg = JSON.parse(event.data);
+                const k = msg.k;
+                if (!k) return;
+
+                const candle = {
+                    time: k.t,
+                    open: parseFloat(k.o),
+                    high: parseFloat(k.h),
+                    low: parseFloat(k.l),
+                    close: parseFloat(k.c),
+                    vol: parseFloat(k.v)
+                };
+
+                const lastIdx = candleData1H.length - 1;
+                if (lastIdx >= 0 && candleData1H[lastIdx].time === candle.time) {
+                    candleData1H[lastIdx] = candle;
+                } else {
+                    candleData1H.push(candle);
+                    if (viewEnd >= totalCandles - 2) {
+                        viewStart++;
+                        viewEnd++;
+                    }
+                }
+
+                updateGpuTextures();
+                document.getElementById('price-val').innerText = candle.close.toLocaleString('en-US', {minimumFractionDigits: 2});
+            };
+
+            ws.onerror = () => { wsDot.style.background = '#ef4444'; };
+            ws.onclose = () => { wsDot.style.background = '#f59e0b'; };
+        }
+
+        window.changeSymbol = function(sym) {
+            currentSymbol = sym;
+            fetchAllMultiTimeframeKlines(currentSymbol);
+        };
+
+        window.changeCandleDepth = function(depth) {
+            requestedDepth = parseInt(depth);
+            fetchAllMultiTimeframeKlines(currentSymbol);
+        };
+
+        window.fitAllCandles = function() {
+            viewStart = 0;
+            viewEnd = totalCandles;
+            resetPriceScale();
+            updateVisibleBacktestSummary();
+        };
+
+        // ==========================================
+        // DİKEY FİYAT ÖLÇEĞİ VE ETKİLEŞİM
+        // ==========================================
+        let minPrice = 0;
+        let maxPrice = 0;
+
+        let isPriceDragging = false;
+        let priceDragStartY = 0;
+        let priceScaleFactor = 1.0;
+
+        window.resetPriceScale = function() {
+            priceScaleFactor = 1.0;
+        };
+
+        priceAxisElem.addEventListener('mousedown', (e) => {
+            isPriceDragging = true;
+            priceDragStartY = e.clientY;
+            e.preventDefault();
+        });
+
+        priceAxisElem.addEventListener('dblclick', () => {
+            resetPriceScale();
+        });
+
+        timeAxisElem.addEventListener('dblclick', () => {
+            fitAllCandles();
+        });
+
+        // ==========================================
+        // YATAY KAYDIRMA (PAN) VE ZOOM
+        // ==========================================
+        let isChartDragging = false;
+        let chartDragStartX = 0;
+        let origViewStart = 0;
+        let origViewEnd = 0;
+
+        let mousePixelX = -1000;
+        let mousePixelY = -1000;
+
+        const crosshairPriceTag = document.getElementById('crosshair-price-tag');
+        const crosshairTimeTag = document.getElementById('crosshair-time-tag');
+        const currentPriceBadge = document.getElementById('current-price-badge');
+        const priceLabelsContainer = document.getElementById('price-labels-container');
+        const timeLabelsContainer = document.getElementById('time-labels-container');
+        const ohlcO = document.getElementById('ohlc-o');
+        const ohlcH = document.getElementById('ohlc-h');
+        const ohlcL = document.getElementById('ohlc-l');
+        const ohlcC = document.getElementById('ohlc-c');
+
+        const signalInspector = document.getElementById('signal-inspector-card');
+        const inspType = document.getElementById('insp-type');
+        const inspBtResult = document.getElementById('insp-bt-result');
+        const inspEntry = document.getElementById('insp-entry');
+        const inspTp = document.getElementById('insp-tp');
+        const inspSl = document.getElementById('insp-sl');
+
+        function startPan(clientX) {
+            isChartDragging = true;
+            chartDragStartX = clientX;
+            origViewStart = viewStart;
+            origViewEnd = viewEnd;
+            canvasContainer.classList.add('grabbing');
+            timeAxisElem.classList.add('grabbing');
+        }
+
+        canvasContainer.addEventListener('mousedown', (e) => {
+            startPan(e.clientX);
+        });
+
+        timeAxisElem.addEventListener('mousedown', (e) => {
+            startPan(e.clientX);
+            e.preventDefault();
+        });
+
+        window.addEventListener('mouseup', () => {
+            isChartDragging = false;
+            isPriceDragging = false;
+            canvasContainer.classList.remove('grabbing');
+            timeAxisElem.classList.remove('grabbing');
+            updateVisibleBacktestSummary();
+        });
+
+        function formatTimeLabelWithYear(date) {
+            const yyyy = date.getFullYear();
+            const hh = String(date.getHours()).padStart(2, '0');
+            const mm = String(date.getMinutes()).padStart(2, '0');
+            const dd = String(date.getDate()).padStart(2, '0');
+            const mon = date.toLocaleString('tr-TR', { month: 'short' });
+            return `${dd} ${mon} <b>${yyyy}</b> ${hh}:${mm}`;
+        }
+
+        function formatFullTime(date) {
+            const yyyy = date.getFullYear();
+            const hh = String(date.getHours()).padStart(2, '0');
+            const mm = String(date.getMinutes()).padStart(2, '0');
+            const dd = String(date.getDate()).padStart(2, '0');
+            const mon = date.toLocaleString('tr-TR', { month: 'short' });
+            return `${dd} ${mon} ${yyyy} ${hh}:${mm}`;
+        }
+
+        window.addEventListener('mousemove', (e) => {
+            if (isPriceDragging) {
+                const deltaY = priceDragStartY - e.clientY;
+                priceScaleFactor = Math.max(0.05, Math.min(25.0, priceScaleFactor * Math.exp(deltaY * 0.006)));
+                priceDragStartY = e.clientY;
+                return;
+            }
+
+            const rect = canvas.getBoundingClientRect();
+            if (!rect.width || !rect.height) return;
+
+            mousePixelX = (e.clientX - rect.left) * (canvas.width / rect.width);
+            mousePixelY = (rect.bottom - e.clientY) * (canvas.height / rect.height);
+
+            if (isChartDragging && totalCandles > 0) {
+                const deltaPx = e.clientX - chartDragStartX;
+                const candleSpan = origViewEnd - origViewStart;
+                const deltaCandles = (deltaPx / rect.width) * candleSpan;
+
+                let nStart = origViewStart - deltaCandles;
+                let nEnd = origViewEnd - deltaCandles;
+
+                if (nStart < 0) {
+                    nStart = 0;
+                    nEnd = candleSpan;
+                }
+                if (nEnd > totalCandles) {
+                    nEnd = totalCandles;
+                    nStart = Math.max(0, totalCandles - candleSpan);
+                }
+
+                viewStart = nStart;
+                viewEnd = nEnd;
+                updateVisibleBacktestSummary();
+            }
+
+            const normX = (e.clientX - rect.left) / rect.width;
+            const visibleCount = Math.max(1, viewEnd - viewStart);
+            const cIdx = Math.floor(viewStart + normX * visibleCount);
+
+            if (cIdx >= 0 && cIdx < totalCandles && candleData1H[cIdx]) {
+                const c = candleData1H[cIdx];
+                ohlcO.innerText = c.open.toFixed(2);
+                ohlcH.innerText = c.high.toFixed(2);
+                ohlcL.innerText = c.low.toFixed(2);
+                ohlcC.innerText = c.close.toFixed(2);
+                ohlcC.className = c.close >= c.open ? 'ohlc-val val-up' : 'ohlc-val val-down';
+
+                const date = new Date(c.time);
+                crosshairTimeTag.style.display = 'block';
+                crosshairTimeTag.style.left = `${e.clientX - rect.left}px`;
+                crosshairTimeTag.innerText = formatFullTime(date);
+
+                // Sinyal İnceleme Kartı
+                const sigAtCandle = calculatedSignals.find(s => s.index === cIdx);
+                if (sigAtCandle) {
+                    signalInspector.style.display = 'flex';
+                    inspType.innerText = `⚡ ${sigAtCandle.label}`;
+                    inspType.style.color = sigAtCandle.isBuy ? '#10b981' : '#ef4444';
+
+                    if (isBacktestActive) {
+                        inspBtResult.style.display = 'block';
+                        if (sigAtCandle.btStatus === 'TP') {
+                            inspBtResult.innerText = `🏆 BACKTEST: TP BAŞARILI! (+${sigAtCandle.pnlPct.toFixed(2)}%)`;
+                            inspBtResult.style.color = '#10b981';
+                        } else if (sigAtCandle.btStatus === 'SL') {
+                            inspBtResult.innerText = `❌ BACKTEST: STOP OLDU! (${sigAtCandle.pnlPct.toFixed(2)}%)`;
+                            inspBtResult.style.color = '#ef4444';
+                        } else {
+                            inspBtResult.innerText = '⌛ BACKTEST: İŞLEM HALA AÇIK';
+                            inspBtResult.style.color = '#38bdf8';
+                        }
+                    } else {
+                        inspBtResult.style.display = 'none';
+                    }
+
+                    inspEntry.innerText = `GİRİŞ: $${sigAtCandle.price.toFixed(2)}`;
+                    inspTp.innerText = `🎯 TP (2.5 ATR): $${sigAtCandle.tp.toFixed(2)}`;
+                    inspSl.innerText = `🛡️ SL (1.5 ATR): $${sigAtCandle.sl.toFixed(2)}`;
+                } else {
+                    signalInspector.style.display = 'none';
+                }
+            }
+
+            if (isFinite(minPrice) && isFinite(maxPrice) && maxPrice > minPrice) {
+                const normY = (rect.bottom - e.clientY) / rect.height;
+                const hoveredPrice = minPrice + normY * (maxPrice - minPrice);
+                crosshairPriceTag.style.display = 'block';
+                crosshairPriceTag.style.top = `${e.clientY - rect.top}px`;
+                crosshairPriceTag.innerText = hoveredPrice.toFixed(2);
+            }
+        });
+
+        canvasContainer.addEventListener('mouseleave', () => {
+            if (!isChartDragging && !isPriceDragging) {
+                mousePixelX = -1000;
+                mousePixelY = -1000;
+                crosshairPriceTag.style.display = 'none';
+                crosshairTimeTag.style.display = 'none';
+                signalInspector.style.display = 'none';
+            }
+        });
+
+        canvasContainer.addEventListener('wheel', (e) => {
+            e.preventDefault();
+            if (totalCandles === 0) return;
+
+            const zoomSpeed = 0.0012;
+            const zoomFactor = Math.exp(e.deltaY * zoomSpeed);
+
+            const count = Math.max(1, viewEnd - viewStart);
+            const newCount = Math.max(10, Math.min(totalCandles, count * zoomFactor));
+
+            const rect = canvas.getBoundingClientRect();
+            const mouseNormX = Math.max(0.0, Math.min(1.0, (e.clientX - rect.left) / rect.width));
+            const mouseCandle = viewStart + mouseNormX * count;
+
+            let nStart = mouseCandle - mouseNormX * newCount;
+            let nEnd = mouseCandle + (1.0 - mouseNormX) * newCount;
+
+            if (newCount >= totalCandles - 1 || (nStart <= 0 && nEnd >= totalCandles)) {
+                nStart = 0;
+                nEnd = totalCandles;
+            } else {
+                if (nStart < 0) {
+                    nStart = 0;
+                    nEnd = newCount;
+                }
+                if (nEnd > totalCandles) {
+                    nEnd = totalCandles;
+                    nStart = Math.max(0, totalCandles - newCount);
+                }
+            }
+
+            viewStart = Math.max(0, nStart);
+            viewEnd = Math.min(totalCandles, nEnd);
+            updateVisibleBacktestSummary();
+        }, { passive: false });
+
+        function updateTimeScaleLabels() {
+            if (totalCandles === 0) return;
+            const count = 6;
+            const visibleCount = Math.max(1, viewEnd - viewStart);
+            let html = '';
+
+            for (let i = 0; i <= count; i++) {
+                const pct = i / count;
+                const candleIdx = Math.min(totalCandles - 1, Math.max(0, Math.floor(viewStart + pct * visibleCount)));
+                const c = candleData1H[candleIdx];
+                if (c && c.time) {
+                    const date = new Date(c.time);
+                    const labelStr = formatTimeLabelWithYear(date);
+                    const leftPx = Math.round(pct * canvasContainer.clientWidth);
+                    html += `<div class="time-scale-label" style="left: ${leftPx}px;">${labelStr}</div>`;
+                }
+            }
+            timeLabelsContainer.innerHTML = html;
+        }
+
+        function updatePriceScaleLabels() {
+            if (!isFinite(minPrice) || !isFinite(maxPrice) || minPrice >= maxPrice) return;
+            const levels = 8;
+            let html = '';
+            for (let i = 0; i <= levels; i++) {
+                const pct = i / levels;
+                const priceAtLevel = minPrice + pct * (maxPrice - minPrice);
+                const topPct = (1 - pct) * 100;
+                html += `<div class="price-scale-label" style="top: ${topPct}%;">${priceAtLevel.toFixed(2)}</div>`;
+            }
+            priceLabelsContainer.innerHTML = html;
+
+            if (totalCandles > 0 && candleData1H[totalCandles - 1]) {
+                const lastClose = candleData1H[totalCandles - 1].close;
+                const lastCloseNorm = (lastClose - minPrice) / (maxPrice - minPrice);
+                const lastCloseTop = (1 - lastCloseNorm) * 100;
+                currentPriceBadge.style.top = `${lastCloseTop}%`;
+                currentPriceBadge.innerText = lastClose.toFixed(2);
+            }
+        }
+
+        // ==========================================
+        // RENDER DÖNGÜSÜ (HiDPI RETINA / 4K)
+        // ==========================================
+        let lastT = performance.now();
+        let frameCount = 0;
+
+        function render(now) {
+            frameCount++;
+            if (now - lastT >= 500) {
+                const fps = Math.round((frameCount * 1000) / (now - lastT));
+                const visibleCount = Math.round(viewEnd - viewStart);
+                document.getElementById('fps-stat').innerText = fps;
+                document.getElementById('visible-candles-stat').innerText = visibleCount;
+                frameCount = 0;
+                lastT = now;
+            }
+
+            const dpr = Math.min(window.devicePixelRatio || 1, 2.5);
+            const cssW = canvasContainer.clientWidth;
+            const cssH = canvasContainer.clientHeight;
+            const w = Math.max(10, Math.floor(cssW * dpr));
+            const h = Math.max(10, Math.floor(cssH * dpr));
+
+            if (canvas.width !== w || canvas.height !== h) {
+                canvas.width = w;
+                canvas.height = h;
+                overlayCanvas.width = w;
+                overlayCanvas.height = h;
+                ctx2d.resetTransform();
+                ctx2d.scale(dpr, dpr);
+                ctx2d.imageSmoothingEnabled = true;
+                ctx2d.imageSmoothingQuality = 'high';
+                gl.viewport(0, 0, w, h);
+            }
+
+            if (totalCandles > 0) {
+                let minP = Infinity;
+                let maxP = -Infinity;
+                const startI = Math.max(0, Math.floor(viewStart));
+                const endI = Math.min(totalCandles, Math.ceil(viewEnd));
+
+                for (let i = startI; i < endI; i++) {
+                    if (candleData1H[i]) {
+                        if (candleData1H[i].low < minP) minP = candleData1H[i].low;
+                        if (candleData1H[i].high > maxP) maxP = candleData1H[i].high;
+                    }
+                }
+
+                if (!isFinite(minP) || !isFinite(maxP) || minP >= maxP) {
+                    minP = 60000;
+                    maxP = 70000;
+                }
+
+                const baseMid = (minP + maxP) / 2;
+                const baseHalfSpan = (maxP - minP) / 2;
+                const scaledHalfSpan = (baseHalfSpan / priceScaleFactor) * 1.05;
+
+                minPrice = baseMid - scaledHalfSpan;
+                maxPrice = baseMid + scaledHalfSpan;
+
+                updatePriceScaleLabels();
+                updateTimeScaleLabels();
+
+                // 1. GPU Shader Render
+                gl.useProgram(prog);
+                gl.uniform2f(uRes, canvas.width, canvas.height);
+                gl.uniform2f(uViewRange, viewStart, viewEnd);
+                gl.uniform2f(uPriceRange, minPrice, maxPrice);
+                gl.uniform2f(uMouse, mousePixelX, mousePixelY);
+                gl.uniform1f(uTime, now * 0.001);
+
+                gl.uniform1i(uShowCloud, layers.cloud);
+                gl.uniform1i(uShowEma, layers.ema);
+                gl.uniform1i(uShowBg, layers.bg);
+
+                gl.activeTexture(gl.TEXTURE0);
+                gl.bindTexture(gl.TEXTURE_2D, candleTex);
+                gl.uniform1i(uCandleTex, 0);
+
+                gl.activeTexture(gl.TEXTURE1);
+                gl.bindTexture(gl.TEXTURE_2D, indTex);
+                gl.uniform1i(uIndTex, 1);
+
+                gl.uniform1f(uTotalCandles, totalCandles);
+
+                gl.drawArrays(gl.TRIANGLES, 0, 6);
+
+                // 2. Vektör TP / SL, Havai Fişek ve Sinyal Rozetleri
+                drawVectorSignalsAndTargets(now);
+            }
+
+            requestAnimationFrame(render);
+        }
+
+        // Başlangıçta Backtest Paneli Açık
+        document.getElementById('btn-backtest').classList.add('active');
+
+        fetchAllMultiTimeframeKlines('BTCUSDT');
+        requestAnimationFrame(render);
+    </script>
+</body>
+</html>

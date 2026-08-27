@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cyber-Pulse // Oyun Motoru Tabanlı GPU İndikatör HUD</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body, html {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #030712;
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Orbitron', monospace, sans-serif;
+            color: #f8fafc;
+            user-select: none;
+        }
+        canvas {
+            display: block;
+            width: 100vw;
+            height: 100vh;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+
+        /* Sci-Fi / Cyberpunk Oyun HUD Katmanı */
+        .hud-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 10;
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 24px;
+        }
+
+        /* Üst Bar: Boss Fight Tarzı Boğa vs Ayı Güç Barı */
+        .top-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            pointer-events: auto;
+        }
+        .hud-panel {
+            background: rgba(10, 15, 30, 0.75);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(0, 242, 254, 0.25);
+            border-radius: 14px;
+            padding: 14px 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7), inset 0 0 15px rgba(0, 242, 254, 0.1);
+        }
+
+        .title-box h1 {
+            font-size: 16px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #00f2fe;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-shadow: 0 0 10px rgba(0, 242, 254, 0.6);
+        }
+        .price-badge {
+            font-size: 26px;
+            font-weight: 800;
+            font-family: 'Consolas', monospace;
+            color: #10b981;
+            text-shadow: 0 0 15px rgba(16, 185, 129, 0.6);
+            margin-top: 2px;
+        }
+
+        /* Güç Barı (Power Gauge) */
+        .power-gauge {
+            flex: 1;
+            max-width: 500px;
+        }
+        .gauge-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            letter-spacing: 1px;
+        }
+        .bull-lbl { color: #10b981; text-shadow: 0 0 8px #10b981; }
+        .bear-lbl { color: #ef4444; text-shadow: 0 0 8px #ef4444; }
+        .gauge-track {
+            height: 12px;
+            background: #1e293b;
+            border-radius: 6px;
+            overflow: hidden;
+            position: relative;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            display: flex;
+        }
+        .gauge-bull {
+            height: 100%;
+            width: 65%;
+            background: linear-gradient(90deg, #10b981, #00f2fe);
+            box-shadow: 0 0 12px #10b981;
+            transition: width 0.3s ease;
+        }
+        .gauge-bear {
+            height: 100%;
+            width: 35%;
+            background: linear-gradient(90deg, #f59e0b, #ef4444);
+            box-shadow: 0 0 12px #ef4444;
+            transition: width 0.3s ease;
+        }
+
+        /* Sinyal / Combo Kutusu */
+        .combo-box {
+            text-align: right;
+        }
+        .combo-title {
+            font-size: 10px;
+            color: #94a3b8;
+            letter-spacing: 1px;
+        }
+        .combo-signal {
+            font-size: 20px;
+            font-weight: 900;
+            color: #fbbf24;
+            text-shadow: 0 0 15px rgba(251, 191, 36, 0.8);
+            animation: pulse 1s infinite alternate;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); filter: brightness(1); }
+            100% { transform: scale(1.05); filter: brightness(1.4); }
+        }
+
+        /* Alt Bar: Aksiyon Butonları & Oyun Mekanikleri */
+        .bottom-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            pointer-events: auto;
+        }
+        .game-controls {
+            display: flex;
+            gap: 10px;
+        }
+        .action-btn {
+            background: rgba(15, 23, 42, 0.85);
+            border: 1px solid rgba(0, 242, 254, 0.4);
+            color: #e2e8f0;
+            padding: 10px 18px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+        }
+        .action-btn:hover {
+            background: rgba(0, 242, 254, 0.2);
+            border-color: #00f2fe;
+            color: #00f2fe;
+            box-shadow: 0 0 20px rgba(0, 242, 254, 0.5);
+            transform: translateY(-2px);
+        }
+        .action-btn:active {
+            transform: translateY(1px);
+        }
+        .pump-btn {
+            border-color: #10b981;
+            color: #34d399;
+        }
+        .pump-btn:hover {
+            background: rgba(16, 185, 129, 0.25);
+            border-color: #10b981;
+            box-shadow: 0 0 25px rgba(16, 185, 129, 0.6);
+            color: #10b981;
+        }
+        .dump-btn {
+            border-color: #ef4444;
+            color: #f87171;
+        }
+        .dump-btn:hover {
+            background: rgba(239, 68, 68, 0.25);
+            border-color: #ef4444;
+            box-shadow: 0 0 25px rgba(239, 68, 68, 0.6);
+            color: #ef4444;
+        }
+
+        .hud-stats {
+            display: flex;
+            gap: 16px;
+            font-family: 'Consolas', monospace;
+            font-size: 12px;
+            color: #94a3b8;
+        }
+        .hud-stat-item span {
+            color: #00f2fe;
+            font-weight: bold;
+        }
+
+        /* Köşe Nişangah Efektleri (Game Crosshairs) */
+        .reticle {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(0, 242, 254, 0.3);
+            pointer-events: none;
+        }
+        .reticle-tl { top: 12px; left: 12px; border-right: none; border-bottom: none; }
+        .reticle-tr { top: 12px; right: 12px; border-left: none; border-bottom: none; }
+        .reticle-bl { bottom: 12px; left: 12px; border-right: none; border-top: none; }
+        .reticle-br { bottom: 12px; right: 12px; border-left: none; border-top: none; }
+    </style>
+</head>
+<body>
+
+    <!-- Nişangah Köşeleri -->
+    <div class="reticle reticle-tl"></div>
+    <div class="reticle reticle-tr"></div>
+    <div class="reticle reticle-bl"></div>
+    <div class="reticle reticle-br"></div>
+
+    <!-- OYUN HUD KATMANI -->
+    <div class="hud-overlay">
+        
+        <!-- ÜST BAR: BOSS SAĞLIK / GÜÇ BARI -->
+        <div class="top-bar">
+            <div class="hud-panel title-box">
+                <h1>⚡ CYBER-PULSE <span>V4.2</span></h1>
+                <div class="price-badge" id="price-display">$68,420.50</div>
+            </div>
+
+            <div class="hud-panel power-gauge">
+                <div class="gauge-labels">
+                    <span class="bull-lbl">BOĞA MOMENTUMU %<span id="bull-pct">65</span></span>
+                    <span class="bear-lbl">AYI BASKISI %<span id="bear-pct">35</span></span>
+                </div>
+                <div class="gauge-track">
+                    <div class="gauge-bull" id="gauge-bull-bar"></div>
+                    <div class="gauge-bear" id="gauge-bear-bar"></div>
+                </div>
+            </div>
+
+            <div class="hud-panel combo-box">
+                <div class="combo-title">SİNYAL DURUMU</div>
+                <div class="combo-signal" id="signal-text">⚔️ CRITICAL BUY</div>
+            </div>
+        </div>
+
+        <!-- ALT BAR: OYUN KONTROLLERİ VE PARÇACIK PATLAMALARI -->
+        <div class="bottom-bar">
+            <div class="game-controls">
+                <button class="action-btn pump-btn" onclick="triggerEvent('pump')">
+                    🚀 MEGA PUMP (Boğa Patlaması)
+                </button>
+                <button class="action-btn dump-btn" onclick="triggerEvent('dump')">
+                    💥 SHOCK DUMP (Lazer Saldırısı)
+                </button>
+                <button class="action-btn" onclick="toggleShield()">
+                    🛡️ ENERJİ KALKANI (Bollinger)
+                </button>
+                <button class="action-btn" onclick="toggleSound()">
+                    🔊 SES: <span id="sound-status">KAPALI</span>
+                </button>
+            </div>
+
+            <div class="hud-panel hud-stats">
+                <div class="hud-stat-item">GPU FPS: <span id="fps-stat">60</span></div>
+                <div class="hud-stat-item">RSI BEAM: <span id="rsi-stat">68.4</span></div>
+                <div class="hud-stat-item">VOLATİLİTE: <span id="vol-stat">YÜKSEK</span></div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- GPU CANVAS -->
+    <canvas id="glcanvas"></canvas>
+
+    <!-- ==================== VERTEX SHADER ==================== -->
+    <script id="vs" type="x-shader/x-vertex">#version 300 es
+    in vec2 a_position;
+    void main() {
+        gl_Position = vec4(a_position, 0.0, 1.0);
+    }
+    </script>
+
+    <!-- ==================== FRAGMENT SHADER (OYUN GRAFİK & EFEKT MOTORU) ==================== -->
+    <script id="fs" type="x-shader/x-fragment">#version 300 es
+    precision highp float;
+
+    uniform vec2 u_resolution;
+    uniform float u_time;
+    uniform vec2 u_mouse;
+    uniform float u_shockwave;    // Patlama şok dalgası yarıçapı
+    uniform vec2 u_shock_center;  // Şok dalgası merkezi
+    uniform float u_price_trend;  // Anlık fiyat eğilimi (-1 ile +1)
+    uniform float u_shield_active;// Enerji kalkanı aktif mi (0 veya 1)
+
+    out vec4 fragColor;
+
+    // 1. GPU Tabanlı Rastgele Sayı Üreteci
+    float hash21(vec2 p) {
+        p = fract(p * vec2(123.34, 456.21));
+        p += dot(p, p + 45.32);
+        return fract(p.x * p.y);
+    }
+
+    // 2. Akıcı Deformasyon Gürültüsü
+    float noise(vec2 p) {
+        vec2 i = floor(p);
+        vec2 f = fract(p);
+        vec2 u = f * f * (3.0 - 2.0 * f);
+        return mix(mix(hash21(i), hash21(i + vec2(1.0, 0.0)), u.x),
+                   mix(hash21(i + vec2(0.0, 1.0)), hash21(i + vec2(1.0, 1.0)), u.x), u.y);
+    }
+
+    // 3. Altıgen Bilim-Kurgu Enerji Kalkanı (Hexagonal Forcefield SDF)
+    float hexDist(vec2 p) {
+        p = abs(p);
+        float c = dot(p, normalize(vec2(1.0, 1.73205)));
+        return max(c, p.x);
+    }
+
+    vec4 hexCoords(vec2 uv) {
+        vec2 r = vec2(1.0, 1.73205);
+        vec2 h = r * 0.5;
+        vec2 a = mod(uv, r) - h;
+        vec2 b = mod(uv - h, r) - h;
+        vec2 gv = dot(a, a) < dot(b, b) ? a : b;
+        float x = atan(gv.x, gv.y);
+        float y = 0.5 - hexDist(gv);
+        return vec4(gv.x, gv.y, y, 0.0);
+    }
+
+    void main() {
+        vec2 uv = (gl_FragCoord.xy - 0.5 * u_resolution.xy) / min(u_resolution.x, u_resolution.y);
+        vec2 mouseUv = (u_mouse - 0.5 * u_resolution.xy) / min(u_resolution.x, u_resolution.y);
+
+        // ==========================================
+        // 1. ŞOK DALGASI VE MEKANİK KIRILMA EFEKTİ (PUMP/DUMP SHOCKWAVE)
+        // ==========================================
+        if (u_shockwave > 0.0) {
+            float distToShock = length(uv - u_shock_center);
+            float diff = distToShock - u_shockwave;
+            if (abs(diff) < 0.15) {
+                float shockStrength = (1.0 - u_shockwave * 0.8) * sin(diff * 20.0);
+                uv += normalize(uv - u_shock_center) * shockStrength * 0.08;
+            }
+        }
+
+        // Derin Uzay Siber Arka Planı
+        vec3 finalColor = vec3(0.02, 0.04, 0.09) * (1.0 - length(uv) * 0.5);
+
+        // ==========================================
+        // 2. SİBER IZGARA (CYBER-GRID & PERSPECTIVE WARP)
+        // ==========================================
+        vec2 gridUv = uv;
+        gridUv.y += 0.4;
+        float gridDist = min(abs(fract(gridUv.x * 10.0 + u_time * 0.2) - 0.5),
+                             abs(fract(gridUv.y * 10.0) - 0.5));
+        float gridLine = smoothstep(0.04, 0.0, gridDist);
+        finalColor += vec3(0.0, 0.4, 0.8) * gridLine * 0.15 * smoothstep(0.0, -0.6, uv.y);
+
+        // ==========================================
+        // 3. ENERJİ KALKANI (BOLLINGER BANDS FORCEFIELD)
+        // ==========================================
+        if (u_shield_active > 0.5) {
+            vec4 hex = hexCoords(uv * 14.0 + vec2(u_time * 0.1, 0.0));
+            float hexEdge = smoothstep(0.05, 0.08, hex.z) * smoothstep(0.12, 0.08, hex.z);
+            float shieldPulse = sin(u_time * 4.0) * 0.3 + 0.7;
+            finalColor += vec3(0.0, 0.8, 1.0) * hexEdge * 0.4 * shieldPulse;
+        }
+
+        // ==========================================
+        // 4. PARÇACIK FIRTINASI (VOLATILITY SPARKLES)
+        // ==========================================
+        vec2 sparkGrid = floor(uv * 40.0);
+        float sparkRand = hash21(sparkGrid);
+        if (sparkRand > 0.95) {
+            vec2 sparkPos = fract(uv * 40.0) - 0.5;
+            float spark = smoothstep(0.1, 0.0, length(sparkPos));
+            float twinkle = sin(u_time * 6.0 + sparkRand * 50.0) * 0.5 + 0.5;
+            vec3 sparkColor = u_price_trend > 0.0 ? vec3(0.1, 1.0, 0.5) : vec3(1.0, 0.2, 0.4);
+            finalColor += sparkColor * spark * twinkle * 0.9;
+        }
+
+        // ==========================================
+        // 5. OYUN MUM GRAFİĞİ (HOLOGRAPHIC QUANTUM CANDLESTICKS)
+        // ==========================================
+        // GPU üzerinde dinamik 24 adet mum çubuğu sentezliyoruz
+        float candleWidth = 0.035;
+        float candleSpacing = 0.065;
+        for (float i = -10.0; i <= 10.0; i += 1.0) {
+            float candleX = i * candleSpacing;
+            float candleDistX = abs(uv.x - candleX);
+
+            if (candleDistX < candleSpacing * 0.5) {
+                // Mum tepe ve dip noktalarını prosedürel sinüs ve trend ile hesapla
+                float seed = i * 1.34 + u_time * 0.3;
+                float basePrice = sin(i * 0.4 + u_time * 0.5) * 0.15 + (i * 0.015 * u_price_trend);
+                float openPrice = basePrice - sin(seed) * 0.05;
+                float closePrice = basePrice + cos(seed * 1.5) * 0.07;
+                float highPrice = max(openPrice, closePrice) + abs(sin(seed * 2.1)) * 0.04;
+                float lowPrice = min(openPrice, closePrice) - abs(cos(seed * 1.8)) * 0.04;
+
+                bool isBull = closePrice >= openPrice;
+                vec3 cColor = isBull ? vec3(0.0, 1.0, 0.5) : vec3(1.0, 0.15, 0.35);
+
+                // Mum Gövdesi (Candle Body)
+                float bodyTop = max(openPrice, closePrice);
+                float bodyBottom = min(openPrice, closePrice);
+                if (uv.y >= bodyBottom && uv.y <= bodyTop && candleDistX < candleWidth * 0.5) {
+                    finalColor = mix(finalColor, cColor, 0.85);
+                    finalColor += vec3(1.0) * 0.3; // Gövde içi enerji parlaklığı
+                }
+
+                // Mum İğnesi / Fitili (Wick)
+                if (uv.y >= lowPrice && uv.y <= highPrice) {
+                    float wickLine = smoothstep(0.002, 0.0, candleDistX);
+                    finalColor += cColor * wickLine * 0.8;
+                }
+            }
+        }
+
+        // ==========================================
+        // 6. LAZER SÜPERTREND VE RSI IŞIN MOTORU (LASER BEAM INDICATORS)
+        // ==========================================
+        // 1. Lazer: Hızlı EMA Işını (Cyan Plasma)
+        float fastEmaY = sin(uv.x * 5.0 + u_time * 2.0) * 0.16 + (uv.x * 0.15 * u_price_trend);
+        float fastDist = abs(uv.y - fastEmaY);
+        float fastGlow = 0.004 / (pow(fastDist, 1.25) + 0.0001);
+        finalColor += vec3(0.0, 0.9, 1.0) * fastGlow * 0.45;
+        finalColor += vec3(1.0) * smoothstep(0.003, 0.0, fastDist) * 0.8;
+
+        // 2. Lazer: Yavaş Trend Işını (Altın / Mor Plazma)
+        float slowEmaY = sin(uv.x * 2.5 + u_time * 1.0) * 0.12 + (uv.x * 0.08 * u_price_trend);
+        float slowDist = abs(uv.y - slowEmaY);
+        float slowGlow = 0.004 / (pow(slowDist, 1.25) + 0.0001);
+        vec3 slowColor = u_price_trend > 0.0 ? vec3(1.0, 0.8, 0.0) : vec3(0.9, 0.0, 0.4);
+        finalColor += slowColor * slowGlow * 0.45;
+        finalColor += vec3(1.0) * smoothstep(0.003, 0.0, slowDist) * 0.8;
+
+        // Kesişim Patlaması (Golden Cross / Death Cross Parıltısı)
+        float crossDist = abs(fastEmaY - slowEmaY);
+        if (crossDist < 0.02) {
+            float crossSparks = smoothstep(0.03, 0.0, length(uv - vec2(uv.x, fastEmaY)));
+            finalColor += vec3(1.0, 1.0, 0.4) * crossSparks * 0.8;
+        }
+
+        // ==========================================
+        // 7. VIGNETTE VE SİNEMATİK TON EŞLEME
+        // ==========================================
+        finalColor *= smoothstep(1.35, 0.35, length(uv)); // Kenar karartması
+        finalColor = finalColor / (finalColor + vec3(0.8)); // Tone map
+        finalColor = pow(finalColor, vec3(1.0 / 1.15));
+
+        fragColor = vec4(finalColor, 1.0);
+    }
+    </script>
+
+    <!-- ==================== OYUN MOTORU KÖPRÜSÜ ==================== -->
+    <script>
+        const canvas = document.getElementById('glcanvas');
+        const gl = canvas.getContext('webgl2') || canvas.getContext('webgl');
+
+        if (!gl) {
+            alert('Tarayıcınız WebGL 2.0 desteklemiyor!');
+        }
+
+        function createShader(gl, type, src) {
+            const s = gl.createShader(type);
+            gl.shaderSource(s, src);
+            gl.compileShader(s);
+            if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) {
+                console.error('Shader Hatası:', gl.getShaderInfoLog(s));
+            }
+            return s;
+        }
+
+        const prog = gl.createProgram();
+        gl.attachShader(prog, createShader(gl, gl.VERTEX_SHADER, document.getElementById('vs').text.trim()));
+        gl.attachShader(prog, createShader(gl, gl.FRAGMENT_SHADER, document.getElementById('fs').text.trim()));
+        gl.linkProgram(prog);
+
+        const posBuf = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, posBuf);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, -1,1, 1,-1, 1,1]), gl.STATIC_DRAW);
+
+        const aPos = gl.getAttribLocation(prog, 'a_position');
+        gl.enableVertexAttribArray(aPos);
+        gl.vertexAttribPointer(aPos, 2, gl.FLOAT, false, 0, 0);
+
+        // Uniform Konumları
+        const uRes = gl.getUniformLocation(prog, 'u_resolution');
+        const uTime = gl.getUniformLocation(prog, 'u_time');
+        const uMouse = gl.getUniformLocation(prog, 'u_mouse');
+        const uShock = gl.getUniformLocation(prog, 'u_shockwave');
+        const uShockCenter = gl.getUniformLocation(prog, 'u_shock_center');
+        const uTrend = gl.getUniformLocation(prog, 'u_price_trend');
+        const uShield = gl.getUniformLocation(prog, 'u_shield_active');
+
+        // Oyun Durumu (Game State)
+        let price = 68420.50;
+        let bullPower = 65;
+        let priceTrend = 0.5; // -1.0 (Ayı) ile +1.0 (Boğa)
+        let isShieldActive = 1.0;
+        let shockwaveRadius = 0.0;
+        let shockCenter = [0.0, 0.0];
+        let soundEnabled = false;
+
+        // UI Elemanları
+        const priceElem = document.getElementById('price-display');
+        const bullPctElem = document.getElementById('bull-pct');
+        const bearPctElem = document.getElementById('bear-pct');
+        const gaugeBullBar = document.getElementById('gauge-bull-bar');
+        const gaugeBearBar = document.getElementById('gauge-bear-bar');
+        const signalElem = document.getElementById('signal-text');
+        const rsiElem = document.getElementById('rsi-stat');
+        const fpsElem = document.getElementById('fps-stat');
+
+        // Web Audio API ile Saf 8-bit Synth Ses Motoru (Harici dosya gerekmez!)
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        let audioCtx = null;
+
+        function playSynth(freq, type, dur) {
+            if (!soundEnabled) return;
+            try {
+                if (!audioCtx) audioCtx = new AudioCtx();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(freq * 1.5, audioCtx.currentTime + dur);
+                gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + dur);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + dur);
+            } catch(e) {}
+        }
+
+        window.toggleSound = function() {
+            soundEnabled = !soundEnabled;
+            if (soundEnabled && !audioCtx) audioCtx = new AudioCtx();
+            document.getElementById('sound-status').innerText = soundEnabled ? 'AÇIK 🔊' : 'KAPALI 🔇';
+            if (soundEnabled) playSynth(440, 'sine', 0.2);
+        };
+
+        window.toggleShield = function() {
+            isShieldActive = isShieldActive > 0.5 ? 0.0 : 1.0;
+            playSynth(isShieldActive ? 600 : 250, 'triangle', 0.25);
+        };
+
+        // Olay Tetikleyici (Pump / Dump Şok Dalgası)
+        window.triggerEvent = function(type) {
+            shockwaveRadius = 0.01;
+            shockCenter = [(Math.random() - 0.5) * 0.4, (Math.random() - 0.5) * 0.3];
+
+            if (type === 'pump') {
+                bullPower = Math.min(95, bullPower + 25);
+                priceTrend = 1.0;
+                price += Math.random() * 2400 + 1200;
+                signalElem.innerText = '🔥 MEGA PUMP ACTIVATED!';
+                signalElem.style.color = '#10b981';
+                playSynth(880, 'sawtooth', 0.4);
+            } else {
+                bullPower = Math.max(5, bullPower - 25);
+                priceTrend = -1.0;
+                price -= Math.random() * 2400 + 1200;
+                signalElem.innerText = '💀 DEATH DROP / SELL!';
+                signalElem.style.color = '#ef4444';
+                playSynth(180, 'sawtooth', 0.4);
+            }
+            updateHUD();
+        };
+
+        function updateHUD() {
+            const bearPower = 100 - bullPower;
+            bullPctElem.innerText = Math.round(bullPower);
+            bearPctElem.innerText = Math.round(bearPower);
+            gaugeBullBar.style.width = `${bullPower}%`;
+            gaugeBearBar.style.width = `${bearPower}%`;
+
+            priceElem.innerText = `$${price.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+            priceElem.style.color = priceTrend > 0 ? '#10b981' : '#ef4444';
+
+            const rsi = (bullPower * 0.8 + 10).toFixed(1);
+            rsiElem.innerText = rsi;
+        }
+
+        // Fare Takibi
+        let mouseX = window.innerWidth / 2;
+        let mouseY = window.innerHeight / 2;
+        window.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = window.innerHeight - e.clientY;
+        });
+
+        // Çözünürlük Boyutlandırma
+        function resize() {
+            const dpr = Math.min(window.devicePixelRatio || 1, 2);
+            const w = Math.floor(window.innerWidth * dpr);
+            const h = Math.floor(window.innerHeight * dpr);
+            if (canvas.width !== w || canvas.height !== h) {
+                canvas.width = w;
+                canvas.height = h;
+                gl.viewport(0, 0, w, h);
+            }
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        // Performans & Render Döngüsü
+        let lastT = performance.now();
+        let frameCnt = 0;
+
+        function gameLoop(now) {
+            const tSec = now * 0.001;
+            frameCnt++;
+
+            if (now - lastT >= 500) {
+                const fps = Math.round((frameCnt * 1000) / (now - lastT));
+                fpsElem.innerText = fps;
+                frameCnt = 0;
+                lastT = now;
+            }
+
+            // Şok Dalgası Animasyonunu İlerlet
+            if (shockwaveRadius > 0.0) {
+                shockwaveRadius += 0.035;
+                if (shockwaveRadius > 1.8) shockwaveRadius = 0.0;
+            }
+
+            // Fiyat ve Trendi Doğal Olarak Yavaşça Dengele
+            price += (Math.random() - 0.48) * 15;
+            bullPower += (Math.random() - 0.5) * 0.4;
+            bullPower = Math.max(10, Math.min(90, bullPower));
+            priceTrend = (bullPower - 50) / 40;
+            updateHUD();
+
+            resize();
+
+            gl.useProgram(prog);
+            gl.uniform2f(uRes, canvas.width, canvas.height);
+            gl.uniform1f(uTime, tSec);
+            gl.uniform2f(uMouse, mouseX * (canvas.width / window.innerWidth), mouseY * (canvas.height / window.innerHeight));
+            gl.uniform1f(uShock, shockwaveRadius);
+            gl.uniform2f(uShockCenter, shockCenter[0], shockCenter[1]);
+            gl.uniform1f(uTrend, priceTrend);
+            gl.uniform1f(uShield, isShieldActive);
+
+            gl.drawArrays(gl.TRIANGLES, 0, 6);
+            requestAnimationFrame(gameLoop);
+        }
+
+        requestAnimationFrame(gameLoop);
+    </script>
+</body>
+</html>
