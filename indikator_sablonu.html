@@ -1850,59 +1850,83 @@
         }
 
         // ============================================================
-        // 🎆 HAVAİ FİŞEK VE PARÇACIK ANİMASYON MOTORU
+        // 🎆 EKRAN GENELİ MİNİK HAVAİ FİŞEK VE KUTLAMA PARÇACIK MOTORU
         // ============================================================
-        const fireworkColors = ['#10b981', '#38bdf8', '#fbbf24', '#f43f5e', '#a855f7', '#ec4899', '#00f2fe', '#ffffff'];
+        const SCREEN_FIREWORKS = [
+            { relX: 0.12, relY: 0.22, seed: 1.2, speed: 1.15, size: 28, color: '#10b981' },
+            { relX: 0.28, relY: 0.16, seed: 3.7, speed: 1.30, size: 36, color: '#38bdf8' },
+            { relX: 0.48, relY: 0.24, seed: 5.1, speed: 0.95, size: 32, color: '#fbbf24' },
+            { relX: 0.68, relY: 0.18, seed: 2.4, speed: 1.25, size: 38, color: '#34d399' },
+            { relX: 0.86, relY: 0.22, seed: 4.8, speed: 1.05, size: 30, color: '#6ee7b7' },
+            { relX: 0.20, relY: 0.52, seed: 6.3, speed: 1.40, size: 34, color: '#facc15' },
+            { relX: 0.80, relY: 0.55, seed: 7.9, speed: 1.10, size: 32, color: '#00f2fe' },
+            { relX: 0.38, relY: 0.68, seed: 8.5, speed: 0.85, size: 26, color: '#10b981' },
+            { relX: 0.62, relY: 0.70, seed: 9.2, speed: 1.35, size: 30, color: '#38bdf8' }
+        ];
 
-        function drawFireworkExplosion(ctx, x, y, timeNow, seed) {
-            const particleCount = 14;
-            const cycle = (timeNow * 0.002 + seed * 1.3) % 1.0;
-            const radius = cycle * 34;
-            const alpha = Math.max(0, 1.0 - cycle * 1.1);
-
+        function drawScreenWideCelebrationFireworks(ctx, cssW, cssH, timeNow, globalAlpha) {
+            if (globalAlpha <= 0.01) return;
             ctx.save();
-            for (let i = 0; i < particleCount; i++) {
-                const angle = (i / particleCount) * Math.PI * 2 + seed + (cycle * 0.8);
-                const sparkDist = radius * (0.6 + 0.4 * Math.sin(i * 3 + seed));
-                const px = Math.round(x + Math.cos(angle) * sparkDist);
-                const py = Math.round(y + Math.sin(angle) * sparkDist);
-                const color = fireworkColors[(i + Math.floor(seed * 10)) % fireworkColors.length];
 
-                ctx.fillStyle = color;
-                ctx.shadowColor = color;
-                ctx.shadowBlur = 8;
-                ctx.globalAlpha = alpha;
+            for (let f = 0; f < SCREEN_FIREWORKS.length; f++) {
+                const fw = SCREEN_FIREWORKS[f];
+                const cx = fw.relX * cssW;
+                const cy = fw.relY * cssH;
+                const cycle = ((timeNow * 0.0014 * fw.speed) + fw.seed) % 1.0;
+                const radius = cycle * fw.size;
+                const burstAlpha = Math.max(0, 1.0 - cycle * 1.05) * globalAlpha;
 
-                const size = (1.0 - cycle) * 2.8 + 0.8;
-                ctx.beginPath();
-                ctx.arc(px, py, size, 0, Math.PI * 2);
-                ctx.fill();
+                const pCount = 12;
+                for (let i = 0; i < pCount; i++) {
+                    const angle = (i / pCount) * Math.PI * 2 + fw.seed + (cycle * 0.6);
+                    const dist = radius * (0.6 + 0.4 * Math.sin(i * 2.5 + fw.seed));
+                    const px = Math.round(cx + Math.cos(angle) * dist);
+                    const py = Math.round(cy + Math.sin(angle) * dist + (cycle * cycle * 12)); // hafif yerçekimi
 
-                if (i % 2 === 0) {
-                    ctx.strokeStyle = color;
-                    ctx.lineWidth = 1;
+                    ctx.fillStyle = fw.color;
+                    ctx.shadowColor = fw.color;
+                    ctx.shadowBlur = 8;
+                    ctx.globalAlpha = burstAlpha;
+
+                    const pSize = Math.max(0.6, (1.0 - cycle) * 2.6);
                     ctx.beginPath();
-                    ctx.moveTo(x, y);
-                    ctx.lineTo(px, py);
-                    ctx.stroke();
+                    ctx.arc(px, py, pSize, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    // Minik parıldayan altın yıldızlar
+                    if (i % 3 === 0 && cycle > 0.15 && cycle < 0.75) {
+                        ctx.fillStyle = '#ffffff';
+                        ctx.shadowColor = '#fbbf24';
+                        ctx.shadowBlur = 10;
+                        ctx.fillRect(px - 1, py - 1, 2, 2);
+                    }
+                }
+
+                // Havai fişek merkez parıltısı
+                if (cycle < 0.22) {
+                    ctx.fillStyle = '#ffffff';
+                    ctx.shadowColor = fw.color;
+                    ctx.shadowBlur = 16;
+                    ctx.globalAlpha = Math.max(0, (1.0 - cycle * 4.5)) * globalAlpha;
+                    ctx.beginPath();
+                    ctx.arc(cx, cy, 3.5, 0, Math.PI * 2);
+                    ctx.fill();
                 }
             }
-
-            ctx.fillStyle = '#ffffff';
-            ctx.shadowColor = '#10b981';
-            ctx.shadowBlur = 14;
-            ctx.globalAlpha = Math.max(0, 1.0 - cycle * 2.0);
-            ctx.beginPath();
-            ctx.arc(x, y, 4, 0, Math.PI * 2);
-            ctx.fill();
-
             ctx.restore();
         }
 
+        // ============================================================
+        // 🎯 60/120 FPS GPU SMOOTH LERP ANİMASYON DURUM MOTORU
+        // ============================================================
         let hoveredCandleIdx = -1;
+        let focusAnim = {
+            currentSigIndex: -1,
+            progress: 0.0 // 0.0 (normal) -> 1.0 (tam odaklanmış spotlight)
+        };
 
         // ============================================================
-        // HiDPI DİNAMİK VEKTÖR TP / SL VE ROZET ÇİZİCİSİ (SİNEMATİK SPOT IŞIKLI)
+        // HiDPI DİNAMİK VEKTÖR TP / SL VE ROZET ÇİZİCİSİ (PÜRÜZSÜZ GPU ODAKLI)
         // ============================================================
         function drawVectorSignalsAndTargets(timeNow) {
             const cssW = canvasContainer.clientWidth;
@@ -1924,26 +1948,47 @@
                 return Math.round(cssH - ((price - minPrice) / diff) * cssH);
             }
 
-            // 1. Hovered Sinyal Kontrolü
+            // 1. Hovered Sinyal ve Smooth Progress Güncellemesi (Lerp)
             const hoveredSig = (hoveredCandleIdx >= 0) ? calculatedSignals.find(s => Math.abs(s.index - hoveredCandleIdx) <= 0.5) : null;
+            const targetSigIdx = hoveredSig ? hoveredSig.index : -1;
 
-            // 2. Eğer sinyal üzerine gelinmişse arka planı sinematik olarak karart (Spotlight Vignette)
-            if (hoveredSig) {
+            if (targetSigIdx !== -1) {
+                focusAnim.currentSigIndex = targetSigIdx;
+            }
+
+            const targetProgress = (targetSigIdx !== -1) ? 1.0 : 0.0;
+            // 60-120 FPS akıcı geçiş için pürüzsüz üssel yaklaşım (Lerp)
+            focusAnim.progress += (targetProgress - focusAnim.progress) * 0.14;
+
+            if (focusAnim.progress < 0.002) {
+                focusAnim.progress = 0.0;
+                if (targetSigIdx === -1) focusAnim.currentSigIndex = -1;
+            }
+
+            const activeFocusSig = (focusAnim.currentSigIndex !== -1) ? calculatedSignals.find(s => s.index === focusAnim.currentSigIndex) : null;
+
+            // 2. Smooth Sinematik Arka Plan Karartması (Vignette Fade-in/out)
+            if (focusAnim.progress > 0.002) {
                 ctx2d.save();
-                ctx2d.fillStyle = 'rgba(3, 7, 18, 0.72)';
+                ctx2d.fillStyle = `rgba(3, 7, 18, ${(focusAnim.progress * 0.76).toFixed(3)})`;
                 ctx2d.fillRect(0, 0, cssW, cssH);
                 ctx2d.restore();
             }
 
-            // 3. Normal / Arka Plan Sinyalleri Çizimi
+            // 3. Başarılı İşlemde Ekran Geneli Minik Havai Fişek Patlamaları (Smooth Fade-in)
+            if (activeFocusSig && activeFocusSig.btStatus === 'TP' && focusAnim.progress > 0.01) {
+                drawScreenWideCelebrationFireworks(ctx2d, cssW, cssH, timeNow, focusAnim.progress * 0.95);
+            }
+
+            // 4. Arka Plandaki Diğer Sinyallerin Çizimi (Smooth Karartma Oranıyla)
+            const otherAlpha = Math.max(0.12, 1.0 - (focusAnim.progress * 0.84));
+
             for (const sig of calculatedSignals) {
                 if (sig.index < viewStart - 8 || sig.index > viewEnd + 8) continue;
-                if (hoveredSig && sig === hoveredSig) continue; // Hovered olanı en üstte devasa çizeceğiz
+                if (activeFocusSig && sig.index === activeFocusSig.index && focusAnim.progress > 0.01) continue; // Odaktaki sinyali en üstte smooth çizeceğiz
 
                 ctx2d.save();
-                if (hoveredSig) {
-                    ctx2d.globalAlpha = 0.18; // Diğer tüm sinyalleri iyice karart
-                }
+                ctx2d.globalAlpha = otherAlpha;
 
                 const candleCenter = sig.index + 0.5;
                 const screenX = Math.round(((candleCenter - viewStart) / visibleCount) * cssW);
@@ -1974,11 +2019,6 @@
                 }
 
                 const badgeY = isBuy ? lowY + 24 : highY - 24;
-
-                // Havai fişek patlaması
-                if (isBacktestActive && isTpWin && !hoveredSig) {
-                    drawFireworkExplosion(ctx2d, screenX, badgeY, timeNow, sig.index * 0.17);
-                }
 
                 // Sinyal Rozeti
                 ctx2d.fillStyle = badgeBg;
@@ -2021,7 +2061,7 @@
                     ctx2d.stroke();
                 }
 
-                // TP / SL Çizgileri
+                // Normal Modda Uzaktaki TP / SL Çizgileri
                 if (visibleCount < 400) {
                     const projDistance = isBacktestActive ? Math.min(sig.exitIndex - sig.index, 25) : 8;
                     const projEndX = Math.round(Math.min(cssW - 90, screenX + (cssW / visibleCount) * Math.max(6, projDistance)));
@@ -2051,9 +2091,9 @@
                 ctx2d.restore();
             }
 
-            // 4. SPOTLIGHT MODU: HOVERED SİNYALİ BÜYÜTEREK VE PARLATARAK ÖNE ÇIKAR
-            if (hoveredSig) {
-                const sig = hoveredSig;
+            // 5. 🌟 SAF GPU SMOOTH ODAK MODU (PÜRÜZSÜZ BÜYÜYEN MUM & YATAYDA MUMU ORTALAYAN TP/SL ROZETLERİ)
+            if (activeFocusSig && focusAnim.progress > 0.002) {
+                const sig = activeFocusSig;
                 const candleCenter = sig.index + 0.5;
                 const screenX = Math.round(((candleCenter - viewStart) / visibleCount) * cssW);
                 const candle = candleDataBase[sig.index];
@@ -2070,83 +2110,89 @@
                     const isBuy = sig.isBuy;
                     const isTpWin = sig.btStatus === 'TP';
                     const isSlLoss = sig.btStatus === 'SL';
+                    const prog = focusAnim.progress;
 
                     ctx2d.save();
 
-                    // A. DİKEY PARLAK IŞIK SÜTUNU (SPOTLIGHT BEAM)
+                    // A. DİKEY PARLAK IŞIK SÜTUNU (SPOTLIGHT BEAM - SMOOTH FADE)
                     const beamGrad = ctx2d.createLinearGradient(screenX, 0, screenX, cssH);
                     beamGrad.addColorStop(0, 'rgba(56, 189, 248, 0.0)');
-                    beamGrad.addColorStop(0.3, isBuy ? 'rgba(16, 185, 129, 0.12)' : 'rgba(239, 68, 68, 0.12)');
-                    beamGrad.addColorStop(0.5, isBuy ? 'rgba(16, 185, 129, 0.22)' : 'rgba(239, 68, 68, 0.22)');
-                    beamGrad.addColorStop(0.7, isBuy ? 'rgba(16, 185, 129, 0.12)' : 'rgba(239, 68, 68, 0.12)');
+                    beamGrad.addColorStop(0.3, isBuy ? `rgba(16, 185, 129, ${(0.14 * prog).toFixed(3)})` : `rgba(239, 68, 68, ${(0.14 * prog).toFixed(3)})`);
+                    beamGrad.addColorStop(0.5, isBuy ? `rgba(16, 185, 129, ${(0.28 * prog).toFixed(3)})` : `rgba(239, 68, 68, ${(0.28 * prog).toFixed(3)})`);
+                    beamGrad.addColorStop(0.7, isBuy ? `rgba(16, 185, 129, ${(0.14 * prog).toFixed(3)})` : `rgba(239, 68, 68, ${(0.14 * prog).toFixed(3)})`);
                     beamGrad.addColorStop(1, 'rgba(56, 189, 248, 0.0)');
                     
-                    const beamWidth = Math.max(48, (cssW / visibleCount) * 3.5);
+                    const beamWidth = Math.max(50, (cssW / visibleCount) * (2.0 + 2.0 * prog));
                     ctx2d.fillStyle = beamGrad;
                     ctx2d.fillRect(screenX - beamWidth / 2, 0, beamWidth, cssH);
 
-                    // B. TP VE SL HEDEF ALANLARI (DOLGULU RİSK/KÂR KUTUSU)
+                    // B. TP / SL HEDEF ALANLARI VE YATAYDA MUMU ORTALAYAN HAREKETLİ ROZET KONUMU
                     const projDistance = isBacktestActive ? Math.min(sig.exitIndex - sig.index, 35) : 16;
-                    const projEndX = Math.round(Math.min(cssW - 20, screenX + (cssW / visibleCount) * Math.max(12, projDistance)));
+                    const baseProjEndX = Math.round(Math.min(cssW - 20, screenX + (cssW / visibleCount) * Math.max(12, projDistance)));
+                    
+                    // ✨ Kullanıcı Talebi: TP ve SL yazıları uzaktan başlayıp yavaşça MUMU YATAYDA ORTALAYACAK şekilde kayar!
+                    const badgeCenterX = Math.round(baseProjEndX + (screenX - baseProjEndX) * prog);
 
-                    // TP Alanı (Yeşil Vurgu Kutusu)
+                    // TP Alanı (Yeşil Kâr Kutusu - Smooth Opaklık)
                     const tpTop = Math.min(entryY, tpY);
                     const tpHeight = Math.max(2, Math.abs(tpY - entryY));
-                    ctx2d.fillStyle = 'rgba(16, 185, 129, 0.22)';
-                    ctx2d.fillRect(screenX, tpTop, projEndX - screenX, tpHeight);
+                    ctx2d.fillStyle = `rgba(16, 185, 129, ${(0.24 * prog).toFixed(3)})`;
+                    const boxRight = Math.max(screenX + 30, baseProjEndX);
+                    ctx2d.fillRect(screenX, tpTop, boxRight - screenX, tpHeight);
 
-                    // SL Alanı (Kırmızı Vurgu Kutusu)
+                    // SL Alanı (Kırmızı Risk Kutusu - Smooth Opaklık)
                     const slTop = Math.min(entryY, slY);
                     const slHeight = Math.max(2, Math.abs(slY - entryY));
-                    ctx2d.fillStyle = 'rgba(239, 68, 68, 0.22)';
-                    ctx2d.fillRect(screenX, slTop, projEndX - screenX, slHeight);
+                    ctx2d.fillStyle = `rgba(239, 68, 68, ${(0.24 * prog).toFixed(3)})`;
+                    ctx2d.fillRect(screenX, slTop, boxRight - screenX, slHeight);
 
-                    // C. KALIN IŞILDAYAN TP VE SL ÇİZGİLERİ
+                    // C. KALIN IŞILDAYAN TP VE SL SEVİYE ÇİZGİLERİ
                     // TP Çizgisi
                     ctx2d.strokeStyle = '#10b981';
-                    ctx2d.lineWidth = 3.5;
+                    ctx2d.lineWidth = 2.0 + 1.8 * prog;
                     ctx2d.shadowColor = '#10b981';
-                    ctx2d.shadowBlur = 20;
+                    ctx2d.shadowBlur = 10 + 18 * prog;
                     ctx2d.beginPath();
                     ctx2d.moveTo(screenX, entryY);
                     ctx2d.lineTo(screenX, tpY);
-                    ctx2d.lineTo(projEndX, tpY);
+                    ctx2d.lineTo(boxRight, tpY);
                     ctx2d.stroke();
 
                     // SL Çizgisi
                     ctx2d.strokeStyle = '#ef4444';
-                    ctx2d.lineWidth = 3.5;
+                    ctx2d.lineWidth = 2.0 + 1.8 * prog;
                     ctx2d.shadowColor = '#ef4444';
-                    ctx2d.shadowBlur = 20;
+                    ctx2d.shadowBlur = 10 + 18 * prog;
                     ctx2d.beginPath();
                     ctx2d.moveTo(screenX, entryY);
                     ctx2d.lineTo(screenX, slY);
-                    ctx2d.lineTo(projEndX, slY);
+                    ctx2d.lineTo(boxRight, slY);
                     ctx2d.stroke();
 
-                    // Giriş Seviyesi (Nötr Sarı Çizgi)
+                    // Giriş Çizgisi (Kesikli Altın)
                     ctx2d.strokeStyle = '#fbbf24';
-                    ctx2d.lineWidth = 2.0;
+                    ctx2d.lineWidth = 1.5 + 0.8 * prog;
                     ctx2d.shadowColor = '#fbbf24';
-                    ctx2d.shadowBlur = 12;
+                    ctx2d.shadowBlur = 8 + 10 * prog;
                     ctx2d.setLineDash([5, 4]);
                     ctx2d.beginPath();
                     ctx2d.moveTo(screenX, entryY);
-                    ctx2d.lineTo(projEndX, entryY);
+                    ctx2d.lineTo(boxRight, entryY);
                     ctx2d.stroke();
                     ctx2d.setLineDash([]);
 
-                    // D. BÜYÜTÜLMÜŞ SPOTLIGHT SİNYAL MUMU (2X BOYUT VE NEON GÖVDE)
-                    const candleW = Math.max(14, (cssW / visibleCount) * 1.85);
+                    // D. PÜRÜZSÜZ (SMOOTH LERP) BÜYÜYEN SİNYAL MUMU (1.0X -> 2.25X)
+                    const baseCandleW = (cssW / visibleCount) * 0.8;
+                    const candleW = Math.max(10, baseCandleW * (1.0 + 1.35 * prog));
                     const bodyTop = Math.min(openY, closeY);
                     const bodyHeight = Math.max(5, Math.abs(closeY - openY));
                     const isCandleBull = candle.close >= candle.open;
 
                     // Fitil (Wick)
                     ctx2d.strokeStyle = isCandleBull ? '#34d399' : '#f87171';
-                    ctx2d.lineWidth = 3.5;
+                    ctx2d.lineWidth = 2.0 + 2.2 * prog;
                     ctx2d.shadowColor = ctx2d.strokeStyle;
-                    ctx2d.shadowBlur = 18;
+                    ctx2d.shadowBlur = 8 + 18 * prog;
                     ctx2d.beginPath();
                     ctx2d.moveTo(screenX, highY);
                     ctx2d.lineTo(screenX, lowY);
@@ -2155,78 +2201,78 @@
                     // Gövde (Body)
                     ctx2d.fillStyle = isCandleBull ? '#10b981' : '#ef4444';
                     ctx2d.strokeStyle = '#ffffff';
-                    ctx2d.lineWidth = 2.5;
+                    ctx2d.lineWidth = 1.5 + 1.5 * prog;
                     ctx2d.shadowColor = ctx2d.fillStyle;
-                    ctx2d.shadowBlur = 28;
+                    ctx2d.shadowBlur = 10 + 26 * prog;
                     ctx2d.fillRect(screenX - candleW / 2, bodyTop, candleW, bodyHeight);
                     ctx2d.strokeRect(screenX - candleW / 2, bodyTop, candleW, bodyHeight);
 
-                    // E. DEVASA HOLOGRAFİK TP / SL ROZETLERİ
+                    // E. YATAYDA MUMU ORTALAYAN DEVASA HOLOGRAFİK TP / SL ROZETLERİ
                     const targetPnlPct = Math.abs((sig.tp - sig.price) / sig.price * 100).toFixed(2);
                     const riskPnlPct = Math.abs((sig.price - sig.sl) / sig.price * 100).toFixed(2);
 
-                    // 1. TP Holografik Rozeti
-                    ctx2d.fillStyle = 'rgba(6, 78, 59, 0.95)';
+                    // 1. TP Holografik Rozeti (Mumu Yatayda Ortalar)
+                    ctx2d.fillStyle = 'rgba(6, 78, 59, 0.96)';
                     ctx2d.strokeStyle = '#10b981';
                     ctx2d.lineWidth = 2;
                     ctx2d.shadowColor = '#10b981';
-                    ctx2d.shadowBlur = 16;
+                    ctx2d.shadowBlur = 18;
                     const tpText = `🎯 TP HEDEFİ: $${sig.tp.toFixed(1)} (+%${targetPnlPct}) ${isTpWin ? '🏆 KAZANDI' : ''}`;
                     ctx2d.font = 'bold 12.5px "SF Pro Text", "Segoe UI", sans-serif';
                     const tpMetrics = ctx2d.measureText(tpText);
-                    const tpW = Math.round(tpMetrics.width) + 16;
+                    const tpW = Math.round(tpMetrics.width) + 18;
                     const tpH = 24;
                     ctx2d.beginPath();
-                    ctx2d.roundRect(projEndX - tpW / 2, tpY - tpH / 2, tpW, tpH, 6);
+                    ctx2d.roundRect(badgeCenterX - tpW / 2, tpY - tpH / 2, tpW, tpH, 6);
                     ctx2d.fill();
                     ctx2d.stroke();
                     ctx2d.fillStyle = '#ffffff';
                     ctx2d.textAlign = 'center';
                     ctx2d.textBaseline = 'middle';
-                    ctx2d.fillText(tpText, projEndX, tpY);
+                    ctx2d.fillText(tpText, badgeCenterX, tpY);
 
-                    // 2. SL Holografik Rozeti
-                    ctx2d.fillStyle = 'rgba(127, 29, 29, 0.95)';
+                    // 2. SL Holografik Rozeti (Mumu Yatayda Ortalar)
+                    ctx2d.fillStyle = 'rgba(127, 29, 29, 0.96)';
                     ctx2d.strokeStyle = '#ef4444';
                     ctx2d.lineWidth = 2;
                     ctx2d.shadowColor = '#ef4444';
-                    ctx2d.shadowBlur = 16;
+                    ctx2d.shadowBlur = 18;
                     const slText = `🛡️ STOP LOSS: $${sig.sl.toFixed(1)} (-%${riskPnlPct}) ${isSlLoss ? '❌ STOP' : ''}`;
                     ctx2d.font = 'bold 12.5px "SF Pro Text", "Segoe UI", sans-serif';
                     const slMetrics = ctx2d.measureText(slText);
-                    const slW = Math.round(slMetrics.width) + 16;
+                    const slW = Math.round(slMetrics.width) + 18;
                     const slH = 24;
                     ctx2d.beginPath();
-                    ctx2d.roundRect(projEndX - slW / 2, slY - slH / 2, slW, slH, 6);
+                    ctx2d.roundRect(badgeCenterX - slW / 2, slY - slH / 2, slW, slH, 6);
                     ctx2d.fill();
                     ctx2d.stroke();
                     ctx2d.fillStyle = '#ffffff';
                     ctx2d.textAlign = 'center';
                     ctx2d.textBaseline = 'middle';
-                    ctx2d.fillText(slText, projEndX, slY);
+                    ctx2d.fillText(slText, badgeCenterX, slY);
 
-                    // 3. Giriş Bilgi Rozeti
-                    ctx2d.fillStyle = 'rgba(15, 23, 42, 0.95)';
+                    // 3. Giriş Seviye Rozeti (Mumu Yatayda Ortalar)
+                    ctx2d.fillStyle = 'rgba(15, 23, 42, 0.96)';
                     ctx2d.strokeStyle = '#fbbf24';
                     ctx2d.lineWidth = 1.5;
                     ctx2d.shadowColor = '#fbbf24';
-                    ctx2d.shadowBlur = 12;
+                    ctx2d.shadowBlur = 14;
                     const entryText = `⚡ GİRİŞ: $${sig.price.toFixed(1)} | R:R 1 : ${sig.rrRatio.toFixed(2)}`;
                     ctx2d.font = 'bold 11px "SF Pro Text", "Segoe UI", sans-serif';
                     const entryMetrics = ctx2d.measureText(entryText);
-                    const entryW = Math.round(entryMetrics.width) + 14;
+                    const entryW = Math.round(entryMetrics.width) + 16;
                     const entryH = 20;
                     ctx2d.beginPath();
-                    ctx2d.roundRect(screenX + 10, entryY - entryH / 2, entryW, entryH, 5);
+                    ctx2d.roundRect(badgeCenterX - entryW / 2, entryY - entryH / 2, entryW, entryH, 5);
                     ctx2d.fill();
                     ctx2d.stroke();
                     ctx2d.fillStyle = '#fef08a';
                     ctx2d.textAlign = 'center';
                     ctx2d.textBaseline = 'middle';
-                    ctx2d.fillText(entryText, screenX + 10 + entryW / 2, entryY);
+                    ctx2d.fillText(entryText, badgeCenterX, entryY);
 
-                    // F. BÜYÜTÜLMÜŞ SİNYAL ETİKET ROZETİ
-                    const badgeY = isBuy ? lowY + 34 : highY - 34;
+                    // F. BÜYÜTÜLMÜŞ SİNYAL ETİKET ROZETİ (MUMUN HEMEN YANINDA / ÜSTÜNDE)
+                    const badgeY = isBuy ? lowY + 36 : highY - 36;
                     const badgeColor = isBuy ? '#10b981' : '#ef4444';
                     const badgeBg = isBuy ? 'rgba(16, 185, 129, 1.0)' : 'rgba(239, 68, 68, 1.0)';
                     const badgeText = `⚡ ${sig.label.toUpperCase()}`;
@@ -2235,7 +2281,7 @@
                     ctx2d.strokeStyle = '#ffffff';
                     ctx2d.lineWidth = 2.5;
                     ctx2d.shadowColor = badgeColor;
-                    ctx2d.shadowBlur = 24;
+                    ctx2d.shadowBlur = 14 + 18 * prog;
 
                     ctx2d.font = 'bold 13px "SF Pro Text", "Segoe UI", sans-serif';
                     const bMetrics = ctx2d.measureText(badgeText);
