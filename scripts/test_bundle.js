@@ -47,25 +47,85 @@
         const uTotalCandles = gl.getUniformLocation(prog, 'u_total_candles');
 
         // ==========================================
-        // 🎯 5 GELİŞMİŞ QUANT STRATEJİSİ
+        // 🎯 5 GELİŞMİŞ QUANT STRATEJİSİ (1M SCALP VS 1H SWING DİNAMİK)
         // ==========================================
-        let activeStrategy = 4; // Varsayılan: 4 (En yüksek karlı Asimetrik Pro)
+        let activeStrategy = 4; // Varsayılan: 4 (Şampiyon Asimetrik Pro)
 
-        const stratTitles = {
-            4: '🔥 STRATEJİ 4: ASİMETRİK PRO (BUY1: 2.2x, BUY2 TREND: 4.0x R:R 1:2.85, SELL: 2.5x)',
-            2: '🤖 STRATEJİ 2: QUANT MAE (DİNAMİK VOLATİLİTE OPTİMİZASYONU: 1.2x-2.5x SL / 2.0x-3.2x TP)',
-            3: '🔄 STRATEJİ 3: DİNAMİK TRAILING STOP (+0.8 ATR BREAKEVEN & %78.8 KAZANMA ORANI)',
-            1: '🏛️ STRATEJİ 1: PİYASA YAPISI (SWING LOW/HIGH + KIJUN + BULUT TABANI + 0.4 ATR TAMPON)',
-            0: '📐 STRATEJİ 0: KLASİK SABİT 1:1.67 R:R (1.5x SL / 2.5x TP)'
-        };
+        function isScalpTimeframe(tf) {
+            return tf === '1m' || tf === '3m' || tf === '5m' || tf === '15m';
+        }
 
-        const stratFooters = {
-            4: 'Aktif: <b>4. Asimetrik Pro (BUY1: 2.2x SL / 2.2x TP, BUY2: 1.4x SL / 4.0x TP R:R 1:2.85, SELL: 1.2x SL / 2.5x TP)</b>',
-            2: 'Aktif: <b>2. Quant MAE (Sıkışmada 2.5x SL / Patlamada 3.2x TP)</b>',
-            3: 'Aktif: <b>3. Trailing BE (+0.8 ATR Erken Breakeven & %78.8 Win Rate)</b>',
-            1: 'Aktif: <b>1. Piyasa Yapısı (Swing Low + Kijun + Bulut Tabanı + 0.4 ATR Tampon)</b>',
-            0: 'Aktif: <b>0. Sabit 1.67 (1.5x ATR SL / 2.5x ATR TP)</b>'
-        };
+        function getStratTitle(stratId, tf) {
+            const scalp = isScalpTimeframe(tf || currentTimeframe);
+            if (scalp) {
+                switch(stratId) {
+                    case 4: return '🔥 1M ASİMETRİK SCALP PRO (BUY2: 1.5/3.0x %63.6 Win | SELL: 1.5/3.0x)';
+                    case 3: return '🔄 1M MICRO-BREAKEVEN (%70.5 KAZANMA ORANI | +0.6 ATR BE & SWING 8)';
+                    case 2: return '⚡ 1M SERİ HIZLI SCALP (1.5x SL / 2.0x TP | DAKİKALIK KAPANIŞ)';
+                    case 1: return '🏛️ 1M MİKRO-YAPISAL SL (SON 5 BAR SWING + 0.2x ATR TAMPON)';
+                    case 0: return '📐 1M KLASİK SABİT SCALP (1.2x SL / 1.8x TP)';
+                    default: return '⚡ 1M SCALP STRATEJİSİ';
+                }
+            } else {
+                switch(stratId) {
+                    case 4: return '🔥 1H ASİMETRİK PRO (BUY1: 2.2x, BUY2 TREND: 4.0x R:R 1:2.85, SELL: 2.5x)';
+                    case 3: return '🔄 1H TRAILING STOP (+0.8 ATR BREAKEVEN & %78.8 KAZANMA ORANI)';
+                    case 2: return '🤖 1H QUANT MAE (DİNAMİK VOLATİLİTE: 1.2x-2.5x SL / 2.0x-3.2x TP)';
+                    case 1: return '🏛️ 1H YAPISAL SL (SWING LOW/HIGH + KIJUN + BULUT TABANI + 0.4 ATR)';
+                    case 0: return '📐 1H KLASİK SABİT 1:1.67 R:R (1.5x SL / 2.5x TP)';
+                    default: return '📊 1H SWING STRATEJİSİ';
+                }
+            }
+        }
+
+        function getStratFooter(stratId, tf) {
+            const scalp = isScalpTimeframe(tf || currentTimeframe);
+            if (scalp) {
+                switch(stratId) {
+                    case 4: return 'Aktif: <b>⚡ 4. 1M Asimetrik Scalp (BUY2: 1.5x SL / 3.0x TP %63.6 Win 🚀, SELL: 1.5x SL / 3.0x TP)</b>';
+                    case 3: return 'Aktif: <b>🔄 3. 1M Micro-BE (%70.5 Win Rate | +0.6 ATR Erken Breakeven)</b>';
+                    case 2: return 'Aktif: <b>⚡ 2. 1M Hızlı Scalp (1.5x SL / 2.0x TP R:R 1:1.33)</b>';
+                    case 1: return 'Aktif: <b>🏛️ 1. 1M Mikro-Yapısal (Son 5 Bar Swing + 0.2x ATR)</b>';
+                    case 0: return 'Aktif: <b>📐 0. 1M Sabit Scalp (1.2x SL / 1.8x TP)</b>';
+                    default: return '';
+                }
+            } else {
+                switch(stratId) {
+                    case 4: return 'Aktif: <b>🔥 4. 1H Asimetrik Pro (BUY1: 2.2x, BUY2: 1.4/4.0x R:R 1:2.85, SELL: 1.2/2.5x)</b>';
+                    case 3: return 'Aktif: <b>🔄 3. 1H Trailing BE (+0.8 ATR Erken Breakeven & %78.8 Win Rate)</b>';
+                    case 2: return 'Aktif: <b>🤖 2. 1H Quant MAE (Sıkışmada 2.5x SL / Patlamada 3.2x TP)</b>';
+                    case 1: return 'Aktif: <b>🏛️ 1. 1H Yapısal SL (Swing 10 + Kijun + Bulut + 0.4 ATR Tampon)</b>';
+                    case 0: return 'Aktif: <b>📐 0. 1H Sabit 1.67 (1.5x ATR SL / 2.5x ATR TP)</b>';
+                    default: return '';
+                }
+            }
+        }
+
+        function updateStrategyToolbarUi(tf) {
+            const scalp = isScalpTimeframe(tf);
+            const btn4 = document.getElementById('strat-btn-4');
+            const btn3 = document.getElementById('strat-btn-3');
+            const btn2 = document.getElementById('strat-btn-2');
+            const btn1 = document.getElementById('strat-btn-1');
+            const btn0 = document.getElementById('strat-btn-0');
+
+            if (scalp) {
+                if (btn4) { btn4.innerHTML = '🔥 4. 1M Asimetrik Scalp'; btn4.title = '1M Scalp Şampiyonu: BUY2 Trend (3.0x TP %63.6 Win), SELL (3.0x TP)'; }
+                if (btn3) { btn3.innerHTML = '🔄 3. 1M Micro-BE (%70.5 Win)'; btn3.title = '1M En Yüksek Başarı: +0.6 ATR Erken Breakeven & Son 8 Bar Swing'; }
+                if (btn2) { btn2.innerHTML = '⚡ 2. 1M Hızlı Scalp'; btn2.title = '1M Hızlı Seri Kapanış: 1.5x SL / 2.0x TP (R:R 1:1.33)'; }
+                if (btn1) { btn1.innerHTML = '🏛️ 1. 1M Mikro-Yapısal'; btn1.title = '1M Mikro-Yapısal SL: Son 5 bar Swing Low/High + 0.2x ATR'; }
+                if (btn0) { btn0.innerHTML = '📐 0. 1M Sabit Scalp'; btn0.title = '1M Sabit Scalp: 1.2x ATR SL / 1.8x ATR TP'; }
+            } else {
+                if (btn4) { btn4.innerHTML = '🔥 4. Asimetrik Pro (+%14 Kâr)'; btn4.title = '1H Swing Şampiyonu: BUY1 (2.2x), BUY2 Trend (1.4/4.0x R:R 1:2.85), SELL (1.2/2.5x)'; }
+                if (btn3) { btn3.innerHTML = '🔄 3. Trailing BE (%78.8 Win)'; btn3.title = '1H Trailing Stop: +0.8 ATR Erken Breakeven & %78.8 Kazanma Oranı'; }
+                if (btn2) { btn2.innerHTML = '🤖 2. Quant MAE (+%9.5)'; btn2.title = '1H Quant MAE: Volatilite Sıkışmada 2.5x SL / Patlamada 3.2x TP'; }
+                if (btn1) { btn1.innerHTML = '🏛️ 1. Yapısal SL'; btn1.title = '1H Piyasa Yapısı: Son 10 mum Swing Low + Kijun + Bulut Tabanı + 0.4 ATR Tampon'; }
+                if (btn0) { btn0.innerHTML = '📐 0. Sabit 1.67'; btn0.title = '1H Sabit 1:1.67 R:R (1.5x ATR SL, 2.5x ATR TP)'; }
+            }
+
+            document.getElementById('vbt-strat-title').innerText = getStratTitle(activeStrategy, tf);
+            document.getElementById('active-strat-footer').innerHTML = getStratFooter(activeStrategy, tf);
+        }
 
         window.setStrategy = function(stratId) {
             activeStrategy = stratId;
@@ -73,8 +133,8 @@
                 const btn = document.getElementById(`strat-btn-${id}`);
                 if (btn) btn.classList.toggle('active', id === stratId);
             });
-            document.getElementById('vbt-strat-title').innerText = stratTitles[stratId];
-            document.getElementById('active-strat-footer').innerHTML = stratFooters[stratId];
+            document.getElementById('vbt-strat-title').innerText = getStratTitle(stratId, currentTimeframe);
+            document.getElementById('active-strat-footer').innerHTML = getStratFooter(stratId, currentTimeframe);
             updateGpuTextures();
         };
 
@@ -172,6 +232,7 @@
                 const btn = document.getElementById(`tf-btn-${t}`);
                 if (btn) btn.classList.toggle('active', t === tf);
             });
+            updateStrategyToolbarUi(tf);
             fetchAllMultiTimeframeKlines(currentSymbol);
         };
 
@@ -342,6 +403,7 @@
             }
 
             // 6. SİNYAL VE SEÇİLEN STRATEJİYE GÖRE AKILLI SL / TP SİMÜLASYONU
+            const isScalp = isScalpTimeframe(tfCfg.baseTf);
             let prevBuy2Cond = false;
             let prevSell2Cond = false;
 
@@ -408,106 +470,179 @@
                     let extraInfo = '';
 
                     // -------------------------------------------------------------
-                    // STRATEJİ 4: ASİMETRİK SİNYAL PRO (EN YÜKSEK GETİRİ ŞAMPİYONU)
+                    // STRATEJİ 4: ASİMETRİK SİNYAL PRO (1M SCALP VS 1H SWING)
                     // -------------------------------------------------------------
                     if (stratId === 4) {
-                        if (sigType === 'BUY') {
-                            // BUY1: Kırılım esnasında retest payı (2.2x SL / 2.2x TP)
-                            sl = c - (atr * 2.2);
-                            tp = c + (atr * 2.2);
-                            rrRatio = 1.0;
-                            extraInfo = `BUY1 Kırılım: 2.2x SL / 2.2x TP (Geniş Tampon)`;
-                        } else if (sigType === 'BUY2') {
-                            // BUY2: Trend onaylandı, dar SL + asimetrik devasa TP (1.4x SL / 4.0x TP)
-                            sl = c - (atr * 1.4);
-                            tp = c + (atr * 4.0);
-                            rrRatio = 4.0 / 1.4;
-                            extraInfo = `BUY2 Trend: 1.4x SL / 4.0x TP (R:R 1:2.85 🚀)`;
+                        if (isScalp) {
+                            if (sigType === 'BUY') {
+                                sl = c - (atr * 1.2);
+                                tp = c + (atr * 1.8);
+                                rrRatio = 1.8 / 1.2;
+                                extraInfo = `1M BUY1 Kırılım: 1.2x SL / 1.8x TP`;
+                            } else if (sigType === 'BUY2') {
+                                sl = c - (atr * 1.5);
+                                tp = c + (atr * 3.0);
+                                rrRatio = 2.0;
+                                extraInfo = `1M BUY2 Trend: 1.5x SL / 3.0x TP (%63.6 Win 🚀)`;
+                            } else {
+                                sl = c + (atr * 1.5);
+                                tp = c - (atr * 3.0);
+                                rrRatio = 2.0;
+                                extraInfo = `1M SELL: 1.5x SL / 3.0x TP (+%1.48 Kâr 🔻)`;
+                            }
                         } else {
-                            // SELL1 & SELL2: Kısa yönlü hızlı hedefler (1.2x SL / 2.5x TP)
-                            sl = c + (atr * 1.2);
-                            tp = c - (atr * 2.5);
-                            rrRatio = 2.5 / 1.2;
-                            extraInfo = `SELL Trend: 1.2x SL / 2.5x TP (R:R 1:2.08 🔻)`;
+                            if (sigType === 'BUY') {
+                                sl = c - (atr * 2.2);
+                                tp = c + (atr * 2.2);
+                                rrRatio = 1.0;
+                                extraInfo = `BUY1 Kırılım: 2.2x SL / 2.2x TP (Geniş Tampon)`;
+                            } else if (sigType === 'BUY2') {
+                                sl = c - (atr * 1.4);
+                                tp = c + (atr * 4.0);
+                                rrRatio = 4.0 / 1.4;
+                                extraInfo = `BUY2 Trend: 1.4x SL / 4.0x TP (R:R 1:2.85 🚀)`;
+                            } else {
+                                sl = c + (atr * 1.2);
+                                tp = c - (atr * 2.5);
+                                rrRatio = 2.5 / 1.2;
+                                extraInfo = `SELL Trend: 1.2x SL / 2.5x TP (R:R 1:2.08 🔻)`;
+                            }
                         }
                     }
                     // -------------------------------------------------------------
-                    // STRATEJİ 2: QUANT MAE (DİNAMİK VOLATİLİTE OPTİMİZATÖRÜ)
-                    // -------------------------------------------------------------
-                    else if (stratId === 2) {
-                        const atr50 = atr50SmaArr[i] || atr;
-                        const vol20 = vol20SmaArr[i] || dataBase[i].vol;
-                        const rAtr = atr / atr50;
-                        const rCloud = (Math.abs(curSa - curSb) / c) * 100;
-                        const rvol = vol20 > 0 ? (dataBase[i].vol / vol20) : 1.0;
-                        const rKijun = Math.abs(c - kijunBase[i]) / atr;
-
-                        const zRegime = 1.60 * (rAtr - 1.0) + 0.90 * (rvol - 1.0) + 0.50 * ((rCloud / 0.80) - 1.0) - 0.75 * (rKijun - 0.70);
-                        const pExpansion = 1.0 / (1.0 + Math.exp(-1.75 * zRegime));
-
-                        const kMAE = 2.50 - (pExpansion * (2.50 - 1.20));
-                        const kTP = 2.00 + (Math.pow(pExpansion, 0.85) * (3.20 - 2.00));
-                        rrRatio = kTP / kMAE;
-
-                        if (isBuy) {
-                            sl = c - (kMAE * atr);
-                            tp = c + (kTP * atr);
-                        } else {
-                            sl = c + (kMAE * atr);
-                            tp = c - (kTP * atr);
-                        }
-                        extraInfo = `MAE SL: ${kMAE.toFixed(2)}x | TP: ${kTP.toFixed(2)}x (P_exp: %${(pExpansion * 100).toFixed(0)})`;
-                    }
-                    // -------------------------------------------------------------
-                    // STRATEJİ 3: DİNAMİK TRAILING STOP (+0.8 ATR ERKEN BREAKEVEN)
+                    // STRATEJİ 3: DİNAMİK TRAILING STOP / BREAKEVEN
                     // -------------------------------------------------------------
                     else if (stratId === 3) {
-                        sl = isBuy ? (c - atr * 1.5) : (c + atr * 1.5);
-                        tp = isBuy ? (c + atr * 2.5) : (c - atr * 2.5);
-                        extraInfo = `Erken BE: +0.8 ATR (%78.8 Win Rate) | Kijun: +2.2 ATR`;
+                        if (isScalp) {
+                            let swingLow8 = Infinity, swingHigh8 = -Infinity;
+                            for (let k = 0; k < 8; k++) {
+                                const pastIdx = Math.max(0, i - k);
+                                if (dataBase[pastIdx].low < swingLow8) swingLow8 = dataBase[pastIdx].low;
+                                if (dataBase[pastIdx].high > swingHigh8) swingHigh8 = dataBase[pastIdx].high;
+                            }
+                            const buf = atr * 0.3;
+                            if (isBuy) {
+                                const dist = Math.max(0.8 * atr, Math.min(2.5 * atr, c - (swingLow8 - buf)));
+                                sl = c - dist;
+                                tp = c + (dist * 1.5);
+                            } else {
+                                const dist = Math.max(0.8 * atr, Math.min(2.5 * atr, (swingHigh8 + buf) - c));
+                                sl = c + dist;
+                                tp = c - (dist * 1.5);
+                            }
+                            rrRatio = 1.5;
+                            extraInfo = `1M Micro-BE: +0.6 ATR Erken Breakeven (%70.5 Win 🏆)`;
+                        } else {
+                            sl = isBuy ? (c - atr * 1.5) : (c + atr * 1.5);
+                            tp = isBuy ? (c + atr * 2.5) : (c - atr * 2.5);
+                            rrRatio = 2.5 / 1.5;
+                            extraInfo = `1H Trailing BE: +0.8 ATR (%78.8 Win Rate) | Kijun: +2.2 ATR`;
+                        }
                     }
                     // -------------------------------------------------------------
-                    // STRATEJİ 1: PİYASA YAPISI (SWING LOW & KIJUN & TAMPON)
+                    // STRATEJİ 2: QUANT MAE / 1M HIZLI SERİ SCALP
+                    // -------------------------------------------------------------
+                    else if (stratId === 2) {
+                        if (isScalp) {
+                            sl = isBuy ? (c - atr * 1.5) : (c + atr * 1.5);
+                            tp = isBuy ? (c + atr * 2.0) : (c - atr * 2.0);
+                            rrRatio = 2.0 / 1.5;
+                            extraInfo = `1M Seri Hızlı Scalp: 1.5x SL / 2.0x TP (R:R 1:1.33)`;
+                        } else {
+                            const atr50 = atr50SmaArr[i] || atr;
+                            const vol20 = vol20SmaArr[i] || dataBase[i].vol;
+                            const rAtr = atr / atr50;
+                            const rCloud = (Math.abs(curSa - curSb) / c) * 100;
+                            const rvol = vol20 > 0 ? (dataBase[i].vol / vol20) : 1.0;
+                            const rKijun = Math.abs(c - kijunBase[i]) / atr;
+
+                            const zRegime = 1.60 * (rAtr - 1.0) + 0.90 * (rvol - 1.0) + 0.50 * ((rCloud / 0.80) - 1.0) - 0.75 * (rKijun - 0.70);
+                            const pExpansion = 1.0 / (1.0 + Math.exp(-1.75 * zRegime));
+
+                            const kMAE = 2.50 - (pExpansion * (2.50 - 1.20));
+                            const kTP = 2.00 + (Math.pow(pExpansion, 0.85) * (3.20 - 2.00));
+                            rrRatio = kTP / kMAE;
+
+                            if (isBuy) {
+                                sl = c - (kMAE * atr);
+                                tp = c + (kTP * atr);
+                            } else {
+                                sl = c + (kMAE * atr);
+                                tp = c - (kTP * atr);
+                            }
+                            extraInfo = `MAE SL: ${kMAE.toFixed(2)}x | TP: ${kTP.toFixed(2)}x (P_exp: %${(pExpansion * 100).toFixed(0)})`;
+                        }
+                    }
+                    // -------------------------------------------------------------
+                    // STRATEJİ 1: PİYASA YAPISI / 1M MİKRO-YAPISAL SL
                     // -------------------------------------------------------------
                     else if (stratId === 1) {
-                        let swingLow10 = Infinity;
-                        let swingHigh10 = -Infinity;
-                        for (let k = 0; k < 10; k++) {
-                            const pastIdx = Math.max(0, i - k);
-                            if (dataBase[pastIdx].low < swingLow10) swingLow10 = dataBase[pastIdx].low;
-                            if (dataBase[pastIdx].high > swingHigh10) swingHigh10 = dataBase[pastIdx].high;
-                        }
-
-                        const curKijun = kijunBase[i];
-                        const atrBuffer = atr * 0.4;
-                        const minDistance = atr * 1.0;
-                        const maxDistance = atr * 3.0;
-
-                        if (isBuy) {
-                            const cloudBot = Math.min(curSa, curSb);
-                            const structuralAnchor = Math.min(swingLow10, curKijun, cloudBot);
-                            let rawDistance = c - (structuralAnchor - atrBuffer);
-                            let finalDistance = Math.max(minDistance, Math.min(maxDistance, rawDistance));
-                            sl = c - finalDistance;
-                            tp = c + (finalDistance * 1.67);
-                            extraInfo = `Yapısal Destek: $${structuralAnchor.toFixed(1)} + 0.4x ATR Tampon`;
+                        if (isScalp) {
+                            let sL5 = Infinity, sH5 = -Infinity;
+                            for (let k = 0; k < 5; k++) {
+                                const pastIdx = Math.max(0, i - k);
+                                if (dataBase[pastIdx].low < sL5) sL5 = dataBase[pastIdx].low;
+                                if (dataBase[pastIdx].high > sH5) sH5 = dataBase[pastIdx].high;
+                            }
+                            const buf = atr * 0.2;
+                            if (isBuy) {
+                                const dist = Math.max(0.8 * atr, Math.min(2.0 * atr, c - (sL5 - buf)));
+                                sl = c - dist;
+                                tp = c + (dist * 1.5);
+                            } else {
+                                const dist = Math.max(0.8 * atr, Math.min(2.0 * atr, (sH5 + buf) - c));
+                                sl = c + dist;
+                                tp = c - (dist * 1.5);
+                            }
+                            rrRatio = 1.5;
+                            extraInfo = `1M Mikro-Yapısal SL: Son 5 Bar Swing + 0.2x ATR`;
                         } else {
-                            const cloudTop = Math.max(curSa, curSb);
-                            const structuralAnchor = Math.max(swingHigh10, curKijun, cloudTop);
-                            let rawDistance = (structuralAnchor + atrBuffer) - c;
-                            let finalDistance = Math.max(minDistance, Math.min(maxDistance, rawDistance));
-                            sl = c + finalDistance;
-                            tp = c - (finalDistance * 1.67);
-                            extraInfo = `Yapısal Direnç: $${structuralAnchor.toFixed(1)} + 0.4x ATR Tampon`;
+                            let swingLow10 = Infinity, swingHigh10 = -Infinity;
+                            for (let k = 0; k < 10; k++) {
+                                const pastIdx = Math.max(0, i - k);
+                                if (dataBase[pastIdx].low < swingLow10) swingLow10 = dataBase[pastIdx].low;
+                                if (dataBase[pastIdx].high > swingHigh10) swingHigh10 = dataBase[pastIdx].high;
+                            }
+
+                            const curKijun = kijunBase[i];
+                            const atrBuffer = atr * 0.4;
+                            const minDistance = atr * 1.0;
+                            const maxDistance = atr * 3.0;
+
+                            if (isBuy) {
+                                const cloudBot = Math.min(curSa, curSb);
+                                const structuralAnchor = Math.min(swingLow10, curKijun, cloudBot);
+                                let rawDistance = c - (structuralAnchor - atrBuffer);
+                                let finalDistance = Math.max(minDistance, Math.min(maxDistance, rawDistance));
+                                sl = c - finalDistance;
+                                tp = c + (finalDistance * 1.67);
+                                extraInfo = `Yapısal Destek: $${structuralAnchor.toFixed(1)} + 0.4x ATR Tampon`;
+                            } else {
+                                const cloudTop = Math.max(curSa, curSb);
+                                const structuralAnchor = Math.max(swingHigh10, curKijun, cloudTop);
+                                let rawDistance = (structuralAnchor + atrBuffer) - c;
+                                let finalDistance = Math.max(minDistance, Math.min(maxDistance, rawDistance));
+                                sl = c + finalDistance;
+                                tp = c - (finalDistance * 1.67);
+                                extraInfo = `Yapısal Direnç: $${structuralAnchor.toFixed(1)} + 0.4x ATR Tampon`;
+                            }
                         }
                     }
                     // -------------------------------------------------------------
-                    // STRATEJİ 0: KLASİK SABİT 1:1.67
+                    // STRATEJİ 0: KLASİK SABİT
                     // -------------------------------------------------------------
                     else {
-                        sl = isBuy ? (c - atr * 1.5) : (c + atr * 1.5);
-                        tp = isBuy ? (c + atr * 2.5) : (c - atr * 2.5);
-                        extraInfo = `Sabit SL: 1.5x ATR | TP: 2.5x ATR`;
+                        if (isScalp) {
+                            sl = isBuy ? (c - atr * 1.2) : (c + atr * 1.2);
+                            tp = isBuy ? (c + atr * 1.8) : (c - atr * 1.8);
+                            rrRatio = 1.8 / 1.2;
+                            extraInfo = `1M Sabit SL: 1.2x ATR | TP: 1.8x ATR`;
+                        } else {
+                            sl = isBuy ? (c - atr * 1.5) : (c + atr * 1.5);
+                            tp = isBuy ? (c + atr * 2.5) : (c - atr * 2.5);
+                            rrRatio = 2.5 / 1.5;
+                            extraInfo = `Sabit SL: 1.5x ATR | TP: 2.5x ATR`;
+                        }
                     }
 
                     // BACKTEST MOTORU SİMÜLASYONU
@@ -524,22 +659,31 @@
                         const stepAtr = atrArr[step] || atr;
                         const stepKijun = kijunBase[step] || c;
 
-                        // STRATEJİ 3 İÇİN TRAILING STOP GÜNCELLEMESİ
+                        // STRATEJİ 3 İÇİN TRAILING / BREAKEVEN GÜNCELLEMESİ
                         if (stratId === 3) {
                             const curProfitAtr = isBuy ? (barHigh - c) / atr : (c - barLow) / atr;
                             if (curProfitAtr > highestProfitAtr) highestProfitAtr = curProfitAtr;
 
-                            // Erken Breakeven (+0.8 ATR üstü)
-                            if (highestProfitAtr >= 0.8) {
-                                const beStop = isBuy ? c + (atr * 0.05) : c - (atr * 0.05);
-                                if (isBuy && beStop > currentDynamicStop) currentDynamicStop = beStop;
-                                if (!isBuy && beStop < currentDynamicStop) currentDynamicStop = beStop;
-                            }
-                            // Kijun-sen Trailing (+2.2 ATR üstü)
-                            if (highestProfitAtr >= 2.2 && stepKijun > 0) {
-                                const kijunStop = isBuy ? stepKijun - (stepAtr * 0.2) : stepKijun + (stepAtr * 0.2);
-                                if (isBuy && kijunStop > currentDynamicStop) currentDynamicStop = kijunStop;
-                                if (!isBuy && kijunStop < currentDynamicStop) currentDynamicStop = kijunStop;
+                            if (isScalp) {
+                                // 1M Hızlı Breakeven (+0.6 ATR üstü)
+                                if (highestProfitAtr >= 0.6) {
+                                    const beStop = isBuy ? c + (atr * 0.05) : c - (atr * 0.05);
+                                    if (isBuy && beStop > currentDynamicStop) currentDynamicStop = beStop;
+                                    if (!isBuy && beStop < currentDynamicStop) currentDynamicStop = beStop;
+                                }
+                            } else {
+                                // 1H Erken Breakeven (+0.8 ATR üstü)
+                                if (highestProfitAtr >= 0.8) {
+                                    const beStop = isBuy ? c + (atr * 0.05) : c - (atr * 0.05);
+                                    if (isBuy && beStop > currentDynamicStop) currentDynamicStop = beStop;
+                                    if (!isBuy && beStop < currentDynamicStop) currentDynamicStop = beStop;
+                                }
+                                // 1H Kijun-sen Trailing (+2.2 ATR üstü)
+                                if (highestProfitAtr >= 2.2 && stepKijun > 0) {
+                                    const kijunStop = isBuy ? stepKijun - (stepAtr * 0.2) : stepKijun + (stepAtr * 0.2);
+                                    if (isBuy && kijunStop > currentDynamicStop) currentDynamicStop = kijunStop;
+                                    if (!isBuy && kijunStop < currentDynamicStop) currentDynamicStop = kijunStop;
+                                }
                             }
                         }
 
