@@ -1525,11 +1525,11 @@
                     // -------------------------------------------------------------
                     else if (stratId === 2) {
                         const atr50 = atr50SmaArr[i] || atr;
-                        const vol20 = vol20SmaArr[i] || data1H[i].vol;
+                        const vol20 = vol20SmaArr[i] || dataBase[i].vol;
                         const rAtr = atr / atr50;
                         const rCloud = (Math.abs(curSa - curSb) / c) * 100;
-                        const rvol = vol20 > 0 ? (data1H[i].vol / vol20) : 1.0;
-                        const rKijun = Math.abs(c - kijun1H[i]) / atr;
+                        const rvol = vol20 > 0 ? (dataBase[i].vol / vol20) : 1.0;
+                        const rKijun = Math.abs(c - kijunBase[i]) / atr;
 
                         const zRegime = 1.60 * (rAtr - 1.0) + 0.90 * (rvol - 1.0) + 0.50 * ((rCloud / 0.80) - 1.0) - 0.75 * (rKijun - 0.70);
                         const pExpansion = 1.0 / (1.0 + Math.exp(-1.75 * zRegime));
@@ -1563,11 +1563,11 @@
                         let swingHigh10 = -Infinity;
                         for (let k = 0; k < 10; k++) {
                             const pastIdx = Math.max(0, i - k);
-                            if (data1H[pastIdx].low < swingLow10) swingLow10 = data1H[pastIdx].low;
-                            if (data1H[pastIdx].high > swingHigh10) swingHigh10 = data1H[pastIdx].high;
+                            if (dataBase[pastIdx].low < swingLow10) swingLow10 = dataBase[pastIdx].low;
+                            if (dataBase[pastIdx].high > swingHigh10) swingHigh10 = dataBase[pastIdx].high;
                         }
 
-                        const curKijun = kijun1H[i];
+                        const curKijun = kijunBase[i];
                         const atrBuffer = atr * 0.4;
                         const minDistance = atr * 1.0;
                         const maxDistance = atr * 3.0;
