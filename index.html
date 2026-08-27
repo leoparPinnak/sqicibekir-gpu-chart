@@ -1948,9 +1948,61 @@
                 return Math.round(cssH - ((price - minPrice) / diff) * cssH);
             }
 
-            // 1. Hovered Sinyal ve Smooth Progress Güncellemesi (Lerp)
-            const hoveredSig = (hoveredCandleIdx >= 0) ? calculatedSignals.find(s => Math.abs(s.index - hoveredCandleIdx) <= 0.5) : null;
-            const targetSigIdx = hoveredSig ? hoveredSig.index : -1;
+            // 1. Hassas Hover Kontrolü: İmleç TAM OLARAK mum barının veya sinyal etiketinin üzerinde mi?
+            let preciseHoveredSig = null;
+
+            if (mouseCssX >= 0 && mouseCssY >= 0 && mouseCssX <= cssW && mouseCssY <= cssH) {
+                for (const sig of calculatedSignals) {
+                    if (sig.index < viewStart - 2 || sig.index > viewEnd + 2) continue;
+
+                    const candleCenter = sig.index + 0.5;
+                    const screenX = Math.round(((candleCenter - viewStart) / visibleCount) * cssW);
+                    const candle = candleDataBase[sig.index];
+                    if (!candle) continue;
+
+                    const highY = getY(candle.high);
+                    const lowY = getY(candle.low);
+                    const isBuy = sig.isBuy;
+                    const badgeY = isBuy ? lowY + 24 : highY - 24;
+
+                    const candleBarW = Math.max(8, (cssW / visibleCount) * 0.95);
+                    const candleTopY = Math.min(highY, lowY) - 6;
+                    const candleBotY = Math.max(highY, lowY) + 6;
+
+                    // A. İmleç tam olarak mum barının (gövde + fitil) üzerinde mi?
+                    const isOverCandleBar = (Math.abs(mouseCssX - screenX) <= Math.max(5, candleBarW / 2 + 3)) &&
+                                            (mouseCssY >= candleTopY && mouseCssY <= candleBotY);
+
+                    // B. İmleç tam olarak sinyal etiketinin (▲ BUY / ▼ SELL) üzerinde mi?
+                    const isOverSignalBadge = (Math.abs(mouseCssX - screenX) <= 45) &&
+                                              (Math.abs(mouseCssY - badgeY) <= 15);
+
+                    // C. Odaktayken (progress > 0.25) genişleyen mum veya ortalanmış TP/SL etiketleri üzerinde mi?
+                    let isOverEnlargedFocusZone = false;
+                    if (focusAnim.currentSigIndex === sig.index && focusAnim.progress > 0.25) {
+                        const enlargedW = Math.max(10, candleBarW * (1.0 + 1.35 * focusAnim.progress));
+                        const isOverEnlargedCandle = (Math.abs(mouseCssX - screenX) <= enlargedW / 2 + 5) &&
+                                                     (mouseCssY >= candleTopY - 10 && mouseCssY <= candleBotY + 10);
+
+                        const tpY = getY(sig.tp);
+                        const slY = getY(sig.sl);
+                        const entryY = getY(sig.price);
+                        const isOverTp = (Math.abs(mouseCssX - screenX) <= 130) && (Math.abs(mouseCssY - tpY) <= 15);
+                        const isOverSl = (Math.abs(mouseCssX - screenX) <= 130) && (Math.abs(mouseCssY - slY) <= 15);
+                        const isOverEntry = (Math.abs(mouseCssX - screenX) <= 90) && (Math.abs(mouseCssY - entryY) <= 14);
+                        const isOverEnlargedTag = (Math.abs(mouseCssX - screenX) <= 65) && (Math.abs(mouseCssY - (isBuy ? lowY + 36 : highY - 36)) <= 18);
+
+                        isOverEnlargedFocusZone = isOverEnlargedCandle || isOverTp || isOverSl || isOverEntry || isOverEnlargedTag;
+                    }
+
+                    if (isOverCandleBar || isOverSignalBadge || isOverEnlargedFocusZone) {
+                        preciseHoveredSig = sig;
+                        break;
+                    }
+                }
+            }
+
+            const targetSigIdx = preciseHoveredSig ? preciseHoveredSig.index : -1;
 
             if (targetSigIdx !== -1) {
                 focusAnim.currentSigIndex = targetSigIdx;
@@ -2485,6 +2537,8 @@
 
         let mousePixelX = -1000;
         let mousePixelY = -1000;
+        let mouseCssX = -1000;
+        let mouseCssY = -1000;
 
         const crosshairPriceTag = document.getElementById('crosshair-price-tag');
         const crosshairTimeTag = document.getElementById('crosshair-time-tag');
@@ -2560,7 +2614,9 @@
             const rect = canvas.getBoundingClientRect();
             if (!rect.width || !rect.height) return;
 
-            mousePixelX = (e.clientX - rect.left) * (canvas.width / rect.width);
+            mouseCssX = e.clientX - rect.left;
+            mouseCssY = e.clientY - rect.top;
+            mousePixelX = mouseCssX * (canvas.width / rect.width);
             mousePixelY = (rect.bottom - e.clientY) * (canvas.height / rect.height);
 
             if (isChartDragging && totalCandles > 0) {
@@ -2646,6 +2702,8 @@
 
         canvasContainer.addEventListener('mouseleave', () => {
             hoveredCandleIdx = -1;
+            mouseCssX = -1000;
+            mouseCssY = -1000;
             if (!isChartDragging && !isPriceDragging) {
                 mousePixelX = -1000;
                 mousePixelY = -1000;
