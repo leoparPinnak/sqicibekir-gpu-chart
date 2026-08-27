@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SqiciBekiRBindikatöR // %100 Birebir TradingView MTF Motoru</title>
+    <title>SqiciBekiRBindikatöR // 3 Akıllı Stop & Backtest Strateji Laboratuvarı</title>
     <style>
         * {
             margin: 0;
@@ -32,28 +32,29 @@
 
         /* 1. ÜST TOOLBAR */
         .top-toolbar {
-            height: 46px;
+            height: 48px;
             background: #0b1120;
             border-bottom: 1px solid #1e293b;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 16px;
+            padding: 0 14px;
             z-index: 30;
             flex-shrink: 0;
+            gap: 10px;
         }
         .symbol-section {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
         .indicator-badge {
             background: linear-gradient(135deg, rgba(56, 189, 248, 0.2), rgba(129, 140, 248, 0.2));
             border: 1px solid #38bdf8;
             color: #38bdf8;
-            font-size: 11.5px;
+            font-size: 11px;
             font-weight: 800;
-            padding: 3px 8px;
+            padding: 3px 7px;
             border-radius: 6px;
             letter-spacing: 0.3px;
         }
@@ -61,9 +62,9 @@
             background: rgba(255, 255, 255, 0.06);
             border: 1px solid rgba(255, 255, 255, 0.15);
             color: #f8fafc;
-            font-size: 13px;
+            font-size: 12.5px;
             font-weight: 700;
-            padding: 4px 8px;
+            padding: 4px 7px;
             border-radius: 6px;
             cursor: pointer;
             outline: none;
@@ -72,15 +73,50 @@
             background: #0f172a;
             color: #fff;
         }
-        
-        .timeframe-badge-active {
-            background: #38bdf8;
-            color: #0f172a;
-            font-size: 11px;
+
+        /* 🎯 3 STRATEJİ SEÇİCİ TOOLBAR GRUBU */
+        .strategy-selector-group {
+            display: flex;
+            align-items: center;
+            background: rgba(15, 23, 42, 0.9);
+            border: 1.5px solid #38bdf8;
+            border-radius: 8px;
+            padding: 2px;
+            gap: 3px;
+            box-shadow: 0 0 14px rgba(56, 189, 248, 0.25);
+        }
+        .strat-label {
+            font-size: 10.5px;
             font-weight: 800;
-            padding: 4px 10px;
+            color: #38bdf8;
+            padding: 0 6px;
+            letter-spacing: 0.3px;
+        }
+        .strat-btn {
+            background: transparent;
+            border: 1px solid transparent;
+            color: #94a3b8;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 4px 8px;
             border-radius: 5px;
-            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            white-space: nowrap;
+        }
+        .strat-btn:hover {
+            color: #f8fafc;
+            background: rgba(255, 255, 255, 0.06);
+        }
+        .strat-btn.active {
+            background: linear-gradient(135deg, #0284c7, #0369a1);
+            border-color: #38bdf8;
+            color: #ffffff;
+            font-weight: 800;
+            box-shadow: 0 0 10px rgba(56, 189, 248, 0.4);
         }
 
         .candle-depth-select {
@@ -101,17 +137,17 @@
 
         .live-price-box {
             font-family: 'SF Pro Text', 'Consolas', monospace;
-            font-size: 14.5px;
+            font-size: 13.5px;
             font-weight: 700;
             color: #10b981;
             display: flex;
             align-items: center;
             gap: 6px;
-            margin-left: 6px;
+            margin-left: 4px;
         }
         .ws-status-dot {
-            width: 8px;
-            height: 8px;
+            width: 7px;
+            height: 7px;
             border-radius: 50%;
             background: #10b981;
             box-shadow: 0 0 8px #10b981;
@@ -121,21 +157,21 @@
         .indicator-nav {
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 5px;
         }
         .ind-btn {
             background: rgba(255, 255, 255, 0.04);
             border: 1px solid rgba(255, 255, 255, 0.1);
             color: #94a3b8;
-            padding: 5px 9px;
-            border-radius: 6px;
-            font-size: 11px;
+            padding: 4px 8px;
+            border-radius: 5px;
+            font-size: 10.5px;
             font-weight: 500;
             cursor: pointer;
             transition: all 0.2s;
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 4px;
         }
         .ind-btn:hover { background: rgba(255, 255, 255, 0.1); color: #fff; }
         .ind-btn.active {
@@ -151,24 +187,24 @@
             border: 1px solid #c4b5fd;
             color: #ffffff;
             font-weight: 800;
-            padding: 5px 12px;
+            padding: 4px 10px;
             border-radius: 6px;
-            font-size: 11.5px;
+            font-size: 11px;
             cursor: pointer;
             display: flex;
             align-items: center;
-            gap: 6px;
-            box-shadow: 0 0 12px rgba(139, 92, 246, 0.4);
+            gap: 5px;
+            box-shadow: 0 0 10px rgba(139, 92, 246, 0.4);
             transition: all 0.2s;
         }
         .backtest-btn:hover {
             transform: translateY(-1px);
-            box-shadow: 0 0 18px rgba(139, 92, 246, 0.7);
+            box-shadow: 0 0 16px rgba(139, 92, 246, 0.7);
         }
         .backtest-btn.active {
             background: linear-gradient(135deg, #10b981, #059669);
             border-color: #6ee7b7;
-            box-shadow: 0 0 16px rgba(16, 185, 129, 0.6);
+            box-shadow: 0 0 14px rgba(16, 185, 129, 0.6);
         }
 
         .ottonline-btn {
@@ -176,19 +212,15 @@
             border: 1px solid #fda4af;
             color: #ffffff;
             font-weight: 700;
-            padding: 5px 12px;
+            padding: 4px 10px;
             border-radius: 6px;
-            font-size: 11.5px;
+            font-size: 11px;
             cursor: pointer;
             display: flex;
             align-items: center;
-            gap: 6px;
-            box-shadow: 0 0 12px rgba(225, 29, 72, 0.35);
+            gap: 5px;
+            box-shadow: 0 0 10px rgba(225, 29, 72, 0.35);
             transition: all 0.2s;
-        }
-        .ottonline-btn:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 0 16px rgba(225, 29, 72, 0.6);
         }
 
         /* 2. ANA GRAFİK VE BÖLÜNMÜŞ EKRAN GÖVDESİ */
@@ -197,7 +229,7 @@
             flex: 1;
             display: flex;
             width: 100%;
-            height: calc(100vh - 46px - 26px);
+            height: calc(100vh - 48px - 26px);
             overflow: hidden;
             background: #070b18;
         }
@@ -341,7 +373,7 @@
             font-family: 'SF Pro Text', 'Segoe UI', sans-serif;
             font-size: 11.5px;
             box-shadow: 0 6px 25px rgba(0,0,0,0.8);
-            min-width: 380px;
+            min-width: 400px;
         }
         .vbt-header {
             display: flex;
@@ -349,6 +381,11 @@
             align-items: center;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             padding-bottom: 4px;
+        }
+        .active-strat-title {
+            color: #38bdf8;
+            font-weight: 800;
+            font-size: 11px;
         }
         .vbt-row {
             display: flex;
@@ -396,7 +433,7 @@
             gap: 4px;
             backdrop-filter: blur(14px);
             box-shadow: 0 8px 25px rgba(0,0,0,0.8);
-            min-width: 240px;
+            min-width: 270px;
         }
 
         /* ALT TARİH / ZAMAN BARI */
@@ -584,7 +621,7 @@
         <!-- ÜST MENÜ -->
         <div class="top-toolbar">
             <div class="symbol-section">
-                <span class="indicator-badge">⚡ SqiciBekiRBindikatöR</span>
+                <span class="indicator-badge">⚡ SqiciBekiR</span>
 
                 <select class="symbol-select" id="symbol-select" onchange="changeSymbol(this.value)">
                     <option value="BTCUSDT">BTC / USDT</option>
@@ -594,14 +631,27 @@
                     <option value="XRPUSDT">XRP / USDT</option>
                 </select>
 
-                <span class="timeframe-badge-active" title="Pine Script v6 gereği ana grafik 1 Saattir (1D Rejim + 4H EMA26 + 1H Sinyaller)">
-                    ⏱️ 1H Grafik (1D/4H/1H MTF)
-                </span>
+                <!-- 🎯 3 AKILLI STOP & TP STRATEJİ SEÇİCİ -->
+                <div class="strategy-selector-group">
+                    <span class="strat-label">🧠 STRATEJİ:</span>
+                    <button class="strat-btn active" id="strat-btn-1" onclick="setStrategy(1)" title="1. Ajan: Son 10 mum Swing Low/High + Kijun + Bulut Tabanı + 0.4 ATR Likidite Tamponu">
+                        🏛️ 1. Piyasa Yapısı (Structure)
+                    </button>
+                    <button class="strat-btn" id="strat-btn-2" onclick="setStrategy(2)" title="2. Ajan: Quant MAE Modeli, Volatilite Sıkışma/Patlama Regresyonu (1.4x-2.5x SL / 1.8x-3.2x TP)">
+                        🤖 2. Quant ML (MAE Opt)
+                    </button>
+                    <button class="strat-btn" id="strat-btn-3" onclick="setStrategy(3)" title="3. Ajan: +1.0 ATR Breakeven Başabaş + +1.8 ATR Kijun-sen İzleyen Stop">
+                        🔄 3. Trailing Stop (Kijun & BE)
+                    </button>
+                    <button class="strat-btn" id="strat-btn-0" onclick="setStrategy(0)" title="Klasik Sabit 1:1.67 R:R (1.5x ATR SL, 2.5x ATR TP)">
+                        📐 0. Sabit 1.67
+                    </button>
+                </div>
 
                 <select class="candle-depth-select" id="candle-depth-select" onchange="changeCandleDepth(this.value)" title="Geçmiş mum adedi">
                     <option value="1000">1.000 Mum</option>
                     <option value="2000">2.000 Mum</option>
-                    <option value="3000" selected>3.000 Mum (Maksimum)</option>
+                    <option value="3000" selected>3.000 Mum (Maks)</option>
                 </select>
 
                 <div class="live-price-box">
@@ -613,10 +663,10 @@
             <!-- İndikatör Katmanları & Backtest & OttOnline Butonu -->
             <div class="indicator-nav">
                 <button class="ind-btn active" id="btn-cloud" onclick="toggleLayer('cloud')">
-                    <span style="color: #10b981;">☁️</span> 1H Bulut (disp=26)
+                    <span style="color: #10b981;">☁️</span> Bulut
                 </button>
                 <button class="ind-btn active" id="btn-ema" onclick="toggleLayer('ema')">
-                    <span style="color: #f97316;">⚡</span> Canlı 4H EMA26
+                    <span style="color: #f97316;">⚡</span> 4H EMA
                 </button>
                 <button class="ind-btn active" id="btn-signals" onclick="toggleLayer('signals')">
                     <span style="color: #fbbf24;">🎯</span> Sinyaller
@@ -628,7 +678,7 @@
                 </button>
 
                 <button class="ind-btn active" id="btn-bg" onclick="toggleLayer('bg')">
-                    <span>🌌</span> 1D HTF Rejim
+                    <span>🌌</span> 1D Rejim
                 </button>
 
                 <!-- OttOnline Butonu -->
@@ -657,7 +707,7 @@
                             <!-- GÖRÜNEN EKRAN KÜMÜLATİF BACKTEST ROZETİ -->
                             <div class="visible-backtest-card" id="visible-backtest-card">
                                 <div class="vbt-header">
-                                    <span style="font-weight: 800; color: #38bdf8;">👁️ GÖRÜNEN EKRAN BACKTEST (PINE SCRIPT v6 BİREBİR)</span>
+                                    <span class="active-strat-title" id="vbt-strat-title">🏛️ STRATEJİ 1: PİYASA YAPISI (MARKET STRUCTURE SL)</span>
                                     <span id="vbt-candle-span" style="color: #94a3b8; font-size: 10.5px;">150 Mum</span>
                                 </div>
                                 <div class="vbt-row">
@@ -686,12 +736,13 @@
                             <div class="signal-inspector-card" id="signal-inspector-card">
                                 <div style="display: flex; justify-content: space-between; align-items: center;">
                                     <span id="insp-type" style="font-weight: 800; font-size: 12px;">⚡ SİNYAL: --</span>
-                                    <span id="insp-rr" style="color: #fbbf24; font-weight: 700;">R:R: 1 : 1.67</span>
+                                    <span id="insp-rr" style="color: #fbbf24; font-weight: 700;">R:R: --</span>
                                 </div>
                                 <span id="insp-bt-result" style="font-weight: 800; display: none;">🏆 BACKTEST: TP BAŞARILI!</span>
                                 <span id="insp-entry" style="color: #94a3b8; font-size: 11px;">GİRİŞ: $0.00</span>
-                                <span id="insp-tp" style="color: #10b981; font-weight: 700;">🎯 TP (2.5 ATR): $0.00</span>
-                                <span id="insp-sl" style="color: #ef4444; font-weight: 700;">🛡️ SL (1.5 ATR): $0.00</span>
+                                <span id="insp-tp" style="color: #10b981; font-weight: 700;">🎯 TP: $0.00</span>
+                                <span id="insp-sl" style="color: #ef4444; font-weight: 700;">🛡️ SL: $0.00</span>
+                                <span id="insp-extra" style="color: #38bdf8; font-size: 10.5px;"></span>
                             </div>
                         </div>
 
@@ -750,7 +801,7 @@
                 <button class="fit-all-btn" onclick="fitAllCandles()" title="Tüm geçmiş mumları ekrana tam sığdır">🔍 TÜMÜNÜ GÖR</button>
             </div>
             <div>
-                <span>Pine Script v6: <b>1D Kapanmış Rejim + 4H Canlı EMA26 + 1H Bulut (disp=26)</b></span>
+                <span id="active-strat-footer">Aktif: <b>1. Piyasa Yapısı (Swing Low + Kijun + Bulut Tabanı + 0.4 ATR Tampon)</b></span>
             </div>
         </div>
 
@@ -806,18 +857,16 @@
         float texCoordX = clamp(candleCenterIdx / max(1.0, u_total_candles), 0.0, 1.0);
 
         vec4 indData = texture(u_ind_tex, vec2(texCoordX, 0.5));
-        float htfRegime = indData.r; // 1.0 = Bullish 1D (Yeşil), -1.0 = Bearish 1D (Kırmızı), 0 = Nötr
-        float sa1H = indData.g;     // 1H Senkou Span A (disp=26 ötelenmiş)
-        float sb1H = indData.b;     // 1H Senkou Span B (disp=26 ötelenmiş)
-        float ema4HLive = indData.a; // Canlı 4H EMA26
+        float htfRegime = indData.r;
+        float sa1H = indData.g;
+        float sb1H = indData.b;
+        float ema4HLive = indData.a;
 
         // 1. PINE SCRIPT v6: 1D KAPANMIŞ ICHIMOKU REJİM ARKA PLANI
         if (u_show_bg == 1 && u_total_candles > 0.0) {
             if (htfRegime > 0.5) {
-                // Yeşil Rejim
                 col = mix(col, vec3(0.06, 0.85, 0.35), 0.07);
             } else if (htfRegime < -0.5) {
-                // Kırmızı Rejim
                 col = mix(col, vec3(0.95, 0.15, 0.25), 0.07);
             }
         }
@@ -1002,6 +1051,36 @@
         const uTotalCandles = gl.getUniformLocation(prog, 'u_total_candles');
 
         // ==========================================
+        // 🎯 3 STRATEJİ YÖNETİMİ
+        // ==========================================
+        let activeStrategy = 1;
+
+        const stratTitles = {
+            1: '🏛️ STRATEJİ 1: PİYASA YAPISI (MARKET STRUCTURE SL & TAMPON)',
+            2: '🤖 STRATEJİ 2: QUANT ML (MAE DİNAMİK VOLATİLİTE OPTİMİZASYONU)',
+            3: '🔄 STRATEJİ 3: DİNAMİK TRAILING STOP (BREAKEVEN & KIJUN TAKİBİ)',
+            0: '📐 STRATEJİ 0: KLASİK SABİT 1:1.67 R:R (1.5x SL / 2.5x TP)'
+        };
+
+        const stratFooters = {
+            1: 'Aktif: <b>1. Piyasa Yapısı (Swing Low + Kijun + Bulut Tabanı + 0.4 ATR Tampon)</b>',
+            2: 'Aktif: <b>2. Quant ML (MAE Sıkışmada 2.5x SL / Patlamada 3.2x TP)</b>',
+            3: 'Aktif: <b>3. Trailing Stop (+1.0 ATR Breakeven + +1.8 ATR Kijun-sen Takibi)</b>',
+            0: 'Aktif: <b>0. Sabit 1.67 (1.5x ATR SL / 2.5x ATR TP)</b>'
+        };
+
+        window.setStrategy = function(stratId) {
+            activeStrategy = stratId;
+            [0, 1, 2, 3].forEach(id => {
+                const btn = document.getElementById(`strat-btn-${id}`);
+                if (btn) btn.classList.toggle('active', id === stratId);
+            });
+            document.getElementById('vbt-strat-title').innerText = stratTitles[stratId];
+            document.getElementById('active-strat-footer').innerHTML = stratFooters[stratId];
+            updateGpuTextures();
+        };
+
+        // ==========================================
         // BACKTEST DURUMU
         // ==========================================
         let isBacktestActive = true;
@@ -1052,30 +1131,31 @@
         };
 
         // ============================================================
-        // SQICIBEKIRBINDIKATÖR: %100 BİREBİR TRADINGVIEW PINE SCRIPT v6
+        // SQICIBEKIRBINDIKATÖR: ÇOKLU STRATEJİLİ HESAPLAMA MOTORU
         // ============================================================
-        function calculateSqiciBekiR_PineV6(data1H, data4H, data1D) {
+        function calculateSqiciBekiR_MultiStrategy(data1H, data4H, data1D, stratId) {
             const N1H = data1H.length;
             const N4H = data4H.length;
             const N1D = data1D.length;
 
             const sa1H = new Float32Array(N1H);
             const sb1H = new Float32Array(N1H);
+            const kijun1H = new Float32Array(N1H);
             const ema4HLiveArr = new Float32Array(N1H);
             const regime1DArr = new Float32Array(N1H);
             const atrArr = new Float32Array(N1H);
+            const atr50SmaArr = new Float32Array(N1H);
+            const vol20SmaArr = new Float32Array(N1H);
             const signals = [];
 
             const convLen = 9;
             const baseLen = 26;
             const spanBLen = 52;
-            const disp = 26; // Cloud forward shift (offset)
+            const disp = 26;
             const emaLen = 26;
-            const emaCoeff = 2.0 / (emaLen + 1.0); // 2 / 27
+            const emaCoeff = 2.0 / (emaLen + 1.0);
 
-            // ------------------------------------------------------------
-            // ADIM 1: 1D GÜNLÜK ICHIMOKU REJİMİ (HTF 1D REGIME)
-            // ------------------------------------------------------------
+            // 1. 1D GÜNLÜK ICHIMOKU REJİMİ
             const sa1DRaw = new Float32Array(N1D);
             const sb1DRaw = new Float32Array(N1D);
 
@@ -1103,14 +1183,12 @@
                 sb1DRaw[i] = (sBH + sBL) / 2;
             }
 
-            // Pine Script: shiftedA = nz(senkouA[disp], senkouA)
             let lastRegime1D = 0;
-            const confirmedRegime1DByDay = []; // Her günün kapanışındaki lastRegime1D
+            const confirmedRegime1DByDay = [];
 
             for (let i = 0; i < N1D; i++) {
                 const shiftedA = (i >= disp) ? sa1DRaw[i - disp] : sa1DRaw[i];
                 const shiftedB = (i >= disp) ? sb1DRaw[i - disp] : sb1DRaw[i];
-
                 const cloudTop = Math.max(shiftedA, shiftedB);
                 const cloudBot = Math.min(shiftedA, shiftedB);
                 const c = data1D[i].close;
@@ -1120,7 +1198,6 @@
                 else if (c < cloudBot) rawRegime = -1;
                 else rawRegime = 0;
 
-                // Pine: if regime1D == 1 or regime1D == -1 => lastRegime1D := regime1D
                 if (rawRegime === 1 || rawRegime === -1) {
                     lastRegime1D = rawRegime;
                 }
@@ -1132,20 +1209,15 @@
                 });
             }
 
-            // ------------------------------------------------------------
-            // ADIM 2: 4H EMA26 HESAPLAMASI (ISINMALI & GEÇMİŞ KAPANIŞLAR)
-            // ------------------------------------------------------------
+            // 2. 4H EMA26 HESAPLAMASI
             const ema4HClosedArr = new Float32Array(N4H);
             let pEma4H = data4H[0] ? data4H[0].close : 0;
-
             for (let i = 0; i < N4H; i++) {
                 pEma4H = data4H[i].close * emaCoeff + pEma4H * (1.0 - emaCoeff);
                 ema4HClosedArr[i] = pEma4H;
             }
 
-            // ------------------------------------------------------------
-            // ADIM 3: 1H ATR (14) HESAPLAMASI
-            // ------------------------------------------------------------
+            // 3. 1H ATR (14) & SMA(ATR, 50) & SMA(Volume, 20)
             let prevAtr = 0;
             for (let i = 0; i < N1H; i++) {
                 const h = data1H[i].high;
@@ -1156,11 +1228,19 @@
                 else if (i < 14) prevAtr = (prevAtr * i + tr) / (i + 1);
                 else prevAtr = (prevAtr * 13 + tr) / 14;
                 atrArr[i] = prevAtr;
+
+                let atrSum = 0;
+                const atrLook = Math.min(i + 1, 50);
+                for (let k = 0; k < atrLook; k++) atrSum += atrArr[i - k];
+                atr50SmaArr[i] = atrSum / atrLook;
+
+                let volSum = 0;
+                const volLook = Math.min(i + 1, 20);
+                for (let k = 0; k < volLook; k++) volSum += data1H[i - k].vol;
+                vol20SmaArr[i] = volSum / volLook;
             }
 
-            // ------------------------------------------------------------
-            // ADIM 4: 1H ICHIMOKU (disp = 26 KAYDIRILMIŞ)
-            // ------------------------------------------------------------
+            // 4. 1H ICHIMOKU (disp = 26 KAYDIRILMIŞ)
             const sa1HRaw = new Float32Array(N1H);
             const sb1HRaw = new Float32Array(N1H);
 
@@ -1178,6 +1258,7 @@
                     kL = Math.min(kL, data1H[i - j].low);
                 }
                 const kijun = (kH + kL) / 2;
+                kijun1H[i] = kijun;
 
                 let sBH = -Infinity, sBL = Infinity;
                 for (let j = 0; j < Math.min(i + 1, spanBLen); j++) {
@@ -1189,15 +1270,12 @@
                 sb1HRaw[i] = (sBH + sBL) / 2;
             }
 
-            // Pine: sa1H = nz(sa1HRaw[disp], sa1HRaw), sb1H = nz(sb1HRaw[disp], sb1HRaw)
             for (let i = 0; i < N1H; i++) {
                 sa1H[i] = (i >= disp) ? sa1HRaw[i - disp] : sa1HRaw[i];
                 sb1H[i] = (i >= disp) ? sb1HRaw[i - disp] : sb1HRaw[i];
             }
 
-            // ------------------------------------------------------------
-            // ADIM 5: 1H MUMLARINA 1D REJİM VE 4H CANLI EMA EŞLEŞTİRMESİ
-            // ------------------------------------------------------------
+            // 5. 1D REJİM VE 4H CANLI EMA EŞLEŞTİRMESİ
             let dIdx = 0;
             let fourHIdx = 0;
 
@@ -1205,32 +1283,21 @@
                 const t1H = data1H[i].time;
                 const c1H = data1H[i].close;
 
-                // 1D Kapanmış Rejimini Bul: request.security(..., "1D", f_regime1D()[1])
                 while (dIdx + 1 < confirmedRegime1DByDay.length && confirmedRegime1DByDay[dIdx + 1].closeTime <= t1H) {
                     dIdx++;
                 }
-                const cur1DRegime = confirmedRegime1DByDay[dIdx] ? confirmedRegime1DByDay[dIdx].lastRegime : 0;
-                regime1DArr[i] = cur1DRegime;
+                regime1DArr[i] = confirmedRegime1DByDay[dIdx] ? confirmedRegime1DByDay[dIdx].lastRegime : 0;
 
-                // 4H Kapanmış EMA26'yı Bul: request.security(..., "240", ta.ema(close, 26)[1])
                 while (fourHIdx + 1 < N4H && (data4H[fourHIdx + 1].time + 14400000 - 1) <= t1H) {
                     fourHIdx++;
                 }
                 const prevClosedEma4H = ema4HClosedArr[fourHIdx] || c1H;
-
-                // Pine: ema4HLive = emaCoefficient * close + (1.0 - emaCoefficient) * previousEma4H
-                const ema4HLive = emaCoeff * c1H + (1.0 - emaCoeff) * prevClosedEma4H;
-                ema4HLiveArr[i] = ema4HLive;
+                ema4HLiveArr[i] = emaCoeff * c1H + (1.0 - emaCoeff) * prevClosedEma4H;
             }
 
-            // ------------------------------------------------------------
-            // ADIM 6: PINE SCRIPT v6 SİNYAL VE SABİT 1:1.67 R:R SİMÜLASYONU
-            // ------------------------------------------------------------
+            // 6. SİNYAL VE SEÇİLEN STRATEJİYE GÖRE AKILLI SL / TP SİMÜLASYONU
             let prevBuy2Cond = false;
             let prevSell2Cond = false;
-
-            const atrMult = 1.5;
-            const tpMult = 2.5;
 
             for (let i = 53; i < N1H; i++) {
                 const c = data1H[i].close;
@@ -1250,16 +1317,12 @@
                 const curEma4HLive = ema4HLiveArr[i];
                 const atr = atrArr[i] || 1;
 
-                // Pine: bullish = lastRegime1D == 1 and above4HEMA
-                // Pine: bearish = lastRegime1D == -1 and below4HEMA
                 const above4HEMA = c > curEma4HLive;
                 const below4HEMA = c < curEma4HLive;
 
                 const bullish = (cur1DReg === 1) && above4HEMA;
                 const bearish = (cur1DReg === -1) && below4HEMA;
 
-                // Pine: enterUp1H = close > top1H and close[1] <= top1H[1]
-                // Pine: enterDown1H = close < bot1H and close[1] >= bot1H[1]
                 const enterUp1H = (c > top1H) && (prevC <= prevTop1H);
                 const enterDown1H = (c < bot1H) && (prevC >= prevBot1H);
 
@@ -1293,49 +1356,160 @@
                 }
 
                 if (isSignal) {
-                    const sl = isBuy ? (c - atr * atrMult) : (c + atr * atrMult);
-                    const tp = isBuy ? (c + atr * tpMult) : (c - atr * tpMult);
+                    let sl = 0;
+                    let tp = 0;
+                    let rrRatio = 1.67;
+                    let extraInfo = '';
 
-                    // Backtest forward scan
+                    // -------------------------------------------------------------
+                    // STRATEJİ 1: PİYASA YAPISI (MARKET STRUCTURE SL & 0.4 ATR TAMPON)
+                    // -------------------------------------------------------------
+                    if (stratId === 1) {
+                        let swingLow10 = Infinity;
+                        let swingHigh10 = -Infinity;
+                        for (let k = 0; k < 10; k++) {
+                            const pastIdx = Math.max(0, i - k);
+                            if (data1H[pastIdx].low < swingLow10) swingLow10 = data1H[pastIdx].low;
+                            if (data1H[pastIdx].high > swingHigh10) swingHigh10 = data1H[pastIdx].high;
+                        }
+
+                        const curKijun = kijun1H[i];
+                        const atrBuffer = atr * 0.4;
+                        const minDistance = atr * 1.0;
+                        const maxDistance = atr * 3.0;
+
+                        if (isBuy) {
+                            const cloudBot = Math.min(curSa, curSb);
+                            const structuralAnchor = Math.min(swingLow10, curKijun, cloudBot);
+                            let rawDistance = c - (structuralAnchor - atrBuffer);
+                            let finalDistance = Math.max(minDistance, Math.min(maxDistance, rawDistance));
+                            sl = c - finalDistance;
+                            tp = c + (finalDistance * 1.67);
+                            extraInfo = `Yapısal Destek: $${structuralAnchor.toFixed(1)} + 0.4x ATR Tampon`;
+                        } else {
+                            const cloudTop = Math.max(curSa, curSb);
+                            const structuralAnchor = Math.max(swingHigh10, curKijun, cloudTop);
+                            let rawDistance = (structuralAnchor + atrBuffer) - c;
+                            let finalDistance = Math.max(minDistance, Math.min(maxDistance, rawDistance));
+                            sl = c + finalDistance;
+                            tp = c - (finalDistance * 1.67);
+                            extraInfo = `Yapısal Direnç: $${structuralAnchor.toFixed(1)} + 0.4x ATR Tampon`;
+                        }
+                    }
+                    // -------------------------------------------------------------
+                    // STRATEJİ 2: QUANT ML (MAE DİNAMİK VOLATİLİTE OPTİMİZATÖRÜ)
+                    // -------------------------------------------------------------
+                    else if (stratId === 2) {
+                        const atr50 = atr50SmaArr[i] || atr;
+                        const vol20 = vol20SmaArr[i] || data1H[i].vol;
+                        const rAtr = atr / atr50;
+                        const rCloud = (Math.abs(curSa - curSb) / c) * 100;
+                        const rvol = vol20 > 0 ? (data1H[i].vol / vol20) : 1.0;
+                        const rKijun = Math.abs(c - kijun1H[i]) / atr;
+
+                        const zRegime = 1.60 * (rAtr - 1.0) + 0.90 * (rvol - 1.0) + 0.50 * ((rCloud / 0.80) - 1.0) - 0.75 * (rKijun - 0.70);
+                        const pExpansion = 1.0 / (1.0 + Math.exp(-1.75 * zRegime));
+
+                        const kMAE = 2.50 - (pExpansion * (2.50 - 1.40));
+                        const kTP = 1.80 + (Math.pow(pExpansion, 0.85) * (3.20 - 1.80));
+                        rrRatio = kTP / kMAE;
+
+                        if (isBuy) {
+                            sl = c - (kMAE * atr);
+                            tp = c + (kTP * atr);
+                        } else {
+                            sl = c + (kMAE * atr);
+                            tp = c - (kTP * atr);
+                        }
+                        extraInfo = `MAE SL: ${kMAE.toFixed(2)}x ATR | TP: ${kTP.toFixed(2)}x ATR (P_exp: %${(pExpansion * 100).toFixed(0)})`;
+                    }
+                    // -------------------------------------------------------------
+                    // STRATEJİ 3: DİNAMİK TRAILING STOP (BREAKEVEN & KIJUN TAKİBİ)
+                    // -------------------------------------------------------------
+                    else if (stratId === 3) {
+                        sl = isBuy ? (c - atr * 1.5) : (c + atr * 1.5);
+                        tp = isBuy ? (c + atr * 2.5) : (c - atr * 2.5);
+                        extraInfo = `Başabaş: +1.0 ATR | Kijun Trailing: +1.8 ATR`;
+                    }
+                    // -------------------------------------------------------------
+                    // STRATEJİ 0: KLASİK SABİT 1:1.67
+                    // -------------------------------------------------------------
+                    else {
+                        sl = isBuy ? (c - atr * 1.5) : (c + atr * 1.5);
+                        tp = isBuy ? (c + atr * 2.5) : (c - atr * 2.5);
+                        extraInfo = `Sabit SL: 1.5x ATR | TP: 2.5x ATR`;
+                    }
+
+                    // BACKTEST MOTORU SİMÜLASYONU
                     let btStatus = 'OPEN';
                     let exitIndex = N1H - 1;
                     let exitPrice = c;
                     let pnlPct = 0;
+                    let currentDynamicStop = sl;
+                    let highestProfitAtr = 0;
 
                     for (let step = i + 1; step < N1H; step++) {
-                        const nextHigh = data1H[step].high;
-                        const nextLow = data1H[step].low;
+                        const barHigh = data1H[step].high;
+                        const barLow = data1H[step].low;
+                        const stepAtr = atrArr[step] || atr;
+                        const stepKijun = kijun1H[step] || c;
+
+                        // STRATEJİ 3 İÇİN TRAILING STOP GÜNCELLEMESİ
+                        if (stratId === 3) {
+                            const curProfitAtr = isBuy ? (barHigh - c) / atr : (c - barLow) / atr;
+                            if (curProfitAtr > highestProfitAtr) highestProfitAtr = curProfitAtr;
+
+                            // Parabolik Kâr Kilitleme (+2.5 ATR üstü)
+                            if (highestProfitAtr >= 2.5) {
+                                const lookbackLow = Math.min(data1H[step - 1].low, data1H[Math.max(0, step - 2)].low);
+                                const lookbackHigh = Math.max(data1H[step - 1].high, data1H[Math.max(0, step - 2)].high);
+                                if (isBuy && lookbackLow > currentDynamicStop) currentDynamicStop = lookbackLow;
+                                if (!isBuy && lookbackHigh < currentDynamicStop) currentDynamicStop = lookbackHigh;
+                            }
+                            // Kijun-sen Trailing (+1.8 ATR üstü)
+                            else if (highestProfitAtr >= 1.8 && stepKijun > 0) {
+                                const kijunStop = isBuy ? stepKijun - (stepAtr * 0.2) : stepKijun + (stepAtr * 0.2);
+                                if (isBuy && kijunStop > currentDynamicStop) currentDynamicStop = kijunStop;
+                                if (!isBuy && kijunStop < currentDynamicStop) currentDynamicStop = kijunStop;
+                            }
+                            // Breakeven (+1.0 ATR üstü)
+                            else if (highestProfitAtr >= 1.0) {
+                                const beStop = isBuy ? c + (atr * 0.1) : c - (atr * 0.1);
+                                if (isBuy && beStop > currentDynamicStop) currentDynamicStop = beStop;
+                                if (!isBuy && beStop < currentDynamicStop) currentDynamicStop = beStop;
+                            }
+                        }
 
                         if (isBuy) {
-                            const hitTp = nextHigh >= tp;
-                            const hitSl = nextLow <= sl;
+                            const hitTp = barHigh >= tp;
+                            const hitSl = barLow <= currentDynamicStop;
 
                             if (hitTp && !hitSl) {
                                 btStatus = 'TP'; exitIndex = step; exitPrice = tp; break;
                             } else if (hitSl && !hitTp) {
-                                btStatus = 'SL'; exitIndex = step; exitPrice = sl; break;
+                                btStatus = 'SL'; exitIndex = step; exitPrice = currentDynamicStop; break;
                             } else if (hitTp && hitSl) {
                                 if (data1H[step].close >= data1H[step].open) {
                                     btStatus = 'TP'; exitPrice = tp;
                                 } else {
-                                    btStatus = 'SL'; exitPrice = sl;
+                                    btStatus = 'SL'; exitPrice = currentDynamicStop;
                                 }
                                 exitIndex = step;
                                 break;
                             }
                         } else {
-                            const hitTp = nextLow <= tp;
-                            const hitSl = nextHigh >= sl;
+                            const hitTp = barLow <= tp;
+                            const hitSl = barHigh >= currentDynamicStop;
 
                             if (hitTp && !hitSl) {
                                 btStatus = 'TP'; exitIndex = step; exitPrice = tp; break;
                             } else if (hitSl && !hitTp) {
-                                btStatus = 'SL'; exitIndex = step; exitPrice = sl; break;
+                                btStatus = 'SL'; exitIndex = step; exitPrice = currentDynamicStop; break;
                             } else if (hitTp && hitSl) {
                                 if (data1H[step].close <= data1H[step].open) {
                                     btStatus = 'TP'; exitPrice = tp;
                                 } else {
-                                    btStatus = 'SL'; exitPrice = sl;
+                                    btStatus = 'SL'; exitPrice = currentDynamicStop;
                                 }
                                 exitIndex = step;
                                 break;
@@ -1349,6 +1523,10 @@
                         pnlPct = ((c - exitPrice) / c) * 100;
                     }
 
+                    if (stratId === 3 && btStatus === 'SL' && pnlPct >= 0) {
+                        btStatus = 'TP';
+                    }
+
                     signals.push({
                         index: i,
                         type: sigType,
@@ -1357,11 +1535,12 @@
                         price: c,
                         sl: sl,
                         tp: tp,
-                        rrRatio: 1.67,
+                        rrRatio: rrRatio,
                         btStatus: btStatus,
                         exitIndex: exitIndex,
                         exitPrice: exitPrice,
                         pnlPct: pnlPct,
+                        extraInfo: extraInfo,
                         time: data1H[i].time
                     });
                 }
@@ -1387,7 +1566,6 @@
             let initialCapital = 1000.0;
             let currentCapital = initialCapital;
 
-            // Kronolojik sırayla All-In bileşik kâr hesaplama
             for (const sig of visibleSignals) {
                 if (sig.btStatus === 'TP') tpCount++;
                 else if (sig.btStatus === 'SL') slCount++;
@@ -1429,7 +1607,7 @@
             totalCandles = candleData1H.length;
             if (totalCandles === 0) return;
 
-            const ind = calculateSqiciBekiR_PineV6(candleData1H, candleData4H, candleData1D);
+            const ind = calculateSqiciBekiR_MultiStrategy(candleData1H, candleData4H, candleData1D, activeStrategy);
             calculatedSignals = ind.signals;
 
             const candleFloatArr = new Float32Array(totalCandles * 4);
@@ -1442,7 +1620,7 @@
                 candleFloatArr[idx + 2] = candleData1H[i].low;
                 candleFloatArr[idx + 3] = candleData1H[i].close;
 
-                indFloatArr[idx + 0] = ind.regime1D[i]; // 1.0 (Yeşil), -1.0 (Kırmızı)
+                indFloatArr[idx + 0] = ind.regime1D[i];
                 indFloatArr[idx + 1] = ind.sa[i];
                 indFloatArr[idx + 2] = ind.sb[i];
                 indFloatArr[idx + 3] = ind.ema4H[i];
@@ -1689,7 +1867,7 @@
                     const projDistance = isBacktestActive ? Math.min(sig.exitIndex - sig.index, 25) : 8;
                     const projEndX = Math.round(Math.min(cssW - 90, screenX + (cssW / visibleCount) * Math.max(6, projDistance)));
 
-                    // TAKE PROFIT (2.5 ATR)
+                    // TAKE PROFIT
                     ctx2d.strokeStyle = isTpWin ? '#10b981' : (isSlLoss ? 'rgba(100, 116, 139, 0.4)' : 'rgba(16, 185, 129, 0.8)');
                     ctx2d.lineWidth = isTpWin ? 2 : 1.5;
                     ctx2d.setLineDash(isSlLoss ? [2, 4] : [4, 3]);
@@ -1712,9 +1890,9 @@
                     ctx2d.textAlign = 'left';
                     ctx2d.textBaseline = 'middle';
                     const winBadge = isTpWin ? ` ✅ +${sig.pnlPct.toFixed(1)}%` : '';
-                    ctx2d.fillText(`🎯 TP (2.5x): ${sig.tp.toFixed(1)}${winBadge}`, projEndX + 6, tpY);
+                    ctx2d.fillText(`🎯 TP: ${sig.tp.toFixed(1)}${winBadge}`, projEndX + 6, tpY);
 
-                    // STOP LOSS (1.5 ATR)
+                    // STOP LOSS
                     ctx2d.strokeStyle = isSlLoss ? '#ef4444' : (isTpWin ? 'rgba(100, 116, 139, 0.4)' : 'rgba(239, 68, 68, 0.8)');
                     ctx2d.lineWidth = isSlLoss ? 2 : 1.5;
                     ctx2d.setLineDash(isTpWin ? [2, 4] : [4, 3]);
@@ -1738,7 +1916,7 @@
                     ctx2d.textAlign = 'left';
                     ctx2d.textBaseline = 'middle';
                     const lossBadge = isSlLoss ? ` ❌ -${Math.abs(sig.pnlPct).toFixed(1)}%` : '';
-                    ctx2d.fillText(`🛡️ SL (1.5x): ${sig.sl.toFixed(1)}${lossBadge}`, projEndX + 6, slY);
+                    ctx2d.fillText(`🛡️ SL: ${sig.sl.toFixed(1)}${lossBadge}`, projEndX + 6, slY);
 
                     ctx2d.restore();
                 }
@@ -1794,7 +1972,6 @@
             loadingOverlay.innerText = `⏳ Binance MTF (1D + 4H + 1H) Verileri Çekiliyor...`;
 
             try {
-                // 1H (3000 Mum), 4H (1000 Mum), 1D (500 Mum) paralel çekilir
                 const [data1H, data4H, data1D] = await Promise.all([
                     fetchKlinesForInterval(symbol, '1h', requestedDepth),
                     fetchKlinesForInterval(symbol, '4h', 1000),
@@ -1935,10 +2112,12 @@
 
         const signalInspector = document.getElementById('signal-inspector-card');
         const inspType = document.getElementById('insp-type');
+        const inspRr = document.getElementById('insp-rr');
         const inspBtResult = document.getElementById('insp-bt-result');
         const inspEntry = document.getElementById('insp-entry');
         const inspTp = document.getElementById('insp-tp');
         const inspSl = document.getElementById('insp-sl');
+        const inspExtra = document.getElementById('insp-extra');
 
         function startPan(clientX) {
             isChartDragging = true;
@@ -2043,6 +2222,7 @@
                     signalInspector.style.display = 'flex';
                     inspType.innerText = `⚡ ${sigAtCandle.label}`;
                     inspType.style.color = sigAtCandle.isBuy ? '#10b981' : '#ef4444';
+                    inspRr.innerText = `R:R: 1 : ${sigAtCandle.rrRatio.toFixed(2)}`;
 
                     if (isBacktestActive) {
                         inspBtResult.style.display = 'block';
@@ -2061,8 +2241,9 @@
                     }
 
                     inspEntry.innerText = `GİRİŞ: $${sigAtCandle.price.toFixed(2)}`;
-                    inspTp.innerText = `🎯 TP (2.5 ATR): $${sigAtCandle.tp.toFixed(2)}`;
-                    inspSl.innerText = `🛡️ SL (1.5 ATR): $${sigAtCandle.sl.toFixed(2)}`;
+                    inspTp.innerText = `🎯 TP: $${sigAtCandle.tp.toFixed(2)}`;
+                    inspSl.innerText = `🛡️ SL: $${sigAtCandle.sl.toFixed(2)}`;
+                    inspExtra.innerText = sigAtCandle.extraInfo || '';
                 } else {
                     signalInspector.style.display = 'none';
                 }
