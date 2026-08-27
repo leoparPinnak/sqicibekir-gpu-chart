@@ -4,8 +4,6 @@
         const canvasContainer = document.getElementById('canvas-container');
         const timeAxisElem = document.getElementById('time-axis');
         const priceAxisElem = document.getElementById('price-axis');
-        const ottonlinePanel = document.getElementById('ottonline-panel');
-        const ottonlineFrame = document.getElementById('ottonline-frame');
         
         const gl = canvas.getContext('webgl2', { alpha: false, depth: false, antialias: true });
         const ctx2d = overlayCanvas.getContext('2d');
@@ -150,13 +148,6 @@
             btn.classList.toggle('active', isBacktestActive);
             btn.innerText = isBacktestActive ? '🎆 Backtest: AÇIK' : '📊 Backtest Modu';
             vbtCard.style.display = isBacktestActive ? 'flex' : 'none';
-        };
-
-        window.toggleOttOnlinePanel = function() {
-            const isOpen = ottonlinePanel.classList.toggle('open');
-            if (isOpen && !ottonlineFrame.src) {
-                ottonlineFrame.src = 'https://www.ottonline1553.com.tr/';
-            }
         };
 
         // ==========================================

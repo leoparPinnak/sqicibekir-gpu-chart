@@ -248,23 +248,7 @@
             box-shadow: 0 0 14px rgba(16, 185, 129, 0.6);
         }
 
-        .ottonline-btn {
-            background: linear-gradient(135deg, #e11d48, #be123c);
-            border: 1px solid #fda4af;
-            color: #ffffff;
-            font-weight: 700;
-            padding: 4px 9px;
-            border-radius: 5px;
-            font-size: 10.5px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            box-shadow: 0 0 10px rgba(225, 29, 72, 0.35);
-            transition: all 0.2s;
-        }
-
-        /* 2. ANA GRAFİK VE BÖLÜNMÜŞ EKRAN GÖVDESİ */
+        /* 2. ANA GRAFİK GÖVDESİ */
         .main-workspace {
             position: relative;
             flex: 1;
@@ -315,56 +299,6 @@
         #overlay-canvas {
             pointer-events: none;
             z-index: 10;
-        }
-
-        /* OTTONLINE BÖLÜNMÜŞ YAN PANEL */
-        .ottonline-panel {
-            width: 50%;
-            height: 100%;
-            background: #0b1122;
-            border-left: 2px solid #e11d48;
-            display: none;
-            flex-direction: column;
-            position: relative;
-            z-index: 25;
-            transition: all 0.25s ease-in-out;
-        }
-        .ottonline-panel.open {
-            display: flex;
-        }
-        .ottonline-header {
-            height: 38px;
-            background: #111827;
-            border-bottom: 1px solid #1e293b;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 12px;
-            font-size: 12px;
-            font-weight: 700;
-            color: #fda4af;
-        }
-        .ottonline-header-actions {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .ottonline-action-btn {
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            color: #f8fafc;
-            padding: 3px 8px;
-            border-radius: 4px;
-            font-size: 11px;
-            cursor: pointer;
-            text-decoration: none;
-        }
-        .ottonline-action-btn:hover { background: rgba(255, 255, 255, 0.2); }
-        .ottonline-iframe {
-            width: 100%;
-            flex: 1;
-            border: none;
-            background: #ffffff;
         }
 
         /* HUD KARTLARI */
@@ -734,11 +668,6 @@
                 <button class="ind-btn active" id="btn-bg" onclick="toggleLayer('bg')">
                     <span>🌌</span> Rejim
                 </button>
-
-                <!-- OttOnline Butonu -->
-                <button class="ottonline-btn" onclick="toggleOttOnlinePanel()" title="OttOnline Platformunu Bölünmüş Ekranda Aç / Kapat">
-                    🌐 OttOnline
-                </button>
             </div>
         </div>
 
@@ -825,22 +754,6 @@
                 <div class="axis-corner-reset" onclick="resetPriceScale()" title="Fiyat ölçeğini otomatik sıfırla">
                     OTO 🔄
                 </div>
-            </div>
-
-            <!-- SAĞ: OTTONLINE 1553 BÖLÜNMÜŞ ÇALIŞMA PANELİ -->
-            <div class="ottonline-panel" id="ottonline-panel">
-                <div class="ottonline-header">
-                    <span>🌐 OttOnline 1553 Live Platform</span>
-                    <div class="ottonline-header-actions">
-                        <a href="https://www.ottonline1553.com.tr/" target="_blank" class="ottonline-action-btn" title="Yeni sekmede aç">
-                            ↗️ Yeni Sekmede Aç
-                        </a>
-                        <button class="ottonline-action-btn" onclick="toggleOttOnlinePanel()" title="Paneli Kapat">
-                            ✕ Kapat
-                        </button>
-                    </div>
-                </div>
-                <iframe id="ottonline-frame" class="ottonline-iframe" src="" allow="clipboard-read; clipboard-write;"></iframe>
             </div>
 
         </div>
@@ -1052,8 +965,6 @@
         const canvasContainer = document.getElementById('canvas-container');
         const timeAxisElem = document.getElementById('time-axis');
         const priceAxisElem = document.getElementById('price-axis');
-        const ottonlinePanel = document.getElementById('ottonline-panel');
-        const ottonlineFrame = document.getElementById('ottonline-frame');
         
         const gl = canvas.getContext('webgl2', { alpha: false, depth: false, antialias: true });
         const ctx2d = overlayCanvas.getContext('2d');
@@ -1198,13 +1109,6 @@
             btn.classList.toggle('active', isBacktestActive);
             btn.innerText = isBacktestActive ? '🎆 Backtest: AÇIK' : '📊 Backtest Modu';
             vbtCard.style.display = isBacktestActive ? 'flex' : 'none';
-        };
-
-        window.toggleOttOnlinePanel = function() {
-            const isOpen = ottonlinePanel.classList.toggle('open');
-            if (isOpen && !ottonlineFrame.src) {
-                ottonlineFrame.src = 'https://www.ottonline1553.com.tr/';
-            }
         };
 
         // ==========================================
