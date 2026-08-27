@@ -1850,7 +1850,7 @@
         }
 
         // ============================================================
-        // 🎆 EKRAN GENELİ MİNİK HAVAİ FİŞEK VE KUTLAMA PARÇACIK MOTORU
+        // 🎆 EKRAN GENELİ MİNİK HAVAİ FİŞEK MOTORU (120 FPS SIFIR CPU YÜKÜ)
         // ============================================================
         const SCREEN_FIREWORKS = [
             { relX: 0.12, relY: 0.22, seed: 1.2, speed: 1.15, size: 28, color: '#10b981' },
@@ -1876,40 +1876,43 @@
                 const radius = cycle * fw.size;
                 const burstAlpha = Math.max(0, 1.0 - cycle * 1.05) * globalAlpha;
 
-                const pCount = 12;
+                const pCount = 10;
+                ctx.fillStyle = fw.color;
+                ctx.globalAlpha = burstAlpha;
+
+                // 1. Dış Parıltı Halkası (Hızlı GPU Vektörü - Sıfır CPU Blur)
+                ctx.beginPath();
                 for (let i = 0; i < pCount; i++) {
                     const angle = (i / pCount) * Math.PI * 2 + fw.seed + (cycle * 0.6);
                     const dist = radius * (0.6 + 0.4 * Math.sin(i * 2.5 + fw.seed));
                     const px = Math.round(cx + Math.cos(angle) * dist);
-                    const py = Math.round(cy + Math.sin(angle) * dist + (cycle * cycle * 12)); // hafif yerçekimi
-
-                    ctx.fillStyle = fw.color;
-                    ctx.shadowColor = fw.color;
-                    ctx.shadowBlur = 8;
-                    ctx.globalAlpha = burstAlpha;
-
-                    const pSize = Math.max(0.6, (1.0 - cycle) * 2.6);
-                    ctx.beginPath();
+                    const py = Math.round(cy + Math.sin(angle) * dist + (cycle * cycle * 10));
+                    const pSize = Math.max(1.0, (1.0 - cycle) * 3.2);
+                    ctx.moveTo(px + pSize, py);
                     ctx.arc(px, py, pSize, 0, Math.PI * 2);
-                    ctx.fill();
-
-                    // Minik parıldayan altın yıldızlar
-                    if (i % 3 === 0 && cycle > 0.15 && cycle < 0.75) {
-                        ctx.fillStyle = '#ffffff';
-                        ctx.shadowColor = '#fbbf24';
-                        ctx.shadowBlur = 10;
-                        ctx.fillRect(px - 1, py - 1, 2, 2);
-                    }
                 }
+                ctx.fill();
 
-                // Havai fişek merkez parıltısı
-                if (cycle < 0.22) {
+                // 2. İç Parlak Beyaz Çekirdek
+                ctx.fillStyle = '#ffffff';
+                ctx.globalAlpha = burstAlpha * 0.95;
+                ctx.beginPath();
+                for (let i = 0; i < pCount; i++) {
+                    const angle = (i / pCount) * Math.PI * 2 + fw.seed + (cycle * 0.6);
+                    const dist = radius * (0.6 + 0.4 * Math.sin(i * 2.5 + fw.seed));
+                    const px = Math.round(cx + Math.cos(angle) * dist);
+                    const py = Math.round(cy + Math.sin(angle) * dist + (cycle * cycle * 10));
+                    ctx.moveTo(px + 1.2, py);
+                    ctx.arc(px, py, 1.2, 0, Math.PI * 2);
+                }
+                ctx.fill();
+
+                // Merkez Flaş
+                if (cycle < 0.20) {
                     ctx.fillStyle = '#ffffff';
-                    ctx.shadowColor = fw.color;
-                    ctx.shadowBlur = 16;
-                    ctx.globalAlpha = Math.max(0, (1.0 - cycle * 4.5)) * globalAlpha;
+                    ctx.globalAlpha = Math.max(0, (1.0 - cycle * 5.0)) * globalAlpha;
                     ctx.beginPath();
-                    ctx.arc(cx, cy, 3.5, 0, Math.PI * 2);
+                    ctx.arc(cx, cy, 3.0, 0, Math.PI * 2);
                     ctx.fill();
                 }
             }
@@ -1926,7 +1929,7 @@
         };
 
         // ============================================================
-        // HiDPI DİNAMİK VEKTÖR TP / SL VE ROZET ÇİZİCİSİ (PÜRÜZSÜZ GPU ODAKLI)
+        // HiDPI DİNAMİK VEKTÖR TP / SL VE ROZET ÇİZİCİSİ (120 FPS ULTRA HAFİF)
         // ============================================================
         function drawVectorSignalsAndTargets(timeNow) {
             const cssW = canvasContainer.clientWidth;
@@ -1977,7 +1980,7 @@
                     const isOverSignalBadge = (Math.abs(mouseCssX - screenX) <= 45) &&
                                               (Math.abs(mouseCssY - badgeY) <= 15);
 
-                    // C. Odaktayken (progress > 0.25) genişleyen mum veya ortalanmış TP/SL etiketleri üzerinde mi?
+                    // C. Odaktayken (progress > 0.25) genişleyen mum veya etiketler üzerinde mi?
                     let isOverEnlargedFocusZone = false;
                     if (focusAnim.currentSigIndex === sig.index && focusAnim.progress > 0.25) {
                         const enlargedW = Math.max(10, candleBarW * (1.0 + 1.35 * focusAnim.progress));
@@ -1989,10 +1992,9 @@
                         const entryY = getY(sig.price);
                         const isOverTp = (Math.abs(mouseCssX - screenX) <= 130) && (Math.abs(mouseCssY - tpY) <= 15);
                         const isOverSl = (Math.abs(mouseCssX - screenX) <= 130) && (Math.abs(mouseCssY - slY) <= 15);
-                        const isOverEntry = (Math.abs(mouseCssX - screenX) <= 90) && (Math.abs(mouseCssY - entryY) <= 14);
-                        const isOverEnlargedTag = (Math.abs(mouseCssX - screenX) <= 65) && (Math.abs(mouseCssY - (isBuy ? lowY + 36 : highY - 36)) <= 18);
+                        const isOverEntry = (Math.abs(mouseCssX - (screenX - 80)) <= 80) && (Math.abs(mouseCssY - entryY) <= 14);
 
-                        isOverEnlargedFocusZone = isOverEnlargedCandle || isOverTp || isOverSl || isOverEntry || isOverEnlargedTag;
+                        isOverEnlargedFocusZone = isOverEnlargedCandle || isOverTp || isOverSl || isOverEntry;
                     }
 
                     if (isOverCandleBar || isOverSignalBadge || isOverEnlargedFocusZone) {
@@ -2027,12 +2029,31 @@
                 ctx2d.restore();
             }
 
-            // 3. Başarılı İşlemde Ekran Geneli Minik Havai Fişek Patlamaları (Smooth Fade-in)
+            // 3. 🚨 BAŞARISIZ (STOP) SİNYALDE TÜM EKRANDA KIRMIZI İKAZ LAMBASI MODU
+            if (activeFocusSig && activeFocusSig.btStatus === 'SL' && focusAnim.progress > 0.01) {
+                const warningPulse = 0.5 + 0.5 * Math.sin(timeNow * 0.007); // 0.0 - 1.0 arası nefes alan nabız
+                const redAlpha = (0.08 + 0.14 * warningPulse) * focusAnim.progress;
+
+                ctx2d.save();
+                // Tüm ekranı kaplayan kırmızı ikaz ışığı
+                ctx2d.fillStyle = `rgba(220, 38, 38, ${redAlpha.toFixed(3)})`;
+                ctx2d.fillRect(0, 0, cssW, cssH);
+
+                // Kenarlardan merkeze doğru vuran derin kırmızı ikaz gradyanı
+                const warnGrad = ctx2d.createRadialGradient(cssW / 2, cssH / 2, cssH * 0.15, cssW / 2, cssH / 2, Math.max(cssW, cssH) * 0.75);
+                warnGrad.addColorStop(0, 'rgba(239, 68, 68, 0.0)');
+                warnGrad.addColorStop(1, `rgba(185, 28, 28, ${(redAlpha * 1.6).toFixed(3)})`);
+                ctx2d.fillStyle = warnGrad;
+                ctx2d.fillRect(0, 0, cssW, cssH);
+                ctx2d.restore();
+            }
+
+            // 4. BAŞARILI (TP) İŞLEMDE EKRAN GENELİ MİNİK HAVAİ FİŞEK KUTLAMASI
             if (activeFocusSig && activeFocusSig.btStatus === 'TP' && focusAnim.progress > 0.01) {
                 drawScreenWideCelebrationFireworks(ctx2d, cssW, cssH, timeNow, focusAnim.progress * 0.95);
             }
 
-            // 4. Arka Plandaki Diğer Sinyallerin Çizimi (Smooth Karartma Oranıyla)
+            // 5. Arka Plandaki Diğer Sinyallerin Çizimi (Smooth Karartma Oranıyla)
             const otherAlpha = Math.max(0.12, 1.0 - (focusAnim.progress * 0.84));
 
             for (const sig of calculatedSignals) {
@@ -2075,9 +2096,7 @@
                 // Sinyal Rozeti
                 ctx2d.fillStyle = badgeBg;
                 ctx2d.strokeStyle = isTpWin ? '#fef08a' : (isSlLoss ? '#fca5a5' : '#ffffff');
-                ctx2d.lineWidth = isTpWin ? 2 : 1;
-                ctx2d.shadowColor = badgeColor;
-                ctx2d.shadowBlur = isTpWin ? 14 : 6;
+                ctx2d.lineWidth = isTpWin ? 1.8 : 1;
 
                 let text = isBuy ? `▲ ${sig.type}` : `▼ ${sig.type}`;
                 if (isBacktestActive && isTpWin) text += ' 🏆 TP';
@@ -2103,7 +2122,7 @@
                 // Stop Çarpı (X)
                 if (isBacktestActive && isSlLoss) {
                     ctx2d.strokeStyle = '#ef4444';
-                    ctx2d.lineWidth = 3;
+                    ctx2d.lineWidth = 2.5;
                     const crossSize = 9;
                     ctx2d.beginPath();
                     ctx2d.moveTo(screenX - crossSize, badgeY - crossSize);
@@ -2143,7 +2162,7 @@
                 ctx2d.restore();
             }
 
-            // 5. 🌟 SAF GPU SMOOTH ODAK MODU (PÜRÜZSÜZ BÜYÜYEN MUM & YATAYDA MUMU ORTALAYAN TP/SL ROZETLERİ)
+            // 6. 🌟 SAF GPU SMOOTH ODAK MODU (PÜRÜZSÜZ BÜYÜYEN MUM & YATAYDA MUMU ORTALAYAN TP/SL ROZETLERİ)
             if (activeFocusSig && focusAnim.progress > 0.002) {
                 const sig = activeFocusSig;
                 const candleCenter = sig.index + 0.5;
@@ -2166,7 +2185,7 @@
 
                     ctx2d.save();
 
-                    // A. DİKEY PARLAK IŞIK SÜTUNU (SPOTLIGHT BEAM - SMOOTH FADE)
+                    // A. DİKEY PARLAK IŞIK SÜTUNU (SPOTLIGHT BEAM - HIZLI GPU GRADYANI)
                     const beamGrad = ctx2d.createLinearGradient(screenX, 0, screenX, cssH);
                     beamGrad.addColorStop(0, 'rgba(56, 189, 248, 0.0)');
                     beamGrad.addColorStop(0.3, isBuy ? `rgba(16, 185, 129, ${(0.14 * prog).toFixed(3)})` : `rgba(239, 68, 68, ${(0.14 * prog).toFixed(3)})`);
@@ -2182,7 +2201,7 @@
                     const projDistance = isBacktestActive ? Math.min(sig.exitIndex - sig.index, 35) : 16;
                     const baseProjEndX = Math.round(Math.min(cssW - 20, screenX + (cssW / visibleCount) * Math.max(12, projDistance)));
                     
-                    // ✨ Kullanıcı Talebi: TP ve SL yazıları uzaktan başlayıp yavaşça MUMU YATAYDA ORTALAYACAK şekilde kayar!
+                    // TP ve SL yazıları uzaktan başlayıp yavaşça MUMU YATAYDA ORTALAYACAK şekilde kayar:
                     const badgeCenterX = Math.round(baseProjEndX + (screenX - baseProjEndX) * prog);
 
                     // TP Alanı (Yeşil Kâr Kutusu - Smooth Opaklık)
@@ -2202,8 +2221,6 @@
                     // TP Çizgisi
                     ctx2d.strokeStyle = '#10b981';
                     ctx2d.lineWidth = 2.0 + 1.8 * prog;
-                    ctx2d.shadowColor = '#10b981';
-                    ctx2d.shadowBlur = 10 + 18 * prog;
                     ctx2d.beginPath();
                     ctx2d.moveTo(screenX, entryY);
                     ctx2d.lineTo(screenX, tpY);
@@ -2213,8 +2230,6 @@
                     // SL Çizgisi
                     ctx2d.strokeStyle = '#ef4444';
                     ctx2d.lineWidth = 2.0 + 1.8 * prog;
-                    ctx2d.shadowColor = '#ef4444';
-                    ctx2d.shadowBlur = 10 + 18 * prog;
                     ctx2d.beginPath();
                     ctx2d.moveTo(screenX, entryY);
                     ctx2d.lineTo(screenX, slY);
@@ -2224,8 +2239,6 @@
                     // Giriş Çizgisi (Kesikli Altın)
                     ctx2d.strokeStyle = '#fbbf24';
                     ctx2d.lineWidth = 1.5 + 0.8 * prog;
-                    ctx2d.shadowColor = '#fbbf24';
-                    ctx2d.shadowBlur = 8 + 10 * prog;
                     ctx2d.setLineDash([5, 4]);
                     ctx2d.beginPath();
                     ctx2d.moveTo(screenX, entryY);
@@ -2243,8 +2256,6 @@
                     // Fitil (Wick)
                     ctx2d.strokeStyle = isCandleBull ? '#34d399' : '#f87171';
                     ctx2d.lineWidth = 2.0 + 2.2 * prog;
-                    ctx2d.shadowColor = ctx2d.strokeStyle;
-                    ctx2d.shadowBlur = 8 + 18 * prog;
                     ctx2d.beginPath();
                     ctx2d.moveTo(screenX, highY);
                     ctx2d.lineTo(screenX, lowY);
@@ -2254,8 +2265,6 @@
                     ctx2d.fillStyle = isCandleBull ? '#10b981' : '#ef4444';
                     ctx2d.strokeStyle = '#ffffff';
                     ctx2d.lineWidth = 1.5 + 1.5 * prog;
-                    ctx2d.shadowColor = ctx2d.fillStyle;
-                    ctx2d.shadowBlur = 10 + 26 * prog;
                     ctx2d.fillRect(screenX - candleW / 2, bodyTop, candleW, bodyHeight);
                     ctx2d.strokeRect(screenX - candleW / 2, bodyTop, candleW, bodyHeight);
 
@@ -2267,8 +2276,6 @@
                     ctx2d.fillStyle = 'rgba(6, 78, 59, 0.96)';
                     ctx2d.strokeStyle = '#10b981';
                     ctx2d.lineWidth = 2;
-                    ctx2d.shadowColor = '#10b981';
-                    ctx2d.shadowBlur = 18;
                     const tpText = `🎯 TP HEDEFİ: $${sig.tp.toFixed(1)} (+%${targetPnlPct}) ${isTpWin ? '🏆 KAZANDI' : ''}`;
                     ctx2d.font = 'bold 12.5px "SF Pro Text", "Segoe UI", sans-serif';
                     const tpMetrics = ctx2d.measureText(tpText);
@@ -2287,8 +2294,6 @@
                     ctx2d.fillStyle = 'rgba(127, 29, 29, 0.96)';
                     ctx2d.strokeStyle = '#ef4444';
                     ctx2d.lineWidth = 2;
-                    ctx2d.shadowColor = '#ef4444';
-                    ctx2d.shadowBlur = 18;
                     const slText = `🛡️ STOP LOSS: $${sig.sl.toFixed(1)} (-%${riskPnlPct}) ${isSlLoss ? '❌ STOP' : ''}`;
                     ctx2d.font = 'bold 12.5px "SF Pro Text", "Segoe UI", sans-serif';
                     const slMetrics = ctx2d.measureText(slText);
@@ -2317,8 +2322,6 @@
                     ctx2d.fillStyle = 'rgba(15, 23, 42, 0.96)';
                     ctx2d.strokeStyle = '#fbbf24';
                     ctx2d.lineWidth = 1.5;
-                    ctx2d.shadowColor = '#fbbf24';
-                    ctx2d.shadowBlur = 14;
                     ctx2d.beginPath();
                     ctx2d.roundRect(entryBadgeX - entryW / 2, entryY - entryH / 2, entryW, entryH, 5);
                     ctx2d.fill();
