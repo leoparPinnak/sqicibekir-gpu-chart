@@ -2145,31 +2145,53 @@
                     ctx2d.stroke();
                 }
 
-                // Normal Modda Uzaktaki TP / SL Çizgileri
-                if (visibleCount < 400) {
-                    const projDistance = isBacktestActive ? Math.min(sig.exitIndex - sig.index, 25) : 8;
-                    const projEndX = Math.round(Math.min(cssW - 90, screenX + (cssW / visibleCount) * Math.max(6, projDistance)));
-
-                    // TP
-                    ctx2d.strokeStyle = isTpWin ? '#10b981' : (isSlLoss ? 'rgba(100, 116, 139, 0.4)' : 'rgba(16, 185, 129, 0.8)');
-                    ctx2d.lineWidth = isTpWin ? 2 : 1.5;
-                    ctx2d.setLineDash(isSlLoss ? [2, 4] : [4, 3]);
+                // Sadece Mum Hizasında Kalan Dikey Kesikli Mavi TP ve Pembe SL Seviyeleri & Emojileri
+                if (visibleCount < 500) {
+                    // 1. DİKEY KESİKLİ MAVİ TP ÇİZGİSİ & 🎯 EMOJİSİ
+                    ctx2d.strokeStyle = '#38bdf8'; // Mavi
+                    ctx2d.lineWidth = 1.5;
+                    ctx2d.setLineDash([3, 3]);
                     ctx2d.beginPath();
                     ctx2d.moveTo(screenX, entryY);
                     ctx2d.lineTo(screenX, tpY);
-                    ctx2d.lineTo(projEndX, tpY);
                     ctx2d.stroke();
 
-                    // SL
-                    ctx2d.strokeStyle = isSlLoss ? '#ef4444' : (isTpWin ? 'rgba(100, 116, 139, 0.4)' : 'rgba(239, 68, 68, 0.8)');
-                    ctx2d.lineWidth = isSlLoss ? 2 : 1.5;
-                    ctx2d.setLineDash(isTpWin ? [2, 4] : [4, 3]);
+                    // TP Yatay Minik Çentik
+                    ctx2d.setLineDash([]);
+                    ctx2d.beginPath();
+                    ctx2d.moveTo(screenX - 6, tpY);
+                    ctx2d.lineTo(screenX + 6, tpY);
+                    ctx2d.stroke();
+
+                    // TP Emojisi 🎯
+                    ctx2d.font = '11.5px "Apple Color Emoji", "Segoe UI Emoji", sans-serif';
+                    ctx2d.textAlign = 'center';
+                    ctx2d.textBaseline = 'middle';
+                    const tpEmojiY = (tpY < entryY) ? (tpY - 9) : (tpY + 9);
+                    ctx2d.fillText('🎯', screenX, tpEmojiY);
+
+                    // 2. DİKEY KESİKLİ PEMBE SL ÇİZGİSİ & 🛡️ EMOJİSİ
+                    ctx2d.strokeStyle = '#ec4899'; // Pembe
+                    ctx2d.lineWidth = 1.5;
+                    ctx2d.setLineDash([3, 3]);
                     ctx2d.beginPath();
                     ctx2d.moveTo(screenX, entryY);
                     ctx2d.lineTo(screenX, slY);
-                    ctx2d.lineTo(projEndX, slY);
                     ctx2d.stroke();
+
+                    // SL Yatay Minik Çentik
                     ctx2d.setLineDash([]);
+                    ctx2d.beginPath();
+                    ctx2d.moveTo(screenX - 6, slY);
+                    ctx2d.lineTo(screenX + 6, slY);
+                    ctx2d.stroke();
+
+                    // SL Emojisi 🛡️
+                    ctx2d.font = '11.5px "Apple Color Emoji", "Segoe UI Emoji", sans-serif';
+                    ctx2d.textAlign = 'center';
+                    ctx2d.textBaseline = 'middle';
+                    const slEmojiY = (slY < entryY) ? (slY - 9) : (slY + 9);
+                    ctx2d.fillText('🛡️', screenX, slEmojiY);
                 }
 
                 ctx2d.restore();
