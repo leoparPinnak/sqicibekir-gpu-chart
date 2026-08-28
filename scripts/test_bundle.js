@@ -1468,8 +1468,8 @@
                 candleDataRegime = dataRegime;
 
                 totalCandles = candleDataBase.length;
-                viewStart = Math.max(0, totalCandles - 150);
-                viewEnd = totalCandles;
+                viewStart = Math.max(0, totalCandles - 130);
+                viewEnd = totalCandles + 25; // Sağa doğru 25 mumluk modern TradingView boşluk payı
 
                 updateGpuTextures();
                 connectWebSocket(symbol);
@@ -1516,7 +1516,7 @@
                     candleDataBase[lastIdx] = candle;
                 } else {
                     candleDataBase.push(candle);
-                    if (viewEnd >= totalCandles - 2) {
+                    if (viewEnd >= totalCandles - 25) {
                         viewStart++;
                         viewEnd++;
                     }
@@ -1542,7 +1542,7 @@
 
         window.fitAllCandles = function() {
             viewStart = 0;
-            viewEnd = totalCandles;
+            viewEnd = totalCandles + Math.max(25, Math.round(totalCandles * 0.05));
             resetPriceScale();
             updateVisibleBacktestSummary();
         };
@@ -1674,7 +1674,7 @@
             mousePixelY = (rect.bottom - e.clientY) * (canvas.height / rect.height);
 
             if (isChartDragging && totalCandles > 0) {
-                // 1. Yatay Zaman Kaydırma (X-Axis)
+                // 1. Yatay Zaman Kaydırma (X-Axis) - Sağa doğru boş alana serbestçe kayabilme
                 const deltaPx = e.clientX - chartDragStartX;
                 const candleSpan = origViewEnd - origViewStart;
                 const deltaCandles = (deltaPx / rect.width) * candleSpan;
@@ -1682,13 +1682,18 @@
                 let nStart = origViewStart - deltaCandles;
                 let nEnd = origViewEnd - deltaCandles;
 
-                if (nStart < 0) {
-                    nStart = 0;
-                    nEnd = candleSpan;
+                // Sağa doğru geniş boş alan (en az 400 mum veya %100 boşluk)
+                const maxRightSpace = Math.max(400, Math.round(totalCandles * 1.0));
+                const minAllowedStart = -80;
+                const maxAllowedEnd = totalCandles + maxRightSpace;
+
+                if (nStart < minAllowedStart) {
+                    nStart = minAllowedStart;
+                    nEnd = minAllowedStart + candleSpan;
                 }
-                if (nEnd > totalCandles) {
-                    nEnd = totalCandles;
-                    nStart = Math.max(0, totalCandles - candleSpan);
+                if (nEnd > maxAllowedEnd) {
+                    nEnd = maxAllowedEnd;
+                    nStart = maxAllowedEnd - candleSpan;
                 }
 
                 viewStart = nStart;
@@ -1753,6 +1758,16 @@
                 } else {
                     signalInspector.classList.remove('active');
                 }
+            } else if (cIdx >= totalCandles && totalCandles > 0) {
+                // Sağdaki boş geleceğe gelindiğinde projeksiyon zamanı
+                const lastCandle = candleDataBase[totalCandles - 1];
+                const candleIntervalMs = (totalCandles > 1 && candleDataBase[1]) ? (candleDataBase[1].time - candleDataBase[0].time) : 60000;
+                const futureTime = lastCandle.time + (cIdx - (totalCandles - 1)) * candleIntervalMs;
+                const date = new Date(futureTime);
+                crosshairTimeTag.style.display = 'block';
+                crosshairTimeTag.style.left = `${e.clientX - rect.left}px`;
+                crosshairTimeTag.innerText = formatFullTime(date);
+                signalInspector.classList.remove('active');
             } else {
                 signalInspector.classList.remove('active');
             }
@@ -1787,7 +1802,10 @@
             const zoomFactor = Math.exp(e.deltaY * zoomSpeed);
 
             const count = Math.max(1, viewEnd - viewStart);
-            const newCount = Math.max(10, Math.min(totalCandles, count * zoomFactor));
+            const maxRightSpace = Math.max(400, Math.round(totalCandles * 1.0));
+            const minAllowedStart = -80;
+            const maxAllowedEnd = totalCandles + maxRightSpace;
+            const newCount = Math.max(10, Math.min(totalCandles + maxRightSpace, count * zoomFactor));
 
             const rect = canvas.getBoundingClientRect();
             const mouseNormX = Math.max(0.0, Math.min(1.0, (e.clientX - rect.left) / rect.width));
@@ -1796,22 +1814,17 @@
             let nStart = mouseCandle - mouseNormX * newCount;
             let nEnd = mouseCandle + (1.0 - mouseNormX) * newCount;
 
-            if (newCount >= totalCandles - 1 || (nStart <= 0 && nEnd >= totalCandles)) {
-                nStart = 0;
-                nEnd = totalCandles;
-            } else {
-                if (nStart < 0) {
-                    nStart = 0;
-                    nEnd = newCount;
-                }
-                if (nEnd > totalCandles) {
-                    nEnd = totalCandles;
-                    nStart = Math.max(0, totalCandles - newCount);
-                }
+            if (nStart < minAllowedStart) {
+                nStart = minAllowedStart;
+                nEnd = nStart + newCount;
+            }
+            if (nEnd > maxAllowedEnd) {
+                nEnd = maxAllowedEnd;
+                nStart = nEnd - newCount;
             }
 
-            viewStart = Math.max(0, nStart);
-            viewEnd = Math.min(totalCandles, nEnd);
+            viewStart = nStart;
+            viewEnd = nEnd;
             updateVisibleBacktestSummary();
         }, { passive: false });
 
@@ -1821,12 +1834,25 @@
             const visibleCount = Math.max(1, viewEnd - viewStart);
             let html = '';
 
+            const lastCandle = candleDataBase[totalCandles - 1];
+            const candleIntervalMs = (totalCandles > 1 && candleDataBase[1]) ? (candleDataBase[1].time - candleDataBase[0].time) : 60000;
+
             for (let i = 0; i <= count; i++) {
                 const pct = i / count;
-                const candleIdx = Math.min(totalCandles - 1, Math.max(0, Math.floor(viewStart + pct * visibleCount)));
-                const c = candleDataBase[candleIdx];
-                if (c && c.time) {
-                    const date = new Date(c.time);
+                const candleIdx = Math.floor(viewStart + pct * visibleCount);
+                let date = null;
+
+                if (candleIdx >= 0 && candleIdx < totalCandles && candleDataBase[candleIdx]) {
+                    date = new Date(candleDataBase[candleIdx].time);
+                } else if (candleIdx >= totalCandles && lastCandle) {
+                    const futureTime = lastCandle.time + (candleIdx - (totalCandles - 1)) * candleIntervalMs;
+                    date = new Date(futureTime);
+                } else if (candleIdx < 0 && candleDataBase[0]) {
+                    const pastTime = candleDataBase[0].time + candleIdx * candleIntervalMs;
+                    date = new Date(pastTime);
+                }
+
+                if (date) {
                     const labelStr = formatTimeLabelWithYear(date);
                     const leftPx = Math.round(pct * canvasContainer.clientWidth);
                     html += `<div class="time-scale-label" style="left: ${leftPx}px;">${labelStr}</div>`;
@@ -1905,8 +1931,14 @@
                 }
 
                 if (!isFinite(minP) || !isFinite(maxP) || minP >= maxP) {
-                    minP = 60000;
-                    maxP = 70000;
+                    if (totalCandles > 0 && candleDataBase[totalCandles - 1]) {
+                        const lastP = candleDataBase[totalCandles - 1].close;
+                        minP = lastP * 0.985;
+                        maxP = lastP * 1.015;
+                    } else {
+                        minP = 60000;
+                        maxP = 70000;
+                    }
                 }
 
                 const baseMid = (minP + maxP) / 2;
