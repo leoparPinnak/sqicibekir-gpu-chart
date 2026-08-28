@@ -1825,6 +1825,11 @@
 
             viewStart = nStart;
             viewEnd = nEnd;
+
+            // Yakınlaşırken hedeflenen noktanın ekran altına/üstüne fırlamaması için orantısal ölçekle
+            const ratio = newCount / count;
+            priceOffset *= Math.min(1.0, ratio);
+
             updateVisibleBacktestSummary();
         }, { passive: false });
 
@@ -1944,6 +1949,10 @@
                 const baseMid = (minP + maxP) / 2;
                 const baseHalfSpan = (maxP - minP) / 2;
                 const scaledHalfSpan = (baseHalfSpan / priceScaleFactor) * 1.05;
+
+                // priceOffset'i görünür fiyat aralığına göre akıllıca sınırla (mumların ekran dışına fırlamasını engeller)
+                const maxAllowedOffset = scaledHalfSpan * 1.5;
+                priceOffset = Math.max(-maxAllowedOffset, Math.min(maxAllowedOffset, priceOffset));
 
                 minPrice = baseMid - scaledHalfSpan + priceOffset;
                 maxPrice = baseMid + scaledHalfSpan + priceOffset;
