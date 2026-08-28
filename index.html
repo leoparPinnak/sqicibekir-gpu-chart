@@ -3072,8 +3072,9 @@
                     ctx2d.fillText(entryText, entryBadgeX, entryY);
 
                     ctx2d.restore();
+                }
             }
-        }
+            ctx2d.restore(); // 🛡️ Close ctx2d.save() from line 2653
         }
 
         // ============================================================
@@ -3200,7 +3201,7 @@
                     }
                 }
 
-                updateGpuTextures();
+                scheduleGpuTextureUpdate();
                 document.getElementById('price-val').innerText = candle.close.toLocaleString('en-US', {minimumFractionDigits: 2});
             };
 
@@ -4471,6 +4472,7 @@
                     }
                     ctx.restore();
                 }
+                ctx.restore(); // 🛡️ Close ctx.save() from line 4146 (clipping path)
             }
         }
 
