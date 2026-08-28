@@ -3699,7 +3699,7 @@
                 this.mouseDownStart = null;
                 this.hasDragged = false;
 
-                this.magnetMode = true;
+                this.magnetMode = false;
                 this.continuousDraw = false;
                 this.lockAll = false;
                 this.hideAll = false;
@@ -3826,7 +3826,7 @@
             cancelDrawing() {
                 this.drawingInProgress = null;
                 this.drawingState = 'idle';
-                this.setTool('cursor');
+                window.selectTvTool('cursor');
                 this.selectDrawing(null);
             }
 
@@ -3970,7 +3970,7 @@
                                 };
                                 this.drawings.push(newD);
                                 this.selectDrawing(newD);
-                                if (!this.continuousDraw) this.setTool('cursor');
+                                if (!this.continuousDraw) { window.selectTvTool('cursor'); } else { this.drawingState = 'idle'; this.drawingInProgress = null; }
                             } else {
                                 // 🌟 1. CLICK: Başlangıç Noktası (Point 1) Belirlendi!
                                 this.drawingInProgress = {
@@ -3992,7 +3992,7 @@
                             this.selectDrawing(this.drawingInProgress);
                             this.drawingInProgress = null;
                             this.drawingState = 'idle';
-                            if (!this.continuousDraw) this.setTool('cursor');
+                            if (!this.continuousDraw) { window.selectTvTool('cursor'); } else { this.drawingState = 'idle'; this.drawingInProgress = null; }
                         }
                     }
                 }
