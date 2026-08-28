@@ -2225,7 +2225,7 @@
                 this.mouseDownStart = null;
                 this.hasDragged = false;
 
-                this.magnetMode = true;
+                this.magnetMode = false;
                 this.continuousDraw = false;
                 this.lockAll = false;
                 this.hideAll = false;
@@ -2292,7 +2292,12 @@
             }
 
             setTool(toolName) {
-                this.activeTool = toolName;
+                if (toolName.startsWith('cursor')) {
+                    this.activeTool = 'cursor';
+                    this.cursorType = toolName;
+                } else {
+                    this.activeTool = toolName;
+                }
                 if (toolName === 'cursor') {
                     this.drawingState = 'idle';
                     this.drawingInProgress = null;
@@ -2339,7 +2344,11 @@
                 this.container.addEventListener('contextmenu', (e) => {
                     if (this.drawingState === 'drawing') {
                         e.preventDefault();
-                        this.cancelDrawing();
+                        this.drawingInProgress = null;
+                        this.drawingState = 'idle';
+                    } else if (this.activeTool !== 'cursor') {
+                        e.preventDefault();
+                        window.selectTvTool('cursor');
                     }
                 });
             }
@@ -2347,13 +2356,39 @@
             cancelDrawing() {
                 this.drawingInProgress = null;
                 this.drawingState = 'idle';
-                this.setTool('cursor');
+                window.selectTvTool('cursor');
                 this.selectDrawing(null);
+            }
+
+            isInsideChartViewport(e) {
+                if (!e || !this.container) return false;
+                const rect = this.container.getBoundingClientRect();
+                const mx = e.clientX - rect.left;
+                const my = e.clientY - rect.top;
+                if (mx < 0 || mx > rect.width || my < 0 || my > rect.height) return false;
+
+                if (e.target && (
+                    e.target.closest('#tv-prop-toolbar') ||
+                    e.target.closest('#tv-favorite-bar') ||
+                    e.target.closest('.tv-left-toolbar') ||
+                    e.target.closest('.tv-flyout-menu') ||
+                    e.target.closest('.price-axis-sidebar') ||
+                    e.target.closest('.time-axis-bar') ||
+                    e.target.closest('.top-toolbar') ||
+                    e.target.closest('.bottom-statusbar') ||
+                    e.target.closest('.hud-overlay-card') ||
+                    e.target.closest('.signal-inspector-card')
+                )) {
+                    return false;
+                }
+                return true;
             }
 
             handleMouseDown(e) {
                 if (e.button !== 0) return;
-                if (e.target && (e.target.closest('#tv-prop-toolbar') || e.target.closest('#tv-favorite-bar') || e.target.closest('.tv-left-toolbar') || e.target.closest('.tv-flyout-menu'))) {
+                if (!this.isInsideChartViewport(e)) {
+                    this.mouseDownStart = null;
+                    this.hasDragged = false;
                     return;
                 }
                 const rect = this.container.getBoundingClientRect();
@@ -2406,9 +2441,11 @@
                     }
                 }
 
-                // 🟢 Çizim modunda Nokta 2 fareyi canlı olarak izler (Basılı tutmaya gerek kalmadan)
+                // 🟢 Çizim modunda Nokta 2 fareyi canlı olarak izler (Grafik çerçevesi içinde sınırlandırılmış)
                 if (this.drawingState === 'drawing' && this.drawingInProgress) {
-                    const snapped = this.snapToOHLC(this.xToIndex(mx), this.yToPrice(my));
+                    const clampedX = Math.max(0, Math.min(rect.width, mx));
+                    const clampedY = Math.max(0, Math.min(rect.height, my));
+                    const snapped = this.snapToOHLC(this.xToIndex(clampedX), this.yToPrice(clampedY));
                     this.drawingInProgress.points[1] = { cIdx: snapped.cIdx, price: snapped.price };
                     this.container.style.cursor = isChartDragging ? 'grabbing' : 'crosshair';
                     if (this.canvas) this.canvas.style.cursor = this.container.style.cursor;
@@ -2464,9 +2501,22 @@
             }
 
             handleMouseUp(e) {
+                if (!this.mouseDownStart) {
+                    // Mousedown grafik dışındaydı (örn. Fiyat ekseni, Toolbar, Navbar) -> İşlem yapma!
+                    this.hasDragged = false;
+                    return;
+                }
+
                 const rect = this.container.getBoundingClientRect();
-                const mx = e ? (e.clientX - rect.left) : 0;
-                const my = e ? (e.clientY - rect.top) : 0;
+                const mx = e ? (e.clientX - rect.left) : -1;
+                const my = e ? (e.clientY - rect.top) : -1;
+
+                // Eğer Mouseup grafik çerçevesi dışındaysa nokta koyma!
+                if (mx < 0 || mx > rect.width || my < 0 || my > rect.height) {
+                    this.mouseDownStart = null;
+                    this.hasDragged = false;
+                    return;
+                }
 
                 // ========================================================
                 // ÇİZİM ARACI SEÇİLİYKEN MOUSEUP KONTROLÜ
@@ -2481,7 +2531,7 @@
 
                         if (this.drawingState === 'idle') {
                             // Tek tıklamalı araçlar (Yatay / Dikey Çizgiler)
-                            if (['horizontal', 'horzray', 'vertical'].includes(this.activeTool)) {
+                            if (['horizontal', 'horzray', 'vertical', 'crossline', 'arrow_up', 'arrow_down', 'text', 'text_note', 'price_note', 'pin_note', 'price_label', 'signpost', 'flag_mark', 'callout', 'comment', 'image_tool', 'tweet_tool', 'idea_tool'].includes(this.activeTool)) {
                                 const newD = {
                                     id: 'draw_' + Date.now(),
                                     type: this.activeTool,
@@ -2491,7 +2541,9 @@
                                 };
                                 this.drawings.push(newD);
                                 this.selectDrawing(newD);
-                                if (!this.continuousDraw) this.setTool('cursor');
+                                this.drawingInProgress = null;
+                                this.drawingState = 'idle';
+                                // 🌟 Araç kullanıcı kapatana kadar aktif kalmaya devam eder
                             } else {
                                 // 🌟 1. CLICK: Başlangıç Noktası (Point 1) Belirlendi!
                                 this.drawingInProgress = {
@@ -2513,7 +2565,7 @@
                             this.selectDrawing(this.drawingInProgress);
                             this.drawingInProgress = null;
                             this.drawingState = 'idle';
-                            if (!this.continuousDraw) this.setTool('cursor');
+                            // 🌟 Araç kullanıcı kapatana kadar aktif kalmaya devam eder (Peş peşe çizim)
                         }
                     }
                 }
@@ -2531,7 +2583,17 @@
                 if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') return;
 
                 if (e.key === 'Escape') {
-                    this.cancelDrawing();
+                    if (this.drawingState === 'drawing') {
+                        // Çizilmekte olan şekli iptal et, araç modunda kal
+                        this.drawingInProgress = null;
+                        this.drawingState = 'idle';
+                    } else if (this.activeTool !== 'cursor') {
+                        // Çizim modundan çıkıp imleç moduna geç
+                        window.selectTvTool('cursor');
+                        this.selectDrawing(null);
+                    } else {
+                        this.selectDrawing(null);
+                    }
                 } else if (e.key === 'Delete' || e.key === 'Backspace') {
                     if (this.selectedDrawing) {
                         this.drawings = this.drawings.filter(d => d.id !== this.selectedDrawing.id);
@@ -2599,6 +2661,15 @@
 
             render(ctx) {
                 if (!ctx || this.hideAll) return;
+
+                const cssW = this.container.clientWidth;
+                const cssH = this.container.clientHeight;
+
+                // 🛡️ ÇİZİM SINIRI KORUMASI: Çizimlerin fiyat ekseni veya toolbar dışına taşmasını engelle
+                ctx.save();
+                ctx.beginPath();
+                ctx.rect(0, 0, cssW, cssH);
+                ctx.clip();
 
                 const list = [...this.drawings];
                 if (this.drawingInProgress) list.push(this.drawingInProgress);
@@ -2679,16 +2750,34 @@
                     else if (ls === 'dotted') ctx.setLineDash([3, 4]);
                     else ctx.setLineDash([]);
 
-                    if (d.type === 'trendline') {
+                    if (d.type === 'trendline' || d.type === 'info_line' || d.type === 'extended_line' || d.type === 'trend_angle') {
                         ctx.beginPath();
-                        ctx.moveTo(x1, y1);
-                        ctx.lineTo(x2, y2);
+                        if (d.type === 'extended_line') {
+                            const dx = x2 - x1, dy = y2 - y1;
+                            const scale = (w + 1000) / (Math.hypot(dx, dy) || 1);
+                            ctx.moveTo(x1 - dx * scale, y1 - dy * scale);
+                            ctx.lineTo(x1 + dx * scale, y1 + dy * scale);
+                        } else {
+                            ctx.moveTo(x1, y1);
+                            ctx.lineTo(x2, y2);
+                        }
                         ctx.stroke();
+
+                        if (d.type === 'info_line') {
+                            const dBars = Math.round(p2.cIdx - p1.cIdx);
+                            const dPct = (((p2.price - p1.price) / (p1.price || 1)) * 100).toFixed(2);
+                            const dPrice = (p2.price - p1.price).toFixed(2);
+                            const infoText = `${dBars} Mum | ${dPrice}$ (${dPct}%)`;
+                            ctx.font = '10px "SF Pro Text", sans-serif';
+                            ctx.fillStyle = '#0f172a';
+                            ctx.fillRect((x1 + x2)/2 - 40, (y1 + y2)/2 - 18, 80, 16);
+                            ctx.fillStyle = col;
+                            ctx.fillText(infoText, (x1 + x2)/2 - 36, (y1 + y2)/2 - 6);
+                        }
                     } else if (d.type === 'ray') {
                         ctx.beginPath();
                         ctx.moveTo(x1, y1);
-                        const dx = x2 - x1;
-                        const dy = y2 - y1;
+                        const dx = x2 - x1, dy = y2 - y1;
                         const scale = (w + 500) / (Math.hypot(dx, dy) || 1);
                         ctx.lineTo(x1 + dx * scale, y1 + dy * scale);
                         ctx.stroke();
@@ -2697,6 +2786,9 @@
                         ctx.moveTo(0, y1);
                         ctx.lineTo(w, y1);
                         ctx.stroke();
+                        ctx.font = '10px "SF Pro Text", sans-serif';
+                        ctx.fillStyle = col;
+                        ctx.fillText(`${p1.price.toFixed(2)}`, w - 55, y1 - 4);
                     } else if (d.type === 'horzray') {
                         ctx.beginPath();
                         ctx.moveTo(x1, y1);
@@ -2707,7 +2799,28 @@
                         ctx.moveTo(x1, 0);
                         ctx.lineTo(x1, this.container.clientHeight);
                         ctx.stroke();
-                    } else if (d.type === 'rectangle') {
+                    } else if (d.type === 'crossline') {
+                        ctx.beginPath();
+                        ctx.moveTo(0, y1); ctx.lineTo(w, y1);
+                        ctx.moveTo(x1, 0); ctx.lineTo(x1, this.container.clientHeight);
+                        ctx.stroke();
+                    } else if (d.type === 'parallel_channel' || d.type === 'regression_trend') {
+                        const dy = y2 - y1;
+                        const offset = 40;
+                        ctx.beginPath();
+                        ctx.moveTo(x1, y1); ctx.lineTo(x2, y2);
+                        ctx.moveTo(x1, y1 - offset); ctx.lineTo(x2, y2 - offset);
+                        ctx.moveTo(x1, y1 + offset); ctx.lineTo(x2, y2 + offset);
+                        ctx.stroke();
+                        ctx.fillStyle = col;
+                        ctx.globalAlpha = 0.10;
+                        ctx.beginPath();
+                        ctx.moveTo(x1, y1 - offset); ctx.lineTo(x2, y2 - offset);
+                        ctx.lineTo(x2, y2 + offset); ctx.lineTo(x1, y1 + offset);
+                        ctx.closePath();
+                        ctx.fill();
+                        ctx.globalAlpha = 1.0;
+                    } else if (d.type === 'rectangle' || d.type === 'rotated_rect') {
                         const minX = Math.min(x1, x2), rw = Math.abs(x2 - x1);
                         const minY = Math.min(y1, y2), rh = Math.abs(y2 - y1);
                         ctx.fillStyle = col;
@@ -2715,8 +2828,74 @@
                         ctx.fillRect(minX, minY, rw, rh);
                         ctx.globalAlpha = 1.0;
                         ctx.strokeRect(minX, minY, rw, rh);
-                    } else if (d.type === 'fibonacci') {
-                        const fibs = [0, 0.236, 0.382, 0.5, 0.618, 0.786, 1.0];
+                    } else if (d.type === 'circle') {
+                        const rad = Math.hypot(x2 - x1, y2 - y1);
+                        ctx.beginPath();
+                        ctx.arc(x1, y1, rad, 0, Math.PI * 2);
+                        ctx.fillStyle = col;
+                        ctx.globalAlpha = 0.15;
+                        ctx.fill();
+                        ctx.globalAlpha = 1.0;
+                        ctx.stroke();
+                    } else if (d.type === 'ellipse') {
+                        const rx = Math.abs(x2 - x1) / 2;
+                        const ry = Math.abs(y2 - y1) / 2;
+                        const cx = (x1 + x2) / 2;
+                        const cy = (y1 + y2) / 2;
+                        ctx.beginPath();
+                        ctx.ellipse(cx, cy, Math.max(2, rx), Math.max(2, ry), 0, 0, Math.PI * 2);
+                        ctx.fillStyle = col;
+                        ctx.globalAlpha = 0.18;
+                        ctx.fill();
+                        ctx.globalAlpha = 1.0;
+                        ctx.stroke();
+                    } else if (d.type === 'triangle') {
+                        const minX = Math.min(x1, x2), maxX = Math.max(x1, x2);
+                        const minY = Math.min(y1, y2), maxY = Math.max(y1, y2);
+                        ctx.beginPath();
+                        ctx.moveTo((minX + maxX)/2, minY);
+                        ctx.lineTo(maxX, maxY);
+                        ctx.lineTo(minX, maxY);
+                        ctx.closePath();
+                        ctx.fillStyle = col;
+                        ctx.globalAlpha = 0.18;
+                        ctx.fill();
+                        ctx.globalAlpha = 1.0;
+                        ctx.stroke();
+                    } else if (d.type === 'arrow' || d.type === 'arrow_marker') {
+                        ctx.beginPath();
+                        ctx.moveTo(x1, y1); ctx.lineTo(x2, y2);
+                        ctx.stroke();
+                        const angle = Math.atan2(y2 - y1, x2 - x1);
+                        ctx.beginPath();
+                        ctx.moveTo(x2, y2);
+                        ctx.lineTo(x2 - 14 * Math.cos(angle - Math.PI / 6), y2 - 14 * Math.sin(angle - Math.PI / 6));
+                        ctx.lineTo(x2 - 14 * Math.cos(angle + Math.PI / 6), y2 - 14 * Math.sin(angle + Math.PI / 6));
+                        ctx.closePath();
+                        ctx.fillStyle = col;
+                        ctx.fill();
+                    } else if (d.type === 'arrow_up') {
+                        ctx.fillStyle = '#10b981';
+                        ctx.beginPath();
+                        ctx.moveTo(x1, y1 - 16); ctx.lineTo(x1 + 10, y1 + 4); ctx.lineTo(x1 - 10, y1 + 4);
+                        ctx.closePath();
+                        ctx.fill();
+                    } else if (d.type === 'arrow_down') {
+                        ctx.fillStyle = '#ef4444';
+                        ctx.beginPath();
+                        ctx.moveTo(x1, y1 + 16); ctx.lineTo(x1 + 10, y1 - 4); ctx.lineTo(x1 - 10, y1 - 4);
+                        ctx.closePath();
+                        ctx.fill();
+                    } else if (d.type === 'brush' || d.type === 'highlighter') {
+                        ctx.lineWidth = (d.type === 'highlighter') ? 14 : 3;
+                        ctx.globalAlpha = (d.type === 'highlighter') ? 0.35 : 0.9;
+                        ctx.beginPath();
+                        ctx.moveTo(x1, y1);
+                        ctx.lineTo(x2, y2);
+                        ctx.stroke();
+                        ctx.globalAlpha = 1.0;
+                    } else if (d.type === 'fibonacci' || d.type === 'fib_channel' || d.type === 'fib_extension') {
+                        const fibs = [0, 0.236, 0.382, 0.5, 0.618, 0.786, 1.0, 1.618];
                         const minX = Math.min(x1, x2), maxX = Math.max(x1, x2);
                         const diff = p2.price - p1.price;
                         for (const lvl of fibs) {
@@ -2727,7 +2906,7 @@
                             ctx.stroke();
                             ctx.font = '10px "SF Pro Text", sans-serif';
                             ctx.fillStyle = col;
-                            ctx.fillText(`${(lvl * 100).toFixed(1)}% ($${(p1.price + diff * lvl).toFixed(2)})`, minX + 4, ly - 3);
+                            ctx.fillText(`${(lvl * 100).toFixed(1)}% (${(p1.price + diff * lvl).toFixed(2)})`, minX + 4, ly - 3);
                         }
                     } else if (d.type === 'long_pos' || d.type === 'short_pos') {
                         const minX = Math.min(x1, x2), rw = Math.abs(x2 - x1);
@@ -2745,10 +2924,48 @@
                         ctx.moveTo(minX, midY);
                         ctx.lineTo(minX + rw, midY);
                         ctx.stroke();
-                    } else if (d.type === 'text') {
-                        ctx.font = 'bold 13px "SF Pro Text", "Segoe UI", sans-serif';
-                        ctx.fillStyle = col;
-                        ctx.fillText('Not: ' + (p1.price.toFixed(2)), x1, y1);
+
+                        ctx.font = 'bold 11px "SF Pro Text", sans-serif';
+                        ctx.fillStyle = '#10b981';
+                        ctx.fillText('HEDEF (TP)', minX + 6, isLong ? Math.min(y1, y2) + 14 : Math.max(y1, y2) - 6);
+                        ctx.fillStyle = '#ef4444';
+                        ctx.fillText('ZARAR DURDUR (SL)', minX + 6, isLong ? Math.max(y1, y2) - 6 : Math.min(y1, y2) + 14);
+                    } else if (d.type === 'measure' || d.type === 'price_range' || d.type === 'date_range' || d.type === 'date_price_range') {
+                        const minX = Math.min(x1, x2), rw = Math.abs(x2 - x1);
+                        const minY = Math.min(y1, y2), rh = Math.abs(y2 - y1);
+                        const dBars = Math.abs(Math.round(p2.cIdx - p1.cIdx));
+                        const dPct = (((p2.price - p1.price) / (p1.price || 1)) * 100);
+                        const isUp = dPct >= 0;
+
+                        ctx.fillStyle = isUp ? 'rgba(16, 185, 129, 0.18)' : 'rgba(239, 68, 68, 0.18)';
+                        ctx.fillRect(minX, minY, rw, rh);
+                        ctx.strokeStyle = isUp ? '#10b981' : '#ef4444';
+                        ctx.strokeRect(minX, minY, rw, rh);
+
+                        ctx.fillStyle = '#0f172a';
+                        ctx.fillRect(minX + rw/2 - 60, minY + rh/2 - 18, 120, 36);
+                        ctx.strokeStyle = isUp ? '#10b981' : '#ef4444';
+                        ctx.strokeRect(minX + rw/2 - 60, minY + rh/2 - 18, 120, 36);
+
+                        ctx.font = 'bold 11px "SF Pro Text", sans-serif';
+                        ctx.fillStyle = isUp ? '#10b981' : '#ef4444';
+                        ctx.fillText(`${isUp ? '+' : ''}${dPct.toFixed(2)}% (${(p2.price - p1.price).toFixed(2)})`, minX + rw/2 - 52, minY + rh/2 - 2);
+                        ctx.font = '10px "SF Pro Text", sans-serif';
+                        ctx.fillStyle = '#94a3b8';
+                        ctx.fillText(`${dBars} Mum Aralığı`, minX + rw/2 - 52, minY + rh/2 + 12);
+                    } else if (d.type === 'text' || d.type === 'text_note' || d.type === 'price_note' || d.type === 'callout' || d.type === 'price_label') {
+                        ctx.fillStyle = '#1e222d';
+                        ctx.strokeStyle = col;
+                        ctx.strokeRect(x1 - 4, y1 - 16, 100, 22);
+                        ctx.fillRect(x1 - 4, y1 - 16, 100, 22);
+                        ctx.font = 'bold 11px "SF Pro Text", "Segoe UI", sans-serif';
+                        ctx.fillStyle = '#ffffff';
+                        ctx.fillText(`Fiyat: ${p1.price.toFixed(2)}`, x1 + 4, y1 - 1);
+                    } else {
+                        // Varsayılan çizgisel gösterim
+                        ctx.beginPath();
+                        ctx.moveTo(x1, y1); ctx.lineTo(x2, y2);
+                        ctx.stroke();
                     }
 
                     // 3. Seçili Çizim Tutamaçları (Handles)
@@ -2785,6 +3002,8 @@
             getViewRange: () => ({ start: smoothViewStart || viewStart, end: smoothViewEnd || viewEnd }),
             getCandleData: () => candleDataBase
         });
+        window.drawingEngine = drawingEngine;
+        window.canvasContainer = canvasContainer;
 
         window.selectTvTool = function(toolName, btnElem) {
             if (drawingEngine) drawingEngine.setTool(toolName);

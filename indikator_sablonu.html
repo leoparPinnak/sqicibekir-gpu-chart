@@ -3834,9 +3834,35 @@
                 this.selectDrawing(null);
             }
 
+            isInsideChartViewport(e) {
+                if (!e || !this.container) return false;
+                const rect = this.container.getBoundingClientRect();
+                const mx = e.clientX - rect.left;
+                const my = e.clientY - rect.top;
+                if (mx < 0 || mx > rect.width || my < 0 || my > rect.height) return false;
+
+                if (e.target && (
+                    e.target.closest('#tv-prop-toolbar') ||
+                    e.target.closest('#tv-favorite-bar') ||
+                    e.target.closest('.tv-left-toolbar') ||
+                    e.target.closest('.tv-flyout-menu') ||
+                    e.target.closest('.price-axis-sidebar') ||
+                    e.target.closest('.time-axis-bar') ||
+                    e.target.closest('.top-toolbar') ||
+                    e.target.closest('.bottom-statusbar') ||
+                    e.target.closest('.hud-overlay-card') ||
+                    e.target.closest('.signal-inspector-card')
+                )) {
+                    return false;
+                }
+                return true;
+            }
+
             handleMouseDown(e) {
                 if (e.button !== 0) return;
-                if (e.target && (e.target.closest('#tv-prop-toolbar') || e.target.closest('#tv-favorite-bar') || e.target.closest('.tv-left-toolbar') || e.target.closest('.tv-flyout-menu'))) {
+                if (!this.isInsideChartViewport(e)) {
+                    this.mouseDownStart = null;
+                    this.hasDragged = false;
                     return;
                 }
                 const rect = this.container.getBoundingClientRect();
@@ -3889,9 +3915,11 @@
                     }
                 }
 
-                // 🟢 Çizim modunda Nokta 2 fareyi canlı olarak izler (Basılı tutmaya gerek kalmadan)
+                // 🟢 Çizim modunda Nokta 2 fareyi canlı olarak izler (Grafik çerçevesi içinde sınırlandırılmış)
                 if (this.drawingState === 'drawing' && this.drawingInProgress) {
-                    const snapped = this.snapToOHLC(this.xToIndex(mx), this.yToPrice(my));
+                    const clampedX = Math.max(0, Math.min(rect.width, mx));
+                    const clampedY = Math.max(0, Math.min(rect.height, my));
+                    const snapped = this.snapToOHLC(this.xToIndex(clampedX), this.yToPrice(clampedY));
                     this.drawingInProgress.points[1] = { cIdx: snapped.cIdx, price: snapped.price };
                     this.container.style.cursor = isChartDragging ? 'grabbing' : 'crosshair';
                     if (this.canvas) this.canvas.style.cursor = this.container.style.cursor;
@@ -3947,9 +3975,22 @@
             }
 
             handleMouseUp(e) {
+                if (!this.mouseDownStart) {
+                    // Mousedown grafik dışındaydı (örn. Fiyat ekseni, Toolbar, Navbar) -> İşlem yapma!
+                    this.hasDragged = false;
+                    return;
+                }
+
                 const rect = this.container.getBoundingClientRect();
-                const mx = e ? (e.clientX - rect.left) : 0;
-                const my = e ? (e.clientY - rect.top) : 0;
+                const mx = e ? (e.clientX - rect.left) : -1;
+                const my = e ? (e.clientY - rect.top) : -1;
+
+                // Eğer Mouseup grafik çerçevesi dışındaysa nokta koyma!
+                if (mx < 0 || mx > rect.width || my < 0 || my > rect.height) {
+                    this.mouseDownStart = null;
+                    this.hasDragged = false;
+                    return;
+                }
 
                 // ========================================================
                 // ÇİZİM ARACI SEÇİLİYKEN MOUSEUP KONTROLÜ
@@ -4094,6 +4135,15 @@
 
             render(ctx) {
                 if (!ctx || this.hideAll) return;
+
+                const cssW = this.container.clientWidth;
+                const cssH = this.container.clientHeight;
+
+                // 🛡️ ÇİZİM SINIRI KORUMASI: Çizimlerin fiyat ekseni veya toolbar dışına taşmasını engelle
+                ctx.save();
+                ctx.beginPath();
+                ctx.rect(0, 0, cssW, cssH);
+                ctx.clip();
 
                 const list = [...this.drawings];
                 if (this.drawingInProgress) list.push(this.drawingInProgress);
