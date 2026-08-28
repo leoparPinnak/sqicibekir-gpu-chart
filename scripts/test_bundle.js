@@ -1946,16 +1946,19 @@
                     }
                 }
 
-                const baseMid = (minP + maxP) / 2;
-                const baseHalfSpan = (maxP - minP) / 2;
-                const scaledHalfSpan = (baseHalfSpan / priceScaleFactor) * 1.05;
+                const span = Math.max(0.0001, maxP - minP);
+                // %12 üst ve alt güvenlik nefes payı: Ekranda hiçbir mum gövdesi veya fitili ekrandan taşamaz
+                const pad = span * 0.12;
+                const baseHalfSpan = (span / 2) + pad;
+                const scaledHalfSpan = baseHalfSpan / priceScaleFactor;
 
-                // priceOffset'i görünür fiyat aralığına göre akıllıca sınırla (mumların ekran dışına fırlamasını engeller)
-                const maxAllowedOffset = scaledHalfSpan * 1.5;
+                // priceOffset sınırlandırması: Dikey kaydırmada bile mumların ekrandan taşmasını kesin olarak engeller
+                const maxAllowedOffset = pad * 1.2;
                 priceOffset = Math.max(-maxAllowedOffset, Math.min(maxAllowedOffset, priceOffset));
 
-                minPrice = baseMid - scaledHalfSpan + priceOffset;
-                maxPrice = baseMid + scaledHalfSpan + priceOffset;
+                const midP = (minP + maxP) / 2;
+                minPrice = midP - scaledHalfSpan + priceOffset;
+                maxPrice = midP + scaledHalfSpan + priceOffset;
 
                 updatePriceScaleLabels();
                 updateTimeScaleLabels();
