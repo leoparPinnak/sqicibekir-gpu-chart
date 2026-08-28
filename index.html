@@ -3312,6 +3312,12 @@
             dragAxisLocked = null;
             chartDragStartX = clientX;
             chartDragStartY = clientY;
+            lastDragX = clientX;
+            lastDragY = clientY;
+            lastDragTime = performance.now();
+            dragVelocityX = 0;
+            dragVelocityY = 0;
+            momentumVelocityX = 0;
             origViewStart = viewStart;
             origViewEnd = viewEnd;
             origPriceOffset = priceOffset;
@@ -3329,6 +3335,9 @@
         });
 
         window.addEventListener('mouseup', () => {
+            if (isChartDragging && Math.abs(dragVelocityX) > 0.25) {
+                momentumVelocityX = -dragVelocityX * 0.7; // 🌟 Pürüzsüz ivmeli kayma (Smooth Inertial Glide)
+            }
             isChartDragging = false;
             isPriceDragging = false;
             dragAxisLocked = null;
@@ -3374,24 +3383,33 @@
             mousePixelY = (rect.bottom - e.clientY) * (canvas.height / rect.height);
 
             if (isChartDragging && totalCandles > 0) {
+                const now = performance.now();
+                const dt = Math.max(1, now - lastDragTime);
+                const instVx = (e.clientX - lastDragX) / dt;
+                const instVy = (e.clientY - lastDragY) / dt;
+
+                dragVelocityX = dragVelocityX * 0.6 + instVx * 0.4;
+                dragVelocityY = dragVelocityY * 0.6 + instVy * 0.4;
+                lastDragX = e.clientX;
+                lastDragY = e.clientY;
+                lastDragTime = now;
+
+                const absVx = Math.abs(dragVelocityX);
+                const absVy = Math.abs(dragVelocityY);
                 const deltaPx = e.clientX - chartDragStartX;
                 const deltaPy = e.clientY - chartDragStartY;
-                const absX = Math.abs(deltaPx);
-                const absY = Math.abs(deltaPy);
 
-                // 🎯 HAREKET YÖNÜ AYRIMI (Axis Discrimination):
-                // Başlangıçta serbestçe başlar. Yatay hareket kesinleşirse (absX >= 8 ve absX >= absY) otomatik ölçekleme kilitlenir.
-                if (!dragAxisLocked) {
-                    if (absX >= 8 && absX >= absY) {
-                        dragAxisLocked = 'horizontal';
-                        isAutoPriceScale = true;
-                        priceOffset = 0;
-                        updateOtoButtonState();
-                    } else if (absY >= 15 && absY > absX * 1.5) {
-                        dragAxisLocked = 'vertical';
-                        isAutoPriceScale = false;
-                        updateOtoButtonState();
-                    }
+                // 🎯 İVMEYE VE HIZA BAĞLI OTOMATİK HİZALAMA (Velocity-Based Auto-Scale):
+                // Orta-hızlı yatay ivmede (absVx >= 0.28 px/ms) otomatik ölçekleme devreye girer.
+                // Yavaş veya hassas sürüklemelerde ise kullanıcının manuel dikey konumu serbestçe korunur.
+                if (absVx >= 0.28 && absVx >= absVy * 1.15) {
+                    dragAxisLocked = 'horizontal';
+                    isAutoPriceScale = true;
+                    updateOtoButtonState();
+                } else if (absVy >= 0.28 && absVy > absVx * 1.3) {
+                    dragAxisLocked = 'vertical';
+                    isAutoPriceScale = false;
+                    updateOtoButtonState();
                 }
 
                 // 1. Yatay Zaman Kaydırma (X-Axis)
@@ -3419,8 +3437,9 @@
 
                 // 2. Dikey Eksen Yönetimi
                 if (dragAxisLocked === 'horizontal' || isAutoPriceScale) {
-                    priceOffset = 0;
-                } else if (dragAxisLocked === 'vertical' || !isAutoPriceScale) {
+                    priceOffset += (0 - priceOffset) * 0.22;
+                    if (Math.abs(priceOffset) < 0.5) priceOffset = 0;
+                } else {
                     const currentPriceSpan = maxPrice - minPrice;
                     if (currentPriceSpan > 0 && rect.height > 0) {
                         const pricePerPixel = currentPriceSpan / rect.height;
