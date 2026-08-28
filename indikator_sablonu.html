@@ -1506,8 +1506,8 @@
                 if (btn0) { btn0.innerHTML = '0. Sabit 1:1.67'; btn0.title = '1H Sabit 1:1.67 R:R (1.5x ATR SL, 2.5x ATR TP)'; }
             }
 
-            document.getElementById('vbt-strat-title').innerText = getStratTitle(activeStrategy, tf);
-            document.getElementById('active-strat-footer').innerHTML = getStratFooter(activeStrategy, tf);
+            const vbtTitle = document.getElementById('vbt-strat-title'); if (vbtTitle) vbtTitle.innerText = getStratTitle(activeStrategy, tf);
+            const stratFoot = document.getElementById('active-strat-footer'); if (stratFoot) stratFoot.innerHTML = getStratFooter(activeStrategy, tf);
         }
 
         window.setStrategy = function(stratId) {
@@ -1516,8 +1516,8 @@
                 const btn = document.getElementById(`strat-btn-${id}`);
                 if (btn) btn.classList.toggle('active', id === stratId);
             });
-            document.getElementById('vbt-strat-title').innerText = getStratTitle(stratId, currentTimeframe);
-            document.getElementById('active-strat-footer').innerHTML = getStratFooter(stratId, currentTimeframe);
+            const vbtTitle = document.getElementById('vbt-strat-title'); if (vbtTitle) vbtTitle.innerText = getStratTitle(activeStrategy, tf);
+            const stratFoot = document.getElementById('active-strat-footer'); if (stratFoot) stratFoot.innerHTML = getStratFooter(activeStrategy, tf);
             updateGpuTextures();
         };
 
@@ -2168,25 +2168,24 @@
             const winRate = totalFinished > 0 ? ((tpCount / totalFinished) * 100).toFixed(1) : '0.0';
             const netPnlPct = (((currentCapital - initialCapital) / initialCapital) * 100);
 
-            document.getElementById('vbt-total-sig').innerText = visibleSignals.length;
-            document.getElementById('vbt-tp-count').innerText = tpCount;
-            document.getElementById('vbt-sl-count').innerText = slCount;
-            document.getElementById('vbt-open-count').innerText = openCount;
-            document.getElementById('vbt-winrate').innerText = `%${winRate}`;
+            const elTotal = document.getElementById('vbt-total-sig'); if (elTotal) elTotal.innerText = visibleSignals.length;
+            const elTp = document.getElementById('vbt-tp-count'); if (elTp) elTp.innerText = tpCount;
+            const elSl = document.getElementById('vbt-sl-count'); if (elSl) elSl.innerText = slCount;
+            const elOpen = document.getElementById('vbt-open-count'); if (elOpen) elOpen.innerText = openCount;
+            const elWin = document.getElementById('vbt-winrate'); if (elWin) elWin.innerText = `%${winRate}`;
 
             const finalBalanceElem = document.getElementById('vbt-final-balance');
             const netPnlElem = document.getElementById('vbt-net-pnl');
 
-            finalBalanceElem.innerText = `$${currentCapital.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
-            
-            if (netPnlPct >= 0) {
-                finalBalanceElem.className = 'pnl-badge-up';
-                netPnlElem.className = 'pnl-badge-up';
-                netPnlElem.innerText = `+${netPnlPct.toFixed(2)}% (+$${(currentCapital - initialCapital).toFixed(2)}) `;
-            } else {
-                finalBalanceElem.className = 'pnl-badge-down';
-                netPnlElem.className = 'pnl-badge-down';
-                netPnlElem.innerText = `${netPnlPct.toFixed(2)}% (-$${(initialCapital - currentCapital).toFixed(2)}) `;
+            if (finalBalanceElem) {
+                finalBalanceElem.innerText = `$${currentCapital.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+                finalBalanceElem.className = netPnlPct >= 0 ? 'pnl-badge-up' : 'pnl-badge-down';
+            }
+            if (netPnlElem) {
+                netPnlElem.className = netPnlPct >= 0 ? 'pnl-badge-up' : 'pnl-badge-down';
+                netPnlElem.innerText = netPnlPct >= 0 
+                    ? `+${netPnlPct.toFixed(2)}% (+$${(currentCapital - initialCapital).toFixed(2)}) `
+                    : `${netPnlPct.toFixed(2)}% (-$${(initialCapital - currentCapital).toFixed(2)}) `;
             }
         }
 
