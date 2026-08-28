@@ -1263,7 +1263,7 @@
                 </div>
 
                 <!-- Sağ Alt Köşe: Ölçek Sıfırlama Butonu -->
-                <div class="axis-corner-reset" onclick="resetPriceScale()" title="Fiyat ölçeğini otomatik sıfırla">
+                <div class="axis-corner-reset active" onclick="resetPriceScale()" title="Fiyat ölçeğini otomatik sıfırla">
                     OTO
                 </div>
             </div>
@@ -3296,6 +3296,7 @@
 
         function startPan(clientX, clientY) {
             isChartDragging = true;
+            dragAxisLocked = null;
             chartDragStartX = clientX;
             chartDragStartY = clientY;
             origViewStart = viewStart;
@@ -3317,6 +3318,7 @@
         window.addEventListener('mouseup', () => {
             isChartDragging = false;
             isPriceDragging = false;
+            dragAxisLocked = null;
             canvasContainer.classList.remove('grabbing');
             timeAxisElem.classList.remove('grabbing');
             updateVisibleBacktestSummary();
