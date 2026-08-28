@@ -138,7 +138,7 @@
             fill: #f0f3fa;
         }
 
-        /* 📑 AÇILIR FLYOUT ALT MENÜLERİ */
+        /*  AÇILIR FLYOUT ALT MENÜLERİ */
         .tv-flyout-menu {
             position: absolute;
             left: 48px;
@@ -241,7 +241,7 @@
         .tv-fav-item.active { background: #2962ff; color: #fff; }
         .tv-fav-item svg { width: 20px; height: 20px; fill: currentColor; }
 
-        /* 🎛️ ÇİZİM SEÇİM KAYAN AYAR ÇUBUĞU */
+        /* ️ ÇİZİM SEÇİM KAYAN AYAR ÇUBUĞU */
         .tv-property-toolbar {
             position: absolute;
             background: #1e222d;
@@ -285,23 +285,23 @@
             flex-shrink: 0;
         }
         .indicator-badge {
-            background: linear-gradient(135deg, rgba(56, 189, 248, 0.2), rgba(129, 140, 248, 0.2));
-            border: 1px solid #38bdf8;
-            color: #38bdf8;
+            background: #1e222d;
+            border: 1px solid #2a2e39;
+            color: #f0f3fa;
             font-size: 11px;
-            font-weight: 800;
-            padding: 3px 6px;
-            border-radius: 5px;
-            letter-spacing: 0.3px;
+            font-weight: 700;
+            padding: 4px 8px;
+            border-radius: 4px;
+            letter-spacing: 0.5px;
         }
         .symbol-select {
-            background: rgba(255, 255, 255, 0.06);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            color: #f8fafc;
+            background: #1e222d;
+            border: 1px solid #2a2e39;
+            color: #f0f3fa;
             font-size: 12px;
-            font-weight: 700;
-            padding: 4px 6px;
-            border-radius: 5px;
+            font-weight: 600;
+            padding: 4px 8px;
+            border-radius: 4px;
             cursor: pointer;
             outline: none;
         }
@@ -314,9 +314,9 @@
         .tf-selector-group {
             display: flex;
             align-items: center;
-            background: rgba(15, 23, 42, 0.9);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 6px;
+            background: #1e222d;
+            border: 1px solid #2a2e39;
+            border-radius: 4px;
             padding: 2px;
             gap: 2px;
         }
@@ -336,22 +336,21 @@
             background: rgba(255, 255, 255, 0.08);
         }
         .tf-btn.active {
-            background: #38bdf8;
-            color: #0f172a;
-            font-weight: 800;
-            box-shadow: 0 0 10px rgba(56, 189, 248, 0.4);
+            background: #2962ff;
+            color: #ffffff;
+            font-weight: 700;
+            box-shadow: none;
         }
 
-        /* 🎯 STRATEJİ SEÇİCİ TOOLBAR GRUBU */
+        /*  STRATEJİ SEÇİCİ TOOLBAR GRUBU */
         .strategy-selector-group {
             display: flex;
             align-items: center;
-            background: rgba(15, 23, 42, 0.95);
-            border: 1.5px solid #38bdf8;
-            border-radius: 7px;
+            background: #1e222d;
+            border: 1px solid #2a2e39;
+            border-radius: 4px;
             padding: 2px;
             gap: 2px;
-            box-shadow: 0 0 14px rgba(56, 189, 248, 0.25);
         }
         .strat-label {
             font-size: 10px;
@@ -380,11 +379,11 @@
             background: rgba(255, 255, 255, 0.08);
         }
         .strat-btn.active {
-            background: linear-gradient(135deg, #0284c7, #0369a1);
-            border-color: #38bdf8;
+            background: #2962ff;
+            border-color: #2962ff;
             color: #ffffff;
-            font-weight: 800;
-            box-shadow: 0 0 10px rgba(56, 189, 248, 0.4);
+            font-weight: 700;
+            box-shadow: none;
         }
         .strat-btn.highlight-btc {
             background: linear-gradient(135deg, #f59e0b, #d97706);
@@ -392,19 +391,19 @@
             color: #ffffff;
         }
         .strat-btn.highlight-btc.active {
-            background: linear-gradient(135deg, #10b981, #059669);
-            border-color: #6ee7b7;
-            box-shadow: 0 0 12px rgba(16, 185, 129, 0.6);
+            background: #2962ff;
+            border-color: #2962ff;
+            box-shadow: none;
         }
 
         .candle-depth-select {
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            color: #38bdf8;
-            font-size: 10.5px;
+            background: #1e222d;
+            border: 1px solid #2a2e39;
+            color: #d1d4dc;
+            font-size: 11px;
             font-weight: 600;
-            padding: 3px 5px;
-            border-radius: 5px;
+            padding: 4px 6px;
+            border-radius: 4px;
             cursor: pointer;
             outline: none;
         }
@@ -431,57 +430,61 @@
             display: inline-block;
         }
 
+        
+        .ind-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 4px;
+        }
+
         .indicator-nav {
             display: flex;
             align-items: center;
             gap: 4px;
         }
         .ind-btn {
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: #94a3b8;
-            padding: 4px 7px;
-            border-radius: 5px;
-            font-size: 10px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 3px;
-        }
-        .ind-btn:hover { background: rgba(255, 255, 255, 0.1); color: #fff; }
-        .ind-btn.active {
-            background: rgba(56, 189, 248, 0.2);
-            border-color: #38bdf8;
-            color: #38bdf8;
+            background: #1e222d;
+            border: 1px solid #2a2e39;
+            color: #787b86;
+            font-size: 11px;
             font-weight: 600;
-        }
-
-        /* BACKTEST BUTONU */
-        .backtest-btn {
-            background: linear-gradient(135deg, #8b5cf6, #6d28d9);
-            border: 1px solid #c4b5fd;
-            color: #ffffff;
-            font-weight: 800;
-            padding: 4px 9px;
-            border-radius: 5px;
-            font-size: 10.5px;
+            padding: 4px 8px;
+            border-radius: 4px;
             cursor: pointer;
             display: flex;
             align-items: center;
             gap: 4px;
-            box-shadow: 0 0 10px rgba(139, 92, 246, 0.4);
-            transition: all 0.2s;
+            transition: all 0.15s;
+        }
+        .ind-btn:hover { background: rgba(255, 255, 255, 0.1); color: #fff; }
+        .ind-btn.active {
+            background: rgba(41, 98, 255, 0.15);
+            border-color: #2962ff;
+            color: #f0f3fa;
+        }
+
+        /* BACKTEST BUTONU */
+        .backtest-btn {
+            background: #1e222d;
+            border: 1px solid #2a2e39;
+            color: #787b86;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.15s;
         }
         .backtest-btn:hover {
             transform: translateY(-1px);
             box-shadow: 0 0 16px rgba(139, 92, 246, 0.7);
         }
         .backtest-btn.active {
-            background: linear-gradient(135deg, #10b981, #059669);
-            border-color: #6ee7b7;
-            box-shadow: 0 0 14px rgba(16, 185, 129, 0.6);
+            background: #059669;
+            border-color: #10b981;
+            color: #ffffff;
         }
 
         /* 2. ANA GRAFİK GÖVDESİ */
@@ -549,25 +552,25 @@
         .hud-overlay-card {
             position: absolute;
             top: 10px;
-            left: 12px;
-            z-index: 20;
+            left: 10px;
             display: flex;
             flex-direction: column;
             gap: 6px;
+            z-index: 15;
             pointer-events: none;
         }
         .hud-badge-row {
             display: flex;
-            gap: 8px;
             align-items: center;
-            background: rgba(11, 17, 32, 0.9);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            padding: 4px 8px;
-            border-radius: 6px;
-            backdrop-filter: blur(10px);
-            font-family: 'SF Pro Text', 'Segoe UI', sans-serif;
-            font-size: 11px;
-            font-weight: 500;
+            gap: 6px;
+            background: rgba(19, 23, 34, 0.88);
+            border: 1px solid #2a2e39;
+            padding: 5px 8px;
+            border-radius: 5px;
+            backdrop-filter: blur(6px);
+            font-size: 10.5px;
+            color: #787b86;
+            font-weight: 600;
         }
         .hud-tag {
             font-weight: 700;
@@ -581,18 +584,18 @@
 
         /* GÖRÜNEN EKRAN KÜMÜLATİF ALL-IN BACKTEST ROZETİ */
         .visible-backtest-card {
+            background: rgba(19, 23, 34, 0.92);
+            border: 1px solid #2a2e39;
+            padding: 8px 10px;
+            border-radius: 5px;
+            backdrop-filter: blur(8px);
+            font-size: 11px;
+            color: #d1d4dc;
             display: flex;
             flex-direction: column;
-            gap: 4px;
-            background: linear-gradient(135deg, rgba(15, 23, 42, 0.96), rgba(30, 27, 75, 0.96));
-            border: 1.5px solid #38bdf8;
-            padding: 8px 12px;
-            border-radius: 8px;
-            backdrop-filter: blur(14px);
-            font-family: 'SF Pro Text', 'Segoe UI', sans-serif;
-            font-size: 11.5px;
-            box-shadow: 0 6px 25px rgba(0,0,0,0.8);
-            min-width: 410px;
+            gap: 5px;
+            min-width: 320px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.4);
         }
         .vbt-header {
             display: flex;
@@ -849,7 +852,7 @@
         <!-- ÜST MENÜ -->
         <div class="top-toolbar">
             <div class="symbol-section">
-                <span class="indicator-badge">⚡ SqiciBekiR</span>
+                <span class="indicator-badge">SQICIBEKIR TERMINAL</span>
 
                 <select class="symbol-select" id="symbol-select" onchange="changeSymbol(this.value)">
                     <option value="BTCUSDT">BTC / USDT</option>
@@ -861,31 +864,31 @@
 
                 <!-- ⏱️ ZAMAN DİLİMİ (TIMEFRAME) SEÇİCİ -->
                 <div class="tf-selector-group">
-                    <button class="tf-btn" id="tf-btn-1m" onclick="changeTimeframe('1m')" title="⚡ 1-Dakika Scalping: 1m Mumlar + 5m EMA26 + 1H Rejim">⚡ 1m</button>
-                    <button class="tf-btn" id="tf-btn-3m" onclick="changeTimeframe('3m')" title="🔥 3-Dakika Turbo Day Trade: 3m Mumlar + 15m EMA26 + 1H Rejim">🔥 3m</button>
-                    <button class="tf-btn" id="tf-btn-5m" onclick="changeTimeframe('5m')" title="🚀 5-Dakika Hızlı Trade: 5m Mumlar + 15m EMA26 + 4H Rejim">🚀 5m</button>
-                    <button class="tf-btn" id="tf-btn-15m" onclick="changeTimeframe('15m')" title="🎯 15-Dakika Swing Day Trade: 15m Mumlar + 1H EMA26 + 1D Rejim">🎯 15m</button>
-                    <button class="tf-btn active" id="tf-btn-1h" onclick="changeTimeframe('1h')" title="📊 1-Saat Orijinal Pine v6 Swing: 1H Mumlar + 4H EMA26 + 1D Rejim">📊 1h</button>
-                    <button class="tf-btn" id="tf-btn-4h" onclick="changeTimeframe('4h')" title="🏛️ 4-Saat Trend Takibi: 4H Mumlar + 1D EMA26 + 1W Rejim">🏛️ 4h</button>
+                    <button class="tf-btn" id="tf-btn-1m" onclick="changeTimeframe('1m')" title="1-Dakika Scalping: 1m Mumlar + 5m EMA26 + 1H Rejim">1m</button>
+                    <button class="tf-btn" id="tf-btn-3m" onclick="changeTimeframe('3m')" title="3-Dakika Day Trade: 3m Mumlar + 15m EMA26 + 1H Rejim">3m</button>
+                    <button class="tf-btn" id="tf-btn-5m" onclick="changeTimeframe('5m')" title="5-Dakika Trade: 5m Mumlar + 15m EMA26 + 4H Rejim">5m</button>
+                    <button class="tf-btn" id="tf-btn-15m" onclick="changeTimeframe('15m')" title="15-Dakika Swing Trade: 15m Mumlar + 1H EMA26 + 1D Rejim">15m</button>
+                    <button class="tf-btn active" id="tf-btn-1h" onclick="changeTimeframe('1h')" title="1-Saat Orijinal Pine v6 Swing: 1H Mumlar + 4H EMA26 + 1D Rejim">1h</button>
+                    <button class="tf-btn" id="tf-btn-4h" onclick="changeTimeframe('4h')" title="4-Saat Trend Takibi: 4H Mumlar + 1D EMA26 + 1W Rejim">4h</button>
                 </div>
 
-                <!-- 🎯 5 GELİŞMİŞ QUANT STRATEJİ SEÇİCİ -->
+                <!--  5 GELİŞMİŞ QUANT STRATEJİ SEÇİCİ -->
                 <div class="strategy-selector-group">
-                    <span class="strat-label">🧠 LAB:</span>
-                    <button class="strat-btn active highlight-btc" id="strat-btn-4" onclick="setStrategy(4)" title="🏆 Quant Optimizasyon Şampiyonu: BUY1 (2.2/2.2x), BUY2 Trend (1.4/4.0x R:R 1:2.85), SELL (1.2/2.5x)">
-                        🔥 4. Asimetrik Pro (+%14 Kâr)
+                    <span class="strat-label">STRATEJİ:</span>
+                    <button class="strat-btn active highlight-btc" id="strat-btn-4" onclick="setStrategy(4)" title=" Quant Optimizasyon Şampiyonu: BUY1 (2.2/2.2x), BUY2 Trend (1.4/4.0x R:R 1:2.85), SELL (1.2/2.5x)">
+                        4. Asimetrik Pro (+14.0%)
                     </button>
                     <button class="strat-btn" id="strat-btn-2" onclick="setStrategy(2)" title="Quant MAE: Volatilite Sıkışmada 2.5x SL / Patlamada 3.2x TP">
-                        🤖 2. Quant MAE (+%9.5)
+                        2. Quant MAE (+9.5%)
                     </button>
                     <button class="strat-btn" id="strat-btn-3" onclick="setStrategy(3)" title="Trailing Stop: +0.8 ATR Erken Breakeven & %78.8 Kazanma Oranı">
-                        🔄 3. Trailing BE (%78.8 Win)
+                        3. Trailing BE (78.8% Win)
                     </button>
                     <button class="strat-btn" id="strat-btn-1" onclick="setStrategy(1)" title="Piyasa Yapısı: Son 10 mum Swing Low + Kijun + Bulut Tabanı + 0.4 ATR Tampon">
-                        🏛️ 1. Yapısal SL
+                        1. Yapısal SL
                     </button>
                     <button class="strat-btn" id="strat-btn-0" onclick="setStrategy(0)" title="Klasik Sabit 1:1.67 R:R (1.5x ATR SL, 2.5x ATR TP)">
-                        📐 0. Sabit 1.67
+                        0. Sabit 1:1.67
                     </button>
                 </div>
 
@@ -904,22 +907,22 @@
             <!-- İndikatör Katmanları & Backtest & OttOnline Butonu -->
             <div class="indicator-nav">
                 <button class="ind-btn active" id="btn-cloud" onclick="toggleLayer('cloud')">
-                    <span style="color: #10b981;">☁️</span> Bulut
+                    <span class="ind-dot" style="background: #10b981;"></span> Bulut
                 </button>
                 <button class="ind-btn active" id="btn-ema" onclick="toggleLayer('ema')">
-                    <span style="color: #f97316;">⚡</span> EMA
+                    <span class="ind-dot" style="background: #f97316;"></span> EMA
                 </button>
                 <button class="ind-btn active" id="btn-signals" onclick="toggleLayer('signals')">
-                    <span style="color: #fbbf24;">🎯</span> Sinyal
+                    <span class="ind-dot" style="background: #fbbf24;"></span> Sinyaller
                 </button>
 
                 <!-- Backtest Butonu -->
                 <button class="backtest-btn" id="btn-backtest" onclick="toggleBacktestMode()" title="Backtest Modunu Aç / Kapat">
-                    🎆 Backtest
+                    Backtest
                 </button>
 
                 <button class="ind-btn active" id="btn-bg" onclick="toggleLayer('bg')">
-                    <span>🌌</span> Rejim
+                    <span class="ind-dot" style="background: #a855f7;"></span> Rejim
                 </button>
             </div>
         </div>
@@ -1062,7 +1065,7 @@
                             <div class="tv-fav-item" onclick="selectTvTool('brush')" title="Fırça"><svg viewBox="0 0 28 28"><path d="M4 22c3-1 5-4 7-8l9-9 3 3-9 9c-4 2-7 4-8 7z" fill="currentColor"></path></svg></div>
                         </div>
 
-                        <!-- 🎛️ ÇİZİM SEÇİM KAYAN AYAR ÇUBUĞU -->
+                        <!-- ️ ÇİZİM SEÇİM KAYAN AYAR ÇUBUĞU -->
                         <div class="tv-property-toolbar" id="tv-prop-toolbar">
                             <div class="tv-prop-color-dot" style="background: #38bdf8;" onclick="setDrawingColor('#38bdf8')"></div>
                             <div class="tv-prop-color-dot" style="background: #10b981;" onclick="setDrawingColor('#10b981')"></div>
@@ -1079,29 +1082,29 @@
                             <button class="tv-prop-btn" onclick="setDrawingStyle('dashed')" title="Kesikli Çizgi">---</button>
                             <button class="tv-prop-btn" onclick="setDrawingStyle('dotted')" title="Noktalı Çizgi">···</button>
                             <span style="width: 1px; height: 16px; background: #2a2e39; margin: 0 2px;"></span>
-                            <button class="tv-prop-btn delete" onclick="deleteSelectedDrawing()" title="Çizimi Sil">🗑️</button>
+                            <button class="tv-prop-btn delete" onclick="deleteSelectedDrawing()" title="Çizimi Sil"><svg viewBox="0 0 28 28" width="16" height="16" fill="currentColor"><path d="M18 7h5v1h-2l-1.3 14.6a1.5 1.5 0 0 1-1.5 1.4H9.8a1.5 1.5 0 0 1-1.5-1.4L7 8H5V7h5V6c0-1.1.9-2 2-2h4a2 2 0 0 1 2 2v1Zm-6-2a1 1 0 0 0-1 1v1h6V6a1 1 0 0 0-1-1h-4Z"></path></svg></button>
                         </div>
 
                         <div class="hud-overlay-card">
                             <div class="hud-badge-row">
                                 <span>1D HTF REJİM: <span id="hud-regime" class="hud-tag tag-bull">BOĞA (YEŞİL)</span></span>
                                 <span>CANLI 4H EMA26: <span id="hud-ema" class="hud-tag tag-bull">ÜSTÜNDE</span></span>
-                                <span>ANA YÖN (Pine v6): <span id="hud-trend" class="hud-tag tag-bull">GÜÇLÜ BOĞA 🚀</span></span>
+                                <span>ANA YÖN (Pine v6): <span id="hud-trend" class="hud-tag tag-bull">GÜÇLÜ BOĞA</span></span>
                                 <span>MUM BİLGİSİ: <span id="hud-candle-info" class="hud-tag" style="background: rgba(56, 189, 248, 0.2); color: #38bdf8; border: 1px solid #38bdf8; font-weight: 700;">Görünen: 150 / Toplam: 3.000</span></span>
                             </div>
 
                             <!-- GÖRÜNEN EKRAN KÜMÜLATİF BACKTEST ROZETİ -->
                             <div class="visible-backtest-card" id="visible-backtest-card">
                                 <div class="vbt-header">
-                                    <span class="active-strat-title" id="vbt-strat-title">🔥 4. ASİMETRİK PRO (BUY1: 2.2x, BUY2: 4.0x, SELL: 2.5x)</span>
+                                    <span class="active-strat-title" id="vbt-strat-title">4. ASİMETRİK PRO (BUY1: 2.2x, BUY2: 4.0x, SELL: 2.5x)</span>
                                     <span id="vbt-candle-span" style="color: #38bdf8; font-weight: 700; font-size: 11px;">Görünen: 150 / Toplam: 3.000 Mum</span>
                                 </div>
                                 <div class="vbt-row">
-                                    <span>Görünen Sinyaller: <b id="vbt-total-sig" style="color: #f8fafc;">0</b> (🎯 <b id="vbt-tp-count" style="color: #10b981;">0</b> | ❌ <b id="vbt-sl-count" style="color: #ef4444;">0</b> | ⌛ <b id="vbt-open-count" style="color: #38bdf8;">0</b>)</span>
+                                    <span>Görünen Sinyaller: <b id="vbt-total-sig" style="color: #f8fafc;">0</b> (Kazanma: <b id="vbt-tp-count" style="color: #10b981;">0</b> | Stop: <b id="vbt-sl-count" style="color: #ef4444;">0</b> | Açık: <b id="vbt-open-count" style="color: #38bdf8;">0</b>)</span>
                                     <span>Kazanma: <span class="bt-stat-badge bt-win" id="vbt-winrate">%0.0</span></span>
                                 </div>
                                 <div class="vbt-row" style="background: rgba(0,0,0,0.3); padding: 4px 6px; border-radius: 5px;">
-                                    <span>💰 <b>$1.000</b> İle Sırayla All-In Girilseydi:</span>
+                                    <span>Portföy Simülasyonu ($1,000 Giriş):</span>
                                     <span id="vbt-final-balance" class="pnl-badge-up">$1,000.00</span>
                                 </div>
                                 <div class="vbt-row">
@@ -1121,13 +1124,13 @@
                             <!-- Sinyal İnceleyici Kartı -->
                             <div class="signal-inspector-card" id="signal-inspector-card">
                                 <div style="display: flex; justify-content: space-between; align-items: center;">
-                                    <span id="insp-type" style="font-weight: 800; font-size: 12px;">⚡ SİNYAL: --</span>
+                                    <span id="insp-type" style="font-weight: 800; font-size: 12px;">SİNYAL: --</span>
                                     <span id="insp-rr" style="color: #fbbf24; font-weight: 700;">R:R: --</span>
                                 </div>
-                                <span id="insp-bt-result" style="font-weight: 800; display: none;">🏆 BACKTEST: TP BAŞARILI!</span>
+                                <span id="insp-bt-result" style="font-weight: 800; display: none;">BACKTEST: TP BAŞARILI</span>
                                 <span id="insp-entry" style="color: #94a3b8; font-size: 11px;">GİRİŞ: $0.00</span>
-                                <span id="insp-tp" style="color: #10b981; font-weight: 700;">🎯 TP: $0.00</span>
-                                <span id="insp-sl" style="color: #ef4444; font-weight: 700;">🛡️ SL: $0.00</span>
+                                <span id="insp-tp" style="color: #10b981; font-weight: 700;">TP: $0.00</span>
+                                <span id="insp-sl" style="color: #ef4444; font-weight: 700;">SL: $0.00</span>
                                 <span id="insp-extra" style="color: #38bdf8; font-size: 10.5px;"></span>
                             </div>
                         </div>
@@ -1155,7 +1158,7 @@
 
                 <!-- Sağ Alt Köşe: Ölçek Sıfırlama Butonu -->
                 <div class="axis-corner-reset" onclick="resetPriceScale()" title="Fiyat ölçeğini otomatik sıfırla">
-                    OTO 🔄
+                    OTO
                 </div>
             </div>
 
@@ -1165,11 +1168,11 @@
         <div class="bottom-statusbar">
             <div class="status-left">
                 <span>KAYNAK: <span class="status-highlight">Binance MTF</span></span>
-                <span>MOTOR: <span class="status-highlight" id="engine-stat">🚀 GPU (WebGL 2.0)</span></span>
+                <span>MOTOR: <span class="status-highlight" id="engine-stat">GPU (WebGL 2.0)</span></span>
                 <span>FPS: <span class="status-highlight" id="fps-stat">60</span></span>
                 <span>TOPLAM MUM: <span class="status-highlight" id="total-candles-stat">3000</span></span>
                 <span>GÖRÜNÜR: <span class="status-highlight" id="visible-candles-stat">150</span></span>
-                <button class="fit-all-btn" onclick="fitAllCandles()" title="Tüm geçmiş mumları ekrana tam sığdır">🔍 TÜMÜNÜ GÖR</button>
+                <button class="fit-all-btn" onclick="fitAllCandles()" title="Tüm geçmiş mumları ekrana tam sığdır">SIĞDIR</button>
             </div>
             <div>
                 <span id="active-strat-footer">Aktif: <b>4. Asimetrik Pro (BUY1: 2.2x SL / 2.2x TP, BUY2: 1.4x SL / 4.0x TP, SELL: 1.2x SL / 2.5x TP)</b></span>
@@ -1428,13 +1431,13 @@
         setTimeout(() => {
             const engineStat = document.getElementById('engine-stat');
             if (engineStat) {
-                engineStat.innerText = isGpuActive ? '🚀 GPU (WebGL 2.0)' : '⚡ Hibrit Turbo 2D (Tablet Uyumlu)';
+                engineStat.innerText = isGpuActive ? 'GPU (WebGL 2.0)' : 'Turbo 2D (Tablet)';
                 engineStat.style.color = isGpuActive ? '#10b981' : '#38bdf8';
             }
         }, 100);
 
         // ==========================================
-        // 🎯 5 GELİŞMİŞ QUANT STRATEJİSİ (1M SCALP VS 1H SWING DİNAMİK)
+        //  5 GELİŞMİŞ QUANT STRATEJİSİ (1M SCALP VS 1H SWING DİNAMİK)
         // ==========================================
         let activeStrategy = 4; // Varsayılan: 4 (Şampiyon Asimetrik Pro)
 
@@ -1446,21 +1449,21 @@
             const scalp = isScalpTimeframe(tf || currentTimeframe);
             if (scalp) {
                 switch(stratId) {
-                    case 4: return '🔥 1M ASİMETRİK SCALP PRO (BUY2: 1.5/3.0x %63.6 Win | SELL: 1.5/3.0x)';
-                    case 3: return '🔄 1M MICRO-BREAKEVEN (%70.5 KAZANMA ORANI | +0.6 ATR BE & SWING 8)';
-                    case 2: return '⚡ 1M SERİ HIZLI SCALP (1.5x SL / 2.0x TP | DAKİKALIK KAPANIŞ)';
-                    case 1: return '🏛️ 1M MİKRO-YAPISAL SL (SON 5 BAR SWING + 0.2x ATR TAMPON)';
-                    case 0: return '📐 1M KLASİK SABİT SCALP (1.2x SL / 1.8x TP)';
-                    default: return '⚡ 1M SCALP STRATEJİSİ';
+                    case 4: return '1M ASİMETRİK SCALP PRO (BUY2: 1.5/3.0x %63.6 Win | SELL: 1.5/3.0x)';
+                    case 3: return '1M MICRO-BREAKEVEN (%70.5 Kazanma Oranı | +0.6 ATR BE & Swing 8)';
+                    case 2: return '1M HIZLI SCALP (1.5x SL / 2.0x TP | Dakikalık Kapanış)';
+                    case 1: return '1M MİKRO-YAPISAL SL (Son 5 Bar Swing + 0.2x ATR Tampon)';
+                    case 0: return '1M KLASİK SABİT SCALP (1.2x SL / 1.8x TP)';
+                    default: return '1M SCALP STRATEJİSİ';
                 }
             } else {
                 switch(stratId) {
-                    case 4: return '🔥 1H ASİMETRİK PRO (BUY1: 2.2x, BUY2 TREND: 4.0x R:R 1:2.85, SELL: 2.5x)';
-                    case 3: return '🔄 1H TRAILING STOP (+0.8 ATR BREAKEVEN & %78.8 KAZANMA ORANI)';
-                    case 2: return '🤖 1H QUANT MAE (DİNAMİK VOLATİLİTE: 1.2x-2.5x SL / 2.0x-3.2x TP)';
-                    case 1: return '🏛️ 1H YAPISAL SL (SWING LOW/HIGH + KIJUN + BULUT TABANI + 0.4 ATR)';
-                    case 0: return '📐 1H KLASİK SABİT 1:1.67 R:R (1.5x SL / 2.5x TP)';
-                    default: return '📊 1H SWING STRATEJİSİ';
+                    case 4: return '1H ASİMETRİK PRO (BUY1: 2.2x, BUY2: 4.0x R:R 1:2.85, SELL: 2.5x)';
+                    case 3: return '1H TRAILING STOP (+0.8 ATR Breakeven & %78.8 Kazanma Oranı)';
+                    case 2: return '1H QUANT MAE (Dinamik Volatilite: 1.2x-2.5x SL / 2.0x-3.2x TP)';
+                    case 1: return '1H YAPISAL SL (Swing Low/High + Kijun + Bulut Tabanı + 0.4 ATR)';
+                    case 0: return '1H KLASİK SABİT 1:1.67 R:R (1.5x SL / 2.5x TP)';
+                    default: return '1H SWING STRATEJİSİ';
                 }
             }
         }
@@ -1469,20 +1472,20 @@
             const scalp = isScalpTimeframe(tf || currentTimeframe);
             if (scalp) {
                 switch(stratId) {
-                    case 4: return 'Aktif: <b>⚡ 4. 1M Asimetrik Scalp (BUY2: 1.5x SL / 3.0x TP %63.6 Win 🚀, SELL: 1.5x SL / 3.0x TP)</b>';
-                    case 3: return 'Aktif: <b>🔄 3. 1M Micro-BE (%70.5 Win Rate | +0.6 ATR Erken Breakeven)</b>';
-                    case 2: return 'Aktif: <b>⚡ 2. 1M Hızlı Scalp (1.5x SL / 2.0x TP R:R 1:1.33)</b>';
-                    case 1: return 'Aktif: <b>🏛️ 1. 1M Mikro-Yapısal (Son 5 Bar Swing + 0.2x ATR)</b>';
-                    case 0: return 'Aktif: <b>📐 0. 1M Sabit Scalp (1.2x SL / 1.8x TP)</b>';
+                    case 4: return 'Aktif: <b>4. 1M Asimetrik Scalp (BUY2: 1.5x SL / 3.0x TP %63.6 Win, SELL: 1.5x SL / 3.0x TP)</b>';
+                    case 3: return 'Aktif: <b>3. 1M Micro-BE (%70.5 Win Rate | +0.6 ATR Erken Breakeven)</b>';
+                    case 2: return 'Aktif: <b>2. 1M Hızlı Scalp (1.5x SL / 2.0x TP R:R 1:1.33)</b>';
+                    case 1: return 'Aktif: <b>1. 1M Mikro-Yapısal (Son 5 Bar Swing + 0.2x ATR)</b>';
+                    case 0: return 'Aktif: <b>0. 1M Sabit Scalp (1.2x SL / 1.8x TP)</b>';
                     default: return '';
                 }
             } else {
                 switch(stratId) {
-                    case 4: return 'Aktif: <b>🔥 4. 1H Asimetrik Pro (BUY1: 2.2x, BUY2: 1.4/4.0x R:R 1:2.85, SELL: 1.2/2.5x)</b>';
-                    case 3: return 'Aktif: <b>🔄 3. 1H Trailing BE (+0.8 ATR Erken Breakeven & %78.8 Win Rate)</b>';
-                    case 2: return 'Aktif: <b>🤖 2. 1H Quant MAE (Sıkışmada 2.5x SL / Patlamada 3.2x TP)</b>';
-                    case 1: return 'Aktif: <b>🏛️ 1. 1H Yapısal SL (Swing 10 + Kijun + Bulut + 0.4 ATR Tampon)</b>';
-                    case 0: return 'Aktif: <b>📐 0. 1H Sabit 1.67 (1.5x ATR SL / 2.5x ATR TP)</b>';
+                    case 4: return 'Aktif: <b>4. 1H Asimetrik Pro (BUY1: 2.2x, BUY2: 1.4/4.0x R:R 1:2.85, SELL: 1.2/2.5x)</b>';
+                    case 3: return 'Aktif: <b>3. 1H Trailing BE (+0.8 ATR Erken Breakeven & %78.8 Win Rate)</b>';
+                    case 2: return 'Aktif: <b>2. 1H Quant MAE (Sıkışmada 2.5x SL / Patlamada 3.2x TP)</b>';
+                    case 1: return 'Aktif: <b>1. 1H Yapısal SL (Swing 10 + Kijun + Bulut + 0.4 ATR Tampon)</b>';
+                    case 0: return 'Aktif: <b>0. 1H Sabit 1.67 (1.5x ATR SL / 2.5x ATR TP)</b>';
                     default: return '';
                 }
             }
@@ -1497,17 +1500,17 @@
             const btn0 = document.getElementById('strat-btn-0');
 
             if (scalp) {
-                if (btn4) { btn4.innerHTML = '🔥 4. 1M Asimetrik Scalp'; btn4.title = '1M Scalp Şampiyonu: BUY2 Trend (3.0x TP %63.6 Win), SELL (3.0x TP)'; }
-                if (btn3) { btn3.innerHTML = '🔄 3. 1M Micro-BE (%70.5 Win)'; btn3.title = '1M En Yüksek Başarı: +0.6 ATR Erken Breakeven & Son 8 Bar Swing'; }
-                if (btn2) { btn2.innerHTML = '⚡ 2. 1M Hızlı Scalp'; btn2.title = '1M Hızlı Seri Kapanış: 1.5x SL / 2.0x TP (R:R 1:1.33)'; }
-                if (btn1) { btn1.innerHTML = '🏛️ 1. 1M Mikro-Yapısal'; btn1.title = '1M Mikro-Yapısal SL: Son 5 bar Swing Low/High + 0.2x ATR'; }
-                if (btn0) { btn0.innerHTML = '📐 0. 1M Sabit Scalp'; btn0.title = '1M Sabit Scalp: 1.2x ATR SL / 1.8x ATR TP'; }
+                if (btn4) { btn4.innerHTML = '4. 1M Asimetrik Scalp'; btn4.title = '1M Scalp Şampiyonu: BUY2 Trend (3.0x TP %63.6 Win), SELL (3.0x TP)'; }
+                if (btn3) { btn3.innerHTML = '3. 1M Micro-BE (%70.5 Win)'; btn3.title = '1M En Yüksek Başarı: +0.6 ATR Erken Breakeven & Son 8 Bar Swing'; }
+                if (btn2) { btn2.innerHTML = '2. 1M Hızlı Scalp'; btn2.title = '1M Hızlı Seri Kapanış: 1.5x SL / 2.0x TP (R:R 1:1.33)'; }
+                if (btn1) { btn1.innerHTML = '1. 1M Mikro-Yapısal'; btn1.title = '1M Mikro-Yapısal SL: Son 5 bar Swing Low/High + 0.2x ATR'; }
+                if (btn0) { btn0.innerHTML = '0. 1M Sabit Scalp'; btn0.title = '1M Sabit Scalp: 1.2x ATR SL / 1.8x ATR TP'; }
             } else {
-                if (btn4) { btn4.innerHTML = '🔥 4. Asimetrik Pro (+%14 Kâr)'; btn4.title = '1H Swing Şampiyonu: BUY1 (2.2x), BUY2 Trend (1.4/4.0x R:R 1:2.85), SELL (1.2/2.5x)'; }
-                if (btn3) { btn3.innerHTML = '🔄 3. Trailing BE (%78.8 Win)'; btn3.title = '1H Trailing Stop: +0.8 ATR Erken Breakeven & %78.8 Kazanma Oranı'; }
-                if (btn2) { btn2.innerHTML = '🤖 2. Quant MAE (+%9.5)'; btn2.title = '1H Quant MAE: Volatilite Sıkışmada 2.5x SL / Patlamada 3.2x TP'; }
-                if (btn1) { btn1.innerHTML = '🏛️ 1. Yapısal SL'; btn1.title = '1H Piyasa Yapısı: Son 10 mum Swing Low + Kijun + Bulut Tabanı + 0.4 ATR Tampon'; }
-                if (btn0) { btn0.innerHTML = '📐 0. Sabit 1.67'; btn0.title = '1H Sabit 1:1.67 R:R (1.5x ATR SL, 2.5x ATR TP)'; }
+                if (btn4) { btn4.innerHTML = '4. Asimetrik Pro (+14.0%)'; btn4.title = '1H Swing Şampiyonu: BUY1 (2.2x), BUY2 Trend (1.4/4.0x R:R 1:2.85), SELL (1.2/2.5x)'; }
+                if (btn3) { btn3.innerHTML = '3. Trailing BE (78.8% Win)'; btn3.title = '1H Trailing Stop: +0.8 ATR Erken Breakeven & %78.8 Kazanma Oranı'; }
+                if (btn2) { btn2.innerHTML = '2. Quant MAE (+9.5%)'; btn2.title = '1H Quant MAE: Volatilite Sıkışmada 2.5x SL / Patlamada 3.2x TP'; }
+                if (btn1) { btn1.innerHTML = '1. Yapısal SL'; btn1.title = '1H Piyasa Yapısı: Son 10 mum Swing Low + Kijun + Bulut Tabanı + 0.4 ATR Tampon'; }
+                if (btn0) { btn0.innerHTML = '0. Sabit 1:1.67'; btn0.title = '1H Sabit 1:1.67 R:R (1.5x ATR SL, 2.5x ATR TP)'; }
             }
 
             document.getElementById('vbt-strat-title').innerText = getStratTitle(activeStrategy, tf);
@@ -1535,7 +1538,7 @@
             const btn = document.getElementById('btn-backtest');
             const vbtCard = document.getElementById('visible-backtest-card');
             btn.classList.toggle('active', isBacktestActive);
-            btn.innerText = isBacktestActive ? '🎆 Backtest: AÇIK' : '📊 Backtest Modu';
+            btn.innerText = isBacktestActive ? 'Backtest: AÇIK' : ' Backtest Modu';
             vbtCard.style.display = isBacktestActive ? 'flex' : 'none';
         };
 
@@ -1572,32 +1575,32 @@
             '1m': {
                 baseTf: '1m', emaTf: '5m', regimeTf: '1h',
                 baseMs: 60 * 1000, emaMs: 5 * 60 * 1000, regimeMs: 60 * 60 * 1000,
-                label: '⚡ 1m Scalp Pro', emaLabel: '5M EMA26', regimeLabel: '1H ICHIMOKU'
+                label: '1m Scalp Pro', emaLabel: '5M EMA26', regimeLabel: '1H ICHIMOKU'
             },
             '3m': {
                 baseTf: '3m', emaTf: '15m', regimeTf: '1h',
                 baseMs: 3 * 60 * 1000, emaMs: 15 * 60 * 1000, regimeMs: 60 * 60 * 1000,
-                label: '🔥 3m Turbo Trade', emaLabel: '15M EMA26', regimeLabel: '1H ICHIMOKU'
+                label: '3m Turbo Trade', emaLabel: '15M EMA26', regimeLabel: '1H ICHIMOKU'
             },
             '5m': {
                 baseTf: '5m', emaTf: '15m', regimeTf: '4h',
                 baseMs: 5 * 60 * 1000, emaMs: 15 * 60 * 1000, regimeMs: 4 * 60 * 60 * 1000,
-                label: '🚀 5m Day Trade', emaLabel: '15M EMA26', regimeLabel: '4H ICHIMOKU'
+                label: '5m Day Trade', emaLabel: '15M EMA26', regimeLabel: '4H ICHIMOKU'
             },
             '15m': {
                 baseTf: '15m', emaTf: '1h', regimeTf: '1d',
                 baseMs: 15 * 60 * 1000, emaMs: 60 * 60 * 1000, regimeMs: 24 * 60 * 60 * 1000,
-                label: '🎯 15m Short Swing', emaLabel: '1H EMA26', regimeLabel: '1D ICHIMOKU'
+                label: '15m Short Swing', emaLabel: '1H EMA26', regimeLabel: '1D ICHIMOKU'
             },
             '1h': {
                 baseTf: '1h', emaTf: '4h', regimeTf: '1d',
                 baseMs: 60 * 60 * 1000, emaMs: 4 * 60 * 60 * 1000, regimeMs: 24 * 60 * 60 * 1000,
-                label: '📊 1h Swing (Pine v6)', emaLabel: '4H EMA26', regimeLabel: '1D ICHIMOKU'
+                label: '1h Swing (Pine v6)', emaLabel: '4H EMA26', regimeLabel: '1D ICHIMOKU'
             },
             '4h': {
                 baseTf: '4h', emaTf: '1d', regimeTf: '1w',
                 baseMs: 4 * 60 * 60 * 1000, emaMs: 24 * 60 * 60 * 1000, regimeMs: 7 * 24 * 60 * 60 * 1000,
-                label: '🏛️ 4h Macro Trend', emaLabel: '1D EMA26', regimeLabel: '1W ICHIMOKU'
+                label: '4h Macro Trend', emaLabel: '1D EMA26', regimeLabel: '1W ICHIMOKU'
             }
         };
 
@@ -1860,12 +1863,12 @@
                                 sl = c - (atr * 1.5);
                                 tp = c + (atr * 3.0);
                                 rrRatio = 2.0;
-                                extraInfo = `1M BUY2 Trend: 1.5x SL / 3.0x TP (%63.6 Win 🚀)`;
+                                extraInfo = `1M BUY2 Trend: 1.5x SL / 3.0x TP (%63.6 Win)`;
                             } else {
                                 sl = c + (atr * 1.5);
                                 tp = c - (atr * 3.0);
                                 rrRatio = 2.0;
-                                extraInfo = `1M SELL: 1.5x SL / 3.0x TP (+%1.48 Kâr 🔻)`;
+                                extraInfo = `1M SELL: 1.5x SL / 3.0x TP (+%1.48 Kâr)`;
                             }
                         } else {
                             if (sigType === 'BUY') {
@@ -1877,12 +1880,12 @@
                                 sl = c - (atr * 1.4);
                                 tp = c + (atr * 4.0);
                                 rrRatio = 4.0 / 1.4;
-                                extraInfo = `BUY2 Trend: 1.4x SL / 4.0x TP (R:R 1:2.85 🚀)`;
+                                extraInfo = `BUY2 Trend: 1.4x SL / 4.0x TP (R:R 1:2.85)`;
                             } else {
                                 sl = c + (atr * 1.2);
                                 tp = c - (atr * 2.5);
                                 rrRatio = 2.5 / 1.2;
-                                extraInfo = `SELL Trend: 1.2x SL / 2.5x TP (R:R 1:2.08 🔻)`;
+                                extraInfo = `SELL Trend: 1.2x SL / 2.5x TP (R:R 1:2.08)`;
                             }
                         }
                     }
@@ -1908,7 +1911,7 @@
                                 tp = c - (dist * 1.5);
                             }
                             rrRatio = 1.5;
-                            extraInfo = `1M Micro-BE: +0.6 ATR Erken Breakeven (%70.5 Win 🏆)`;
+                            extraInfo = `1M Micro-BE: +0.6 ATR Erken Breakeven (%70.5 Win)`;
                         } else {
                             sl = isBuy ? (c - atr * 1.5) : (c + atr * 1.5);
                             tp = isBuy ? (c + atr * 2.5) : (c - atr * 2.5);
@@ -2134,7 +2137,7 @@
         }
 
         // ============================================================
-        // 📊 GÖRÜNEN EKRAN KÜMÜLATİF ALL-IN HESAPLAYICISI
+        //  GÖRÜNEN EKRAN KÜMÜLATİF ALL-IN HESAPLAYICISI
         // ============================================================
         function updateVisibleBacktestSummary() {
             if (!isBacktestActive || calculatedSignals.length === 0) return;
@@ -2186,11 +2189,11 @@
             if (netPnlPct >= 0) {
                 finalBalanceElem.className = 'pnl-badge-up';
                 netPnlElem.className = 'pnl-badge-up';
-                netPnlElem.innerText = `+${netPnlPct.toFixed(2)}% (+$${(currentCapital - initialCapital).toFixed(2)}) 🚀`;
+                netPnlElem.innerText = `+${netPnlPct.toFixed(2)}% (+$${(currentCapital - initialCapital).toFixed(2)}) `;
             } else {
                 finalBalanceElem.className = 'pnl-badge-down';
                 netPnlElem.className = 'pnl-badge-down';
-                netPnlElem.innerText = `${netPnlPct.toFixed(2)}% (-$${(initialCapital - currentCapital).toFixed(2)}) 🔻`;
+                netPnlElem.innerText = `${netPnlPct.toFixed(2)}% (-$${(initialCapital - currentCapital).toFixed(2)}) `;
             }
         }
 
@@ -2272,10 +2275,10 @@
             }
 
             if (lastReg > 0.5 && lastClose >= lastEma) {
-                hudTrend.innerText = 'GÜÇLÜ BOĞA 🚀';
+                hudTrend.innerText = 'GÜÇLÜ BOĞA';
                 hudTrend.className = 'hud-tag tag-bull';
             } else if (lastReg < -0.5 && lastClose < lastEma) {
-                hudTrend.innerText = 'GÜÇLÜ AYI 🔻';
+                hudTrend.innerText = 'GÜÇLÜ AYI';
                 hudTrend.className = 'hud-tag tag-bear';
             } else {
                 hudTrend.innerText = 'NÖTR / DÖNÜŞ';
@@ -2287,7 +2290,7 @@
         }
 
         // ============================================================
-        // 🎆 EKRAN GENELİ MİNİK HAVAİ FİŞEK MOTORU (120 FPS SIFIR CPU YÜKÜ)
+        //  EKRAN GENELİ MİNİK HAVAİ FİŞEK MOTORU (120 FPS SIFIR CPU YÜKÜ)
         // ============================================================
         const SCREEN_FIREWORKS = [
             { relX: 0.12, relY: 0.22, seed: 1.2, speed: 1.15, size: 28, color: '#10b981' },
@@ -2357,7 +2360,7 @@
         }
 
         // ============================================================
-        // 🎯 60/120 FPS GPU SMOOTH LERP ANİMASYON DURUM MOTORU
+        //  60/120 FPS GPU SMOOTH LERP ANİMASYON DURUM MOTORU
         // ============================================================
         let hoveredCandleIdx = -1;
         let focusAnim = {
@@ -2366,7 +2369,7 @@
         };
 
         // ============================================================
-        // ⚡ HİBRİT CANVAS 2D TURBO ÇİZİCİSİ (TABLET / MOBİL / SAFARI UYUMLU)
+        //  HİBRİT CANVAS 2D TURBO ÇİZİCİSİ (TABLET / MOBİL / SAFARI UYUMLU)
         // ============================================================
         function draw2DTurboFallback(ctx, w, h, curStart, curEnd, minP, maxP) {
             ctx.fillStyle = '#060a17';
@@ -2496,7 +2499,7 @@
             }
 
             // ============================================================
-            // 🔴🟢 CANLI MUM FİYAT ÇİZGİSİ (TRADINGVIEW DİNAMİK KESİKLİ ÇİZGİ)
+            //  CANLI MUM FİYAT ÇİZGİSİ (TRADINGVIEW DİNAMİK KESİKLİ ÇİZGİ)
             // ============================================================
             if (totalCandles > 0 && candleDataBase[totalCandles - 1]) {
                 const lastCandle = candleDataBase[totalCandles - 1];
@@ -2620,7 +2623,7 @@
                 ctx2d.restore();
             }
 
-            // 3. 🚨 BAŞARISIZ (STOP) SİNYALDE TÜM EKRANDA KIRMIZI İKAZ LAMBASI MODU
+            // 3.  BAŞARISIZ (STOP) SİNYALDE TÜM EKRANDA KIRMIZI İKAZ LAMBASI MODU
             if (activeFocusSig && activeFocusSig.btStatus === 'SL' && focusAnim.progress > 0.01) {
                 const warningPulse = 0.5 + 0.5 * Math.sin(timeNow * 0.007); // 0.0 - 1.0 arası nefes alan nabız
                 const redAlpha = (0.08 + 0.14 * warningPulse) * focusAnim.progress;
@@ -2694,7 +2697,7 @@
                 ctx2d.lineWidth = isTpWin ? 1.8 : 1;
 
                 let text = isBuy ? `▲ ${sig.type}` : `▼ ${sig.type}`;
-                if (isBacktestActive && isTpWin) text += ' 🏆 TP';
+                if (isBacktestActive && isTpWin) text += ' [TP]';
 
                 ctx2d.font = 'bold 10.5px "SF Pro Text", "Segoe UI", sans-serif';
                 const textMetrics = ctx2d.measureText(text);
@@ -2729,7 +2732,7 @@
 
                 // Sadece Mum Hizasında Kalan Dikey Kesikli Mavi TP ve Pembe SL Seviyeleri & Emojileri
                 if (visibleCount < 500) {
-                    // 1. DİKEY KESİKLİ MAVİ TP ÇİZGİSİ & 🎯 EMOJİSİ
+                    // 1. DİKEY KESİKLİ MAVİ TP ÇİZGİSİ &  EMOJİSİ
                     ctx2d.strokeStyle = '#38bdf8'; // Mavi
                     ctx2d.lineWidth = 1.5;
                     ctx2d.setLineDash([3, 3]);
@@ -2745,14 +2748,19 @@
                     ctx2d.lineTo(screenX + 6, tpY);
                     ctx2d.stroke();
 
-                    // TP Emojisi 🎯
+                    // TP Emojisi 
                     ctx2d.font = '11.5px "Apple Color Emoji", "Segoe UI Emoji", sans-serif';
                     ctx2d.textAlign = 'center';
                     ctx2d.textBaseline = 'middle';
                     const tpEmojiY = (tpY < entryY) ? (tpY - 9) : (tpY + 9);
-                    ctx2d.fillText('🎯', screenX, tpEmojiY);
+                    
+                    // Vector TP Indicator Tag
+                    ctx2d.font = 'bold 9px "SF Pro Text", "Segoe UI", sans-serif';
+                    ctx2d.fillStyle = '#38bdf8';
+                    ctx2d.fillText('TP', screenX, tpEmojiY);
 
-                    // 2. DİKEY KESİKLİ PEMBE SL ÇİZGİSİ & 🛡️ EMOJİSİ
+
+                    // 2. DİKEY KESİKLİ PEMBE SL ÇİZGİSİ & ️ EMOJİSİ
                     ctx2d.strokeStyle = '#ec4899'; // Pembe
                     ctx2d.lineWidth = 1.5;
                     ctx2d.setLineDash([3, 3]);
@@ -2768,18 +2776,23 @@
                     ctx2d.lineTo(screenX + 6, slY);
                     ctx2d.stroke();
 
-                    // SL Emojisi 🛡️
+                    // SL Emojisi ️
                     ctx2d.font = '11.5px "Apple Color Emoji", "Segoe UI Emoji", sans-serif';
                     ctx2d.textAlign = 'center';
                     ctx2d.textBaseline = 'middle';
                     const slEmojiY = (slY < entryY) ? (slY - 9) : (slY + 9);
-                    ctx2d.fillText('🛡️', screenX, slEmojiY);
+                    
+                    // Vector SL Indicator Tag
+                    ctx2d.font = 'bold 9px "SF Pro Text", "Segoe UI", sans-serif';
+                    ctx2d.fillStyle = '#ec4899';
+                    ctx2d.fillText('SL', screenX, slEmojiY);
+
                 }
 
                 ctx2d.restore();
             }
 
-            // 6. 🌟 SAF GPU SMOOTH ODAK MODU (PÜRÜZSÜZ FADE-IN VE SCALE İLE BELİREN ELEMANLAR)
+            // 6.  SAF GPU SMOOTH ODAK MODU (PÜRÜZSÜZ FADE-IN VE SCALE İLE BELİREN ELEMANLAR)
             if (activeFocusSig && focusAnim.progress > 0.002) {
                 const sig = activeFocusSig;
                 const candleCenter = sig.index + 0.5;
@@ -2895,7 +2908,7 @@
                     ctx2d.fillStyle = 'rgba(6, 78, 59, 0.96)';
                     ctx2d.strokeStyle = '#10b981';
                     ctx2d.lineWidth = 2;
-                    const tpText = `🎯 TP HEDEFİ: $${sig.tp.toFixed(1)} (+%${targetPnlPct}) ${isTpWin ? '🏆 KAZANDI' : ''}`;
+                    const tpText = `TP HEDEFİ: ${sig.tp.toFixed(1)} (+%${targetPnlPct}) ${isTpWin ? "[BAŞARILI]" : ""}`;
                     ctx2d.font = 'bold 12.5px "SF Pro Text", "Segoe UI", sans-serif';
                     const tpMetrics = ctx2d.measureText(tpText);
                     const tpW = Math.round((tpMetrics.width + 18) * (0.90 + 0.10 * prog));
@@ -2913,7 +2926,7 @@
                     ctx2d.fillStyle = 'rgba(127, 29, 29, 0.96)';
                     ctx2d.strokeStyle = '#ef4444';
                     ctx2d.lineWidth = 2;
-                    const slText = `🛡️ STOP LOSS: $${sig.sl.toFixed(1)} (-%${riskPnlPct}) ${isSlLoss ? '❌ STOP' : ''}`;
+                    const slText = `STOP LOSS: ${sig.sl.toFixed(1)} (-%${riskPnlPct}) ${isSlLoss ? "[STOP]" : ""}`;
                     ctx2d.font = 'bold 12.5px "SF Pro Text", "Segoe UI", sans-serif';
                     const slMetrics = ctx2d.measureText(slText);
                     const slW = Math.round((slMetrics.width + 18) * (0.90 + 0.10 * prog));
@@ -2928,7 +2941,7 @@
                     ctx2d.fillText(slText, badgeCenterX, slY);
 
                     // 3. Giriş Seviye Rozeti (Mumun SOLUNA doğru kayar ve mumla arasında minik bir boşlukla hizalanır)
-                    const entryText = `⚡ GİRİŞ: $${sig.price.toFixed(1)} | R:R 1 : ${sig.rrRatio.toFixed(2)}`;
+                    const entryText = `GİRİŞ: ${sig.price.toFixed(1)} | R:R 1 : ${sig.rrRatio.toFixed(2)}`;
                     ctx2d.font = 'bold 11px "SF Pro Text", "Segoe UI", sans-serif';
                     const entryMetrics = ctx2d.measureText(entryText);
                     const entryW = Math.round((entryMetrics.width + 16) * (0.90 + 0.10 * prog));
@@ -2956,7 +2969,7 @@
         }
 
         // ============================================================
-        // 📥 BINANCE MTF ÇOKLU ZAMAN DİLİMİ VERİ ÇEKİCİ
+        //  BINANCE MTF ÇOKLU ZAMAN DİLİMİ VERİ ÇEKİCİ
         // ============================================================
         async function fetchKlinesForInterval(symbol, interval, targetCount) {
             let allKlines = [];
@@ -3288,20 +3301,20 @@
                 const sigAtCandle = calculatedSignals.find(s => s.index === cIdx);
                 if (sigAtCandle) {
                     signalInspector.classList.add('active');
-                    inspType.innerText = `⚡ ${sigAtCandle.label}`;
+                    inspType.innerText = `SİNYAL: ${sigAtCandle.label}`;
                     inspType.style.color = sigAtCandle.isBuy ? '#10b981' : '#ef4444';
                     inspRr.innerText = `R:R: 1 : ${sigAtCandle.rrRatio.toFixed(2)}`;
 
                     if (isBacktestActive) {
                         inspBtResult.style.display = 'block';
                         if (sigAtCandle.btStatus === 'TP') {
-                            inspBtResult.innerText = `🏆 BACKTEST: TP BAŞARILI! (+${sigAtCandle.pnlPct.toFixed(2)}%)`;
+                            inspBtResult.innerText = `BACKTEST: TP BAŞARILI (+${sigAtCandle.pnlPct.toFixed(2)}%)`;
                             inspBtResult.style.color = '#10b981';
                         } else if (sigAtCandle.btStatus === 'SL') {
-                            inspBtResult.innerText = `❌ BACKTEST: STOP OLDU! (${sigAtCandle.pnlPct.toFixed(2)}%)`;
+                            inspBtResult.innerText = `BACKTEST: STOP LOSS (${sigAtCandle.pnlPct.toFixed(2)}%)`;
                             inspBtResult.style.color = '#ef4444';
                         } else {
-                            inspBtResult.innerText = '⌛ BACKTEST: İŞLEM HALA AÇIK';
+                            inspBtResult.innerText = 'BACKTEST: İŞLEM AÇIK';
                             inspBtResult.style.color = '#38bdf8';
                         }
                     } else {
@@ -3309,8 +3322,8 @@
                     }
 
                     inspEntry.innerText = `GİRİŞ: $${sigAtCandle.price.toFixed(2)}`;
-                    inspTp.innerText = `🎯 TP: $${sigAtCandle.tp.toFixed(2)}`;
-                    inspSl.innerText = `🛡️ SL: $${sigAtCandle.sl.toFixed(2)}`;
+                    inspTp.innerText = `TP HEDEFİ: ${sigAtCandle.tp.toFixed(2)}`;
+                    inspSl.innerText = `STOP LOSS: ${sigAtCandle.sl.toFixed(2)}`;
                     inspExtra.innerText = sigAtCandle.extraInfo || '';
                 } else {
                     signalInspector.classList.remove('active');
@@ -3391,7 +3404,7 @@
         }, { passive: false });
 
         // ==========================================
-        // 📱 TABLET VE DOKUNMATİK EKRAN DESTEĞİ (TOUCH GESTURES & PINCH ZOOM)
+        //  TABLET VE DOKUNMATİK EKRAN DESTEĞİ (TOUCH GESTURES & PINCH ZOOM)
         // ==========================================
         let touchStartDist = 0;
         let isTouching = false;
@@ -3549,7 +3562,7 @@
         }
 
         // ============================================================
-        // 🎨 TRADINGVIEW ÇİZİM MOTORU (STANDALONE DRAWING ENGINE)
+        //  TRADINGVIEW ÇİZİM MOTORU (STANDALONE DRAWING ENGINE)
         // ============================================================
         class TradingViewDrawingEngine {
             constructor(canvasContainer, overlayCanvas, options = {}) {
@@ -3947,7 +3960,7 @@
                     } else if (d.type === 'text') {
                         ctx.font = 'bold 13px "SF Pro Text", "Segoe UI", sans-serif';
                         ctx.fillStyle = col;
-                        ctx.fillText('✍️ Not: ' + (p1.price.toFixed(2)), x1, y1);
+                        ctx.fillText('Not: ' + (p1.price.toFixed(2)), x1, y1);
                     }
 
                     if (isSel && !this.hideAll) {
