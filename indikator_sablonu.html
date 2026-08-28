@@ -2536,9 +2536,9 @@
                 ctx2d.restore();
             }
 
-            if (!layers.signals || loadAnimProgress < 0.05) return;
+            if (!layers.signals) return;
             ctx2d.save();
-            ctx2d.globalAlpha = Math.pow(loadAnimProgress, 2.2);
+            ctx2d.globalAlpha = Math.max(0.0, Math.min(1.0, Math.pow(loadAnimProgress, 2.0)));
 
             // 1. Hassas Hover Kontrolü: İmleç TAM OLARAK mum barının veya sinyal etiketinin üzerinde mi?
             let preciseHoveredSig = null;
@@ -2959,8 +2959,8 @@
                     ctx2d.fillText(entryText, entryBadgeX, entryY);
 
                     ctx2d.restore();
-                }
             }
+        }
         }
 
         // ============================================================
@@ -3011,28 +3011,10 @@
         let candleDataEma = [];
         let candleDataRegime = [];
 
-        // Başlangıçta ekranın ortasında 0 boyutta düz çizgi gibi duran başlangıç mumları
-        (function initZeroHeightPlaceholder() {
-            const now = Date.now();
-            const initP = 75000;
-            const dummyArr = [];
-            for (let i = 0; i < 150; i++) {
-                dummyArr.push({
-                    time: now - (150 - i) * 60000,
-                    open: initP,
-                    high: initP,
-                    low: initP,
-                    close: initP,
-                    vol: 1
-                });
-            }
-            candleDataBase = dummyArr;
-            candleDataEma = dummyArr;
-            candleDataRegime = dummyArr;
-            totalCandles = 150;
-            viewStart = 0;
-            viewEnd = 150;
-        })();
+        let isDataLoading = false;
+        let loadAnimStartTime = 0;
+        let loadAnimProgress = 1.0;
+        const LOAD_ANIM_DURATION = 800;
 
         async function fetchAllMultiTimeframeKlines(symbol) {
             const tfCfg = TIMEFRAME_CONFIGS[currentTimeframe] || TIMEFRAME_CONFIGS['1h'];
@@ -4427,7 +4409,6 @@
                 }
 
                 drawVectorSignalsAndTargets(now);
-                ctx2d.restore();
 
                 if (drawingEngine) {
                     drawingEngine.render(ctx2d);
