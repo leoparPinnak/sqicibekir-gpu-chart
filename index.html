@@ -3238,6 +3238,8 @@
 
         let priceOffset = 0; // Dikey serbest kaydırma ofseti
         let origPriceOffset = 0;
+        let isAutoPriceScale = true; // 🌟 Otomatik Fiyat Ölçekleme (OTO Modu)
+        let dragAxisLocked = null; // 'horizontal' | 'vertical' | null
 
         let isPriceDragging = false;
         let priceDragStartY = 0;
@@ -3246,7 +3248,17 @@
         window.resetPriceScale = function() {
             priceScaleFactor = 1.0;
             priceOffset = 0;
+            isAutoPriceScale = true;
+            dragAxisLocked = null;
+            updateOtoButtonState();
         };
+
+        function updateOtoButtonState() {
+            const otoBtn = document.querySelector('.axis-corner-reset');
+            if (otoBtn) {
+                otoBtn.classList.toggle('active', isAutoPriceScale);
+            }
+        }
 
         priceAxisElem.addEventListener('mousedown', (e) => {
             isPriceDragging = true;
@@ -3362,15 +3374,33 @@
             mousePixelY = (rect.bottom - e.clientY) * (canvas.height / rect.height);
 
             if (isChartDragging && totalCandles > 0) {
-                // 1. Yatay Zaman Kaydırma (X-Axis) - Sağa doğru boş alana serbestçe kayabilme
                 const deltaPx = e.clientX - chartDragStartX;
+                const deltaPy = e.clientY - chartDragStartY;
+                const absX = Math.abs(deltaPx);
+                const absY = Math.abs(deltaPy);
+
+                // 🎯 HAREKET YÖNÜ AYRIMI (Axis Discrimination):
+                // Başlangıçta serbestçe başlar. Yatay hareket kesinleşirse (absX >= 8 ve absX >= absY) otomatik ölçekleme kilitlenir.
+                if (!dragAxisLocked) {
+                    if (absX >= 8 && absX >= absY) {
+                        dragAxisLocked = 'horizontal';
+                        isAutoPriceScale = true;
+                        priceOffset = 0;
+                        updateOtoButtonState();
+                    } else if (absY >= 15 && absY > absX * 1.5) {
+                        dragAxisLocked = 'vertical';
+                        isAutoPriceScale = false;
+                        updateOtoButtonState();
+                    }
+                }
+
+                // 1. Yatay Zaman Kaydırma (X-Axis)
                 const candleSpan = origViewEnd - origViewStart;
                 const deltaCandles = (deltaPx / rect.width) * candleSpan;
 
                 let nStart = origViewStart - deltaCandles;
                 let nEnd = origViewEnd - deltaCandles;
 
-                // Sağa doğru geniş boş alan (en az 400 mum veya %100 boşluk)
                 const maxRightSpace = Math.max(400, Math.round(totalCandles * 1.0));
                 const minAllowedStart = -80;
                 const maxAllowedEnd = totalCandles + maxRightSpace;
@@ -3387,12 +3417,15 @@
                 viewStart = nStart;
                 viewEnd = nEnd;
 
-                // 2. Dikey Fiyat Serbest Kaydırma (Y-Axis Free Pan - Doğal El Hareketi Yönü)
-                const deltaPy = e.clientY - chartDragStartY;
-                const currentPriceSpan = maxPrice - minPrice;
-                if (currentPriceSpan > 0 && rect.height > 0) {
-                    const pricePerPixel = currentPriceSpan / rect.height;
-                    priceOffset = origPriceOffset + (deltaPy * pricePerPixel);
+                // 2. Dikey Eksen Yönetimi
+                if (dragAxisLocked === 'horizontal' || isAutoPriceScale) {
+                    priceOffset = 0;
+                } else if (dragAxisLocked === 'vertical' || !isAutoPriceScale) {
+                    const currentPriceSpan = maxPrice - minPrice;
+                    if (currentPriceSpan > 0 && rect.height > 0) {
+                        const pricePerPixel = currentPriceSpan / rect.height;
+                        priceOffset = origPriceOffset + (deltaPy * pricePerPixel);
+                    }
                 }
 
                 updateVisibleBacktestSummary();
@@ -3486,7 +3519,14 @@
             e.preventDefault();
             if (totalCandles === 0) return;
 
-            const zoomSpeed = 0.0012;
+            // 🌟 ZOOM ESNASINDA KESİNLİKLE OTO ÖLÇEKLENDİRME AÇIKTIR
+            isAutoPriceScale = true;
+            priceOffset = 0;
+            priceScaleFactor = 1.0;
+            updateOtoButtonState();
+
+            const rect = canvas.getBoundingClientRect();
+            const zoomSpeed = 0.0015;
             const zoomFactor = Math.exp(e.deltaY * zoomSpeed);
 
             const count = Math.max(1, viewEnd - viewStart);
@@ -3495,7 +3535,7 @@
             const maxAllowedEnd = totalCandles + maxRightSpace;
             const newCount = Math.max(10, Math.min(totalCandles + maxRightSpace, count * zoomFactor));
 
-            const rect = canvas.getBoundingClientRect();
+            // 🎯 İMLECİN SADECE YATAYDAKİ (X EKSENİ) KONUMUNA DOĞRU ZOOM
             const mouseNormX = Math.max(0.0, Math.min(1.0, (e.clientX - rect.left) / rect.width));
             const mouseCandle = viewStart + mouseNormX * count;
 
@@ -3513,9 +3553,6 @@
 
             viewStart = nStart;
             viewEnd = nEnd;
-
-            // Yakınlaşırken hedeflenen noktanın ekran altına/üstüne fırlamaması için orantısal ölçekle
-            // Keep priceOffset intact during wheel zooming
 
             updateVisibleBacktestSummary();
         }, { passive: false });
@@ -4663,15 +4700,20 @@
             }
 
             if (totalCandles > 0) {
+                // 🌟 KESİN VE NET GÖRÜNÜR İĞNE FİYAT ÖLÇEĞİ (Tüm iğneler %100 ekranda kalır)
+                const curVStart = (smoothViewStart && isFinite(smoothViewStart)) ? smoothViewStart : viewStart;
+                const curVEnd = (smoothViewEnd && isFinite(smoothViewEnd)) ? smoothViewEnd : viewEnd;
+                const startI = Math.max(0, Math.floor(Math.min(viewStart, curVStart)));
+                const endI = Math.min(totalCandles, Math.ceil(Math.max(viewEnd, curVEnd)));
+
                 let minP = Infinity;
                 let maxP = -Infinity;
-                const startI = Math.max(0, Math.floor(viewStart));
-                const endI = Math.min(totalCandles, Math.ceil(viewEnd));
 
                 for (let i = startI; i < endI; i++) {
-                    if (candleDataBase[i]) {
-                        if (candleDataBase[i].low < minP) minP = candleDataBase[i].low;
-                        if (candleDataBase[i].high > maxP) maxP = candleDataBase[i].high;
+                    const c = candleDataBase[i];
+                    if (c) {
+                        if (c.low < minP) minP = c.low;
+                        if (c.high > maxP) maxP = c.high;
                     }
                 }
 
@@ -4687,15 +4729,20 @@
                 }
 
                 const span = Math.max(0.0001, maxP - minP);
-                const pad = span * 0.12;
-                const baseHalfSpan = (span / 2) + pad;
-                const scaledHalfSpan = baseHalfSpan / priceScaleFactor;
+                const pad = span * 0.10; // %10 üst ve alt tampon payı
 
-                // 🌟 SINIRSIZ DİKEY KAYDIRMA: maxAllowedOffset tamamen kaldırıldı
+                let targetMinPrice, targetMaxPrice;
 
-                const midP = (minP + maxP) / 2;
-                const targetMinPrice = midP - scaledHalfSpan + priceOffset;
-                const targetMaxPrice = midP + scaledHalfSpan + priceOffset;
+                if (isAutoPriceScale) {
+                    targetMinPrice = minP - pad;
+                    targetMaxPrice = maxP + pad;
+                } else {
+                    const midP = (minP + maxP) / 2;
+                    const baseHalfSpan = (span / 2) + pad;
+                    const scaledHalfSpan = baseHalfSpan / priceScaleFactor;
+                    targetMinPrice = midP - scaledHalfSpan + priceOffset;
+                    targetMaxPrice = midP + scaledHalfSpan + priceOffset;
+                }
 
                 if (!smoothMinPrice || !isFinite(smoothMinPrice) || smoothMinPrice === 0) {
                     smoothMinPrice = targetMinPrice;
@@ -4703,8 +4750,8 @@
                     smoothViewStart = viewStart;
                     smoothViewEnd = viewEnd;
                 } else {
-                    const priceLerp = isChartDragging ? 0.45 : 0.28;
-                    const viewLerp = isChartDragging ? 0.50 : 0.35;
+                    const priceLerp = isChartDragging ? 0.45 : 0.32;
+                    const viewLerp = isChartDragging ? 0.48 : 0.35;
                     smoothViewStart += (viewStart - smoothViewStart) * viewLerp;
                     smoothViewEnd += (viewEnd - smoothViewEnd) * viewLerp;
                     smoothMinPrice += (targetMinPrice - smoothMinPrice) * priceLerp;
