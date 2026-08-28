@@ -1359,6 +1359,10 @@
                 gl.attachShader(prog, createShader(gl, gl.VERTEX_SHADER, document.getElementById('vs').text));
                 gl.attachShader(prog, createShader(gl, gl.FRAGMENT_SHADER, document.getElementById('fs').text));
                 gl.linkProgram(prog);
+                if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) {
+                    const info = gl.getProgramInfoLog(prog);
+                    throw new Error('WebGL 2.0 Program linklenemedi: ' + info);
+                }
 
                 const posBuffer = gl.createBuffer();
                 gl.bindBuffer(gl.ARRAY_BUFFER, posBuffer);
