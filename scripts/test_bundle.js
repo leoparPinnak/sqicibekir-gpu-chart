@@ -63,13 +63,13 @@
         setTimeout(() => {
             const engineStat = document.getElementById('engine-stat');
             if (engineStat) {
-                engineStat.innerText = isGpuActive ? '🚀 GPU (WebGL 2.0)' : '⚡ Hibrit Turbo 2D (Tablet Uyumlu)';
+                engineStat.innerText = isGpuActive ? 'GPU (WebGL 2.0)' : 'Turbo 2D (Tablet)';
                 engineStat.style.color = isGpuActive ? '#10b981' : '#38bdf8';
             }
         }, 100);
 
         // ==========================================
-        // 🎯 5 GELİŞMİŞ QUANT STRATEJİSİ (1M SCALP VS 1H SWING DİNAMİK)
+        //  5 GELİŞMİŞ QUANT STRATEJİSİ (1M SCALP VS 1H SWING DİNAMİK)
         // ==========================================
         let activeStrategy = 4; // Varsayılan: 4 (Şampiyon Asimetrik Pro)
 
@@ -81,21 +81,21 @@
             const scalp = isScalpTimeframe(tf || currentTimeframe);
             if (scalp) {
                 switch(stratId) {
-                    case 4: return '🔥 1M ASİMETRİK SCALP PRO (BUY2: 1.5/3.0x %63.6 Win | SELL: 1.5/3.0x)';
-                    case 3: return '🔄 1M MICRO-BREAKEVEN (%70.5 KAZANMA ORANI | +0.6 ATR BE & SWING 8)';
-                    case 2: return '⚡ 1M SERİ HIZLI SCALP (1.5x SL / 2.0x TP | DAKİKALIK KAPANIŞ)';
-                    case 1: return '🏛️ 1M MİKRO-YAPISAL SL (SON 5 BAR SWING + 0.2x ATR TAMPON)';
-                    case 0: return '📐 1M KLASİK SABİT SCALP (1.2x SL / 1.8x TP)';
-                    default: return '⚡ 1M SCALP STRATEJİSİ';
+                    case 4: return '1M ASİMETRİK SCALP PRO (BUY2: 1.5/3.0x %63.6 Win | SELL: 1.5/3.0x)';
+                    case 3: return '1M MICRO-BREAKEVEN (%70.5 Kazanma Oranı | +0.6 ATR BE & Swing 8)';
+                    case 2: return '1M HIZLI SCALP (1.5x SL / 2.0x TP | Dakikalık Kapanış)';
+                    case 1: return '1M MİKRO-YAPISAL SL (Son 5 Bar Swing + 0.2x ATR Tampon)';
+                    case 0: return '1M KLASİK SABİT SCALP (1.2x SL / 1.8x TP)';
+                    default: return '1M SCALP STRATEJİSİ';
                 }
             } else {
                 switch(stratId) {
-                    case 4: return '🔥 1H ASİMETRİK PRO (BUY1: 2.2x, BUY2 TREND: 4.0x R:R 1:2.85, SELL: 2.5x)';
-                    case 3: return '🔄 1H TRAILING STOP (+0.8 ATR BREAKEVEN & %78.8 KAZANMA ORANI)';
-                    case 2: return '🤖 1H QUANT MAE (DİNAMİK VOLATİLİTE: 1.2x-2.5x SL / 2.0x-3.2x TP)';
-                    case 1: return '🏛️ 1H YAPISAL SL (SWING LOW/HIGH + KIJUN + BULUT TABANI + 0.4 ATR)';
-                    case 0: return '📐 1H KLASİK SABİT 1:1.67 R:R (1.5x SL / 2.5x TP)';
-                    default: return '📊 1H SWING STRATEJİSİ';
+                    case 4: return '1H ASİMETRİK PRO (BUY1: 2.2x, BUY2: 4.0x R:R 1:2.85, SELL: 2.5x)';
+                    case 3: return '1H TRAILING STOP (+0.8 ATR Breakeven & %78.8 Kazanma Oranı)';
+                    case 2: return '1H QUANT MAE (Dinamik Volatilite: 1.2x-2.5x SL / 2.0x-3.2x TP)';
+                    case 1: return '1H YAPISAL SL (Swing Low/High + Kijun + Bulut Tabanı + 0.4 ATR)';
+                    case 0: return '1H KLASİK SABİT 1:1.67 R:R (1.5x SL / 2.5x TP)';
+                    default: return '1H SWING STRATEJİSİ';
                 }
             }
         }
@@ -104,20 +104,20 @@
             const scalp = isScalpTimeframe(tf || currentTimeframe);
             if (scalp) {
                 switch(stratId) {
-                    case 4: return 'Aktif: <b>⚡ 4. 1M Asimetrik Scalp (BUY2: 1.5x SL / 3.0x TP %63.6 Win 🚀, SELL: 1.5x SL / 3.0x TP)</b>';
-                    case 3: return 'Aktif: <b>🔄 3. 1M Micro-BE (%70.5 Win Rate | +0.6 ATR Erken Breakeven)</b>';
-                    case 2: return 'Aktif: <b>⚡ 2. 1M Hızlı Scalp (1.5x SL / 2.0x TP R:R 1:1.33)</b>';
-                    case 1: return 'Aktif: <b>🏛️ 1. 1M Mikro-Yapısal (Son 5 Bar Swing + 0.2x ATR)</b>';
-                    case 0: return 'Aktif: <b>📐 0. 1M Sabit Scalp (1.2x SL / 1.8x TP)</b>';
+                    case 4: return 'Aktif: <b>4. 1M Asimetrik Scalp (BUY2: 1.5x SL / 3.0x TP %63.6 Win, SELL: 1.5x SL / 3.0x TP)</b>';
+                    case 3: return 'Aktif: <b>3. 1M Micro-BE (%70.5 Win Rate | +0.6 ATR Erken Breakeven)</b>';
+                    case 2: return 'Aktif: <b>2. 1M Hızlı Scalp (1.5x SL / 2.0x TP R:R 1:1.33)</b>';
+                    case 1: return 'Aktif: <b>1. 1M Mikro-Yapısal (Son 5 Bar Swing + 0.2x ATR)</b>';
+                    case 0: return 'Aktif: <b>0. 1M Sabit Scalp (1.2x SL / 1.8x TP)</b>';
                     default: return '';
                 }
             } else {
                 switch(stratId) {
-                    case 4: return 'Aktif: <b>🔥 4. 1H Asimetrik Pro (BUY1: 2.2x, BUY2: 1.4/4.0x R:R 1:2.85, SELL: 1.2/2.5x)</b>';
-                    case 3: return 'Aktif: <b>🔄 3. 1H Trailing BE (+0.8 ATR Erken Breakeven & %78.8 Win Rate)</b>';
-                    case 2: return 'Aktif: <b>🤖 2. 1H Quant MAE (Sıkışmada 2.5x SL / Patlamada 3.2x TP)</b>';
-                    case 1: return 'Aktif: <b>🏛️ 1. 1H Yapısal SL (Swing 10 + Kijun + Bulut + 0.4 ATR Tampon)</b>';
-                    case 0: return 'Aktif: <b>📐 0. 1H Sabit 1.67 (1.5x ATR SL / 2.5x ATR TP)</b>';
+                    case 4: return 'Aktif: <b>4. 1H Asimetrik Pro (BUY1: 2.2x, BUY2: 1.4/4.0x R:R 1:2.85, SELL: 1.2/2.5x)</b>';
+                    case 3: return 'Aktif: <b>3. 1H Trailing BE (+0.8 ATR Erken Breakeven & %78.8 Win Rate)</b>';
+                    case 2: return 'Aktif: <b>2. 1H Quant MAE (Sıkışmada 2.5x SL / Patlamada 3.2x TP)</b>';
+                    case 1: return 'Aktif: <b>1. 1H Yapısal SL (Swing 10 + Kijun + Bulut + 0.4 ATR Tampon)</b>';
+                    case 0: return 'Aktif: <b>0. 1H Sabit 1.67 (1.5x ATR SL / 2.5x ATR TP)</b>';
                     default: return '';
                 }
             }
@@ -132,20 +132,20 @@
             const btn0 = document.getElementById('strat-btn-0');
 
             if (scalp) {
-                if (btn4) { btn4.innerHTML = '🔥 4. 1M Asimetrik Scalp'; btn4.title = '1M Scalp Şampiyonu: BUY2 Trend (3.0x TP %63.6 Win), SELL (3.0x TP)'; }
-                if (btn3) { btn3.innerHTML = '🔄 3. 1M Micro-BE (%70.5 Win)'; btn3.title = '1M En Yüksek Başarı: +0.6 ATR Erken Breakeven & Son 8 Bar Swing'; }
-                if (btn2) { btn2.innerHTML = '⚡ 2. 1M Hızlı Scalp'; btn2.title = '1M Hızlı Seri Kapanış: 1.5x SL / 2.0x TP (R:R 1:1.33)'; }
-                if (btn1) { btn1.innerHTML = '🏛️ 1. 1M Mikro-Yapısal'; btn1.title = '1M Mikro-Yapısal SL: Son 5 bar Swing Low/High + 0.2x ATR'; }
-                if (btn0) { btn0.innerHTML = '📐 0. 1M Sabit Scalp'; btn0.title = '1M Sabit Scalp: 1.2x ATR SL / 1.8x ATR TP'; }
+                if (btn4) { btn4.innerHTML = '4. 1M Asimetrik Scalp'; btn4.title = '1M Scalp Şampiyonu: BUY2 Trend (3.0x TP %63.6 Win), SELL (3.0x TP)'; }
+                if (btn3) { btn3.innerHTML = '3. 1M Micro-BE (%70.5 Win)'; btn3.title = '1M En Yüksek Başarı: +0.6 ATR Erken Breakeven & Son 8 Bar Swing'; }
+                if (btn2) { btn2.innerHTML = '2. 1M Hızlı Scalp'; btn2.title = '1M Hızlı Seri Kapanış: 1.5x SL / 2.0x TP (R:R 1:1.33)'; }
+                if (btn1) { btn1.innerHTML = '1. 1M Mikro-Yapısal'; btn1.title = '1M Mikro-Yapısal SL: Son 5 bar Swing Low/High + 0.2x ATR'; }
+                if (btn0) { btn0.innerHTML = '0. 1M Sabit Scalp'; btn0.title = '1M Sabit Scalp: 1.2x ATR SL / 1.8x ATR TP'; }
             } else {
-                if (btn4) { btn4.innerHTML = '🔥 4. Asimetrik Pro (+%14 Kâr)'; btn4.title = '1H Swing Şampiyonu: BUY1 (2.2x), BUY2 Trend (1.4/4.0x R:R 1:2.85), SELL (1.2/2.5x)'; }
-                if (btn3) { btn3.innerHTML = '🔄 3. Trailing BE (%78.8 Win)'; btn3.title = '1H Trailing Stop: +0.8 ATR Erken Breakeven & %78.8 Kazanma Oranı'; }
-                if (btn2) { btn2.innerHTML = '🤖 2. Quant MAE (+%9.5)'; btn2.title = '1H Quant MAE: Volatilite Sıkışmada 2.5x SL / Patlamada 3.2x TP'; }
-                if (btn1) { btn1.innerHTML = '🏛️ 1. Yapısal SL'; btn1.title = '1H Piyasa Yapısı: Son 10 mum Swing Low + Kijun + Bulut Tabanı + 0.4 ATR Tampon'; }
-                if (btn0) { btn0.innerHTML = '📐 0. Sabit 1.67'; btn0.title = '1H Sabit 1:1.67 R:R (1.5x ATR SL, 2.5x ATR TP)'; }
+                if (btn4) { btn4.innerHTML = '4. Asimetrik Pro (+14.0%)'; btn4.title = '1H Swing Şampiyonu: BUY1 (2.2x), BUY2 Trend (1.4/4.0x R:R 1:2.85), SELL (1.2/2.5x)'; }
+                if (btn3) { btn3.innerHTML = '3. Trailing BE (78.8% Win)'; btn3.title = '1H Trailing Stop: +0.8 ATR Erken Breakeven & %78.8 Kazanma Oranı'; }
+                if (btn2) { btn2.innerHTML = '2. Quant MAE (+9.5%)'; btn2.title = '1H Quant MAE: Volatilite Sıkışmada 2.5x SL / Patlamada 3.2x TP'; }
+                if (btn1) { btn1.innerHTML = '1. Yapısal SL'; btn1.title = '1H Piyasa Yapısı: Son 10 mum Swing Low + Kijun + Bulut Tabanı + 0.4 ATR Tampon'; }
+                if (btn0) { btn0.innerHTML = '0. Sabit 1:1.67'; btn0.title = '1H Sabit 1:1.67 R:R (1.5x ATR SL, 2.5x ATR TP)'; }
             }
 
-            document.getElementById('vbt-strat-title').innerText = getStratTitle(activeStrategy, tf);
+            const vbtTitle = document.getElementById('vbt-strat-title'); if (vbtTitle) vbtTitle.innerText = getStratTitle(activeStrategy, currentTimeframe);
             document.getElementById('active-strat-footer').innerHTML = getStratFooter(activeStrategy, tf);
         }
 
@@ -155,7 +155,7 @@
                 const btn = document.getElementById(`strat-btn-${id}`);
                 if (btn) btn.classList.toggle('active', id === stratId);
             });
-            document.getElementById('vbt-strat-title').innerText = getStratTitle(stratId, currentTimeframe);
+            const vbtTitle = document.getElementById('vbt-strat-title'); if (vbtTitle) vbtTitle.innerText = getStratTitle(activeStrategy, currentTimeframe);
             document.getElementById('active-strat-footer').innerHTML = getStratFooter(stratId, currentTimeframe);
             updateGpuTextures();
         };
@@ -170,7 +170,7 @@
             const btn = document.getElementById('btn-backtest');
             const vbtCard = document.getElementById('visible-backtest-card');
             btn.classList.toggle('active', isBacktestActive);
-            btn.innerText = isBacktestActive ? '🎆 Backtest: AÇIK' : '📊 Backtest Modu';
+            btn.innerText = isBacktestActive ? 'Backtest: AÇIK' : ' Backtest Modu';
             vbtCard.style.display = isBacktestActive ? 'flex' : 'none';
         };
 
@@ -207,32 +207,32 @@
             '1m': {
                 baseTf: '1m', emaTf: '5m', regimeTf: '1h',
                 baseMs: 60 * 1000, emaMs: 5 * 60 * 1000, regimeMs: 60 * 60 * 1000,
-                label: '⚡ 1m Scalp Pro', emaLabel: '5M EMA26', regimeLabel: '1H ICHIMOKU'
+                label: '1m Scalp Pro', emaLabel: '5M EMA26', regimeLabel: '1H ICHIMOKU'
             },
             '3m': {
                 baseTf: '3m', emaTf: '15m', regimeTf: '1h',
                 baseMs: 3 * 60 * 1000, emaMs: 15 * 60 * 1000, regimeMs: 60 * 60 * 1000,
-                label: '🔥 3m Turbo Trade', emaLabel: '15M EMA26', regimeLabel: '1H ICHIMOKU'
+                label: '3m Turbo Trade', emaLabel: '15M EMA26', regimeLabel: '1H ICHIMOKU'
             },
             '5m': {
                 baseTf: '5m', emaTf: '15m', regimeTf: '4h',
                 baseMs: 5 * 60 * 1000, emaMs: 15 * 60 * 1000, regimeMs: 4 * 60 * 60 * 1000,
-                label: '🚀 5m Day Trade', emaLabel: '15M EMA26', regimeLabel: '4H ICHIMOKU'
+                label: '5m Day Trade', emaLabel: '15M EMA26', regimeLabel: '4H ICHIMOKU'
             },
             '15m': {
                 baseTf: '15m', emaTf: '1h', regimeTf: '1d',
                 baseMs: 15 * 60 * 1000, emaMs: 60 * 60 * 1000, regimeMs: 24 * 60 * 60 * 1000,
-                label: '🎯 15m Short Swing', emaLabel: '1H EMA26', regimeLabel: '1D ICHIMOKU'
+                label: '15m Short Swing', emaLabel: '1H EMA26', regimeLabel: '1D ICHIMOKU'
             },
             '1h': {
                 baseTf: '1h', emaTf: '4h', regimeTf: '1d',
                 baseMs: 60 * 60 * 1000, emaMs: 4 * 60 * 60 * 1000, regimeMs: 24 * 60 * 60 * 1000,
-                label: '📊 1h Swing (Pine v6)', emaLabel: '4H EMA26', regimeLabel: '1D ICHIMOKU'
+                label: '1h Swing (Pine v6)', emaLabel: '4H EMA26', regimeLabel: '1D ICHIMOKU'
             },
             '4h': {
                 baseTf: '4h', emaTf: '1d', regimeTf: '1w',
                 baseMs: 4 * 60 * 60 * 1000, emaMs: 24 * 60 * 60 * 1000, regimeMs: 7 * 24 * 60 * 60 * 1000,
-                label: '🏛️ 4h Macro Trend', emaLabel: '1D EMA26', regimeLabel: '1W ICHIMOKU'
+                label: '4h Macro Trend', emaLabel: '1D EMA26', regimeLabel: '1W ICHIMOKU'
             }
         };
 
@@ -495,12 +495,12 @@
                                 sl = c - (atr * 1.5);
                                 tp = c + (atr * 3.0);
                                 rrRatio = 2.0;
-                                extraInfo = `1M BUY2 Trend: 1.5x SL / 3.0x TP (%63.6 Win 🚀)`;
+                                extraInfo = `1M BUY2 Trend: 1.5x SL / 3.0x TP (%63.6 Win)`;
                             } else {
                                 sl = c + (atr * 1.5);
                                 tp = c - (atr * 3.0);
                                 rrRatio = 2.0;
-                                extraInfo = `1M SELL: 1.5x SL / 3.0x TP (+%1.48 Kâr 🔻)`;
+                                extraInfo = `1M SELL: 1.5x SL / 3.0x TP (+%1.48 Kâr)`;
                             }
                         } else {
                             if (sigType === 'BUY') {
@@ -512,12 +512,12 @@
                                 sl = c - (atr * 1.4);
                                 tp = c + (atr * 4.0);
                                 rrRatio = 4.0 / 1.4;
-                                extraInfo = `BUY2 Trend: 1.4x SL / 4.0x TP (R:R 1:2.85 🚀)`;
+                                extraInfo = `BUY2 Trend: 1.4x SL / 4.0x TP (R:R 1:2.85)`;
                             } else {
                                 sl = c + (atr * 1.2);
                                 tp = c - (atr * 2.5);
                                 rrRatio = 2.5 / 1.2;
-                                extraInfo = `SELL Trend: 1.2x SL / 2.5x TP (R:R 1:2.08 🔻)`;
+                                extraInfo = `SELL Trend: 1.2x SL / 2.5x TP (R:R 1:2.08)`;
                             }
                         }
                     }
@@ -543,7 +543,7 @@
                                 tp = c - (dist * 1.5);
                             }
                             rrRatio = 1.5;
-                            extraInfo = `1M Micro-BE: +0.6 ATR Erken Breakeven (%70.5 Win 🏆)`;
+                            extraInfo = `1M Micro-BE: +0.6 ATR Erken Breakeven (%70.5 Win)`;
                         } else {
                             sl = isBuy ? (c - atr * 1.5) : (c + atr * 1.5);
                             tp = isBuy ? (c + atr * 2.5) : (c - atr * 2.5);
@@ -769,7 +769,7 @@
         }
 
         // ============================================================
-        // 📊 GÖRÜNEN EKRAN KÜMÜLATİF ALL-IN HESAPLAYICISI
+        //  GÖRÜNEN EKRAN KÜMÜLATİF ALL-IN HESAPLAYICISI
         // ============================================================
         function updateVisibleBacktestSummary() {
             if (!isBacktestActive || calculatedSignals.length === 0) return;
@@ -821,11 +821,11 @@
             if (netPnlPct >= 0) {
                 finalBalanceElem.className = 'pnl-badge-up';
                 netPnlElem.className = 'pnl-badge-up';
-                netPnlElem.innerText = `+${netPnlPct.toFixed(2)}% (+$${(currentCapital - initialCapital).toFixed(2)}) 🚀`;
+                netPnlElem.innerText = `+${netPnlPct.toFixed(2)}% (+$${(currentCapital - initialCapital).toFixed(2)}) `;
             } else {
                 finalBalanceElem.className = 'pnl-badge-down';
                 netPnlElem.className = 'pnl-badge-down';
-                netPnlElem.innerText = `${netPnlPct.toFixed(2)}% (-$${(initialCapital - currentCapital).toFixed(2)}) 🔻`;
+                netPnlElem.innerText = `${netPnlPct.toFixed(2)}% (-$${(initialCapital - currentCapital).toFixed(2)}) `;
             }
         }
 
@@ -907,10 +907,10 @@
             }
 
             if (lastReg > 0.5 && lastClose >= lastEma) {
-                hudTrend.innerText = 'GÜÇLÜ BOĞA 🚀';
+                hudTrend.innerText = 'GÜÇLÜ BOĞA';
                 hudTrend.className = 'hud-tag tag-bull';
             } else if (lastReg < -0.5 && lastClose < lastEma) {
-                hudTrend.innerText = 'GÜÇLÜ AYI 🔻';
+                hudTrend.innerText = 'GÜÇLÜ AYI';
                 hudTrend.className = 'hud-tag tag-bear';
             } else {
                 hudTrend.innerText = 'NÖTR / DÖNÜŞ';
@@ -922,7 +922,7 @@
         }
 
         // ============================================================
-        // 🎆 EKRAN GENELİ MİNİK HAVAİ FİŞEK MOTORU (120 FPS SIFIR CPU YÜKÜ)
+        //  EKRAN GENELİ MİNİK HAVAİ FİŞEK MOTORU (120 FPS SIFIR CPU YÜKÜ)
         // ============================================================
         const SCREEN_FIREWORKS = [
             { relX: 0.12, relY: 0.22, seed: 1.2, speed: 1.15, size: 28, color: '#10b981' },
@@ -992,7 +992,7 @@
         }
 
         // ============================================================
-        // 🎯 60/120 FPS GPU SMOOTH LERP ANİMASYON DURUM MOTORU
+        //  60/120 FPS GPU SMOOTH LERP ANİMASYON DURUM MOTORU
         // ============================================================
         let hoveredCandleIdx = -1;
         let focusAnim = {
@@ -1001,7 +1001,7 @@
         };
 
         // ============================================================
-        // ⚡ HİBRİT CANVAS 2D TURBO ÇİZİCİSİ (TABLET / MOBİL / SAFARI UYUMLU)
+        //  HİBRİT CANVAS 2D TURBO ÇİZİCİSİ (TABLET / MOBİL / SAFARI UYUMLU)
         // ============================================================
         function draw2DTurboFallback(ctx, w, h, curStart, curEnd, minP, maxP) {
             ctx.fillStyle = '#060a17';
@@ -1131,7 +1131,7 @@
             }
 
             // ============================================================
-            // 🔴🟢 CANLI MUM FİYAT ÇİZGİSİ (TRADINGVIEW DİNAMİK KESİKLİ ÇİZGİ)
+            //  CANLI MUM FİYAT ÇİZGİSİ (TRADINGVIEW DİNAMİK KESİKLİ ÇİZGİ)
             // ============================================================
             if (totalCandles > 0 && candleDataBase[totalCandles - 1]) {
                 const lastCandle = candleDataBase[totalCandles - 1];
@@ -1255,7 +1255,7 @@
                 ctx2d.restore();
             }
 
-            // 3. 🚨 BAŞARISIZ (STOP) SİNYALDE TÜM EKRANDA KIRMIZI İKAZ LAMBASI MODU
+            // 3.  BAŞARISIZ (STOP) SİNYALDE TÜM EKRANDA KIRMIZI İKAZ LAMBASI MODU
             if (activeFocusSig && activeFocusSig.btStatus === 'SL' && focusAnim.progress > 0.01) {
                 const warningPulse = 0.5 + 0.5 * Math.sin(timeNow * 0.007); // 0.0 - 1.0 arası nefes alan nabız
                 const redAlpha = (0.08 + 0.14 * warningPulse) * focusAnim.progress;
@@ -1329,7 +1329,7 @@
                 ctx2d.lineWidth = isTpWin ? 1.8 : 1;
 
                 let text = isBuy ? `▲ ${sig.type}` : `▼ ${sig.type}`;
-                if (isBacktestActive && isTpWin) text += ' 🏆 TP';
+                if (isBacktestActive && isTpWin) text += ' [TP]';
 
                 ctx2d.font = 'bold 10.5px "SF Pro Text", "Segoe UI", sans-serif';
                 const textMetrics = ctx2d.measureText(text);
@@ -1364,7 +1364,7 @@
 
                 // Sadece Mum Hizasında Kalan Dikey Kesikli Mavi TP ve Pembe SL Seviyeleri & Emojileri
                 if (visibleCount < 500) {
-                    // 1. DİKEY KESİKLİ MAVİ TP ÇİZGİSİ & 🎯 EMOJİSİ
+                    // 1. DİKEY KESİKLİ MAVİ TP ÇİZGİSİ &  EMOJİSİ
                     ctx2d.strokeStyle = '#38bdf8'; // Mavi
                     ctx2d.lineWidth = 1.5;
                     ctx2d.setLineDash([3, 3]);
@@ -1380,14 +1380,19 @@
                     ctx2d.lineTo(screenX + 6, tpY);
                     ctx2d.stroke();
 
-                    // TP Emojisi 🎯
+                    // TP Emojisi 
                     ctx2d.font = '11.5px "Apple Color Emoji", "Segoe UI Emoji", sans-serif';
                     ctx2d.textAlign = 'center';
                     ctx2d.textBaseline = 'middle';
                     const tpEmojiY = (tpY < entryY) ? (tpY - 9) : (tpY + 9);
-                    ctx2d.fillText('🎯', screenX, tpEmojiY);
+                    
+                    // Vector TP Indicator Tag
+                    ctx2d.font = 'bold 9px "SF Pro Text", "Segoe UI", sans-serif';
+                    ctx2d.fillStyle = '#38bdf8';
+                    ctx2d.fillText('TP', screenX, tpEmojiY);
 
-                    // 2. DİKEY KESİKLİ PEMBE SL ÇİZGİSİ & 🛡️ EMOJİSİ
+
+                    // 2. DİKEY KESİKLİ PEMBE SL ÇİZGİSİ & ️ EMOJİSİ
                     ctx2d.strokeStyle = '#ec4899'; // Pembe
                     ctx2d.lineWidth = 1.5;
                     ctx2d.setLineDash([3, 3]);
@@ -1403,18 +1408,23 @@
                     ctx2d.lineTo(screenX + 6, slY);
                     ctx2d.stroke();
 
-                    // SL Emojisi 🛡️
+                    // SL Emojisi ️
                     ctx2d.font = '11.5px "Apple Color Emoji", "Segoe UI Emoji", sans-serif';
                     ctx2d.textAlign = 'center';
                     ctx2d.textBaseline = 'middle';
                     const slEmojiY = (slY < entryY) ? (slY - 9) : (slY + 9);
-                    ctx2d.fillText('🛡️', screenX, slEmojiY);
+                    
+                    // Vector SL Indicator Tag
+                    ctx2d.font = 'bold 9px "SF Pro Text", "Segoe UI", sans-serif';
+                    ctx2d.fillStyle = '#ec4899';
+                    ctx2d.fillText('SL', screenX, slEmojiY);
+
                 }
 
                 ctx2d.restore();
             }
 
-            // 6. 🌟 SAF GPU SMOOTH ODAK MODU (PÜRÜZSÜZ FADE-IN VE SCALE İLE BELİREN ELEMANLAR)
+            // 6.  SAF GPU SMOOTH ODAK MODU (PÜRÜZSÜZ FADE-IN VE SCALE İLE BELİREN ELEMANLAR)
             if (activeFocusSig && focusAnim.progress > 0.002) {
                 const sig = activeFocusSig;
                 const candleCenter = sig.index + 0.5;
@@ -1530,7 +1540,7 @@
                     ctx2d.fillStyle = 'rgba(6, 78, 59, 0.96)';
                     ctx2d.strokeStyle = '#10b981';
                     ctx2d.lineWidth = 2;
-                    const tpText = `🎯 TP HEDEFİ: $${sig.tp.toFixed(1)} (+%${targetPnlPct}) ${isTpWin ? '🏆 KAZANDI' : ''}`;
+                    const tpText = `TP HEDEFİ: ${sig.tp.toFixed(1)} (+%${targetPnlPct}) ${isTpWin ? "[BAŞARILI]" : ""}`;
                     ctx2d.font = 'bold 12.5px "SF Pro Text", "Segoe UI", sans-serif';
                     const tpMetrics = ctx2d.measureText(tpText);
                     const tpW = Math.round((tpMetrics.width + 18) * (0.90 + 0.10 * prog));
@@ -1548,7 +1558,7 @@
                     ctx2d.fillStyle = 'rgba(127, 29, 29, 0.96)';
                     ctx2d.strokeStyle = '#ef4444';
                     ctx2d.lineWidth = 2;
-                    const slText = `🛡️ STOP LOSS: $${sig.sl.toFixed(1)} (-%${riskPnlPct}) ${isSlLoss ? '❌ STOP' : ''}`;
+                    const slText = `STOP LOSS: ${sig.sl.toFixed(1)} (-%${riskPnlPct}) ${isSlLoss ? "[STOP]" : ""}`;
                     ctx2d.font = 'bold 12.5px "SF Pro Text", "Segoe UI", sans-serif';
                     const slMetrics = ctx2d.measureText(slText);
                     const slW = Math.round((slMetrics.width + 18) * (0.90 + 0.10 * prog));
@@ -1563,7 +1573,7 @@
                     ctx2d.fillText(slText, badgeCenterX, slY);
 
                     // 3. Giriş Seviye Rozeti (Mumun SOLUNA doğru kayar ve mumla arasında minik bir boşlukla hizalanır)
-                    const entryText = `⚡ GİRİŞ: $${sig.price.toFixed(1)} | R:R 1 : ${sig.rrRatio.toFixed(2)}`;
+                    const entryText = `GİRİŞ: ${sig.price.toFixed(1)} | R:R 1 : ${sig.rrRatio.toFixed(2)}`;
                     ctx2d.font = 'bold 11px "SF Pro Text", "Segoe UI", sans-serif';
                     const entryMetrics = ctx2d.measureText(entryText);
                     const entryW = Math.round((entryMetrics.width + 16) * (0.90 + 0.10 * prog));
@@ -1591,7 +1601,7 @@
         }
 
         // ============================================================
-        // 📥 BINANCE MTF ÇOKLU ZAMAN DİLİMİ VERİ ÇEKİCİ
+        //  BINANCE MTF ÇOKLU ZAMAN DİLİMİ VERİ ÇEKİCİ
         // ============================================================
         async function fetchKlinesForInterval(symbol, interval, targetCount) {
             let allKlines = [];
@@ -1815,6 +1825,13 @@
         }
 
         canvasContainer.addEventListener('mousedown', (e) => {
+            if (e.button !== 0) return;
+            if (drawingEngine) {
+                if (drawingEngine.activeTool !== 'cursor') return; // Çizim aracı etkinken grafik sabit durur
+                const rect = canvasContainer.getBoundingClientRect();
+                const hit = drawingEngine.hitTest(e.clientX - rect.left, e.clientY - rect.top);
+                if (hit.drawing || hit.handleIdx !== -1) return; // Çizim veya tutamaç seçilirken grafik sabit durur
+            }
             startPan(e.clientX, e.clientY);
         });
 
@@ -1923,20 +1940,20 @@
                 const sigAtCandle = calculatedSignals.find(s => s.index === cIdx);
                 if (sigAtCandle) {
                     signalInspector.classList.add('active');
-                    inspType.innerText = `⚡ ${sigAtCandle.label}`;
+                    inspType.innerText = `SİNYAL: ${sigAtCandle.label}`;
                     inspType.style.color = sigAtCandle.isBuy ? '#10b981' : '#ef4444';
                     inspRr.innerText = `R:R: 1 : ${sigAtCandle.rrRatio.toFixed(2)}`;
 
                     if (isBacktestActive) {
                         inspBtResult.style.display = 'block';
                         if (sigAtCandle.btStatus === 'TP') {
-                            inspBtResult.innerText = `🏆 BACKTEST: TP BAŞARILI! (+${sigAtCandle.pnlPct.toFixed(2)}%)`;
+                            inspBtResult.innerText = `BACKTEST: TP BAŞARILI (+${sigAtCandle.pnlPct.toFixed(2)}%)`;
                             inspBtResult.style.color = '#10b981';
                         } else if (sigAtCandle.btStatus === 'SL') {
-                            inspBtResult.innerText = `❌ BACKTEST: STOP OLDU! (${sigAtCandle.pnlPct.toFixed(2)}%)`;
+                            inspBtResult.innerText = `BACKTEST: STOP LOSS (${sigAtCandle.pnlPct.toFixed(2)}%)`;
                             inspBtResult.style.color = '#ef4444';
                         } else {
-                            inspBtResult.innerText = '⌛ BACKTEST: İŞLEM HALA AÇIK';
+                            inspBtResult.innerText = 'BACKTEST: İŞLEM AÇIK';
                             inspBtResult.style.color = '#38bdf8';
                         }
                     } else {
@@ -1944,8 +1961,8 @@
                     }
 
                     inspEntry.innerText = `GİRİŞ: $${sigAtCandle.price.toFixed(2)}`;
-                    inspTp.innerText = `🎯 TP: $${sigAtCandle.tp.toFixed(2)}`;
-                    inspSl.innerText = `🛡️ SL: $${sigAtCandle.sl.toFixed(2)}`;
+                    inspTp.innerText = `TP HEDEFİ: ${sigAtCandle.tp.toFixed(2)}`;
+                    inspSl.innerText = `STOP LOSS: ${sigAtCandle.sl.toFixed(2)}`;
                     inspExtra.innerText = sigAtCandle.extraInfo || '';
                 } else {
                     signalInspector.classList.remove('active');
@@ -2026,13 +2043,17 @@
         }, { passive: false });
 
         // ==========================================
-        // 📱 TABLET VE DOKUNMATİK EKRAN DESTEĞİ (TOUCH GESTURES & PINCH ZOOM)
+        //  TABLET VE DOKUNMATİK EKRAN DESTEĞİ (TOUCH GESTURES & PINCH ZOOM)
         // ==========================================
         let touchStartDist = 0;
         let isTouching = false;
 
         canvasContainer.addEventListener('touchstart', (e) => {
             if (e.touches.length === 1) {
+                if (drawingEngine && drawingEngine.activeTool !== 'cursor') {
+                    // Dokunmatik ekranda çizim modu: grafiği sürükleme, çizim yap
+                    return;
+                }
                 isTouching = true;
                 isChartDragging = true;
                 const t = e.touches[0];
@@ -2184,7 +2205,7 @@
         }
 
         // ============================================================
-        // 🎨 TRADINGVIEW ÇİZİM MOTORU (STANDALONE DRAWING ENGINE)
+        //  TRADINGVIEW ÇİZİM MOTORU (STANDALONE DRAWING ENGINE)
         // ============================================================
         class TradingViewDrawingEngine {
             constructor(canvasContainer, overlayCanvas, options = {}) {
@@ -2302,10 +2323,34 @@
             initEvents() {
                 if (!this.container) return;
 
+                // Mouse Eventleri
                 this.container.addEventListener('mousedown', (e) => this.handleMouseDown(e));
                 window.addEventListener('mousemove', (e) => this.handleMouseMove(e));
                 window.addEventListener('mouseup', (e) => this.handleMouseUp(e));
                 window.addEventListener('keydown', (e) => this.handleKeyDown(e));
+
+                // Touch (Tablet / Mobil) Çizim Eventleri
+                this.container.addEventListener('touchstart', (e) => {
+                    if (this.activeTool === 'cursor') return;
+                    if (e.touches.length === 1) {
+                        const t = e.touches[0];
+                        this.handleMouseDown({ button: 0, clientX: t.clientX, clientY: t.clientY, stopPropagation: () => e.stopPropagation() });
+                    }
+                }, { passive: true });
+
+                window.addEventListener('touchmove', (e) => {
+                    if (this.activeTool === 'cursor' && !this.isDragging && !this.isDraggingHandle) return;
+                    if (e.touches.length === 1) {
+                        const t = e.touches[0];
+                        this.handleMouseMove({ clientX: t.clientX, clientY: t.clientY });
+                    }
+                }, { passive: true });
+
+                window.addEventListener('touchend', (e) => {
+                    if (this.activeTool !== 'cursor' || this.isDragging || this.isDraggingHandle) {
+                        this.handleMouseUp();
+                    }
+                }, { passive: true });
             }
 
             handleMouseDown(e) {
@@ -2582,7 +2627,7 @@
                     } else if (d.type === 'text') {
                         ctx.font = 'bold 13px "SF Pro Text", "Segoe UI", sans-serif';
                         ctx.fillStyle = col;
-                        ctx.fillText('✍️ Not: ' + (p1.price.toFixed(2)), x1, y1);
+                        ctx.fillText('Not: ' + (p1.price.toFixed(2)), x1, y1);
                     }
 
                     if (isSel && !this.hideAll) {

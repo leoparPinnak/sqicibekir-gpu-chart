@@ -1093,25 +1093,7 @@
                                 <span>MUM BİLGİSİ: <span id="hud-candle-info" class="hud-tag" style="background: rgba(56, 189, 248, 0.2); color: #38bdf8; border: 1px solid #38bdf8; font-weight: 700;">Görünen: 150 / Toplam: 3.000</span></span>
                             </div>
 
-                            <!-- GÖRÜNEN EKRAN KÜMÜLATİF BACKTEST ROZETİ -->
-                            <div class="visible-backtest-card" id="visible-backtest-card">
-                                <div class="vbt-header">
-                                    <span class="active-strat-title" id="vbt-strat-title">4. ASİMETRİK PRO (BUY1: 2.2x, BUY2: 4.0x, SELL: 2.5x)</span>
-                                    <span id="vbt-candle-span" style="color: #38bdf8; font-weight: 700; font-size: 11px;">Görünen: 150 / Toplam: 3.000 Mum</span>
-                                </div>
-                                <div class="vbt-row">
-                                    <span>Görünen Sinyaller: <b id="vbt-total-sig" style="color: #f8fafc;">0</b> (Kazanma: <b id="vbt-tp-count" style="color: #10b981;">0</b> | Stop: <b id="vbt-sl-count" style="color: #ef4444;">0</b> | Açık: <b id="vbt-open-count" style="color: #38bdf8;">0</b>)</span>
-                                    <span>Kazanma: <span class="bt-stat-badge bt-win" id="vbt-winrate">%0.0</span></span>
-                                </div>
-                                <div class="vbt-row" style="background: rgba(0,0,0,0.3); padding: 4px 6px; border-radius: 5px;">
-                                    <span>Portföy Simülasyonu ($1,000 Giriş):</span>
-                                    <span id="vbt-final-balance" class="pnl-badge-up">$1,000.00</span>
-                                </div>
-                                <div class="vbt-row">
-                                    <span>Kümülatif Net Kâr/Zarar:</span>
-                                    <span id="vbt-net-pnl" class="pnl-badge-up">+%0.00</span>
-                                </div>
-                            </div>
+                            <!-- GÖRÜNEN EKRAN KÜMÜLATİF BACKTEST ROZETİ KALDIRILDI -->
 
                             <div class="ohlc-tooltip">
                                 <span>O: <span class="ohlc-val" id="ohlc-o">0.00</span></span>
@@ -1513,7 +1495,7 @@
                 if (btn0) { btn0.innerHTML = '0. Sabit 1:1.67'; btn0.title = '1H Sabit 1:1.67 R:R (1.5x ATR SL, 2.5x ATR TP)'; }
             }
 
-            document.getElementById('vbt-strat-title').innerText = getStratTitle(activeStrategy, tf);
+            const vbtTitle = document.getElementById('vbt-strat-title'); if (vbtTitle) vbtTitle.innerText = getStratTitle(activeStrategy, currentTimeframe);
             document.getElementById('active-strat-footer').innerHTML = getStratFooter(activeStrategy, tf);
         }
 
@@ -1523,7 +1505,7 @@
                 const btn = document.getElementById(`strat-btn-${id}`);
                 if (btn) btn.classList.toggle('active', id === stratId);
             });
-            document.getElementById('vbt-strat-title').innerText = getStratTitle(stratId, currentTimeframe);
+            const vbtTitle = document.getElementById('vbt-strat-title'); if (vbtTitle) vbtTitle.innerText = getStratTitle(activeStrategy, currentTimeframe);
             document.getElementById('active-strat-footer').innerHTML = getStratFooter(stratId, currentTimeframe);
             updateGpuTextures();
         };
@@ -1536,10 +1518,10 @@
         window.toggleBacktestMode = function() {
             isBacktestActive = !isBacktestActive;
             const btn = document.getElementById('btn-backtest');
-            const vbtCard = document.getElementById('visible-backtest-card');
-            btn.classList.toggle('active', isBacktestActive);
-            btn.innerText = isBacktestActive ? 'Backtest: AÇIK' : ' Backtest Modu';
-            vbtCard.style.display = isBacktestActive ? 'flex' : 'none';
+            if (btn) {
+                btn.classList.toggle('active', isBacktestActive);
+                btn.innerText = isBacktestActive ? 'Backtest: AÇIK' : 'Backtest Modu';
+            }
         };
 
         // ==========================================
@@ -2175,25 +2157,26 @@
             const winRate = totalFinished > 0 ? ((tpCount / totalFinished) * 100).toFixed(1) : '0.0';
             const netPnlPct = (((currentCapital - initialCapital) / initialCapital) * 100);
 
-            document.getElementById('vbt-total-sig').innerText = visibleSignals.length;
-            document.getElementById('vbt-tp-count').innerText = tpCount;
-            document.getElementById('vbt-sl-count').innerText = slCount;
-            document.getElementById('vbt-open-count').innerText = openCount;
-            document.getElementById('vbt-winrate').innerText = `%${winRate}`;
+            const totalSigElem = document.getElementById('vbt-total-sig');
+            if (totalSigElem) {
+                totalSigElem.innerText = visibleSignals.length;
+                const tpElem = document.getElementById('vbt-tp-count'); if (tpElem) tpElem.innerText = tpCount;
+                const slElem = document.getElementById('vbt-sl-count'); if (slElem) slElem.innerText = slCount;
+                const openElem = document.getElementById('vbt-open-count'); if (openElem) openElem.innerText = openCount;
+                const winRateElem = document.getElementById('vbt-winrate'); if (winRateElem) winRateElem.innerText = `%${winRate}`;
 
-            const finalBalanceElem = document.getElementById('vbt-final-balance');
-            const netPnlElem = document.getElementById('vbt-net-pnl');
+                const finalBalanceElem = document.getElementById('vbt-final-balance');
+                const netPnlElem = document.getElementById('vbt-net-pnl');
 
-            finalBalanceElem.innerText = `$${currentCapital.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
-            
-            if (netPnlPct >= 0) {
-                finalBalanceElem.className = 'pnl-badge-up';
-                netPnlElem.className = 'pnl-badge-up';
-                netPnlElem.innerText = `+${netPnlPct.toFixed(2)}% (+$${(currentCapital - initialCapital).toFixed(2)}) `;
-            } else {
-                finalBalanceElem.className = 'pnl-badge-down';
-                netPnlElem.className = 'pnl-badge-down';
-                netPnlElem.innerText = `${netPnlPct.toFixed(2)}% (-$${(initialCapital - currentCapital).toFixed(2)}) `;
+                if (finalBalanceElem) {
+                    finalBalanceElem.innerText = `${currentCapital.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+                    finalBalanceElem.className = netPnlPct >= 0 ? 'pnl-badge-up' : 'pnl-badge-down';
+                }
+                
+                if (netPnlElem) {
+                    netPnlElem.className = netPnlPct >= 0 ? 'pnl-badge-up' : 'pnl-badge-down';
+                    netPnlElem.innerText = netPnlPct >= 0 ? `+${netPnlPct.toFixed(2)}% (+${(currentCapital - initialCapital).toFixed(2)})` : `${netPnlPct.toFixed(2)}% (-${(initialCapital - currentCapital).toFixed(2)})`;
+                }
             }
         }
 
@@ -3193,6 +3176,13 @@
         }
 
         canvasContainer.addEventListener('mousedown', (e) => {
+            if (e.button !== 0) return;
+            if (drawingEngine) {
+                if (drawingEngine.activeTool !== 'cursor') return; // Çizim aracı etkinken grafik sabit durur
+                const rect = canvasContainer.getBoundingClientRect();
+                const hit = drawingEngine.hitTest(e.clientX - rect.left, e.clientY - rect.top);
+                if (hit.drawing || hit.handleIdx !== -1) return; // Çizim veya tutamaç seçilirken grafik sabit durur
+            }
             startPan(e.clientX, e.clientY);
         });
 
@@ -3411,6 +3401,10 @@
 
         canvasContainer.addEventListener('touchstart', (e) => {
             if (e.touches.length === 1) {
+                if (drawingEngine && drawingEngine.activeTool !== 'cursor') {
+                    // Dokunmatik ekranda çizim modu: grafiği sürükleme, çizim yap
+                    return;
+                }
                 isTouching = true;
                 isChartDragging = true;
                 const t = e.touches[0];
@@ -3680,10 +3674,34 @@
             initEvents() {
                 if (!this.container) return;
 
+                // Mouse Eventleri
                 this.container.addEventListener('mousedown', (e) => this.handleMouseDown(e));
                 window.addEventListener('mousemove', (e) => this.handleMouseMove(e));
                 window.addEventListener('mouseup', (e) => this.handleMouseUp(e));
                 window.addEventListener('keydown', (e) => this.handleKeyDown(e));
+
+                // Touch (Tablet / Mobil) Çizim Eventleri
+                this.container.addEventListener('touchstart', (e) => {
+                    if (this.activeTool === 'cursor') return;
+                    if (e.touches.length === 1) {
+                        const t = e.touches[0];
+                        this.handleMouseDown({ button: 0, clientX: t.clientX, clientY: t.clientY, stopPropagation: () => e.stopPropagation() });
+                    }
+                }, { passive: true });
+
+                window.addEventListener('touchmove', (e) => {
+                    if (this.activeTool === 'cursor' && !this.isDragging && !this.isDraggingHandle) return;
+                    if (e.touches.length === 1) {
+                        const t = e.touches[0];
+                        this.handleMouseMove({ clientX: t.clientX, clientY: t.clientY });
+                    }
+                }, { passive: true });
+
+                window.addEventListener('touchend', (e) => {
+                    if (this.activeTool !== 'cursor' || this.isDragging || this.isDraggingHandle) {
+                        this.handleMouseUp();
+                    }
+                }, { passive: true });
             }
 
             handleMouseDown(e) {
