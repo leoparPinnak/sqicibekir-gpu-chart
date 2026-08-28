@@ -775,8 +775,15 @@
             if (!isBacktestActive || calculatedSignals.length === 0) return;
 
             const visibleSignals = calculatedSignals.filter(s => s.index >= viewStart && s.index <= viewEnd);
-            const vSpan = Math.round(viewEnd - viewStart);
-            document.getElementById('vbt-candle-span').innerText = `${vSpan} Mum Aralığı`;
+            const vSpan = Math.max(1, Math.round(viewEnd - viewStart));
+            const vbtSpanElem = document.getElementById('vbt-candle-span');
+            if (vbtSpanElem) {
+                vbtSpanElem.innerText = `Görünen: ${vSpan} / Toplam: ${totalCandles.toLocaleString('tr-TR')} Mum`;
+            }
+            const hudCandleElem = document.getElementById('hud-candle-info');
+            if (hudCandleElem) {
+                hudCandleElem.innerText = `Görünen: ${vSpan} / Toplam: ${totalCandles.toLocaleString('tr-TR')}`;
+            }
 
             let tpCount = 0;
             let slCount = 0;
@@ -1110,7 +1117,7 @@
             const cssW = canvasContainer.clientWidth;
             const cssH = canvasContainer.clientHeight;
 
-            if (!ctx2d || totalCandles === 0 || !layers.signals) return;
+            if (!ctx2d || totalCandles === 0) return;
 
             const curStart = (smoothViewStart && isFinite(smoothViewStart)) ? smoothViewStart : viewStart;
             const curEnd = (smoothViewEnd && isFinite(smoothViewEnd)) ? smoothViewEnd : viewEnd;
@@ -1122,6 +1129,53 @@
                 if (diff <= 0.0001) return cssH / 2;
                 return Math.round(cssH - ((price - minPrice) / diff) * cssH);
             }
+
+            // ============================================================
+            // 🔴🟢 CANLI MUM FİYAT ÇİZGİSİ (TRADINGVIEW DİNAMİK KESİKLİ ÇİZGİ)
+            // ============================================================
+            if (totalCandles > 0 && candleDataBase[totalCandles - 1]) {
+                const lastCandle = candleDataBase[totalCandles - 1];
+                const lastClose = lastCandle.close;
+                const lastY = getY(lastClose);
+                const lastCandleCenter = totalCandles - 1 + 0.5;
+                const lastX = Math.round(((lastCandleCenter - curStart) / visibleCount) * cssW);
+                const isUp = lastClose >= lastCandle.open;
+                const lineColor = isUp ? 'rgba(16, 185, 129, 0.90)' : 'rgba(239, 68, 68, 0.90)';
+                const glowColor = isUp ? 'rgba(16, 185, 129, 0.40)' : 'rgba(239, 68, 68, 0.40)';
+
+                ctx2d.save();
+
+                // 1. Canlı mumdan sağ fiyat eksenine kadar uzanan dinamik kesikli çizgi
+                ctx2d.strokeStyle = lineColor;
+                ctx2d.lineWidth = 1.4;
+                ctx2d.setLineDash([5, 4]);
+                ctx2d.beginPath();
+                const startLineX = Math.max(0, Math.min(cssW, lastX));
+                ctx2d.moveTo(startLineX, lastY);
+                ctx2d.lineTo(cssW, lastY);
+                ctx2d.stroke();
+
+                // 2. Canlı Mum Başında Parlayan Nabız Noktası (Pulsing Live Dot)
+                if (lastX >= 0 && lastX <= cssW) {
+                    ctx2d.setLineDash([]);
+                    ctx2d.fillStyle = lineColor;
+                    ctx2d.beginPath();
+                    ctx2d.arc(lastX, lastY, 3.5, 0, Math.PI * 2);
+                    ctx2d.fill();
+
+                    // Nefes alan parlayan dış halka
+                    const pulseRadius = 4.0 + Math.sin(timeNow * 0.007) * 3.0;
+                    ctx2d.strokeStyle = glowColor;
+                    ctx2d.lineWidth = 1.5;
+                    ctx2d.beginPath();
+                    ctx2d.arc(lastX, lastY, Math.max(4.0, pulseRadius), 0, Math.PI * 2);
+                    ctx2d.stroke();
+                }
+
+                ctx2d.restore();
+            }
+
+            if (!layers.signals) return;
 
             // 1. Hassas Hover Kontrolü: İmleç TAM OLARAK mum barının veya sinyal etiketinin üzerinde mi?
             let preciseHoveredSig = null;
@@ -2117,11 +2171,15 @@
             priceLabelsContainer.innerHTML = html;
 
             if (totalCandles > 0 && candleDataBase[totalCandles - 1]) {
-                const lastClose = candleDataBase[totalCandles - 1].close;
+                const lastCandle = candleDataBase[totalCandles - 1];
+                const lastClose = lastCandle.close;
                 const lastCloseNorm = (lastClose - minPrice) / (maxPrice - minPrice);
                 const lastCloseTop = (1 - lastCloseNorm) * 100;
                 currentPriceBadge.style.top = `${lastCloseTop}%`;
                 currentPriceBadge.innerText = lastClose.toFixed(2);
+                const isUp = lastClose >= lastCandle.open;
+                currentPriceBadge.style.background = isUp ? '#10b981' : '#ef4444';
+                currentPriceBadge.style.boxShadow = isUp ? '0 0 12px rgba(16, 185, 129, 0.65)' : '0 0 12px rgba(239, 68, 68, 0.65)';
             }
         }
 
@@ -2135,9 +2193,11 @@
             frameCount++;
             if (now - lastT >= 500) {
                 const fps = Math.round((frameCount * 1000) / (now - lastT));
-                const visibleCount = Math.round(viewEnd - viewStart);
+                const visibleCount = Math.max(1, Math.round(viewEnd - viewStart));
                 document.getElementById('fps-stat').innerText = fps;
                 document.getElementById('visible-candles-stat').innerText = visibleCount;
+                const totalCandlesElem = document.getElementById('total-candles-stat');
+                if (totalCandlesElem) totalCandlesElem.innerText = totalCandles.toLocaleString('tr-TR');
                 frameCount = 0;
                 lastT = now;
             }
