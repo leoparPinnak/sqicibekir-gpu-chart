@@ -997,20 +997,19 @@
         // ⚡ HİBRİT CANVAS 2D TURBO ÇİZİCİSİ (TABLET / MOBİL / SAFARI UYUMLU)
         // ============================================================
         function draw2DTurboFallback(ctx, w, h, curStart, curEnd, minP, maxP) {
-            ctx.clearRect(0, 0, w, h);
             ctx.fillStyle = '#060a17';
             ctx.fillRect(0, 0, w, h);
 
             if (totalCandles === 0) return;
 
             const visibleCount = Math.max(1, curEnd - curStart);
-            const candleW = Math.max(1, Math.floor(w / visibleCount));
+            const candleW = w / visibleCount;
             const bodyW = Math.max(1, Math.floor(candleW * 0.72));
 
             function getY(price) {
                 const diff = maxP - minP;
                 if (diff <= 0.0001) return h / 2;
-                return h - ((price - minP) / diff) * h;
+                return Math.round(h - ((price - minP) / diff) * h);
             }
 
             const startI = Math.max(0, Math.floor(curStart));
@@ -1100,7 +1099,7 @@
                 const topY = Math.min(openY, closeY);
                 const bodyH = Math.max(1.5, Math.abs(closeY - openY));
                 ctx.fillStyle = color;
-                ctx.fillRect(Math.round(x - bodyW / 2), Math.round(topY), bodyW, Math.round(bodyH));
+                ctx.fillRect(Math.floor(x - bodyW / 2), Math.round(topY), Math.max(1, bodyW), Math.max(1, Math.round(bodyH)));
             }
         }
 
@@ -1111,12 +1110,7 @@
             const cssW = canvasContainer.clientWidth;
             const cssH = canvasContainer.clientHeight;
 
-            if (!ctx2d || totalCandles === 0) return;
-
-            if (isGpuActive) {
-                ctx2d.clearRect(0, 0, cssW, cssH);
-            }
-            if (!layers.signals) return;
+            if (!ctx2d || totalCandles === 0 || !layers.signals) return;
 
             const curStart = (smoothViewStart && isFinite(smoothViewStart)) ? smoothViewStart : viewStart;
             const curEnd = (smoothViewEnd && isFinite(smoothViewEnd)) ? smoothViewEnd : viewEnd;
@@ -1986,24 +1980,44 @@
         canvasContainer.addEventListener('touchstart', (e) => {
             if (e.touches.length === 1) {
                 isTouching = true;
+                isChartDragging = true;
                 const t = e.touches[0];
-                startPan(t.clientX, t.clientY);
+                const rect = canvas.getBoundingClientRect();
+                chartDragStartX = t.clientX;
+                chartDragStartY = t.clientY;
+                mouseCssX = t.clientX - rect.left;
+                mouseCssY = t.clientY - rect.top;
+                mousePixelX = mouseCssX * (window.devicePixelRatio || 1);
+                mousePixelY = (rect.height - mouseCssY) * (window.devicePixelRatio || 1);
+                origViewStart = viewStart;
+                origViewEnd = viewEnd;
+                origPriceOffset = priceOffset;
+                canvasContainer.classList.add('grabbing');
             } else if (e.touches.length === 2) {
                 isTouching = true;
+                isChartDragging = false;
                 const dx = e.touches[0].clientX - e.touches[1].clientX;
                 const dy = e.touches[0].clientY - e.touches[1].clientY;
                 touchStartDist = Math.hypot(dx, dy);
                 origViewStart = viewStart;
                 origViewEnd = viewEnd;
+                origPriceOffset = priceOffset;
             }
-        }, { passive: true });
+        }, { passive: false });
 
         canvasContainer.addEventListener('touchmove', (e) => {
             if (!isTouching || totalCandles === 0) return;
+            e.preventDefault();
             const rect = canvas.getBoundingClientRect();
 
             if (e.touches.length === 1 && isChartDragging) {
                 const t = e.touches[0];
+                mouseCssX = t.clientX - rect.left;
+                mouseCssY = t.clientY - rect.top;
+                mousePixelX = mouseCssX * (window.devicePixelRatio || 1);
+                mousePixelY = (rect.height - mouseCssY) * (window.devicePixelRatio || 1);
+
+                // 1. Yatay Sürükleme
                 const deltaPx = t.clientX - chartDragStartX;
                 const candleSpan = origViewEnd - origViewStart;
                 const deltaCandles = (deltaPx / rect.width) * candleSpan;
@@ -2020,6 +2034,7 @@
                 viewStart = nStart;
                 viewEnd = nEnd;
 
+                // 2. Dikey Sürükleme
                 const deltaPy = t.clientY - chartDragStartY;
                 const currentPriceSpan = maxPrice - minPrice;
                 if (currentPriceSpan > 0 && rect.height > 0) {
@@ -2045,7 +2060,7 @@
                 viewEnd = nEnd;
                 updateVisibleBacktestSummary();
             }
-        }, { passive: true });
+        }, { passive: false });
 
         window.addEventListener('touchend', () => {
             isTouching = false;
@@ -2128,8 +2143,9 @@
             }
 
             const dpr = Math.min(window.devicePixelRatio || 1, 2.5);
-            const cssW = canvasContainer.clientWidth;
-            const cssH = canvasContainer.clientHeight;
+            const rect = canvasContainer.getBoundingClientRect();
+            const cssW = rect.width || canvasContainer.clientWidth;
+            const cssH = rect.height || canvasContainer.clientHeight;
             const w = Math.max(10, Math.floor(cssW * dpr));
             const h = Math.max(10, Math.floor(cssH * dpr));
 
@@ -2138,11 +2154,18 @@
                 canvas.height = h;
                 overlayCanvas.width = w;
                 overlayCanvas.height = h;
-                ctx2d.resetTransform();
-                ctx2d.scale(dpr, dpr);
-                ctx2d.imageSmoothingEnabled = true;
-                ctx2d.imageSmoothingQuality = 'high';
                 if (isGpuActive && gl) gl.viewport(0, 0, w, h);
+            }
+
+            ctx2d.setTransform(dpr, 0, 0, dpr, 0, 0);
+            ctx2d.imageSmoothingEnabled = true;
+            ctx2d.imageSmoothingQuality = 'high';
+            ctx2d.clearRect(0, 0, cssW, cssH);
+
+            if (isGpuActive) {
+                canvas.style.display = 'block';
+            } else {
+                canvas.style.display = 'none';
             }
 
             if (totalCandles > 0) {
