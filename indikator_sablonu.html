@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SqiciBekiRBindikatöR // Quant Optimizasyon & Strateji Laboratuvarı</title>
+    <title>TradeChart Pro // Multi-Timeframe GPU Trading Terminal</title>
     <style>
         * {
             margin: 0;
@@ -863,7 +863,7 @@
         <!-- ÜST MENÜ -->
         <div class="top-toolbar">
             <div class="symbol-section">
-                <span class="indicator-badge">SQICIBEKIR TERMINAL</span>
+                <span class="indicator-badge">TRADECHART PRO</span>
 
                 <select class="symbol-select" id="symbol-select" onchange="changeSymbol(this.value)">
                     <option value="BTCUSDT">BTC / USDT</option>
@@ -1724,9 +1724,9 @@
         };
 
         // ============================================================
-        // SQICIBEKIRBINDIKATÖR: ÇOKLU STRATEJİLİ HESAPLAMA MOTORU
+        // TRADECHART PRO: MULTI-STRATEGY QUANT CALCULATION ENGINE
         // ============================================================
-        function calculateSqiciBekiR_MultiStrategy(dataBase, dataEma, dataRegime, stratId, tfKey) {
+        function calculateTradeChart_MultiStrategy(dataBase, dataEma, dataRegime, stratId, tfKey) {
             const tfCfg = TIMEFRAME_CONFIGS[tfKey || currentTimeframe] || TIMEFRAME_CONFIGS['1h'];
             const N_base = dataBase.length;
             const N_ema = dataEma.length;
@@ -2309,7 +2309,7 @@
             totalCandles = candleDataBase.length;
             if (totalCandles === 0) return;
 
-            const ind = calculateSqiciBekiR_MultiStrategy(candleDataBase, candleDataEma, candleDataRegime, activeStrategy, currentTimeframe);
+            const ind = calculateTradeChart_MultiStrategy(candleDataBase, candleDataEma, candleDataRegime, activeStrategy, currentTimeframe);
             calculatedSignals = ind.signals;
             calculatedInd = ind;
             const tfCfg = ind.tfCfg || TIMEFRAME_CONFIGS['1h'];

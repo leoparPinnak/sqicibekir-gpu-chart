@@ -1,5 +1,5 @@
 {
-  "name": "sqicibekir-gpu-chart",
+  "name": "tradechart-pro",
   "private": true,
   "version": "1.0.0",
   "type": "module",
@@ -11,5 +11,6 @@
   "devDependencies": {
     "playwright": "^1.62.1",
     "vite": "^5.4.2"
-  }
+  },
+  "description": "TradeChart Pro - Next-Generation Multi-Timeframe WebGL 2.0 Trading Terminal"
 }
