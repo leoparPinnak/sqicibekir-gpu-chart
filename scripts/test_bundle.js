@@ -1552,6 +1552,8 @@
         // ==========================================
         let minPrice = 0;
         let maxPrice = 0;
+        let priceOffset = 0; // Dikey serbest kaydırma ofseti
+        let origPriceOffset = 0;
 
         let isPriceDragging = false;
         let priceDragStartY = 0;
@@ -1559,6 +1561,7 @@
 
         window.resetPriceScale = function() {
             priceScaleFactor = 1.0;
+            priceOffset = 0;
         };
 
         priceAxisElem.addEventListener('mousedown', (e) => {
@@ -1576,10 +1579,11 @@
         });
 
         // ==========================================
-        // YATAY KAYDIRMA (PAN) VE ZOOM
+        // YATAY VE DİKEY SERBEST KAYDIRMA (PAN) VE ZOOM
         // ==========================================
         let isChartDragging = false;
         let chartDragStartX = 0;
+        let chartDragStartY = 0;
         let origViewStart = 0;
         let origViewEnd = 0;
 
@@ -1607,21 +1611,23 @@
         const inspSl = document.getElementById('insp-sl');
         const inspExtra = document.getElementById('insp-extra');
 
-        function startPan(clientX) {
+        function startPan(clientX, clientY) {
             isChartDragging = true;
             chartDragStartX = clientX;
+            chartDragStartY = clientY;
             origViewStart = viewStart;
             origViewEnd = viewEnd;
+            origPriceOffset = priceOffset;
             canvasContainer.classList.add('grabbing');
             timeAxisElem.classList.add('grabbing');
         }
 
         canvasContainer.addEventListener('mousedown', (e) => {
-            startPan(e.clientX);
+            startPan(e.clientX, e.clientY);
         });
 
         timeAxisElem.addEventListener('mousedown', (e) => {
-            startPan(e.clientX);
+            startPan(e.clientX, e.clientY);
             e.preventDefault();
         });
 
@@ -1692,6 +1698,14 @@
 
                 viewStart = nStart;
                 viewEnd = nEnd;
+
+                // 2. Dikey Fiyat Serbest Kaydırma (Y-Axis Free Pan - Doğal El Hareketi Yönü)
+                const deltaPy = e.clientY - chartDragStartY;
+                const currentPriceSpan = maxPrice - minPrice;
+                if (currentPriceSpan > 0 && rect.height > 0) {
+                    const pricePerPixel = currentPriceSpan / rect.height;
+                    priceOffset = origPriceOffset + (deltaPy * pricePerPixel);
+                }
 
                 updateVisibleBacktestSummary();
             }
@@ -1931,8 +1945,8 @@
                 const baseHalfSpan = (maxP - minP) / 2;
                 const scaledHalfSpan = (baseHalfSpan / priceScaleFactor) * 1.05;
 
-                minPrice = baseMid - scaledHalfSpan;
-                maxPrice = baseMid + scaledHalfSpan;
+                minPrice = baseMid - scaledHalfSpan + priceOffset;
+                maxPrice = baseMid + scaledHalfSpan + priceOffset;
 
                 updatePriceScaleLabels();
                 updateTimeScaleLabels();
