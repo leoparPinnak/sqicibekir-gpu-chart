@@ -854,6 +854,100 @@
             margin-left: 8px;
         }
         .fit-all-btn:hover { background: #38bdf8; color: #0f172a; }
+    
+        /* ⚙️ İVME & HASSASİYET KALİBRASYON POPOVER */
+        .velocity-settings-wrap {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+        }
+        .velocity-settings-popover {
+            display: none;
+            position: absolute;
+            bottom: calc(100% + 10px);
+            left: 0;
+            width: 290px;
+            background: #1e222d;
+            border: 1px solid #38bdf8;
+            border-radius: 8px;
+            padding: 12px 14px;
+            box-shadow: 0 14px 40px rgba(0,0,0,0.95);
+            z-index: 99999;
+            font-size: 11px;
+            color: #94a3b8;
+        }
+        .velocity-settings-popover.open {
+            display: block;
+        }
+        .popover-title {
+            font-weight: 800;
+            color: #f1f5f9;
+            font-size: 11px;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+            border-bottom: 1px solid #2a2e39;
+            padding-bottom: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .popover-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+        .preset-row {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 10px;
+        }
+        .preset-btn {
+            flex: 1;
+            background: #131722;
+            border: 1px solid #2a2e39;
+            color: #cbd5e1;
+            border-radius: 4px;
+            padding: 5px 2px;
+            font-size: 9.5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+        .preset-btn:hover {
+            background: #2a2e39;
+            color: #38bdf8;
+            border-color: #38bdf8;
+        }
+        .live-velocity-meter {
+            background: #131722;
+            border: 1px solid #2a2e39;
+            border-radius: 6px;
+            padding: 8px 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .status-pill {
+            display: block;
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 800;
+            text-align: center;
+            letter-spacing: 0.5px;
+        }
+        .status-pill.free {
+            background: rgba(56, 189, 248, 0.15);
+            color: #38bdf8;
+            border: 1px solid #38bdf8;
+        }
+        .status-pill.locked {
+            background: rgba(16, 185, 129, 0.20);
+            color: #10b981;
+            border: 1px solid #10b981;
+        }
+
     </style>
 </head>
 <body>
@@ -935,7 +1029,10 @@
                 <button class="ind-btn active" id="btn-bg" onclick="toggleLayer('bg')">
                     <span class="ind-dot" style="background: #a855f7;"></span> Rejim
                 </button>
-            </div>
+                
+                    </div>
+                </div>
+</div>
         </div>
 
         <!-- ANA ÇALIŞMA ALANI -->
@@ -1279,6 +1376,35 @@
                 <span>TOPLAM MUM: <span class="status-highlight" id="total-candles-stat">3000</span></span>
                 <span>GÖRÜNÜR: <span class="status-highlight" id="visible-candles-stat">150</span></span>
                 <button class="fit-all-btn" onclick="fitAllCandles()" title="Tüm geçmiş mumları ekrana tam sığdır">SIĞDIR</button>
+                <div class="velocity-settings-wrap" style="position: relative; display: inline-block; margin-left: 6px;">
+                    <button class="fit-all-btn" id="btn-velocity-settings" onclick="toggleVelocitySettings(event)" title="Dikey/Yatay İvme ve Otomatik Ölçekleme Eşik Ayarı" style="background: rgba(56, 189, 248, 0.2); border-color: #38bdf8; font-weight: 700;">
+                        ⚙️ İvme: <span id="current-threshold-label" style="font-weight: 800; color: #ffffff;">0.80</span> px/ms
+                    </button>
+                    <div class="velocity-settings-popover" id="velocity-popover" style="bottom: calc(100% + 8px); top: auto; left: 0; right: auto;">
+                        <div class="popover-title">
+                            <span>🎯 İVME & OTO-ÖLÇEK AYARI</span>
+                            <span style="font-size: 11px; color: #94a3b8; cursor: pointer; padding: 0 4px;" onclick="toggleVelocitySettings(event)">✕</span>
+                        </div>
+                        <div class="popover-row">
+                            <span>Tetikleme Eşiği:</span>
+                            <span id="slider-val" style="color: #38bdf8; font-weight: 800;">0.80 px/ms</span>
+                        </div>
+                        <input type="range" id="velocity-threshold-slider" min="0.10" max="3.50" step="0.05" value="0.80" oninput="updateVelocityThreshold(this.value)" style="width: 100%; margin: 8px 0; accent-color: #38bdf8; cursor: pointer;">
+                        <div class="preset-row">
+                            <button class="preset-btn" onclick="setThresholdPreset(0.35)">Hassas (0.35)</button>
+                            <button class="preset-btn" onclick="setThresholdPreset(0.80)">Dengeli (0.80)</button>
+                            <button class="preset-btn" onclick="setThresholdPreset(1.40)">Hızlı (1.40)</button>
+                            <button class="preset-btn" onclick="setThresholdPreset(2.20)">Katı (2.20)</button>
+                        </div>
+                        <div class="live-velocity-meter">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <span>Anlık İvme ($v_x$):</span>
+                                <b id="live-vx-val" style="color: #10b981; font-family: monospace;">0.00 px/ms</b>
+                            </div>
+                            <div id="live-status-pill" class="status-pill free">MANUEL SERBEST</div>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div>
                 <span id="active-strat-footer">Aktif: <b>4. Asimetrik Pro (BUY1: 2.2x SL / 2.2x TP, BUY2: 1.4x SL / 4.0x TP, SELL: 1.2x SL / 2.5x TP)</b></span>
@@ -3241,6 +3367,41 @@
         let isAutoPriceScale = true; // 🌟 Otomatik Fiyat Ölçekleme (OTO Modu)
         let dragAxisLocked = null; // 'horizontal' | 'vertical' | null
 
+        
+        // 🚀 İVME EŞİK VE KALİBRASYON YÖNETİMİ
+        let velocityThreshold = parseFloat(localStorage.getItem('tradechart_velocity_threshold')) || 0.80;
+        window.velocityThreshold = velocityThreshold;
+
+        window.toggleVelocitySettings = function(e) {
+            if (e) e.stopPropagation();
+            const pop = document.getElementById('velocity-popover');
+            if (pop) pop.classList.toggle('open');
+        };
+
+        window.updateVelocityThreshold = function(val) {
+            velocityThreshold = parseFloat(val);
+            window.velocityThreshold = velocityThreshold;
+            localStorage.setItem('tradechart_velocity_threshold', velocityThreshold);
+            const lbl = document.getElementById('current-threshold-label');
+            const slbl = document.getElementById('slider-val');
+            const slider = document.getElementById('velocity-threshold-slider');
+            if (lbl) lbl.innerText = velocityThreshold.toFixed(2);
+            if (slbl) slbl.innerText = `${velocityThreshold.toFixed(2)} px/ms`;
+            if (slider) slider.value = velocityThreshold;
+        };
+
+        window.setThresholdPreset = function(val) {
+            updateVelocityThreshold(val);
+        };
+
+        document.addEventListener('click', (e) => {
+            const wrap = e.target.closest('.velocity-settings-wrap');
+            if (!wrap) {
+                const pop = document.getElementById('velocity-popover');
+                if (pop) pop.classList.remove('open');
+            }
+        });
+
         let isPriceDragging = false;
         let priceDragStartY = 0;
         let priceScaleFactor = 1.0;
@@ -3402,14 +3563,33 @@
                 // 🎯 İVMEYE VE HIZA BAĞLI OTOMATİK HİZALAMA (Velocity-Based Auto-Scale):
                 // Orta-hızlı yatay ivmede (absVx >= 0.28 px/ms) otomatik ölçekleme devreye girer.
                 // Yavaş veya hassas sürüklemelerde ise kullanıcının manuel dikey konumu serbestçe korunur.
-                if (absVx >= 0.28 && absVx >= absVy * 1.15) {
+                // Canlı İvme Göstergesini Güncelle
+                const liveVxElem = document.getElementById('live-vx-val');
+                const livePillElem = document.getElementById('live-status-pill');
+                if (liveVxElem) liveVxElem.innerText = `${absVx.toFixed(2)} px/ms`;
+
+                // 🎯 KULLANICI AYARLI İVMEYE GÖRE OTOMATİK HİZALAMA
+                if (absVx >= velocityThreshold && absVx >= absVy * 1.15) {
                     dragAxisLocked = 'horizontal';
                     isAutoPriceScale = true;
                     updateOtoButtonState();
-                } else if (absVy >= 0.28 && absVy > absVx * 1.3) {
+                    if (livePillElem) {
+                        livePillElem.innerText = 'OTO KİLİTLENDİ';
+                        livePillElem.className = 'status-pill locked';
+                    }
+                } else if (absVy >= velocityThreshold && absVy > absVx * 1.3) {
                     dragAxisLocked = 'vertical';
                     isAutoPriceScale = false;
                     updateOtoButtonState();
+                    if (livePillElem) {
+                        livePillElem.innerText = 'MANUEL SERBEST';
+                        livePillElem.className = 'status-pill free';
+                    }
+                } else {
+                    if (livePillElem && !isAutoPriceScale) {
+                        livePillElem.innerText = 'MANUEL SERBEST';
+                        livePillElem.className = 'status-pill free';
+                    }
                 }
 
                 // 1. Yatay Zaman Kaydırma (X-Axis)
