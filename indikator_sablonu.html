@@ -4699,8 +4699,8 @@
                     smoothViewStart = viewStart;
                     smoothViewEnd = viewEnd;
                 } else {
-                    const priceLerp = isChartDragging ? 0.32 : 0.16;
-                    const viewLerp = isChartDragging ? 0.40 : 0.20;
+                    const priceLerp = isChartDragging ? 0.45 : 0.28;
+                    const viewLerp = isChartDragging ? 0.50 : 0.35;
                     smoothViewStart += (viewStart - smoothViewStart) * viewLerp;
                     smoothViewEnd += (viewEnd - smoothViewEnd) * viewLerp;
                     smoothMinPrice += (targetMinPrice - smoothMinPrice) * priceLerp;
