@@ -3766,7 +3766,12 @@
             }
 
             setTool(toolName) {
-                this.activeTool = toolName;
+                if (toolName.startsWith('cursor')) {
+                    this.activeTool = 'cursor';
+                    this.cursorType = toolName;
+                } else {
+                    this.activeTool = toolName;
+                }
                 if (toolName === 'cursor') {
                     this.drawingState = 'idle';
                     this.drawingInProgress = null;
@@ -3955,7 +3960,7 @@
 
                         if (this.drawingState === 'idle') {
                             // Tek tıklamalı araçlar (Yatay / Dikey Çizgiler)
-                            if (['horizontal', 'horzray', 'vertical'].includes(this.activeTool)) {
+                            if (['horizontal', 'horzray', 'vertical', 'crossline', 'arrow_up', 'arrow_down', 'text', 'text_note', 'price_note', 'pin_note', 'price_label', 'signpost', 'flag_mark', 'callout', 'comment', 'image_tool', 'tweet_tool', 'idea_tool'].includes(this.activeTool)) {
                                 const newD = {
                                     id: 'draw_' + Date.now(),
                                     type: this.activeTool,
@@ -4405,6 +4410,8 @@
             getViewRange: () => ({ start: smoothViewStart || viewStart, end: smoothViewEnd || viewEnd }),
             getCandleData: () => candleDataBase
         });
+        window.drawingEngine = drawingEngine;
+        window.canvasContainer = canvasContainer;
 
         window.selectTvTool = function(toolName, btnElem) {
             if (drawingEngine) drawingEngine.setTool(toolName);
