@@ -3343,7 +3343,7 @@
         window.addEventListener('mousemove', (e) => {
             if (isPriceDragging) {
                 const deltaY = priceDragStartY - e.clientY;
-                priceScaleFactor = Math.max(0.05, Math.min(25.0, priceScaleFactor * Math.exp(deltaY * 0.006)));
+                priceScaleFactor = Math.max(0.001, Math.min(1000.0, priceScaleFactor * Math.exp(deltaY * 0.006)));
                 priceDragStartY = e.clientY;
                 return;
             }
@@ -3510,8 +3510,7 @@
             viewEnd = nEnd;
 
             // Yakınlaşırken hedeflenen noktanın ekran altına/üstüne fırlamaması için orantısal ölçekle
-            const ratio = newCount / count;
-            priceOffset *= Math.min(1.0, ratio);
+            // Keep priceOffset intact during wheel zooming
 
             updateVisibleBacktestSummary();
         }, { passive: false });
@@ -4686,8 +4685,7 @@
                 const baseHalfSpan = (span / 2) + pad;
                 const scaledHalfSpan = baseHalfSpan / priceScaleFactor;
 
-                const maxAllowedOffset = pad * 1.2;
-                priceOffset = Math.max(-maxAllowedOffset, Math.min(maxAllowedOffset, priceOffset));
+                // 🌟 SINIRSIZ DİKEY KAYDIRMA: maxAllowedOffset tamamen kaldırıldı
 
                 const midP = (minP + maxP) / 2;
                 const targetMinPrice = midP - scaledHalfSpan + priceOffset;
