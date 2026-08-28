@@ -981,7 +981,9 @@
 
             ctx2d.clearRect(0, 0, cssW, cssH);
 
-            const visibleCount = viewEnd - viewStart;
+            const curStart = (smoothViewStart && isFinite(smoothViewStart)) ? smoothViewStart : viewStart;
+            const curEnd = (smoothViewEnd && isFinite(smoothViewEnd)) ? smoothViewEnd : viewEnd;
+            const visibleCount = Math.max(1, curEnd - curStart);
             if (visibleCount <= 0) return;
 
             function getY(price) {
@@ -995,10 +997,10 @@
 
             if (mouseCssX >= 0 && mouseCssY >= 0 && mouseCssX <= cssW && mouseCssY <= cssH) {
                 for (const sig of calculatedSignals) {
-                    if (sig.index < viewStart - 2 || sig.index > viewEnd + 2) continue;
+                    if (sig.index < curStart - 2 || sig.index > curEnd + 2) continue;
 
                     const candleCenter = sig.index + 0.5;
-                    const screenX = Math.round(((candleCenter - viewStart) / visibleCount) * cssW);
+                    const screenX = Math.round(((candleCenter - curStart) / visibleCount) * cssW);
                     const candle = candleDataBase[sig.index];
                     if (!candle) continue;
 
@@ -1096,7 +1098,7 @@
             const otherAlpha = Math.max(0.12, 1.0 - (focusAnim.progress * 0.84));
 
             for (const sig of calculatedSignals) {
-                if (sig.index < viewStart - 8 || sig.index > viewEnd + 8) continue;
+                if (sig.index < curStart - 8 || sig.index > curEnd + 8) continue;
                 
                 const isCurrentFocused = (activeFocusSig && sig.index === activeFocusSig.index);
                 // Odaktaki sinyalin normal statik rozeti aniden kaybolmaz, yumuşakça şeffaflaşır:
@@ -1107,7 +1109,7 @@
                 ctx2d.globalAlpha = sigAlpha;
 
                 const candleCenter = sig.index + 0.5;
-                const screenX = Math.round(((candleCenter - viewStart) / visibleCount) * cssW);
+                const screenX = Math.round(((candleCenter - curStart) / visibleCount) * cssW);
                 const candle = candleDataBase[sig.index];
                 if (!candle) { ctx2d.restore(); continue; }
 
@@ -1231,7 +1233,7 @@
             if (activeFocusSig && focusAnim.progress > 0.002) {
                 const sig = activeFocusSig;
                 const candleCenter = sig.index + 0.5;
-                const screenX = Math.round(((candleCenter - viewStart) / visibleCount) * cssW);
+                const screenX = Math.round(((candleCenter - curStart) / visibleCount) * cssW);
                 const candle = candleDataBase[sig.index];
 
                 if (candle) {
@@ -1548,10 +1550,15 @@
         };
 
         // ==========================================
-        // DİKEY FİYAT ÖLÇEĞİ VE ETKİLEŞİM
+        // DİKEY FİYAT ÖLÇEĞİ VE İPEKSİ AKICI ENTERPOLASYON (SMOOTH LERP)
         // ==========================================
         let minPrice = 0;
         let maxPrice = 0;
+        let smoothMinPrice = 0;
+        let smoothMaxPrice = 0;
+        let smoothViewStart = 0;
+        let smoothViewEnd = 0;
+
         let priceOffset = 0; // Dikey serbest kaydırma ofseti
         let origPriceOffset = 0;
 
@@ -1836,7 +1843,9 @@
         function updateTimeScaleLabels() {
             if (totalCandles === 0) return;
             const count = 6;
-            const visibleCount = Math.max(1, viewEnd - viewStart);
+            const curStart = (smoothViewStart && isFinite(smoothViewStart)) ? smoothViewStart : viewStart;
+            const curEnd = (smoothViewEnd && isFinite(smoothViewEnd)) ? smoothViewEnd : viewEnd;
+            const visibleCount = Math.max(1, curEnd - curStart);
             let html = '';
 
             const lastCandle = candleDataBase[totalCandles - 1];
@@ -1844,7 +1853,7 @@
 
             for (let i = 0; i <= count; i++) {
                 const pct = i / count;
-                const candleIdx = Math.floor(viewStart + pct * visibleCount);
+                const candleIdx = Math.floor(curStart + pct * visibleCount);
                 let date = null;
 
                 if (candleIdx >= 0 && candleIdx < totalCandles && candleDataBase[candleIdx]) {
@@ -1888,7 +1897,7 @@
         }
 
         // ==========================================
-        // RENDER DÖNGÜSÜ (HiDPI RETINA / 4K)
+        // RENDER DÖNGÜSÜ (HiDPI RETINA / 4K - 120 FPS SMOOTH LERP)
         // ==========================================
         let lastT = performance.now();
         let frameCount = 0;
@@ -1957,16 +1966,34 @@
                 priceOffset = Math.max(-maxAllowedOffset, Math.min(maxAllowedOffset, priceOffset));
 
                 const midP = (minP + maxP) / 2;
-                minPrice = midP - scaledHalfSpan + priceOffset;
-                maxPrice = midP + scaledHalfSpan + priceOffset;
+                const targetMinPrice = midP - scaledHalfSpan + priceOffset;
+                const targetMaxPrice = midP + scaledHalfSpan + priceOffset;
+
+                // 🌿 DOĞAL VE İPEKSİ YUMUŞAKLIK (Silky Smooth LERP Physics - 120 FPS)
+                if (!smoothMinPrice || !isFinite(smoothMinPrice) || smoothMinPrice === 0) {
+                    smoothMinPrice = targetMinPrice;
+                    smoothMaxPrice = targetMaxPrice;
+                    smoothViewStart = viewStart;
+                    smoothViewEnd = viewEnd;
+                } else {
+                    const priceLerp = isChartDragging ? 0.32 : 0.16; // Sürüklerken çevik, serbestken ipeksi süzülme
+                    const viewLerp = isChartDragging ? 0.40 : 0.20;
+                    smoothViewStart += (viewStart - smoothViewStart) * viewLerp;
+                    smoothViewEnd += (viewEnd - smoothViewEnd) * viewLerp;
+                    smoothMinPrice += (targetMinPrice - smoothMinPrice) * priceLerp;
+                    smoothMaxPrice += (targetMaxPrice - smoothMaxPrice) * priceLerp;
+                }
+
+                minPrice = smoothMinPrice;
+                maxPrice = smoothMaxPrice;
 
                 updatePriceScaleLabels();
                 updateTimeScaleLabels();
 
                 gl.useProgram(prog);
                 gl.uniform2f(uRes, canvas.width, canvas.height);
-                gl.uniform2f(uViewRange, viewStart, viewEnd);
-                gl.uniform2f(uPriceRange, minPrice, maxPrice);
+                gl.uniform2f(uViewRange, smoothViewStart, smoothViewEnd);
+                gl.uniform2f(uPriceRange, smoothMinPrice, smoothMaxPrice);
                 gl.uniform2f(uMouse, mousePixelX, mousePixelY);
                 gl.uniform1f(uTime, now * 0.001);
 
