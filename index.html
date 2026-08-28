@@ -3818,7 +3818,11 @@
                 this.container.addEventListener('contextmenu', (e) => {
                     if (this.drawingState === 'drawing') {
                         e.preventDefault();
-                        this.cancelDrawing();
+                        this.drawingInProgress = null;
+                        this.drawingState = 'idle';
+                    } else if (this.activeTool !== 'cursor') {
+                        e.preventDefault();
+                        window.selectTvTool('cursor');
                     }
                 });
             }
@@ -3970,7 +3974,9 @@
                                 };
                                 this.drawings.push(newD);
                                 this.selectDrawing(newD);
-                                if (!this.continuousDraw) { window.selectTvTool('cursor'); } else { this.drawingState = 'idle'; this.drawingInProgress = null; }
+                                this.drawingInProgress = null;
+                                this.drawingState = 'idle';
+                                // 🌟 Araç kullanıcı kapatana kadar aktif kalmaya devam eder
                             } else {
                                 // 🌟 1. CLICK: Başlangıç Noktası (Point 1) Belirlendi!
                                 this.drawingInProgress = {
@@ -3992,7 +3998,7 @@
                             this.selectDrawing(this.drawingInProgress);
                             this.drawingInProgress = null;
                             this.drawingState = 'idle';
-                            if (!this.continuousDraw) { window.selectTvTool('cursor'); } else { this.drawingState = 'idle'; this.drawingInProgress = null; }
+                            // 🌟 Araç kullanıcı kapatana kadar aktif kalmaya devam eder (Peş peşe çizim)
                         }
                     }
                 }
@@ -4010,7 +4016,17 @@
                 if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') return;
 
                 if (e.key === 'Escape') {
-                    this.cancelDrawing();
+                    if (this.drawingState === 'drawing') {
+                        // Çizilmekte olan şekli iptal et, araç modunda kal
+                        this.drawingInProgress = null;
+                        this.drawingState = 'idle';
+                    } else if (this.activeTool !== 'cursor') {
+                        // Çizim modundan çıkıp imleç moduna geç
+                        window.selectTvTool('cursor');
+                        this.selectDrawing(null);
+                    } else {
+                        this.selectDrawing(null);
+                    }
                 } else if (e.key === 'Delete' || e.key === 'Backspace') {
                     if (this.selectedDrawing) {
                         this.drawings = this.drawings.filter(d => d.id !== this.selectedDrawing.id);
