@@ -1199,8 +1199,8 @@
     uniform sampler2D u_candle_tex;
     uniform sampler2D u_ind_tex;
     uniform float u_total_candles;
-
-    out vec4 fragColor;
+        uniform float u_load_anim; // 0.0 -> 1.0 Doğal Logaritmik Açılış Animasyonu
+        out vec4 fragColor;
 
     float priceToY(float price) {
         float diff = u_price_range.y - u_price_range.x;
@@ -1412,6 +1412,7 @@
                 uCandleTex = gl.getUniformLocation(prog, 'u_candle_tex');
                 uIndTex = gl.getUniformLocation(prog, 'u_ind_tex');
                 uTotalCandles = gl.getUniformLocation(prog, 'u_total_candles');
+                uLoadAnim = gl.getUniformLocation(prog, 'u_load_anim');
 
                 isGpuActive = true;
             }
@@ -2535,7 +2536,9 @@
                 ctx2d.restore();
             }
 
-            if (!layers.signals) return;
+            if (!layers.signals || loadAnimProgress < 0.05) return;
+            ctx2d.save();
+            ctx2d.globalAlpha = Math.pow(loadAnimProgress, 2.2);
 
             // 1. Hassas Hover Kontrolü: İmleç TAM OLARAK mum barının veya sinyal etiketinin üzerinde mi?
             let preciseHoveredSig = null;
@@ -3004,9 +3007,32 @@
             }));
         }
 
-        let candleDataBase = [];
+                let candleDataBase = [];
         let candleDataEma = [];
         let candleDataRegime = [];
+
+        // Başlangıçta ekranın ortasında 0 boyutta düz çizgi gibi duran başlangıç mumları
+        (function initZeroHeightPlaceholder() {
+            const now = Date.now();
+            const initP = 75000;
+            const dummyArr = [];
+            for (let i = 0; i < 150; i++) {
+                dummyArr.push({
+                    time: now - (150 - i) * 60000,
+                    open: initP,
+                    high: initP,
+                    low: initP,
+                    close: initP,
+                    vol: 1
+                });
+            }
+            candleDataBase = dummyArr;
+            candleDataEma = dummyArr;
+            candleDataRegime = dummyArr;
+            totalCandles = 150;
+            viewStart = 0;
+            viewEnd = 150;
+        })();
 
         async function fetchAllMultiTimeframeKlines(symbol) {
             const tfCfg = TIMEFRAME_CONFIGS[currentTimeframe] || TIMEFRAME_CONFIGS['1h'];
@@ -4403,6 +4429,7 @@
                 }
 
                 drawVectorSignalsAndTargets(now);
+                ctx2d.restore();
 
                 if (drawingEngine) {
                     drawingEngine.render(ctx2d);
