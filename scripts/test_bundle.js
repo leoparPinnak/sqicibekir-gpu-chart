@@ -5,44 +5,68 @@
         const timeAxisElem = document.getElementById('time-axis');
         const priceAxisElem = document.getElementById('price-axis');
         
-        const gl = canvas.getContext('webgl2', { alpha: false, depth: false, antialias: true });
+        let isGpuActive = false;
+        let gl = null;
+        let prog = null;
+        let candleTex = null;
+        let indTex = null;
+        let uRes, uViewRange, uPriceRange, uMouse, uTime, uShowCloud, uShowEma, uShowBg, uCandleTex, uIndTex, uTotalCandles;
+
         const ctx2d = overlayCanvas.getContext('2d');
 
-        if (!gl) alert('WebGL 2.0 desteklenmiyor!');
-        gl.getExtension('EXT_color_buffer_float');
+        try {
+            gl = canvas.getContext('webgl2', { alpha: false, depth: false, antialias: false, powerPreference: 'high-performance' });
+            if (gl) {
+                gl.getExtension('EXT_color_buffer_float');
 
-        function createShader(gl, type, source) {
-            const s = gl.createShader(type);
-            gl.shaderSource(s, source.trim());
-            gl.compileShader(s);
-            return s;
+                function createShader(gl, type, source) {
+                    const s = gl.createShader(type);
+                    gl.shaderSource(s, source.trim());
+                    gl.compileShader(s);
+                    return s;
+                }
+
+                prog = gl.createProgram();
+                gl.attachShader(prog, createShader(gl, gl.VERTEX_SHADER, document.getElementById('vs').text));
+                gl.attachShader(prog, createShader(gl, gl.FRAGMENT_SHADER, document.getElementById('fs').text));
+                gl.linkProgram(prog);
+
+                const posBuffer = gl.createBuffer();
+                gl.bindBuffer(gl.ARRAY_BUFFER, posBuffer);
+                gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, -1,1, 1,-1, 1,1]), gl.STATIC_DRAW);
+                const aPos = gl.getAttribLocation(prog, 'a_position');
+                gl.enableVertexAttribArray(aPos);
+                gl.vertexAttribPointer(aPos, 2, gl.FLOAT, false, 0, 0);
+
+                uRes = gl.getUniformLocation(prog, 'u_resolution');
+                uViewRange = gl.getUniformLocation(prog, 'u_view_range');
+                uPriceRange = gl.getUniformLocation(prog, 'u_price_range');
+                uMouse = gl.getUniformLocation(prog, 'u_mouse');
+                uTime = gl.getUniformLocation(prog, 'u_time');
+
+                uShowCloud = gl.getUniformLocation(prog, 'u_show_cloud');
+                uShowEma = gl.getUniformLocation(prog, 'u_show_ema');
+                uShowBg = gl.getUniformLocation(prog, 'u_show_bg');
+
+                uCandleTex = gl.getUniformLocation(prog, 'u_candle_tex');
+                uIndTex = gl.getUniformLocation(prog, 'u_ind_tex');
+                uTotalCandles = gl.getUniformLocation(prog, 'u_total_candles');
+
+                isGpuActive = true;
+            }
+        } catch (e) {
+            console.warn('WebGL 2.0 başlatılamadı, Hibrit Turbo 2D Motoruna geçildi:', e);
+            isGpuActive = false;
         }
 
-        const prog = gl.createProgram();
-        gl.attachShader(prog, createShader(gl, gl.VERTEX_SHADER, document.getElementById('vs').text));
-        gl.attachShader(prog, createShader(gl, gl.FRAGMENT_SHADER, document.getElementById('fs').text));
-        gl.linkProgram(prog);
-
-        const posBuffer = gl.createBuffer();
-        gl.bindBuffer(gl.ARRAY_BUFFER, posBuffer);
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, -1,1, 1,-1, 1,1]), gl.STATIC_DRAW);
-        const aPos = gl.getAttribLocation(prog, 'a_position');
-        gl.enableVertexAttribArray(aPos);
-        gl.vertexAttribPointer(aPos, 2, gl.FLOAT, false, 0, 0);
-
-        const uRes = gl.getUniformLocation(prog, 'u_resolution');
-        const uViewRange = gl.getUniformLocation(prog, 'u_view_range');
-        const uPriceRange = gl.getUniformLocation(prog, 'u_price_range');
-        const uMouse = gl.getUniformLocation(prog, 'u_mouse');
-        const uTime = gl.getUniformLocation(prog, 'u_time');
-
-        const uShowCloud = gl.getUniformLocation(prog, 'u_show_cloud');
-        const uShowEma = gl.getUniformLocation(prog, 'u_show_ema');
-        const uShowBg = gl.getUniformLocation(prog, 'u_show_bg');
-
-        const uCandleTex = gl.getUniformLocation(prog, 'u_candle_tex');
-        const uIndTex = gl.getUniformLocation(prog, 'u_ind_tex');
-        const uTotalCandles = gl.getUniformLocation(prog, 'u_total_candles');
+        // Motor rozetini güncelle
+        setTimeout(() => {
+            const engineStat = document.getElementById('engine-stat');
+            if (engineStat) {
+                engineStat.innerText = isGpuActive ? '🚀 GPU (WebGL 2.0)' : '⚡ Hibrit Turbo 2D (Tablet Uyumlu)';
+                engineStat.style.color = isGpuActive ? '#10b981' : '#38bdf8';
+            }
+        }, 100);
 
         // ==========================================
         // 🎯 5 GELİŞMİŞ QUANT STRATEJİSİ (1M SCALP VS 1H SWING DİNAMİK)
@@ -162,9 +186,6 @@
 
         let totalCandles = 0;
         let calculatedSignals = [];
-
-        let candleTex = null;
-        let indTex = null;
 
         let viewStart = 0;
         let viewEnd = 0;
@@ -801,47 +822,52 @@
             }
         }
 
+        let calculatedInd = null;
+
         function updateGpuTextures() {
             totalCandles = candleDataBase.length;
             if (totalCandles === 0) return;
 
             const ind = calculateSqiciBekiR_MultiStrategy(candleDataBase, candleDataEma, candleDataRegime, activeStrategy, currentTimeframe);
             calculatedSignals = ind.signals;
+            calculatedInd = ind;
             const tfCfg = ind.tfCfg || TIMEFRAME_CONFIGS['1h'];
 
-            const candleFloatArr = new Float32Array(totalCandles * 4);
-            const indFloatArr = new Float32Array(totalCandles * 4);
+            if (isGpuActive && gl) {
+                const candleFloatArr = new Float32Array(totalCandles * 4);
+                const indFloatArr = new Float32Array(totalCandles * 4);
 
-            for (let i = 0; i < totalCandles; i++) {
-                const idx = i * 4;
-                candleFloatArr[idx + 0] = candleDataBase[i].open;
-                candleFloatArr[idx + 1] = candleDataBase[i].high;
-                candleFloatArr[idx + 2] = candleDataBase[i].low;
-                candleFloatArr[idx + 3] = candleDataBase[i].close;
+                for (let i = 0; i < totalCandles; i++) {
+                    const idx = i * 4;
+                    candleFloatArr[idx + 0] = candleDataBase[i].open;
+                    candleFloatArr[idx + 1] = candleDataBase[i].high;
+                    candleFloatArr[idx + 2] = candleDataBase[i].low;
+                    candleFloatArr[idx + 3] = candleDataBase[i].close;
 
-                indFloatArr[idx + 0] = ind.regime1D[i];
-                indFloatArr[idx + 1] = ind.sa[i];
-                indFloatArr[idx + 2] = ind.sb[i];
-                indFloatArr[idx + 3] = ind.ema4H[i];
+                    indFloatArr[idx + 0] = ind.regime1D[i];
+                    indFloatArr[idx + 1] = ind.sa[i];
+                    indFloatArr[idx + 2] = ind.sb[i];
+                    indFloatArr[idx + 3] = ind.ema4H[i];
+                }
+
+                if (!candleTex) candleTex = gl.createTexture();
+                gl.activeTexture(gl.TEXTURE0);
+                gl.bindTexture(gl.TEXTURE_2D, candleTex);
+                gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA32F, totalCandles, 1, 0, gl.RGBA, gl.FLOAT, candleFloatArr);
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+
+                if (!indTex) indTex = gl.createTexture();
+                gl.activeTexture(gl.TEXTURE1);
+                gl.bindTexture(gl.TEXTURE_2D, indTex);
+                gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA32F, totalCandles, 1, 0, gl.RGBA, gl.FLOAT, indFloatArr);
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
             }
-
-            if (!candleTex) candleTex = gl.createTexture();
-            gl.activeTexture(gl.TEXTURE0);
-            gl.bindTexture(gl.TEXTURE_2D, candleTex);
-            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA32F, totalCandles, 1, 0, gl.RGBA, gl.FLOAT, candleFloatArr);
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-
-            if (!indTex) indTex = gl.createTexture();
-            gl.activeTexture(gl.TEXTURE1);
-            gl.bindTexture(gl.TEXTURE_2D, indTex);
-            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA32F, totalCandles, 1, 0, gl.RGBA, gl.FLOAT, indFloatArr);
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
 
             document.getElementById('total-candles-stat').innerText = totalCandles;
 
@@ -968,18 +994,129 @@
         };
 
         // ============================================================
+        // ⚡ HİBRİT CANVAS 2D TURBO ÇİZİCİSİ (TABLET / MOBİL / SAFARI UYUMLU)
+        // ============================================================
+        function draw2DTurboFallback(ctx, w, h, curStart, curEnd, minP, maxP) {
+            ctx.clearRect(0, 0, w, h);
+            ctx.fillStyle = '#060a17';
+            ctx.fillRect(0, 0, w, h);
+
+            if (totalCandles === 0) return;
+
+            const visibleCount = Math.max(1, curEnd - curStart);
+            const candleW = Math.max(1, Math.floor(w / visibleCount));
+            const bodyW = Math.max(1, Math.floor(candleW * 0.72));
+
+            function getY(price) {
+                const diff = maxP - minP;
+                if (diff <= 0.0001) return h / 2;
+                return h - ((price - minP) / diff) * h;
+            }
+
+            const startI = Math.max(0, Math.floor(curStart));
+            const endI = Math.min(totalCandles, Math.ceil(curEnd));
+
+            // Grid Çizgileri
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.04)';
+            ctx.lineWidth = 1;
+            for (let i = 1; i <= 6; i++) {
+                const y = Math.round((h / 7) * i);
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(w, y);
+                ctx.stroke();
+            }
+
+            // 1. Ichimoku Bulutu
+            if (layers.cloud && calculatedInd && calculatedInd.sa && calculatedInd.sb) {
+                for (let i = startI; i < endI - 1; i++) {
+                    const nextI = i + 1;
+                    const x1 = Math.round(((i + 0.5 - curStart) / visibleCount) * w);
+                    const x2 = Math.round(((nextI + 0.5 - curStart) / visibleCount) * w);
+
+                    const sa1 = getY(calculatedInd.sa[i]);
+                    const sb1 = getY(calculatedInd.sb[i]);
+                    const sa2 = getY(calculatedInd.sa[nextI]);
+                    const sb2 = getY(calculatedInd.sb[nextI]);
+
+                    ctx.beginPath();
+                    ctx.moveTo(x1, sa1);
+                    ctx.lineTo(x2, sa2);
+                    ctx.lineTo(x2, sb2);
+                    ctx.lineTo(x1, sb1);
+                    ctx.closePath();
+
+                    if (calculatedInd.sa[i] >= calculatedInd.sb[i]) {
+                        ctx.fillStyle = 'rgba(16, 185, 129, 0.12)';
+                    } else {
+                        ctx.fillStyle = 'rgba(239, 68, 68, 0.12)';
+                    }
+                    ctx.fill();
+                }
+            }
+
+            // 2. EMA Çizgisi
+            if (layers.ema && calculatedInd && calculatedInd.ema4H) {
+                ctx.strokeStyle = '#38bdf8';
+                ctx.lineWidth = 1.8;
+                ctx.beginPath();
+                let started = false;
+                for (let i = startI; i < endI; i++) {
+                    const x = Math.round(((i + 0.5 - curStart) / visibleCount) * w);
+                    const y = getY(calculatedInd.ema4H[i]);
+                    if (!started) {
+                        ctx.moveTo(x, y);
+                        started = true;
+                    } else {
+                        ctx.lineTo(x, y);
+                    }
+                }
+                ctx.stroke();
+            }
+
+            // 3. Mum Çubukları
+            for (let i = startI; i < endI; i++) {
+                const c = candleDataBase[i];
+                if (!c) continue;
+
+                const x = Math.round(((i + 0.5 - curStart) / visibleCount) * w);
+                const openY = getY(c.open);
+                const closeY = getY(c.close);
+                const highY = getY(c.high);
+                const lowY = getY(c.low);
+
+                const isUp = c.close >= c.open;
+                const color = isUp ? '#10b981' : '#ef4444';
+
+                // Fitil
+                ctx.strokeStyle = color;
+                ctx.lineWidth = Math.max(1, Math.min(2, Math.floor(candleW * 0.15)));
+                ctx.beginPath();
+                ctx.moveTo(x, highY);
+                ctx.lineTo(x, lowY);
+                ctx.stroke();
+
+                // Gövde
+                const topY = Math.min(openY, closeY);
+                const bodyH = Math.max(1.5, Math.abs(closeY - openY));
+                ctx.fillStyle = color;
+                ctx.fillRect(Math.round(x - bodyW / 2), Math.round(topY), bodyW, Math.round(bodyH));
+            }
+        }
+
+        // ============================================================
         // HiDPI DİNAMİK VEKTÖR TP / SL VE ROZET ÇİZİCİSİ (120 FPS ULTRA HAFİF)
         // ============================================================
         function drawVectorSignalsAndTargets(timeNow) {
             const cssW = canvasContainer.clientWidth;
             const cssH = canvasContainer.clientHeight;
 
-            if (!ctx2d || !layers.signals || totalCandles === 0) {
-                ctx2d.clearRect(0, 0, cssW, cssH);
-                return;
-            }
+            if (!ctx2d || totalCandles === 0) return;
 
-            ctx2d.clearRect(0, 0, cssW, cssH);
+            if (isGpuActive) {
+                ctx2d.clearRect(0, 0, cssW, cssH);
+            }
+            if (!layers.signals) return;
 
             const curStart = (smoothViewStart && isFinite(smoothViewStart)) ? smoothViewStart : viewStart;
             const curEnd = (smoothViewEnd && isFinite(smoothViewEnd)) ? smoothViewEnd : viewEnd;
@@ -1840,6 +1977,83 @@
             updateVisibleBacktestSummary();
         }, { passive: false });
 
+        // ==========================================
+        // 📱 TABLET VE DOKUNMATİK EKRAN DESTEĞİ (TOUCH GESTURES & PINCH ZOOM)
+        // ==========================================
+        let touchStartDist = 0;
+        let isTouching = false;
+
+        canvasContainer.addEventListener('touchstart', (e) => {
+            if (e.touches.length === 1) {
+                isTouching = true;
+                const t = e.touches[0];
+                startPan(t.clientX, t.clientY);
+            } else if (e.touches.length === 2) {
+                isTouching = true;
+                const dx = e.touches[0].clientX - e.touches[1].clientX;
+                const dy = e.touches[0].clientY - e.touches[1].clientY;
+                touchStartDist = Math.hypot(dx, dy);
+                origViewStart = viewStart;
+                origViewEnd = viewEnd;
+            }
+        }, { passive: true });
+
+        canvasContainer.addEventListener('touchmove', (e) => {
+            if (!isTouching || totalCandles === 0) return;
+            const rect = canvas.getBoundingClientRect();
+
+            if (e.touches.length === 1 && isChartDragging) {
+                const t = e.touches[0];
+                const deltaPx = t.clientX - chartDragStartX;
+                const candleSpan = origViewEnd - origViewStart;
+                const deltaCandles = (deltaPx / rect.width) * candleSpan;
+                let nStart = origViewStart - deltaCandles;
+                let nEnd = origViewEnd - deltaCandles;
+
+                const maxRightSpace = Math.max(400, Math.round(totalCandles * 1.0));
+                const minAllowedStart = -80;
+                const maxAllowedEnd = totalCandles + maxRightSpace;
+
+                if (nStart < minAllowedStart) { nStart = minAllowedStart; nEnd = minAllowedStart + candleSpan; }
+                if (nEnd > maxAllowedEnd) { nEnd = maxAllowedEnd; nStart = maxAllowedEnd - candleSpan; }
+
+                viewStart = nStart;
+                viewEnd = nEnd;
+
+                const deltaPy = t.clientY - chartDragStartY;
+                const currentPriceSpan = maxPrice - minPrice;
+                if (currentPriceSpan > 0 && rect.height > 0) {
+                    const pricePerPixel = currentPriceSpan / rect.height;
+                    priceOffset = origPriceOffset + (deltaPy * pricePerPixel);
+                }
+                updateVisibleBacktestSummary();
+            } else if (e.touches.length === 2 && touchStartDist > 0) {
+                const dx = e.touches[0].clientX - e.touches[1].clientX;
+                const dy = e.touches[0].clientY - e.touches[1].clientY;
+                const dist = Math.hypot(dx, dy);
+                const pinchFactor = touchStartDist / Math.max(1, dist);
+
+                const count = Math.max(1, origViewEnd - origViewStart);
+                const maxRightSpace = Math.max(400, Math.round(totalCandles * 1.0));
+                const newCount = Math.max(10, Math.min(totalCandles + maxRightSpace, count * pinchFactor));
+
+                const midCandle = (origViewStart + origViewEnd) / 2;
+                let nStart = midCandle - newCount / 2;
+                let nEnd = midCandle + newCount / 2;
+
+                viewStart = nStart;
+                viewEnd = nEnd;
+                updateVisibleBacktestSummary();
+            }
+        }, { passive: true });
+
+        window.addEventListener('touchend', () => {
+            isTouching = false;
+            isChartDragging = false;
+            canvasContainer.classList.remove('grabbing');
+            updateVisibleBacktestSummary();
+        });
+
         function updateTimeScaleLabels() {
             if (totalCandles === 0) return;
             const count = 6;
@@ -1928,7 +2142,7 @@
                 ctx2d.scale(dpr, dpr);
                 ctx2d.imageSmoothingEnabled = true;
                 ctx2d.imageSmoothingQuality = 'high';
-                gl.viewport(0, 0, w, h);
+                if (isGpuActive && gl) gl.viewport(0, 0, w, h);
             }
 
             if (totalCandles > 0) {
@@ -1990,28 +2204,33 @@
                 updatePriceScaleLabels();
                 updateTimeScaleLabels();
 
-                gl.useProgram(prog);
-                gl.uniform2f(uRes, canvas.width, canvas.height);
-                gl.uniform2f(uViewRange, smoothViewStart, smoothViewEnd);
-                gl.uniform2f(uPriceRange, smoothMinPrice, smoothMaxPrice);
-                gl.uniform2f(uMouse, mousePixelX, mousePixelY);
-                gl.uniform1f(uTime, now * 0.001);
+                if (isGpuActive && gl && prog) {
+                    gl.useProgram(prog);
+                    gl.uniform2f(uRes, canvas.width, canvas.height);
+                    gl.uniform2f(uViewRange, smoothViewStart, smoothViewEnd);
+                    gl.uniform2f(uPriceRange, smoothMinPrice, smoothMaxPrice);
+                    gl.uniform2f(uMouse, mousePixelX, mousePixelY);
+                    gl.uniform1f(uTime, now * 0.001);
 
-                gl.uniform1i(uShowCloud, layers.cloud);
-                gl.uniform1i(uShowEma, layers.ema);
-                gl.uniform1i(uShowBg, layers.bg);
+                    gl.uniform1i(uShowCloud, layers.cloud);
+                    gl.uniform1i(uShowEma, layers.ema);
+                    gl.uniform1i(uShowBg, layers.bg);
 
-                gl.activeTexture(gl.TEXTURE0);
-                gl.bindTexture(gl.TEXTURE_2D, candleTex);
-                gl.uniform1i(uCandleTex, 0);
+                    gl.activeTexture(gl.TEXTURE0);
+                    gl.bindTexture(gl.TEXTURE_2D, candleTex);
+                    gl.uniform1i(uCandleTex, 0);
 
-                gl.activeTexture(gl.TEXTURE1);
-                gl.bindTexture(gl.TEXTURE_2D, indTex);
-                gl.uniform1i(uIndTex, 1);
+                    gl.activeTexture(gl.TEXTURE1);
+                    gl.bindTexture(gl.TEXTURE_2D, indTex);
+                    gl.uniform1i(uIndTex, 1);
 
-                gl.uniform1f(uTotalCandles, totalCandles);
+                    gl.uniform1f(uTotalCandles, totalCandles);
 
-                gl.drawArrays(gl.TRIANGLES, 0, 6);
+                    gl.drawArrays(gl.TRIANGLES, 0, 6);
+                } else {
+                    // ⚡ HİBRİT CANVAS 2D TURBO ÇİZİCİ (TABLET / MOBİL İÇİN)
+                    draw2DTurboFallback(ctx2d, cssW, cssH, smoothViewStart, smoothViewEnd, smoothMinPrice, smoothMaxPrice);
+                }
 
                 drawVectorSignalsAndTargets(now);
             }
