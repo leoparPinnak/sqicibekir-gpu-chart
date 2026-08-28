@@ -1,4 +1,993 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SqiciBekiRBindikatöR // Quant Optimizasyon & Strateji Laboratuvarı</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
+        }
+        body, html {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #060913;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            color: #cbd5e1;
+            user-select: none;
+        }
+        
+        #app-root {
+            display: flex;
+            flex-direction: column;
+            width: 100vw;
+            height: 100vh;
+        }
 
+        /* 1. ÜST TOOLBAR */
+        .top-toolbar {
+            height: 48px;
+            background: #0b1120;
+            border-bottom: 1px solid #1e293b;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 0 12px;
+            z-index: 30;
+            flex-shrink: 0;
+            gap: 8px;
+            overflow-x: auto;
+            overflow-y: hidden;
+            flex-wrap: nowrap;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+        }
+        .top-toolbar::-webkit-scrollbar {
+            display: none;
+        }
+        .symbol-section {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-shrink: 0;
+        }
+        .indicator-badge {
+            background: linear-gradient(135deg, rgba(56, 189, 248, 0.2), rgba(129, 140, 248, 0.2));
+            border: 1px solid #38bdf8;
+            color: #38bdf8;
+            font-size: 11px;
+            font-weight: 800;
+            padding: 3px 6px;
+            border-radius: 5px;
+            letter-spacing: 0.3px;
+        }
+        .symbol-select {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #f8fafc;
+            font-size: 12px;
+            font-weight: 700;
+            padding: 4px 6px;
+            border-radius: 5px;
+            cursor: pointer;
+            outline: none;
+        }
+        .symbol-select option {
+            background: #0f172a;
+            color: #fff;
+        }
+
+        /* ⏱️ ZAMAN DİLİMİ (TIMEFRAME) SEÇİCİ */
+        .tf-selector-group {
+            display: flex;
+            align-items: center;
+            background: rgba(15, 23, 42, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 6px;
+            padding: 2px;
+            gap: 2px;
+        }
+        .tf-btn {
+            background: transparent;
+            border: 1px solid transparent;
+            color: #94a3b8;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 3px 6px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+        .tf-btn:hover {
+            color: #f8fafc;
+            background: rgba(255, 255, 255, 0.08);
+        }
+        .tf-btn.active {
+            background: #38bdf8;
+            color: #0f172a;
+            font-weight: 800;
+            box-shadow: 0 0 10px rgba(56, 189, 248, 0.4);
+        }
+
+        /* 🎯 STRATEJİ SEÇİCİ TOOLBAR GRUBU */
+        .strategy-selector-group {
+            display: flex;
+            align-items: center;
+            background: rgba(15, 23, 42, 0.95);
+            border: 1.5px solid #38bdf8;
+            border-radius: 7px;
+            padding: 2px;
+            gap: 2px;
+            box-shadow: 0 0 14px rgba(56, 189, 248, 0.25);
+        }
+        .strat-label {
+            font-size: 10px;
+            font-weight: 800;
+            color: #38bdf8;
+            padding: 0 4px;
+            letter-spacing: 0.3px;
+        }
+        .strat-btn {
+            background: transparent;
+            border: 1px solid transparent;
+            color: #94a3b8;
+            font-size: 10.5px;
+            font-weight: 600;
+            padding: 3px 7px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.15s;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            white-space: nowrap;
+        }
+        .strat-btn:hover {
+            color: #f8fafc;
+            background: rgba(255, 255, 255, 0.08);
+        }
+        .strat-btn.active {
+            background: linear-gradient(135deg, #0284c7, #0369a1);
+            border-color: #38bdf8;
+            color: #ffffff;
+            font-weight: 800;
+            box-shadow: 0 0 10px rgba(56, 189, 248, 0.4);
+        }
+        .strat-btn.highlight-btc {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            border-color: #fde68a;
+            color: #ffffff;
+        }
+        .strat-btn.highlight-btc.active {
+            background: linear-gradient(135deg, #10b981, #059669);
+            border-color: #6ee7b7;
+            box-shadow: 0 0 12px rgba(16, 185, 129, 0.6);
+        }
+
+        .candle-depth-select {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: #38bdf8;
+            font-size: 10.5px;
+            font-weight: 600;
+            padding: 3px 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            outline: none;
+        }
+        .candle-depth-select option {
+            background: #0f172a;
+            color: #fff;
+        }
+
+        .live-price-box {
+            font-family: 'SF Pro Text', 'Consolas', monospace;
+            font-size: 13px;
+            font-weight: 700;
+            color: #10b981;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .ws-status-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #10b981;
+            box-shadow: 0 0 8px #10b981;
+            display: inline-block;
+        }
+
+        .indicator-nav {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .ind-btn {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #94a3b8;
+            padding: 4px 7px;
+            border-radius: 5px;
+            font-size: 10px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+        .ind-btn:hover { background: rgba(255, 255, 255, 0.1); color: #fff; }
+        .ind-btn.active {
+            background: rgba(56, 189, 248, 0.2);
+            border-color: #38bdf8;
+            color: #38bdf8;
+            font-weight: 600;
+        }
+
+        /* BACKTEST BUTONU */
+        .backtest-btn {
+            background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+            border: 1px solid #c4b5fd;
+            color: #ffffff;
+            font-weight: 800;
+            padding: 4px 9px;
+            border-radius: 5px;
+            font-size: 10.5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            box-shadow: 0 0 10px rgba(139, 92, 246, 0.4);
+            transition: all 0.2s;
+        }
+        .backtest-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 0 16px rgba(139, 92, 246, 0.7);
+        }
+        .backtest-btn.active {
+            background: linear-gradient(135deg, #10b981, #059669);
+            border-color: #6ee7b7;
+            box-shadow: 0 0 14px rgba(16, 185, 129, 0.6);
+        }
+
+        /* 2. ANA GRAFİK GÖVDESİ */
+        .main-workspace {
+            position: relative;
+            flex: 1;
+            display: flex;
+            width: 100%;
+            height: calc(100vh - 48px - 26px);
+            overflow: hidden;
+            background: #070b18;
+        }
+
+        .chart-body {
+            position: relative;
+            flex: 1;
+            display: flex;
+            height: 100%;
+            overflow: hidden;
+            transition: flex 0.25s ease-in-out;
+        }
+
+        .chart-viewport-column {
+            position: relative;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .canvas-container {
+            position: relative;
+            flex: 1;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            cursor: crosshair;
+            touch-action: none !important;
+            -webkit-touch-callout: none !important;
+            -webkit-user-select: none !important;
+            user-select: none !important;
+        }
+        .canvas-container.grabbing {
+            cursor: grabbing !important;
+        }
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            touch-action: none !important;
+            -webkit-touch-callout: none !important;
+            -webkit-user-select: none !important;
+            user-select: none !important;
+        }
+        #overlay-canvas {
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        /* HUD KARTLARI */
+        .hud-overlay-card {
+            position: absolute;
+            top: 10px;
+            left: 12px;
+            z-index: 20;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            pointer-events: none;
+        }
+        .hud-badge-row {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            background: rgba(11, 17, 32, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            padding: 4px 8px;
+            border-radius: 6px;
+            backdrop-filter: blur(10px);
+            font-family: 'SF Pro Text', 'Segoe UI', sans-serif;
+            font-size: 11px;
+            font-weight: 500;
+        }
+        .hud-tag {
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 10px;
+            letter-spacing: 0.2px;
+        }
+        .tag-bull { background: rgba(16, 185, 129, 0.25); color: #10b981; border: 1px solid #10b981; }
+        .tag-bear { background: rgba(239, 68, 68, 0.25); color: #ef4444; border: 1px solid #ef4444; }
+
+        /* GÖRÜNEN EKRAN KÜMÜLATİF ALL-IN BACKTEST ROZETİ */
+        .visible-backtest-card {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.96), rgba(30, 27, 75, 0.96));
+            border: 1.5px solid #38bdf8;
+            padding: 8px 12px;
+            border-radius: 8px;
+            backdrop-filter: blur(14px);
+            font-family: 'SF Pro Text', 'Segoe UI', sans-serif;
+            font-size: 11.5px;
+            box-shadow: 0 6px 25px rgba(0,0,0,0.8);
+            min-width: 410px;
+        }
+        .vbt-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 4px;
+        }
+        .active-strat-title {
+            color: #38bdf8;
+            font-weight: 800;
+            font-size: 11px;
+        }
+        .vbt-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+        }
+        .bt-stat-badge {
+            font-weight: 800;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+        .bt-win { color: #10b981; background: rgba(16, 185, 129, 0.2); border: 1px solid #10b981; }
+        .bt-loss { color: #ef4444; background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; }
+        .pnl-badge-up { color: #10b981; font-weight: 800; font-size: 13px; text-shadow: 0 0 8px rgba(16, 185, 129, 0.6); }
+        .pnl-badge-down { color: #ef4444; font-weight: 800; font-size: 13px; text-shadow: 0 0 8px rgba(239, 68, 68, 0.6); }
+
+        .ohlc-tooltip {
+            display: flex;
+            gap: 10px;
+            font-family: 'SF Pro Text', 'Consolas', monospace;
+            font-size: 11.5px;
+            color: #94a3b8;
+            background: rgba(11, 17, 32, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            padding: 4px 8px;
+            border-radius: 6px;
+            backdrop-filter: blur(10px);
+        }
+        .ohlc-val { font-weight: 700; }
+        .val-up { color: #10b981; }
+        .val-down { color: #f43f5e; }
+
+        /* Sinyal İnceleyici Kartı (Smooth Fade) */
+        .signal-inspector-card {
+            background: rgba(15, 23, 42, 0.96);
+            border: 1.5px solid #38bdf8;
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-family: 'SF Pro Text', 'Segoe UI', sans-serif;
+            font-size: 11.5px;
+            color: #f8fafc;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            backdrop-filter: blur(14px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.8);
+            min-width: 280px;
+            opacity: 0;
+            transform: translateY(6px) scale(0.96);
+            pointer-events: none;
+            transition: opacity 0.28s cubic-bezier(0.16, 1, 0.3, 1), transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .signal-inspector-card.active {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            pointer-events: auto;
+        }
+
+        /* ALT TARİH / ZAMAN BARI */
+        .time-axis-bar {
+            height: 26px;
+            width: 100%;
+            background: #090e1e;
+            border-top: 1px solid #1e293b;
+            position: relative;
+            flex-shrink: 0;
+            overflow: hidden;
+            cursor: ew-resize;
+            z-index: 15;
+        }
+        .time-axis-bar.grabbing {
+            cursor: grabbing !important;
+        }
+        .time-scale-label {
+            position: absolute;
+            top: 5px;
+            transform: translateX(-50%);
+            font-family: 'SF Pro Text', 'Segoe UI', sans-serif;
+            font-size: 11px;
+            color: #8da2c0;
+            white-space: nowrap;
+            pointer-events: none;
+            letter-spacing: 0.2px;
+        }
+        .time-scale-label b { color: #cbd5e1; font-weight: 700; }
+        .crosshair-time-tag {
+            position: absolute;
+            top: 0;
+            transform: translateX(-50%);
+            background: #38bdf8;
+            color: #0f172a;
+            font-family: 'SF Pro Text', 'Segoe UI', sans-serif;
+            font-size: 11px;
+            font-weight: 800;
+            padding: 2px 7px;
+            border-radius: 0 0 3px 3px;
+            pointer-events: none;
+            display: none;
+            z-index: 20;
+            box-shadow: 0 0 10px rgba(56, 189, 248, 0.4);
+            white-space: nowrap;
+        }
+
+        /* SAĞ FİYAT SKALASI */
+        .price-axis-sidebar {
+            width: 82px;
+            height: 100%;
+            background: #090e1e;
+            border-left: 1px solid #1e293b;
+            position: relative;
+            flex-shrink: 0;
+            overflow: hidden;
+            cursor: ns-resize;
+            z-index: 15;
+        }
+        .price-axis-sidebar:hover { background: #0d1428; }
+        .price-scale-label {
+            font-family: 'SF Pro Text', 'Segoe UI', sans-serif;
+            font-size: 11px;
+            font-weight: 600;
+            color: #7e90aa;
+            padding-left: 8px;
+            position: absolute;
+            transform: translateY(-50%);
+            white-space: nowrap;
+            pointer-events: none;
+        }
+
+        .crosshair-price-tag {
+            position: absolute;
+            left: 0;
+            width: 100%;
+            background: #38bdf8;
+            color: #0f172a;
+            font-family: 'SF Pro Text', 'Segoe UI', sans-serif;
+            font-size: 11px;
+            font-weight: 800;
+            padding: 3px 6px;
+            transform: translateY(-50%);
+            pointer-events: none;
+            display: none;
+            z-index: 20;
+            box-shadow: 0 0 10px rgba(56, 189, 248, 0.4);
+        }
+
+        .current-price-badge {
+            position: absolute;
+            left: 0;
+            width: 100%;
+            background: #10b981;
+            color: #ffffff;
+            font-family: 'SF Pro Text', 'Segoe UI', sans-serif;
+            font-size: 11px;
+            font-weight: 800;
+            padding: 3px 6px;
+            transform: translateY(-50%);
+            pointer-events: none;
+            z-index: 15;
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+            transition: top 0.15s ease-out;
+        }
+
+        .axis-corner-reset {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 82px;
+            height: 26px;
+            background: #0b1122;
+            border-left: 1px solid #1e293b;
+            border-top: 1px solid #1e293b;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10.5px;
+            font-weight: 800;
+            color: #7e90aa;
+            cursor: pointer;
+            z-index: 25;
+        }
+        .axis-corner-reset:hover { color: #38bdf8; background: #1e293b; }
+
+        .loading-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(15, 23, 42, 0.94);
+            border: 1px solid #38bdf8;
+            padding: 14px 24px;
+            border-radius: 10px;
+            font-weight: 600;
+            color: #38bdf8;
+            z-index: 40;
+            display: none;
+            box-shadow: 0 0 30px rgba(0,0,0,0.8);
+            pointer-events: none;
+        }
+
+        /* 3. ALT DURUM ÇUBUĞU */
+        .bottom-statusbar {
+            height: 26px;
+            background: #090e1e;
+            border-top: 1px solid #1e293b;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 14px;
+            font-family: 'SF Pro Text', 'Segoe UI', sans-serif;
+            font-size: 11px;
+            color: #7e90aa;
+            z-index: 30;
+            flex-shrink: 0;
+        }
+        .status-left {
+            display: flex;
+            gap: 14px;
+        }
+        .status-highlight {
+            color: #38bdf8;
+            font-weight: 700;
+        }
+        .fit-all-btn {
+            background: rgba(56, 189, 248, 0.15);
+            border: 1px solid rgba(56, 189, 248, 0.4);
+            color: #38bdf8;
+            font-size: 10.5px;
+            font-weight: 700;
+            padding: 1px 6px;
+            border-radius: 3px;
+            cursor: pointer;
+            margin-left: 8px;
+        }
+        .fit-all-btn:hover { background: #38bdf8; color: #0f172a; }
+    </style>
+</head>
+<body>
+
+    <div id="app-root">
+        
+        <!-- ÜST MENÜ -->
+        <div class="top-toolbar">
+            <div class="symbol-section">
+                <span class="indicator-badge">⚡ SqiciBekiR</span>
+
+                <select class="symbol-select" id="symbol-select" onchange="changeSymbol(this.value)">
+                    <option value="BTCUSDT">BTC / USDT</option>
+                    <option value="ETHUSDT">ETH / USDT</option>
+                    <option value="SOLUSDT">SOL / USDT</option>
+                    <option value="BNBUSDT">BNB / USDT</option>
+                    <option value="XRPUSDT">XRP / USDT</option>
+                </select>
+
+                <!-- ⏱️ ZAMAN DİLİMİ (TIMEFRAME) SEÇİCİ -->
+                <div class="tf-selector-group">
+                    <button class="tf-btn" id="tf-btn-1m" onclick="changeTimeframe('1m')" title="⚡ 1-Dakika Scalping: 1m Mumlar + 5m EMA26 + 1H Rejim">⚡ 1m</button>
+                    <button class="tf-btn" id="tf-btn-3m" onclick="changeTimeframe('3m')" title="🔥 3-Dakika Turbo Day Trade: 3m Mumlar + 15m EMA26 + 1H Rejim">🔥 3m</button>
+                    <button class="tf-btn" id="tf-btn-5m" onclick="changeTimeframe('5m')" title="🚀 5-Dakika Hızlı Trade: 5m Mumlar + 15m EMA26 + 4H Rejim">🚀 5m</button>
+                    <button class="tf-btn" id="tf-btn-15m" onclick="changeTimeframe('15m')" title="🎯 15-Dakika Swing Day Trade: 15m Mumlar + 1H EMA26 + 1D Rejim">🎯 15m</button>
+                    <button class="tf-btn active" id="tf-btn-1h" onclick="changeTimeframe('1h')" title="📊 1-Saat Orijinal Pine v6 Swing: 1H Mumlar + 4H EMA26 + 1D Rejim">📊 1h</button>
+                    <button class="tf-btn" id="tf-btn-4h" onclick="changeTimeframe('4h')" title="🏛️ 4-Saat Trend Takibi: 4H Mumlar + 1D EMA26 + 1W Rejim">🏛️ 4h</button>
+                </div>
+
+                <!-- 🎯 5 GELİŞMİŞ QUANT STRATEJİ SEÇİCİ -->
+                <div class="strategy-selector-group">
+                    <span class="strat-label">🧠 LAB:</span>
+                    <button class="strat-btn active highlight-btc" id="strat-btn-4" onclick="setStrategy(4)" title="🏆 Quant Optimizasyon Şampiyonu: BUY1 (2.2/2.2x), BUY2 Trend (1.4/4.0x R:R 1:2.85), SELL (1.2/2.5x)">
+                        🔥 4. Asimetrik Pro (+%14 Kâr)
+                    </button>
+                    <button class="strat-btn" id="strat-btn-2" onclick="setStrategy(2)" title="Quant MAE: Volatilite Sıkışmada 2.5x SL / Patlamada 3.2x TP">
+                        🤖 2. Quant MAE (+%9.5)
+                    </button>
+                    <button class="strat-btn" id="strat-btn-3" onclick="setStrategy(3)" title="Trailing Stop: +0.8 ATR Erken Breakeven & %78.8 Kazanma Oranı">
+                        🔄 3. Trailing BE (%78.8 Win)
+                    </button>
+                    <button class="strat-btn" id="strat-btn-1" onclick="setStrategy(1)" title="Piyasa Yapısı: Son 10 mum Swing Low + Kijun + Bulut Tabanı + 0.4 ATR Tampon">
+                        🏛️ 1. Yapısal SL
+                    </button>
+                    <button class="strat-btn" id="strat-btn-0" onclick="setStrategy(0)" title="Klasik Sabit 1:1.67 R:R (1.5x ATR SL, 2.5x ATR TP)">
+                        📐 0. Sabit 1.67
+                    </button>
+                </div>
+
+                <select class="candle-depth-select" id="candle-depth-select" onchange="changeCandleDepth(this.value)" title="Geçmiş mum adedi">
+                    <option value="1000">1.000 Mum</option>
+                    <option value="2000">2.000 Mum</option>
+                    <option value="3000" selected>3.000 Mum</option>
+                </select>
+
+                <div class="live-price-box">
+                    <span class="ws-status-dot" id="ws-dot" title="Binance Canlı WebSocket"></span>
+                    <span id="price-val">Yükleniyor...</span>
+                </div>
+            </div>
+
+            <!-- İndikatör Katmanları & Backtest & OttOnline Butonu -->
+            <div class="indicator-nav">
+                <button class="ind-btn active" id="btn-cloud" onclick="toggleLayer('cloud')">
+                    <span style="color: #10b981;">☁️</span> Bulut
+                </button>
+                <button class="ind-btn active" id="btn-ema" onclick="toggleLayer('ema')">
+                    <span style="color: #f97316;">⚡</span> EMA
+                </button>
+                <button class="ind-btn active" id="btn-signals" onclick="toggleLayer('signals')">
+                    <span style="color: #fbbf24;">🎯</span> Sinyal
+                </button>
+
+                <!-- Backtest Butonu -->
+                <button class="backtest-btn" id="btn-backtest" onclick="toggleBacktestMode()" title="Backtest Modunu Aç / Kapat">
+                    🎆 Backtest
+                </button>
+
+                <button class="ind-btn active" id="btn-bg" onclick="toggleLayer('bg')">
+                    <span>🌌</span> Rejim
+                </button>
+            </div>
+        </div>
+
+        <!-- ANA ÇALIŞMA ALANI -->
+        <div class="main-workspace">
+            
+            <!-- SOL: GRAFİK ALANI -->
+            <div class="chart-body" id="chart-body-wrapper">
+                <div class="chart-viewport-column">
+                    <div class="canvas-container" id="canvas-container">
+                        <div class="loading-overlay" id="loading-overlay">⏳ Binance MTF (1D + 4H + 1H) Verileri Yükleniyor...</div>
+
+                        <div class="hud-overlay-card">
+                            <div class="hud-badge-row">
+                                <span>1D HTF REJİM: <span id="hud-regime" class="hud-tag tag-bull">BOĞA (YEŞİL)</span></span>
+                                <span>CANLI 4H EMA26: <span id="hud-ema" class="hud-tag tag-bull">ÜSTÜNDE</span></span>
+                                <span>ANA YÖN (Pine v6): <span id="hud-trend" class="hud-tag tag-bull">GÜÇLÜ BOĞA 🚀</span></span>
+                                <span>MUM BİLGİSİ: <span id="hud-candle-info" class="hud-tag" style="background: rgba(56, 189, 248, 0.2); color: #38bdf8; border: 1px solid #38bdf8; font-weight: 700;">Görünen: 150 / Toplam: 3.000</span></span>
+                            </div>
+
+                            <!-- GÖRÜNEN EKRAN KÜMÜLATİF BACKTEST ROZETİ -->
+                            <div class="visible-backtest-card" id="visible-backtest-card">
+                                <div class="vbt-header">
+                                    <span class="active-strat-title" id="vbt-strat-title">🔥 4. ASİMETRİK PRO (BUY1: 2.2x, BUY2: 4.0x, SELL: 2.5x)</span>
+                                    <span id="vbt-candle-span" style="color: #38bdf8; font-weight: 700; font-size: 11px;">Görünen: 150 / Toplam: 3.000 Mum</span>
+                                </div>
+                                <div class="vbt-row">
+                                    <span>Görünen Sinyaller: <b id="vbt-total-sig" style="color: #f8fafc;">0</b> (🎯 <b id="vbt-tp-count" style="color: #10b981;">0</b> | ❌ <b id="vbt-sl-count" style="color: #ef4444;">0</b> | ⌛ <b id="vbt-open-count" style="color: #38bdf8;">0</b>)</span>
+                                    <span>Kazanma: <span class="bt-stat-badge bt-win" id="vbt-winrate">%0.0</span></span>
+                                </div>
+                                <div class="vbt-row" style="background: rgba(0,0,0,0.3); padding: 4px 6px; border-radius: 5px;">
+                                    <span>💰 <b>$1.000</b> İle Sırayla All-In Girilseydi:</span>
+                                    <span id="vbt-final-balance" class="pnl-badge-up">$1,000.00</span>
+                                </div>
+                                <div class="vbt-row">
+                                    <span>Kümülatif Net Kâr/Zarar:</span>
+                                    <span id="vbt-net-pnl" class="pnl-badge-up">+%0.00</span>
+                                </div>
+                            </div>
+
+                            <div class="ohlc-tooltip">
+                                <span>O: <span class="ohlc-val" id="ohlc-o">0.00</span></span>
+                                <span>H: <span class="ohlc-val" id="ohlc-h">0.00</span></span>
+                                <span>L: <span class="ohlc-val" id="ohlc-l">0.00</span></span>
+                                <span>C: <span class="ohlc-val" id="ohlc-c">0.00</span></span>
+                                <span>ATR(14): <span class="ohlc-val" id="ohlc-atr" style="color: #38bdf8;">0.00</span></span>
+                            </div>
+
+                            <!-- Sinyal İnceleyici Kartı -->
+                            <div class="signal-inspector-card" id="signal-inspector-card">
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <span id="insp-type" style="font-weight: 800; font-size: 12px;">⚡ SİNYAL: --</span>
+                                    <span id="insp-rr" style="color: #fbbf24; font-weight: 700;">R:R: --</span>
+                                </div>
+                                <span id="insp-bt-result" style="font-weight: 800; display: none;">🏆 BACKTEST: TP BAŞARILI!</span>
+                                <span id="insp-entry" style="color: #94a3b8; font-size: 11px;">GİRİŞ: $0.00</span>
+                                <span id="insp-tp" style="color: #10b981; font-weight: 700;">🎯 TP: $0.00</span>
+                                <span id="insp-sl" style="color: #ef4444; font-weight: 700;">🛡️ SL: $0.00</span>
+                                <span id="insp-extra" style="color: #38bdf8; font-size: 10.5px;"></span>
+                            </div>
+                        </div>
+
+                        <!-- WebGL 2.0 GPU Canvas -->
+                        <canvas id="glcanvas"></canvas>
+
+                        <!-- HiDPI Keskin Vektör & Havai Fişek Canvas -->
+                        <canvas id="overlay-canvas"></canvas>
+                    </div>
+
+                    <!-- ALT TARİH / ZAMAN BARI -->
+                    <div class="time-axis-bar" id="time-axis" title="Tarih alanında sürükleyerek kaydırın (Çift tık: Tümünü sığdır)">
+                        <div class="crosshair-time-tag" id="crosshair-time-tag">2026-08-28 00:00</div>
+                        <div id="time-labels-container"></div>
+                    </div>
+                </div>
+
+                <!-- SAĞ FİYAT SKALASI -->
+                <div class="price-axis-sidebar" id="price-axis" title="Yukarı/Aşağı sürükleyerek dikey ölçekleyin (Çift tık: Sıfırla)">
+                    <div class="current-price-badge" id="current-price-badge">0.00</div>
+                    <div class="crosshair-price-tag" id="crosshair-price-tag">0.00</div>
+                    <div id="price-labels-container"></div>
+                </div>
+
+                <!-- Sağ Alt Köşe: Ölçek Sıfırlama Butonu -->
+                <div class="axis-corner-reset" onclick="resetPriceScale()" title="Fiyat ölçeğini otomatik sıfırla">
+                    OTO 🔄
+                </div>
+            </div>
+
+        </div>
+
+        <!-- ALT BİLGİ VE DURUM -->
+        <div class="bottom-statusbar">
+            <div class="status-left">
+                <span>KAYNAK: <span class="status-highlight">Binance MTF</span></span>
+                <span>MOTOR: <span class="status-highlight" id="engine-stat">🚀 GPU (WebGL 2.0)</span></span>
+                <span>FPS: <span class="status-highlight" id="fps-stat">60</span></span>
+                <span>TOPLAM MUM: <span class="status-highlight" id="total-candles-stat">3000</span></span>
+                <span>GÖRÜNÜR: <span class="status-highlight" id="visible-candles-stat">150</span></span>
+                <button class="fit-all-btn" onclick="fitAllCandles()" title="Tüm geçmiş mumları ekrana tam sığdır">🔍 TÜMÜNÜ GÖR</button>
+            </div>
+            <div>
+                <span id="active-strat-footer">Aktif: <b>4. Asimetrik Pro (BUY1: 2.2x SL / 2.2x TP, BUY2: 1.4x SL / 4.0x TP, SELL: 1.2x SL / 2.5x TP)</b></span>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ==================== VERTEX SHADER ==================== -->
+    <script id="vs" type="x-shader/x-vertex">#version 300 es
+    in vec2 a_position;
+    void main() {
+        gl_Position = vec4(a_position, 0.0, 1.0);
+    }
+    </script>
+
+    <!-- ==================== FRAGMENT SHADER ==================== -->
+    <script id="fs" type="x-shader/x-fragment">#version 300 es
+    precision highp float;
+
+    uniform vec2 u_resolution;
+    uniform vec2 u_view_range;
+    uniform vec2 u_price_range;
+    uniform vec2 u_mouse;
+    uniform float u_time;
+
+    uniform int u_show_cloud;
+    uniform int u_show_ema;
+    uniform int u_show_bg;
+
+    uniform sampler2D u_candle_tex;
+    uniform sampler2D u_ind_tex;
+    uniform float u_total_candles;
+
+    out vec4 fragColor;
+
+    float priceToY(float price) {
+        float diff = u_price_range.y - u_price_range.x;
+        if (diff <= 0.0001) diff = 1.0;
+        return (price - u_price_range.x) / diff;
+    }
+
+    void main() {
+        vec2 pixelCoord = gl_FragCoord.xy;
+        vec2 uv = pixelCoord / u_resolution;
+
+        float topBound = 0.985;
+        float bottomBound = 0.015;
+
+        // Koyu Uzay Arka Planı
+        vec3 col = vec3(0.042, 0.062, 0.105);
+
+        float visibleCount = max(1.0, u_view_range.y - u_view_range.x);
+        float currentCandleIdx = u_view_range.x + uv.x * visibleCount;
+        float candleCenterIdx = floor(currentCandleIdx) + 0.5;
+        float texCoordX = clamp(candleCenterIdx / max(1.0, u_total_candles), 0.0, 1.0);
+
+        vec4 indData = texture(u_ind_tex, vec2(texCoordX, 0.5));
+        float htfRegime = indData.r;
+        float sa1H = indData.g;
+        float sb1H = indData.b;
+        float ema4HLive = indData.a;
+
+        if (u_show_bg == 1 && u_total_candles > 0.0) {
+            if (htfRegime > 0.5) {
+                col = mix(col, vec3(0.06, 0.85, 0.35), 0.07);
+            } else if (htfRegime < -0.5) {
+                col = mix(col, vec3(0.95, 0.15, 0.25), 0.07);
+            }
+        }
+
+        float gridY = fract(uv.y * 8.0);
+        float hLine = smoothstep(0.025, 0.0, abs(gridY - 0.5) * 2.0);
+        col += vec3(0.12, 0.18, 0.28) * hLine * 0.4;
+
+        float gridX = fract(uv.x * 10.0);
+        float vLine = smoothstep(0.025, 0.0, abs(gridX - 0.5) * 2.0);
+        col += vec3(0.12, 0.18, 0.28) * vLine * 0.25;
+
+        if (uv.y >= bottomBound && uv.y <= topBound) {
+            if (u_show_cloud == 1 && sa1H > 0.0 && sb1H > 0.0) {
+                float saY = clamp(priceToY(sa1H), bottomBound, topBound);
+                float sbY = clamp(priceToY(sb1H), bottomBound, topBound);
+
+                float cloudTop = max(saY, sbY);
+                float cloudBot = min(saY, sbY);
+
+                if (uv.y >= cloudBot && uv.y <= cloudTop) {
+                    float relY = (uv.y - cloudBot) / max(0.001, cloudTop - cloudBot);
+                    bool isBullCloud = sa1H >= sb1H;
+
+                    float diag1 = sin(pixelCoord.x * 0.06 + pixelCoord.y * 0.06 - u_time * 3.5);
+                    float diag2 = cos(pixelCoord.x * 0.04 - pixelCoord.y * 0.04 + u_time * 2.2);
+                    float plasmaWave = sin(uv.x * 45.0 + sin(uv.y * 30.0 + u_time * 2.5) * 3.0 + u_time * 2.0);
+
+                    float pattern = smoothstep(-0.2, 0.8, diag1 * 0.5 + diag2 * 0.3 + plasmaWave * 0.2);
+                    float pulse = 0.5 + 0.5 * sin(u_time * 2.2 + uv.x * 15.0);
+                    float edgeAura = pow(1.0 - abs(relY - 0.5) * 2.0, 0.65);
+
+                    if (isBullCloud) {
+                        vec3 deepGreen = vec3(0.02, 0.45, 0.25);
+                        vec3 neonGreen = vec3(0.0, 1.0, 0.55);
+                        vec3 electricCyan = vec3(0.1, 0.9, 0.95);
+
+                        vec3 plasmaCol = mix(deepGreen, neonGreen, pattern);
+                        plasmaCol = mix(plasmaCol, electricCyan, diag1 * 0.35 + 0.35);
+
+                        float fillAlpha = 0.18 + pattern * 0.14 + pulse * 0.06 + (1.0 - edgeAura) * 0.08;
+                        col = mix(col, plasmaCol, fillAlpha);
+                        col += neonGreen * (0.05 * pattern);
+                    } else {
+                        vec3 deepRuby = vec3(0.5, 0.05, 0.15);
+                        vec3 neonRed = vec3(1.0, 0.15, 0.3);
+                        vec3 lavaOrange = vec3(1.0, 0.45, 0.1);
+
+                        vec3 plasmaCol = mix(deepRuby, neonRed, pattern);
+                        plasmaCol = mix(plasmaCol, lavaOrange, diag2 * 0.35 + 0.35);
+
+                        float fillAlpha = 0.18 + pattern * 0.14 + pulse * 0.06 + (1.0 - edgeAura) * 0.08;
+                        col = mix(col, plasmaCol, fillAlpha);
+                        col += neonRed * (0.05 * pattern);
+                    }
+                }
+
+                float dSa = abs(uv.y - saY) * u_resolution.y;
+                float dSb = abs(uv.y - sbY) * u_resolution.y;
+                float laserA = smoothstep(1.8, 0.0, dSa) * 0.8 + (0.06 / (dSa + 0.5)) * 0.4;
+                float laserB = smoothstep(1.8, 0.0, dSb) * 0.8 + (0.06 / (dSb + 0.5)) * 0.4;
+
+                col += vec3(0.1, 1.0, 0.55) * laserA;
+                col += vec3(1.0, 0.2, 0.35) * laserB;
+            }
+
+            if (candleCenterIdx >= 0.0 && candleCenterIdx <= u_total_candles) {
+                float candleScreenU = (candleCenterIdx - u_view_range.x) / visibleCount;
+                float candleDistX = abs(uv.x - candleScreenU) * u_resolution.x;
+
+                float candleSlotPx = u_resolution.x / visibleCount;
+                float candleWidth = max(0.55, candleSlotPx * 0.72);
+                float wickThreshold = max(0.4, min(1.2, candleSlotPx * 0.35));
+
+                vec4 candleData = texture(u_candle_tex, vec2(texCoordX, 0.5));
+
+                float openPrice = candleData.r;
+                float highPrice = candleData.g;
+                float lowPrice = candleData.b;
+                float closePrice = candleData.a;
+
+                bool isBull = closePrice >= openPrice;
+                vec3 bullColor = vec3(0.06, 0.85, 0.55);
+                vec3 bearColor = vec3(0.96, 0.24, 0.38);
+                vec3 candleCol = isBull ? bullColor : bearColor;
+
+                float highY = clamp(priceToY(highPrice), bottomBound, topBound);
+                float lowY = clamp(priceToY(lowPrice), bottomBound, topBound);
+                if (uv.y >= lowY && uv.y <= highY && candleDistX <= wickThreshold) {
+                    col = mix(col, candleCol, 0.9);
+                    col += candleCol * 0.2;
+                }
+
+                float bodyTop = clamp(priceToY(max(openPrice, closePrice)), bottomBound, topBound);
+                float bodyBottom = clamp(priceToY(min(openPrice, closePrice)), bottomBound, topBound);
+                bodyTop = max(bodyTop, bodyBottom + 0.0015);
+
+                if (uv.y >= bodyBottom && uv.y <= bodyTop && candleDistX < candleWidth * 0.5) {
+                    col = mix(col, candleCol, 0.95);
+                    if (candleSlotPx > 6.0) {
+                        float edge = smoothstep(candleWidth * 0.5, candleWidth * 0.4, candleDistX);
+                        col += vec3(1.0) * (1.0 - edge) * 0.15;
+                    }
+                }
+
+                if (u_show_ema == 1 && ema4HLive > 0.0) {
+                    float emaY = clamp(priceToY(ema4HLive), bottomBound, topBound);
+                    float distEma = abs(uv.y - emaY) * u_resolution.y;
+                    float lineEma = smoothstep(2.0, 0.0, distEma);
+                    col += vec3(1.0, 0.55, 0.0) * (lineEma + (0.06 / (distEma + 0.5)) * 0.6);
+                }
+            }
+        }
+
+        if (u_mouse.x >= 0.0 && u_mouse.x <= u_resolution.x &&
+            u_mouse.y >= 0.0 && u_mouse.y <= u_resolution.y) {
+            float crossX = smoothstep(1.2, 0.0, abs(pixelCoord.x - u_mouse.x));
+            float crossY = smoothstep(1.2, 0.0, abs(pixelCoord.y - u_mouse.y));
+            col += vec3(0.4, 0.6, 0.8) * (crossX + crossY) * 0.35;
+        }
+
+        fragColor = vec4(col, 1.0);
+    }
+    </script>
+
+    <!-- ==================== JAVASCRIPT MOTORU ==================== -->
+    <script>
         const canvas = document.getElementById('glcanvas');
         const overlayCanvas = document.getElementById('overlay-canvas');
         const canvasContainer = document.getElementById('canvas-container');
@@ -2183,565 +3172,6 @@
             }
         }
 
-        // ============================================================
-        // 🎨 TRADINGVIEW ÇİZİM MOTORU (STANDALONE DRAWING ENGINE)
-        // ============================================================
-        class TradingViewDrawingEngine {
-            constructor(canvasContainer, overlayCanvas, options = {}) {
-                this.container = canvasContainer;
-                this.canvas = overlayCanvas;
-                this.ctx = overlayCanvas ? overlayCanvas.getContext('2d') : null;
-                
-                this.activeTool = 'cursor';
-                this.magnetMode = false;
-                this.continuousDraw = false;
-                this.lockAll = false;
-                this.hideAll = false;
-                
-                this.drawings = [];
-                this.selectedDrawing = null;
-                this.drawingInProgress = null;
-                
-                this.isDragging = false;
-                this.isDraggingHandle = false;
-                this.activeHandleIndex = -1;
-                this.dragStart = { x: 0, y: 0 };
-                this.dragOriginalPoints = [];
-                
-                this.getPriceRange = options.getPriceRange || (() => ({ min: minPrice, max: maxPrice }));
-                this.getViewRange = options.getViewRange || (() => ({ start: smoothViewStart || viewStart, end: smoothViewEnd || viewEnd }));
-                this.getCandleData = options.getCandleData || (() => candleDataBase);
-                
-                this.initEvents();
-            }
-
-            priceToY(price) {
-                const h = this.container.clientHeight;
-                const { min, max } = this.getPriceRange();
-                const diff = max - min;
-                if (diff <= 0) return h / 2;
-                return Math.round(h - ((price - min) / diff) * h);
-            }
-
-            yToPrice(y) {
-                const h = this.container.clientHeight;
-                const { min, max } = this.getPriceRange();
-                if (h <= 0) return min;
-                return min + ((h - y) / h) * (max - min);
-            }
-
-            indexToX(cIdx) {
-                const w = this.container.clientWidth;
-                const { start, end } = this.getViewRange();
-                const count = Math.max(1, end - start);
-                return Math.round(((cIdx + 0.5 - start) / count) * w);
-            }
-
-            xToIndex(x) {
-                const w = this.container.clientWidth;
-                const { start, end } = this.getViewRange();
-                const count = Math.max(1, end - start);
-                if (w <= 0) return start;
-                return start + (x / w) * count - 0.5;
-            }
-
-            snapToOHLC(cIdx, rawPrice) {
-                if (!this.magnetMode) return { cIdx, price: rawPrice };
-                const candles = this.getCandleData();
-                if (!candles || candles.length === 0) return { cIdx, price: rawPrice };
-
-                const roundIdx = Math.max(0, Math.min(candles.length - 1, Math.round(cIdx)));
-                const candle = candles[roundIdx];
-                if (!candle) return { cIdx, price: rawPrice };
-
-                const ohlc = [candle.open, candle.high, candle.low, candle.close];
-                let closest = ohlc[0];
-                let minDist = Math.abs(rawPrice - closest);
-                for (let i = 1; i < ohlc.length; i++) {
-                    const d = Math.abs(rawPrice - ohlc[i]);
-                    if (d < minDist) {
-                        minDist = d;
-                        closest = ohlc[i];
-                    }
-                }
-                return { cIdx: roundIdx, price: closest };
-            }
-
-            setTool(toolName) {
-                this.activeTool = toolName;
-                const cursorBtn = document.getElementById('tv-tool-cursor');
-                if (cursorBtn && toolName === 'cursor') cursorBtn.classList.add('active');
-            }
-
-            toggleMagnet() {
-                this.magnetMode = !this.magnetMode;
-                return this.magnetMode;
-            }
-
-            toggleContinuousDraw() {
-                this.continuousDraw = !this.continuousDraw;
-                return this.continuousDraw;
-            }
-
-            toggleLockAll() {
-                this.lockAll = !this.lockAll;
-                return this.lockAll;
-            }
-
-            toggleHideAll() {
-                this.hideAll = !this.hideAll;
-                return this.hideAll;
-            }
-
-            deleteAll() {
-                this.drawings = [];
-                this.selectedDrawing = null;
-                updatePropertyToolbar(null);
-            }
-
-            initEvents() {
-                if (!this.container) return;
-
-                this.container.addEventListener('mousedown', (e) => this.handleMouseDown(e));
-                window.addEventListener('mousemove', (e) => this.handleMouseMove(e));
-                window.addEventListener('mouseup', (e) => this.handleMouseUp(e));
-                window.addEventListener('keydown', (e) => this.handleKeyDown(e));
-            }
-
-            handleMouseDown(e) {
-                if (e.button !== 0) return;
-                const rect = this.container.getBoundingClientRect();
-                const mx = e.clientX - rect.left;
-                const my = e.clientY - rect.top;
-
-                if (this.activeTool !== 'cursor') {
-                    const snapped = this.snapToOHLC(this.xToIndex(mx), this.yToPrice(my));
-
-                    if (['horizontal', 'horzray', 'vertical'].includes(this.activeTool)) {
-                        const newD = {
-                            id: 'draw_' + Date.now(),
-                            type: this.activeTool,
-                            points: [{ cIdx: snapped.cIdx, price: snapped.price }],
-                            style: { color: '#38bdf8', width: 2, lineStyle: 'solid', fillOpacity: 0.2 },
-                            locked: false
-                        };
-                        this.drawings.push(newD);
-                        this.selectDrawing(newD);
-                        if (!this.continuousDraw) this.setTool('cursor');
-                        e.stopPropagation();
-                        return;
-                    }
-
-                    this.drawingInProgress = {
-                        id: 'draw_' + Date.now(),
-                        type: this.activeTool,
-                        points: [
-                            { cIdx: snapped.cIdx, price: snapped.price },
-                            { cIdx: snapped.cIdx, price: snapped.price }
-                        ],
-                        style: { color: '#38bdf8', width: 2, lineStyle: 'solid', fillOpacity: 0.2 },
-                        locked: false
-                    };
-                    e.stopPropagation();
-                    return;
-                }
-
-                const hit = this.hitTest(mx, my);
-                if (hit.handleIdx !== -1) {
-                    this.isDraggingHandle = true;
-                    this.activeHandleIndex = hit.handleIdx;
-                    this.dragStart = { x: mx, y: my };
-                    e.stopPropagation();
-                    return;
-                }
-
-                if (hit.drawing) {
-                    this.selectDrawing(hit.drawing);
-                    if (!hit.drawing.locked && !this.lockAll) {
-                        this.isDragging = true;
-                        this.dragStart = { x: mx, y: my };
-                        this.dragOriginalPoints = JSON.parse(JSON.stringify(hit.drawing.points));
-                    }
-                    e.stopPropagation();
-                    return;
-                }
-
-                this.selectDrawing(null);
-            }
-
-            handleMouseMove(e) {
-                const rect = this.container.getBoundingClientRect();
-                const mx = e.clientX - rect.left;
-                const my = e.clientY - rect.top;
-
-                if (this.drawingInProgress) {
-                    const snapped = this.snapToOHLC(this.xToIndex(mx), this.yToPrice(my));
-                    this.drawingInProgress.points[1] = { cIdx: snapped.cIdx, price: snapped.price };
-                    return;
-                }
-
-                if (this.isDraggingHandle && this.selectedDrawing) {
-                    const snapped = this.snapToOHLC(this.xToIndex(mx), this.yToPrice(my));
-                    this.selectedDrawing.points[this.activeHandleIndex] = { cIdx: snapped.cIdx, price: snapped.price };
-                    updatePropertyToolbar(this.selectedDrawing);
-                    return;
-                }
-
-                if (this.isDragging && this.selectedDrawing && this.dragOriginalPoints.length > 0) {
-                    const dIdx = this.xToIndex(mx) - this.xToIndex(this.dragStart.x);
-                    const dPrice = this.yToPrice(my) - this.yToPrice(this.dragStart.y);
-
-                    for (let i = 0; i < this.selectedDrawing.points.length; i++) {
-                        this.selectedDrawing.points[i].cIdx = this.dragOriginalPoints[i].cIdx + dIdx;
-                        this.selectedDrawing.points[i].price = this.dragOriginalPoints[i].price + dPrice;
-                    }
-                    updatePropertyToolbar(this.selectedDrawing);
-                }
-            }
-
-            handleMouseUp() {
-                if (this.drawingInProgress) {
-                    this.drawings.push(this.drawingInProgress);
-                    this.selectDrawing(this.drawingInProgress);
-                    this.drawingInProgress = null;
-                    if (!this.continuousDraw) this.setTool('cursor');
-                }
-
-                if (this.isDragging || this.isDraggingHandle) {
-                    this.isDragging = false;
-                    this.isDraggingHandle = false;
-                }
-            }
-
-            handleKeyDown(e) {
-                if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') return;
-
-                if (e.key === 'Escape') {
-                    this.setTool('cursor');
-                    this.selectDrawing(null);
-                } else if (e.key === 'Delete' || e.key === 'Backspace') {
-                    if (this.selectedDrawing) {
-                        this.drawings = this.drawings.filter(d => d.id !== this.selectedDrawing.id);
-                        this.selectDrawing(null);
-                    }
-                }
-            }
-
-            selectDrawing(drawing) {
-                this.selectedDrawing = drawing;
-                updatePropertyToolbar(drawing);
-            }
-
-            hitTest(mx, my) {
-                if (this.hideAll) return { drawing: null, handleIdx: -1 };
-
-                if (this.selectedDrawing && !this.selectedDrawing.locked && !this.lockAll) {
-                    for (let i = 0; i < this.selectedDrawing.points.length; i++) {
-                        const p = this.selectedDrawing.points[i];
-                        const sx = this.indexToX(p.cIdx);
-                        const sy = this.priceToY(p.price);
-                        if (Math.hypot(mx - sx, my - sy) <= 9) {
-                            return { drawing: this.selectedDrawing, handleIdx: i };
-                        }
-                    }
-                }
-
-                for (let k = this.drawings.length - 1; k >= 0; k--) {
-                    const d = this.drawings[k];
-                    if (!d.points || d.points.length === 0) continue;
-
-                    const p1 = d.points[0];
-                    const p2 = d.points[1] || p1;
-                    const x1 = this.indexToX(p1.cIdx);
-                    const y1 = this.priceToY(p1.price);
-                    const x2 = this.indexToX(p2.cIdx);
-                    const y2 = this.priceToY(p2.price);
-
-                    if (d.type === 'horizontal') {
-                        if (Math.abs(my - y1) <= 6) return { drawing: d, handleIdx: -1 };
-                    } else if (d.type === 'horzray') {
-                        if (mx >= x1 - 4 && Math.abs(my - y1) <= 6) return { drawing: d, handleIdx: -1 };
-                    } else if (d.type === 'vertical') {
-                        if (Math.abs(mx - x1) <= 6) return { drawing: d, handleIdx: -1 };
-                    } else if (d.type === 'rectangle' || d.type === 'long_pos' || d.type === 'short_pos') {
-                        const minX = Math.min(x1, x2), maxX = Math.max(x1, x2);
-                        const minY = Math.min(y1, y2), maxY = Math.max(y1, y2);
-                        if (mx >= minX - 4 && mx <= maxX + 4 && my >= minY - 4 && my <= maxY + 4) {
-                            return { drawing: d, handleIdx: -1 };
-                        }
-                    } else {
-                        const l2 = (x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1);
-                        let dist = 999;
-                        if (l2 === 0) dist = Math.hypot(mx - x1, my - y1);
-                        else {
-                            let t = ((mx - x1) * (x2 - x1) + (my - y1) * (y2 - y1)) / l2;
-                            t = Math.max(0, Math.min(1, t));
-                            dist = Math.hypot(mx - (x1 + t * (x2 - x1)), my - (y1 + t * (y2 - y1)));
-                        }
-                        if (dist <= 7) return { drawing: d, handleIdx: -1 };
-                    }
-                }
-                return { drawing: null, handleIdx: -1 };
-            }
-
-            render(ctx) {
-                if (!ctx || this.hideAll) return;
-
-                const list = [...this.drawings];
-                if (this.drawingInProgress) list.push(this.drawingInProgress);
-
-                for (const d of list) {
-                    if (!d.points || d.points.length === 0) continue;
-
-                    const isSel = this.selectedDrawing && (this.selectedDrawing.id === d.id);
-                    const col = d.style.color || '#38bdf8';
-                    const lw = d.style.width || 2;
-                    const ls = d.style.lineStyle || 'solid';
-
-                    ctx.save();
-                    ctx.strokeStyle = col;
-                    ctx.lineWidth = lw;
-                    if (ls === 'dashed') ctx.setLineDash([8, 6]);
-                    else if (ls === 'dotted') ctx.setLineDash([3, 4]);
-                    else ctx.setLineDash([]);
-
-                    const p1 = d.points[0];
-                    const p2 = d.points[1] || p1;
-                    const x1 = this.indexToX(p1.cIdx);
-                    const y1 = this.priceToY(p1.price);
-                    const x2 = this.indexToX(p2.cIdx);
-                    const y2 = this.priceToY(p2.price);
-                    const w = this.container.clientWidth;
-
-                    if (d.type === 'trendline') {
-                        ctx.beginPath();
-                        ctx.moveTo(x1, y1);
-                        ctx.lineTo(x2, y2);
-                        ctx.stroke();
-                    } else if (d.type === 'ray') {
-                        ctx.beginPath();
-                        ctx.moveTo(x1, y1);
-                        const dx = x2 - x1;
-                        const dy = y2 - y1;
-                        const scale = (w + 500) / (Math.hypot(dx, dy) || 1);
-                        ctx.lineTo(x1 + dx * scale, y1 + dy * scale);
-                        ctx.stroke();
-                    } else if (d.type === 'horizontal') {
-                        ctx.beginPath();
-                        ctx.moveTo(0, y1);
-                        ctx.lineTo(w, y1);
-                        ctx.stroke();
-                    } else if (d.type === 'horzray') {
-                        ctx.beginPath();
-                        ctx.moveTo(x1, y1);
-                        ctx.lineTo(w, y1);
-                        ctx.stroke();
-                    } else if (d.type === 'vertical') {
-                        ctx.beginPath();
-                        ctx.moveTo(x1, 0);
-                        ctx.lineTo(x1, this.container.clientHeight);
-                        ctx.stroke();
-                    } else if (d.type === 'rectangle') {
-                        const minX = Math.min(x1, x2), rw = Math.abs(x2 - x1);
-                        const minY = Math.min(y1, y2), rh = Math.abs(y2 - y1);
-                        ctx.fillStyle = col;
-                        ctx.globalAlpha = d.style.fillOpacity || 0.2;
-                        ctx.fillRect(minX, minY, rw, rh);
-                        ctx.globalAlpha = 1.0;
-                        ctx.strokeRect(minX, minY, rw, rh);
-                    } else if (d.type === 'fibonacci') {
-                        const fibs = [0, 0.236, 0.382, 0.5, 0.618, 0.786, 1.0];
-                        const minX = Math.min(x1, x2), maxX = Math.max(x1, x2);
-                        const diff = p2.price - p1.price;
-                        for (const lvl of fibs) {
-                            const ly = this.priceToY(p1.price + diff * lvl);
-                            ctx.beginPath();
-                            ctx.moveTo(minX, ly);
-                            ctx.lineTo(maxX, ly);
-                            ctx.stroke();
-                            ctx.font = '10px "SF Pro Text", sans-serif';
-                            ctx.fillStyle = col;
-                            ctx.fillText(`${(lvl * 100).toFixed(1)}% ($${(p1.price + diff * lvl).toFixed(2)})`, minX + 4, ly - 3);
-                        }
-                    } else if (d.type === 'long_pos' || d.type === 'short_pos') {
-                        const minX = Math.min(x1, x2), rw = Math.abs(x2 - x1);
-                        const midY = (y1 + y2) / 2;
-                        const isLong = d.type === 'long_pos';
-                        
-                        ctx.fillStyle = 'rgba(16, 185, 129, 0.25)';
-                        ctx.fillRect(minX, isLong ? Math.min(y1, y2) : midY, rw, Math.abs(y2 - y1) / 2);
-                        
-                        ctx.fillStyle = 'rgba(239, 68, 68, 0.25)';
-                        ctx.fillRect(minX, isLong ? midY : Math.min(y1, y2), rw, Math.abs(y2 - y1) / 2);
-                        
-                        ctx.strokeStyle = '#38bdf8';
-                        ctx.beginPath();
-                        ctx.moveTo(minX, midY);
-                        ctx.lineTo(minX + rw, midY);
-                        ctx.stroke();
-                    } else if (d.type === 'text') {
-                        ctx.font = 'bold 13px "SF Pro Text", "Segoe UI", sans-serif';
-                        ctx.fillStyle = col;
-                        ctx.fillText('✍️ Not: ' + (p1.price.toFixed(2)), x1, y1);
-                    }
-
-                    if (isSel && !this.hideAll) {
-                        for (const pt of d.points) {
-                            const hx = this.indexToX(pt.cIdx);
-                            const hy = this.priceToY(pt.price);
-                            ctx.fillStyle = '#ffffff';
-                            ctx.strokeStyle = '#2962ff';
-                            ctx.lineWidth = 2.5;
-                            ctx.beginPath();
-                            ctx.arc(hx, hy, 5, 0, Math.PI * 2);
-                            ctx.fill();
-                            ctx.stroke();
-                        }
-                    }
-                    ctx.restore();
-                }
-            }
-        }
-
-        const drawingEngine = new TradingViewDrawingEngine(canvasContainer, overlayCanvas, {
-            getPriceRange: () => ({ min: minPrice, max: maxPrice }),
-            getViewRange: () => ({ start: smoothViewStart || viewStart, end: smoothViewEnd || viewEnd }),
-            getCandleData: () => candleDataBase
-        });
-
-        window.selectTvTool = function(toolName, btnElem) {
-            if (drawingEngine) drawingEngine.setTool(toolName);
-            document.querySelectorAll('.tv-tool-btn').forEach(b => b.classList.remove('active'));
-            if (btnElem) btnElem.classList.add('active');
-            else {
-                const b = document.getElementById('tv-tool-' + toolName);
-                if (b) b.classList.add('active');
-            }
-            document.querySelectorAll('.tv-flyout-menu').forEach(m => m.classList.remove('open'));
-        };
-
-        window.toggleFlyout = function(menuId, e) {
-            if (e) e.stopPropagation();
-            const m = document.getElementById(menuId);
-            const isOpen = m.classList.contains('open');
-            document.querySelectorAll('.tv-flyout-menu').forEach(el => el.classList.remove('open'));
-            if (!isOpen) m.classList.add('open');
-        };
-
-        window.toggleTvMagnet = function(btn) {
-            if (drawingEngine) {
-                const active = drawingEngine.toggleMagnet();
-                btn.classList.toggle('active', active);
-            }
-        };
-
-        window.toggleTvContinuous = function(btn) {
-            if (drawingEngine) {
-                const active = drawingEngine.toggleContinuousDraw();
-                btn.classList.toggle('active', active);
-            }
-        };
-
-        window.toggleTvLock = function(btn) {
-            if (drawingEngine) {
-                const active = drawingEngine.toggleLockAll();
-                btn.classList.toggle('active', active);
-            }
-        };
-
-        window.toggleTvHide = function(btn) {
-            if (drawingEngine) {
-                const active = drawingEngine.toggleHideAll();
-                btn.classList.toggle('active', active);
-            }
-        };
-
-        window.deleteTvDrawings = function() {
-            if (drawingEngine) drawingEngine.deleteAll();
-        };
-
-        window.toggleFavoriteFloatingBar = function(btn) {
-            const bar = document.getElementById('tv-favorite-bar');
-            if (bar) {
-                bar.classList.toggle('hidden');
-                btn.classList.toggle('active', !bar.classList.contains('hidden'));
-            }
-        };
-
-        function updatePropertyToolbar(drawing) {
-            const bar = document.getElementById('tv-prop-toolbar');
-            if (!bar) return;
-            if (!drawing || !drawingEngine) {
-                bar.style.display = 'none';
-                return;
-            }
-            const p = drawing.points[0];
-            if (!p) return;
-            const sx = drawingEngine.indexToX(p.cIdx);
-            const sy = drawingEngine.priceToY(p.price);
-            bar.style.display = 'flex';
-            bar.style.left = Math.max(10, Math.min(canvasContainer.clientWidth - 260, sx)) + 'px';
-            bar.style.top = Math.max(10, sy - 45) + 'px';
-        }
-
-        window.setDrawingColor = function(c) {
-            if (drawingEngine && drawingEngine.selectedDrawing) {
-                drawingEngine.selectedDrawing.style.color = c;
-            }
-        };
-        window.setDrawingWidth = function(w) {
-            if (drawingEngine && drawingEngine.selectedDrawing) {
-                drawingEngine.selectedDrawing.style.width = w;
-            }
-        };
-        window.setDrawingStyle = function(s) {
-            if (drawingEngine && drawingEngine.selectedDrawing) {
-                drawingEngine.selectedDrawing.style.lineStyle = s;
-            }
-        };
-        window.deleteSelectedDrawing = function() {
-            if (drawingEngine && drawingEngine.selectedDrawing) {
-                drawingEngine.drawings = drawingEngine.drawings.filter(d => d.id !== drawingEngine.selectedDrawing.id);
-                drawingEngine.selectDrawing(null);
-            }
-        };
-
-        // Kayan Favori Barı Sürükleme Mantığı (Draggable Handle)
-        (function initDraggableFavoriteBar() {
-            const favBar = document.getElementById('tv-favorite-bar');
-            const handle = document.getElementById('tv-fav-drag-handle');
-            if (!favBar || !handle) return;
-            let isDragging = false;
-            let startX = 0, startY = 0, origL = 0, origT = 0;
-
-            handle.addEventListener('mousedown', (e) => {
-                isDragging = true;
-                startX = e.clientX;
-                startY = e.clientY;
-                origL = favBar.offsetLeft;
-                origT = favBar.offsetTop;
-                e.preventDefault();
-                e.stopPropagation();
-            });
-
-            window.addEventListener('mousemove', (e) => {
-                if (!isDragging) return;
-                const dx = e.clientX - startX;
-                const dy = e.clientY - startY;
-                favBar.style.left = (origL + dx) + 'px';
-                favBar.style.top = (origT + dy) + 'px';
-            });
-
-            window.addEventListener('mouseup', () => { isDragging = false; });
-        })();
-
-        // Menü dışına tıklandığında flyout menüleri kapat
-        document.addEventListener('click', (e) => {
-            if (!e.target.closest('.tv-left-toolbar') && !e.target.closest('.tv-flyout-menu')) {
-                document.querySelectorAll('.tv-flyout-menu').forEach(el => el.classList.remove('open'));
-            }
-        });
-
         // ==========================================
         // RENDER DÖNGÜSÜ (HiDPI RETINA / 4K - 120 FPS SMOOTH LERP)
         // ==========================================
@@ -2812,10 +3242,12 @@
                 }
 
                 const span = Math.max(0.0001, maxP - minP);
+                // %12 üst ve alt güvenlik nefes payı: Ekranda hiçbir mum gövdesi veya fitili ekrandan taşamaz
                 const pad = span * 0.12;
                 const baseHalfSpan = (span / 2) + pad;
                 const scaledHalfSpan = baseHalfSpan / priceScaleFactor;
 
+                // priceOffset sınırlandırması: Dikey kaydırmada bile mumların ekrandan taşmasını kesin olarak engeller
                 const maxAllowedOffset = pad * 1.2;
                 priceOffset = Math.max(-maxAllowedOffset, Math.min(maxAllowedOffset, priceOffset));
 
@@ -2823,13 +3255,14 @@
                 const targetMinPrice = midP - scaledHalfSpan + priceOffset;
                 const targetMaxPrice = midP + scaledHalfSpan + priceOffset;
 
+                // 🌿 DOĞAL VE İPEKSİ YUMUŞAKLIK (Silky Smooth LERP Physics - 120 FPS)
                 if (!smoothMinPrice || !isFinite(smoothMinPrice) || smoothMinPrice === 0) {
                     smoothMinPrice = targetMinPrice;
                     smoothMaxPrice = targetMaxPrice;
                     smoothViewStart = viewStart;
                     smoothViewEnd = viewEnd;
                 } else {
-                    const priceLerp = isChartDragging ? 0.32 : 0.16;
+                    const priceLerp = isChartDragging ? 0.32 : 0.16; // Sürüklerken çevik, serbestken ipeksi süzülme
                     const viewLerp = isChartDragging ? 0.40 : 0.20;
                     smoothViewStart += (viewStart - smoothViewStart) * viewLerp;
                     smoothViewEnd += (viewEnd - smoothViewEnd) * viewLerp;
@@ -2867,14 +3300,11 @@
 
                     gl.drawArrays(gl.TRIANGLES, 0, 6);
                 } else {
+                    // ⚡ HİBRİT CANVAS 2D TURBO ÇİZİCİ (TABLET / MOBİL İÇİN)
                     draw2DTurboFallback(ctx2d, cssW, cssH, smoothViewStart, smoothViewEnd, smoothMinPrice, smoothMaxPrice);
                 }
 
                 drawVectorSignalsAndTargets(now);
-
-                if (drawingEngine) {
-                    drawingEngine.render(ctx2d);
-                }
             }
 
             requestAnimationFrame(render);
@@ -2884,4 +3314,6 @@
 
         fetchAllMultiTimeframeKlines('BTCUSDT');
         requestAnimationFrame(render);
-    
+    </script>
+</body>
+</html>

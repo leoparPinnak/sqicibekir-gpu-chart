@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TradingView Çizim Araçları & Ayarlar DOM Paketi</title>
+    <link rel="stylesheet" href="tradingview_styles.css">
+    <style>
+        body {
+            background-color: #131722;
+            color: #d1d4dc;
+            font-family: -apple-system, BlinkMacSystemFont, 'Trebuchet MS', Roboto, Ubuntu, sans-serif;
+            margin: 0;
+            padding: 24px;
+        }
+        h1 {
+            color: #2962ff;
+            font-size: 22px;
+            margin-bottom: 8px;
+        }
+        p {
+            color: #787b86;
+            margin-bottom: 24px;
+            font-size: 13px;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 16px;
+        }
+        .card {
+            background: #1e222d;
+            border: 1px solid #2a2e39;
+            border-radius: 8px;
+            padding: 16px;
+            transition: all 0.2s;
+        }
+        .card:hover {
+            border-color: #2962ff;
+            transform: translateY(-2px);
+        }
+        .card h3 {
+            margin: 0 0 8px 0;
+            font-size: 15px;
+            color: #f0f3fa;
+        }
+        .card a {
+            display: inline-block;
+            background: #2962ff;
+            color: #fff;
+            text-decoration: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+        .card a:hover {
+            background: #1e53e5;
+        }
+        .badge {
+            display: inline-block;
+            background: rgba(41, 98, 255, 0.15);
+            color: #2962ff;
+            font-size: 11px;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🎨 TradingView Çizim Araçları, Hareketli Barlar & Ayarlar DOM Paketi</h1>
+    <p>Bu klasör, TradingView grafiğindeki sol çizim araç çubuğu, hareket ettirilebilir favori araçlar çubuğu, açılır alt menüler, çizim kayan ayar çubuğu ve detaylı ayar pencerelerinin tam DOM HTML ve CSS yapılarını içerir.</p>
+
+    <div class="grid">
+        <div class="card" style="border-color: #22c55e;">
+            <span class="badge" style="background: rgba(34, 197, 94, 0.2); color: #22c55e;">⭐ Hareketli Hızlı Erişim Barı</span>
+            <h3>14. Favori Çizim Araçları Kayan Barı (Draggable Toolbar)</h3>
+            <p>Grafik üzerinde serbestçe sürüklenebilen (solunda tutma kulpu olan), yıldızlanan favori çizim araçlarını içeren hareketli hızlı erişim barı.</p>
+            <a href="14_favorite_floating_draggable_toolbar.html" target="_blank" style="background: #22c55e; color: #000;">DOM'u Aç</a>
+        </div>
+        <div class="card">
+            <span class="badge">Ana Çubuk</span>
+            <h3>1. Sol Çizim Araç Çubuğu</h3>
+            <p>Tüm çizim gruplarını (Çizgi, Fibo, Şekiller, Metin, Ölçüm vb.) içeren sol dikey toolbar.</p>
+            <a href="01_left_drawing_toolbar.html" target="_blank">DOM'u Aç</a>
+        </div>
+        <div class="card">
+            <span class="badge">Alt Menü</span>
+            <h3>2. Trend Çizgileri Menüsü</h3>
+            <p>Trend çizgisi, ışın, yatay çizgi, paralel kanal vb. alt araç listesi.</p>
+            <a href="02_flyout_trend_lines.html" target="_blank">DOM'u Aç</a>
+        </div>
+        <div class="card">
+            <span class="badge">Alt Menü</span>
+            <h3>3. Gann ve Fibonacci Menüsü</h3>
+            <p>Fibonacci Düzeltmesi, Trend Temelli Fib, Fib Çemberleri vb.</p>
+            <a href="03_flyout_gann_fibonacci.html" target="_blank">DOM'u Aç</a>
+        </div>
+        <div class="card">
+            <span class="badge">Alt Menü</span>
+            <h3>4. Geometrik Şekiller Menüsü</h3>
+            <p>Dikdörtgen, Fırça, Daire, Çokgen, Yol, Eğri vb.</p>
+            <a href="04_flyout_geometric_shapes.html" target="_blank">DOM'u Aç</a>
+        </div>
+        <div class="card">
+            <span class="badge">Alt Menü</span>
+            <h3>5. Açıklama & Metin Menüsü</h3>
+            <p>Metin, Balon, Fiyat Etiketi, Not, İşaretçi vb.</p>
+            <a href="05_flyout_annotation.html" target="_blank">DOM'u Aç</a>
+        </div>
+        <div class="card">
+            <span class="badge">Alt Menü</span>
+            <h3>6. Formasyonlar (Patterns) Menüsü</h3>
+            <p>XABCD, Baş-Omuz, Üç Dalga, Elliott Dalgaları vb.</p>
+            <a href="06_flyout_patterns.html" target="_blank">DOM'u Aç</a>
+        </div>
+        <div class="card">
+            <span class="badge">Alt Menü</span>
+            <h3>7. Tahmin & Ölçüm Menüsü</h3>
+            <p>Uzun/Kısa Pozisyon, Fiyat Aralığı, Tarih Aralığı vb.</p>
+            <a href="07_flyout_prediction_measurement.html" target="_blank">DOM'u Aç</a>
+        </div>
+        <div class="card">
+            <span class="badge">Alt Menü</span>
+            <h3>8. İkonlar & Emojiler Menüsü</h3>
+            <p>Grafik üzerine eklenebilen tüm SVG ikon ve çıkartmalar.</p>
+            <a href="08_flyout_font_icons.html" target="_blank">DOM'u Aç</a>
+        </div>
+        <div class="card">
+            <span class="badge">Kayan Çubuk</span>
+            <h3>9. Çizim Seçim Kayan Ayar Çubuğu (Floating Bar)</h3>
+            <p>Çizim seçildiğinde üzerinde beliren hızlı renk, kalınlık, stil, çöp kutusu ve ayarlar çubuğu.</p>
+            <a href="09_drawing_floating_property_toolbar.html" target="_blank">DOM'u Aç</a>
+        </div>
+        <div class="card">
+            <span class="badge">Modal Pencere</span>
+            <h3>10. Çizim Ayarları Tam Modal Dialog</h3>
+            <p>Çizim üzerine çift tıklandığında açılan tam biçimlendirme ve ayar penceresi.</p>
+            <a href="10_drawing_settings_modal_full.html" target="_blank">DOM'u Aç</a>
+        </div>
+        <div class="card">
+            <span class="badge">Ayar Sekmesi</span>
+            <h3>11. Ayarlar: Stil / Style Sekmesi</h3>
+            <p>Çizginin rengi, şeffaflığı, genişliği, fiyat seviyeleri vb. biçimlendirme ayarları.</p>
+            <a href="11_settings_tab_sembol.html" target="_blank">DOM'u Aç</a>
+        </div>
+    </div>
+</body>
+</html>
