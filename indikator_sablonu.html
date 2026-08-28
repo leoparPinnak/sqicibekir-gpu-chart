@@ -252,8 +252,9 @@
             align-items: center;
             padding: 3px 8px;
             gap: 6px;
-            z-index: 35;
+            z-index: 60;
             user-select: none;
+            pointer-events: auto;
         }
         .tv-prop-color-dot {
             width: 16px;
@@ -3822,7 +3823,7 @@
                         const p = this.selectedDrawing.points[i];
                         const sx = this.indexToX(p.cIdx);
                         const sy = this.priceToY(p.price);
-                        if (Math.hypot(mx - sx, my - sy) <= 9) {
+                        if (Math.hypot(mx - sx, my - sy) <= 16) {
                             return { drawing: this.selectedDrawing, handleIdx: i };
                         }
                     }
@@ -3840,7 +3841,7 @@
                     const y2 = this.priceToY(p2.price);
 
                     if (d.type === 'horizontal') {
-                        if (Math.abs(my - y1) <= 6) return { drawing: d, handleIdx: -1 };
+                        if (Math.abs(my - y1) <= 12) return { drawing: d, handleIdx: -1 };
                     } else if (d.type === 'horzray') {
                         if (mx >= x1 - 4 && Math.abs(my - y1) <= 6) return { drawing: d, handleIdx: -1 };
                     } else if (d.type === 'vertical') {
@@ -3860,7 +3861,7 @@
                             t = Math.max(0, Math.min(1, t));
                             dist = Math.hypot(mx - (x1 + t * (x2 - x1)), my - (y1 + t * (y2 - y1)));
                         }
-                        if (dist <= 7) return { drawing: d, handleIdx: -1 };
+                        if (dist <= 12) return { drawing: d, handleIdx: -1 };
                     }
                 }
                 return { drawing: null, handleIdx: -1 };
