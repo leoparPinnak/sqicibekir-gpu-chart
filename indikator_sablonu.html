@@ -3742,54 +3742,13 @@
                 this.mouseDownStart = { x: mx, y: my, time: Date.now() };
                 this.hasDragged = false;
 
-                // ========================================================
-                // 1. ÇİZİM MODU: CLICK 1 (BAŞLAT) & CLICK 2 (BİTİR)
-                // ========================================================
+                // 🎯 Çizim aracı seçiliyken: Basılı tutup çekilirse grafik kaysın, başlangıç noktası koyulmasın
                 if (this.activeTool !== 'cursor') {
-                    const snapped = this.snapToOHLC(this.xToIndex(mx), this.yToPrice(my));
-
-                    // Tek tıklamalı araçlar (Yatay / Dikey Çizgiler)
-                    if (['horizontal', 'horzray', 'vertical'].includes(this.activeTool)) {
-                        const newD = {
-                            id: 'draw_' + Date.now(),
-                            type: this.activeTool,
-                            points: [{ cIdx: snapped.cIdx, price: snapped.price }],
-                            style: JSON.parse(JSON.stringify(this.defaultStyle)),
-                            locked: false
-                        };
-                        this.drawings.push(newD);
-                        this.selectDrawing(newD);
-                        if (!this.continuousDraw) this.setTool('cursor');
-                        e.stopPropagation();
-                        return;
-                    }
-
-                    if (this.drawingState === 'idle') {
-                        // 🟢 CLICK 1: Çizimi Başlat (Nokta 1'i sabitle, Nokta 2 fareyi izlesin)
-                        this.drawingInProgress = {
-                            id: 'draw_' + Date.now(),
-                            type: this.activeTool,
-                            points: [
-                                { cIdx: snapped.cIdx, price: snapped.price },
-                                { cIdx: snapped.cIdx, price: snapped.price }
-                            ],
-                            style: JSON.parse(JSON.stringify(this.defaultStyle)),
-                            locked: false
-                        };
-                        this.drawingState = 'drawing';
-                        e.stopPropagation();
-                        return;
-                    } else if (this.drawingState === 'drawing') {
-                        // Çizim devam ederken mousedown basıldı:
-                        // Eğer kullanıcı sürüklerse (drag), grafik kaysın; bas-çek yaparsa Click 2 ile çizim tamamlansın!
-                        startPan(e.clientX, e.clientY);
-                        return;
-                    }
+                    startPan(e.clientX, e.clientY);
+                    return;
                 }
 
-                // ========================================================
-                // 2. İMLEÇ (CURSOR) MODU: SEÇİM, TUTAMAÇ & GRAFİK KAYDIRMA
-                // ========================================================
+                // 🖱️ Cursor modunda: Tutamaç veya çizim seçimi / sürükleme
                 const hit = this.hitTest(mx, my);
                 if (hit.handleIdx !== -1) {
                     this.isDraggingHandle = true;
@@ -3821,7 +3780,7 @@
                 const my = e.clientY - rect.top;
 
                 if (this.mouseDownStart) {
-                    if (Math.hypot(mx - this.mouseDownStart.x, my - this.mouseDownStart.y) > 4) {
+                    if (Math.hypot(mx - this.mouseDownStart.x, my - this.mouseDownStart.y) > 5) {
                         this.hasDragged = true;
                     }
                 }
@@ -3830,7 +3789,8 @@
                 if (this.drawingState === 'drawing' && this.drawingInProgress) {
                     const snapped = this.snapToOHLC(this.xToIndex(mx), this.yToPrice(my));
                     this.drawingInProgress.points[1] = { cIdx: snapped.cIdx, price: snapped.price };
-                    this.container.style.cursor = 'crosshair'; if (this.canvas) this.canvas.style.cursor = 'crosshair';
+                    this.container.style.cursor = isChartDragging ? 'grabbing' : 'crosshair';
+                    if (this.canvas) this.canvas.style.cursor = this.container.style.cursor;
                     return;
                 }
 
@@ -3838,7 +3798,8 @@
                     const snapped = this.snapToOHLC(this.xToIndex(mx), this.yToPrice(my));
                     this.selectedDrawing.points[this.activeHandleIndex] = { cIdx: snapped.cIdx, price: snapped.price };
                     updatePropertyToolbar(this.selectedDrawing);
-                    this.container.style.cursor = 'crosshair'; if (this.canvas) this.canvas.style.cursor = 'crosshair';
+                    this.container.style.cursor = 'crosshair';
+                    if (this.canvas) this.canvas.style.cursor = 'crosshair';
                     return;
                 }
 
@@ -3851,29 +3812,33 @@
                         this.selectedDrawing.points[i].price = this.dragOriginalPoints[i].price + dPrice;
                     }
                     updatePropertyToolbar(this.selectedDrawing);
-                    this.container.style.cursor = 'grabbing'; if (this.canvas) this.canvas.style.cursor = 'grabbing';
+                    this.container.style.cursor = 'grabbing';
+                    if (this.canvas) this.canvas.style.cursor = 'grabbing';
                     return;
                 }
 
                 // 🎯 İMLEÇ ALGILAMA & ŞEKİL HOVER TESPİTİ (CANLI İMLEÇ DEĞİŞİMİ)
                 if (this.activeTool !== 'cursor') {
-                    this.container.style.cursor = 'crosshair'; if (this.canvas) this.canvas.style.cursor = 'crosshair';
+                    this.container.style.cursor = isChartDragging ? 'grabbing' : 'crosshair';
+                    if (this.canvas) this.canvas.style.cursor = this.container.style.cursor;
                     this.hoveredDrawing = null;
                     this.hoveredHandleIdx = -1;
                 } else if (isChartDragging) {
-                    this.container.style.cursor = 'grabbing'; if (this.canvas) this.canvas.style.cursor = 'grabbing';
+                    this.container.style.cursor = 'grabbing';
+                    if (this.canvas) this.canvas.style.cursor = 'grabbing';
                 } else {
                     const hit = this.hitTest(mx, my);
                     this.hoveredDrawing = hit.drawing;
                     this.hoveredHandleIdx = hit.handleIdx;
 
                     if (hit.handleIdx !== -1) {
-                        this.container.style.cursor = 'pointer'; if (this.canvas) this.canvas.style.cursor = 'pointer';
+                        this.container.style.cursor = 'pointer';
                     } else if (hit.drawing) {
-                        this.container.style.cursor = 'move'; if (this.canvas) this.canvas.style.cursor = 'move';
+                        this.container.style.cursor = 'move';
                     } else {
-                        this.container.style.cursor = 'crosshair'; if (this.canvas) this.canvas.style.cursor = 'crosshair';
+                        this.container.style.cursor = 'crosshair';
                     }
+                    if (this.canvas) this.canvas.style.cursor = this.container.style.cursor;
                 }
             }
 
@@ -3882,20 +3847,53 @@
                 const mx = e ? (e.clientX - rect.left) : 0;
                 const my = e ? (e.clientY - rect.top) : 0;
 
-                // Çizim modundayken mouseup gerçekleştiğinde:
-                if (this.drawingState === 'drawing' && this.drawingInProgress) {
+                // ========================================================
+                // ÇİZİM ARACI SEÇİLİYKEN MOUSEUP KONTROLÜ
+                // ========================================================
+                if (this.activeTool !== 'cursor') {
                     if (this.hasDragged) {
-                        // Kullanıcı çizim esnasında grafiği sürükledi (pan yaptı)!
-                        // Çizim KAPANMAZ, çizim modu aynen devam eder.
+                        // 👆 Kullanıcı basılı tutup sürükledi (Grafik kaydı)!
+                        // Başlangıç veya bitiş noktası koyulmaz; araç seçili kalmaya devam eder.
                     } else {
-                        // 🏁 CLICK 2: Çizimi Tamamla ve Yerleştir
+                        // 🟢 Kullanıcı temiz 1 Click (bas-çek) yaptı!
                         const snapped = this.snapToOHLC(this.xToIndex(mx), this.yToPrice(my));
-                        this.drawingInProgress.points[1] = { cIdx: snapped.cIdx, price: snapped.price };
-                        this.drawings.push(this.drawingInProgress);
-                        this.selectDrawing(this.drawingInProgress);
-                        this.drawingInProgress = null;
-                        this.drawingState = 'idle';
-                        if (!this.continuousDraw) this.setTool('cursor');
+
+                        if (this.drawingState === 'idle') {
+                            // Tek tıklamalı araçlar (Yatay / Dikey Çizgiler)
+                            if (['horizontal', 'horzray', 'vertical'].includes(this.activeTool)) {
+                                const newD = {
+                                    id: 'draw_' + Date.now(),
+                                    type: this.activeTool,
+                                    points: [{ cIdx: snapped.cIdx, price: snapped.price }],
+                                    style: JSON.parse(JSON.stringify(this.defaultStyle)),
+                                    locked: false
+                                };
+                                this.drawings.push(newD);
+                                this.selectDrawing(newD);
+                                if (!this.continuousDraw) this.setTool('cursor');
+                            } else {
+                                // 🌟 1. CLICK: Başlangıç Noktası (Point 1) Belirlendi!
+                                this.drawingInProgress = {
+                                    id: 'draw_' + Date.now(),
+                                    type: this.activeTool,
+                                    points: [
+                                        { cIdx: snapped.cIdx, price: snapped.price },
+                                        { cIdx: snapped.cIdx, price: snapped.price }
+                                    ],
+                                    style: JSON.parse(JSON.stringify(this.defaultStyle)),
+                                    locked: false
+                                };
+                                this.drawingState = 'drawing';
+                            }
+                        } else if (this.drawingState === 'drawing' && this.drawingInProgress) {
+                            // 🏁 2. CLICK: Bitiş Noktası (Point 2) Belirlendi ve Çizim Tamamlandı!
+                            this.drawingInProgress.points[1] = { cIdx: snapped.cIdx, price: snapped.price };
+                            this.drawings.push(this.drawingInProgress);
+                            this.selectDrawing(this.drawingInProgress);
+                            this.drawingInProgress = null;
+                            this.drawingState = 'idle';
+                            if (!this.continuousDraw) this.setTool('cursor');
+                        }
                     }
                 }
 
