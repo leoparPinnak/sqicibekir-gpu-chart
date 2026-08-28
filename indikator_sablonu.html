@@ -3342,6 +3342,8 @@
 
         window.addEventListener('mousemove', (e) => {
             if (isPriceDragging) {
+                isAutoPriceScale = false;
+                updateOtoButtonState();
                 const deltaY = priceDragStartY - e.clientY;
                 priceScaleFactor = Math.max(0.001, Math.min(1000.0, priceScaleFactor * Math.exp(deltaY * 0.006)));
                 priceDragStartY = e.clientY;
