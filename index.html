@@ -5389,9 +5389,15 @@
             e.preventDefault();
             if (totalCandles === 0) return;
 
-            // 🌟 ZOOM ESNASINDA KESİNLİKLE OTO ÖLÇEKLENDİRME AÇIKTIR
+            // 🛑 Fare basılı tutulurken veya sürüklenirken tekerlekten gelen kuyruk/momentum eventleri TAMAMEN BLOKE EDİLİR!
+            if (isChartDragging || isPriceDragging) {
+                return;
+            }
+
+            // 🌟 ZOOM ESNASINDA OTO ÖLÇEKLENDİRME AÇILIR
             isAutoPriceScale = true;
             priceOffset = 0;
+            origPriceOffset = 0;
             priceScaleFactor = 1.0;
             updateOtoButtonState();
 
@@ -5423,8 +5429,11 @@
 
             viewStart = nStart;
             viewEnd = nEnd;
+            // 🚀 ANINDA VE KESKİN ZOOM (TradingView Standardı: Asla arkadan sarkan hayalet animasyon kalmaz)
+            smoothViewStart = nStart;
+            smoothViewEnd = nEnd;
 
-            // ⚡ Anında min/max fiyat güncellemesi (İlk mousemove anında 0ms gecikmesiz dikey kaydırma için)
+            // ⚡ Anında min/max fiyat güncellemesi (Gecikmesiz, anında kilitlenme)
             let wheelMinP = Infinity, wheelMaxP = -Infinity;
             const wStartI = Math.max(0, Math.floor(nStart));
             const wEndI = Math.min(totalCandles, Math.ceil(nEnd));
@@ -5439,6 +5448,10 @@
                 const wPad = (wheelMaxP - wheelMinP) * 0.10;
                 minPrice = wheelMinP - wPad;
                 maxPrice = wheelMaxP + wPad;
+                smoothMinPrice = minPrice;
+                smoothMaxPrice = maxPrice;
+                manualBaseMinPrice = minPrice;
+                manualBaseMaxPrice = maxPrice;
             }
 
             updateVisibleBacktestSummary();
