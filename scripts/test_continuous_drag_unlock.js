@@ -9,7 +9,8 @@ async function testContinuousDragUnlock() {
     const page = await browser.newPage({ viewport: { width: 1400, height: 900 } });
 
     await page.goto('http://localhost:5173');
-    await page.waitForTimeout(2000);
+    await page.waitForFunction(() => window.totalCandles > 1000 && window.minPrice > 0, { timeout: 15000 });
+    await page.waitForTimeout(500);
 
     const canvasBox = await page.locator('#canvas-container').boundingBox();
     if (!canvasBox) throw new Error('Canvas container not found');

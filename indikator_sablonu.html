@@ -4794,6 +4794,8 @@
         let maxPrice = 0;
         let smoothMinPrice = 0;
         let smoothMaxPrice = 0;
+        let manualBaseMinPrice = 0;
+        let manualBaseMaxPrice = 0;
         let smoothViewStart = 0;
         let smoothViewEnd = 0;
 
@@ -4972,7 +4974,7 @@
             momentumVelocityX = 0;
 
             // 🛑 ANİMASYON ANINDA TIKLANIP BASILI TUTULDUĞUNDA:
-            // 1. Animasyonu o anki karede anında dondur (Freeze Frame)
+            // 1. Yatay ve dikey animasyonu o anki karede anında dondur (Freeze Frame)
             if (smoothViewStart && isFinite(smoothViewStart)) {
                 viewStart = smoothViewStart;
             }
@@ -4980,8 +4982,8 @@
                 viewEnd = smoothViewEnd;
             }
             if (smoothMinPrice && isFinite(smoothMinPrice) && smoothMinPrice !== 0) {
-                minPrice = smoothMinPrice;
-                maxPrice = smoothMaxPrice;
+                manualBaseMinPrice = smoothMinPrice;
+                manualBaseMaxPrice = smoothMaxPrice;
             } else if (totalCandles > 0) {
                 let mP = Infinity, xP = -Infinity;
                 const sI = Math.max(0, Math.floor(viewStart));
@@ -4995,12 +4997,14 @@
                 }
                 if (isFinite(mP) && isFinite(xP) && mP < xP) {
                     const pad = (xP - mP) * 0.10;
-                    minPrice = mP - pad;
-                    maxPrice = xP + pad;
-                    smoothMinPrice = minPrice;
-                    smoothMaxPrice = maxPrice;
+                    manualBaseMinPrice = mP - pad;
+                    manualBaseMaxPrice = xP + pad;
                 }
             }
+            minPrice = manualBaseMinPrice;
+            maxPrice = manualBaseMaxPrice;
+            smoothMinPrice = manualBaseMinPrice;
+            smoothMaxPrice = manualBaseMaxPrice;
 
             // 2. Dikey kilidi ANINDA AÇ ve serbest 2D kaydırma moduna geç
             isAutoPriceScale = false;
@@ -5197,11 +5201,11 @@
                 viewStart = nStart;
                 viewEnd = nEnd;
 
-                // 2. Dikey Eksen Yönetimi
+                // 2. Dikey Eksen Yönetimi (Manuel Fiyat Çapası - 0ms Gecikme)
                 if (isAutoPriceScale) {
                     priceOffset = 0;
                 } else {
-                    const currentPriceSpan = maxPrice - minPrice;
+                    const currentPriceSpan = (manualBaseMaxPrice - manualBaseMinPrice) || (maxPrice - minPrice);
                     if (currentPriceSpan > 0 && rect.height > 0) {
                         const pricePerPixel = currentPriceSpan / rect.height;
                         priceOffset = origPriceOffset + ((e.clientY - chartDragStartY) * pricePerPixel);
@@ -6761,12 +6765,17 @@
                 if (isAutoPriceScale) {
                     targetMinPrice = minP - pad;
                     targetMaxPrice = maxP + pad;
+                    manualBaseMinPrice = targetMinPrice;
+                    manualBaseMaxPrice = targetMaxPrice;
                 } else {
-                    const midP = (minP + maxP) / 2;
-                    const baseHalfSpan = (span / 2) + pad;
-                    const scaledHalfSpan = baseHalfSpan / priceScaleFactor;
-                    targetMinPrice = midP - scaledHalfSpan + priceOffset;
-                    targetMaxPrice = midP + scaledHalfSpan + priceOffset;
+                    // 🌟 MANUEL MODDA GÖRÜNÜR MUMLARA GÖRE OTO-ÖLÇEKLENDİRME YAPILMAZ!
+                    // Fiyat ekseni tamamen serbest dünya koordinatlarında hareket eder (Sıfır takılma).
+                    if (!manualBaseMinPrice || manualBaseMinPrice === 0) {
+                        manualBaseMinPrice = minP - pad;
+                        manualBaseMaxPrice = maxP + pad;
+                    }
+                    targetMinPrice = manualBaseMinPrice + priceOffset;
+                    targetMaxPrice = manualBaseMaxPrice + priceOffset;
                 }
 
                 if (!smoothMinPrice || !isFinite(smoothMinPrice) || smoothMinPrice === 0) {
