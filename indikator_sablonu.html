@@ -1853,6 +1853,12 @@
                     </div>
                 </div>
 
+                <!-- 🌟 CANLI OTO / MANUEL KİLİT GÖSTERGE ROZETİ -->
+                <div class="scale-live-indicator-badge auto-active" id="scale-live-indicator" onclick="toggleAutoPriceScale(event)" title="Otomatik Ölçekleme Durumu (Tıklayarak Aç/Kapat)">
+                    <span class="scale-indicator-dot" id="scale-dot"></span>
+                    <span id="scale-status-text">🔒 OTO ÖLÇEK: AÇIK</span>
+                </div>
+
                 <!-- ⚡ HER AN GÖRÜNÜR İVME, MAX VE EŞİK AŞIM HUD BARI -->
                 <div class="persistent-velocity-hud" id="persistent-velocity-hud" title="Canlı Yatay İvme (vx), En Yüksek Zirve İvme (vmax) ve Eşik Durumu">
                     <div class="hud-stat-item">
@@ -4902,8 +4908,22 @@
         window.resetPriceScale = function() {
             priceScaleFactor = 1.0;
             priceOffset = 0;
+            origPriceOffset = 0;
             isAutoPriceScale = true;
             dragAxisLocked = null;
+            updateOtoButtonState();
+        };
+
+        window.toggleAutoPriceScale = function(e) {
+            if (e) e.stopPropagation();
+            isAutoPriceScale = !isAutoPriceScale;
+            if (isAutoPriceScale) {
+                priceOffset = 0;
+                origPriceOffset = 0;
+            } else {
+                manualBaseMinPrice = smoothMinPrice;
+                manualBaseMaxPrice = smoothMaxPrice;
+            }
             updateOtoButtonState();
         };
 
@@ -4912,7 +4932,63 @@
             if (otoBtn) {
                 otoBtn.classList.toggle('active', isAutoPriceScale);
             }
+            const scaleBadge = document.getElementById('scale-live-indicator');
+            const scaleText = document.getElementById('scale-status-text');
+            if (scaleBadge && scaleText) {
+                if (isAutoPriceScale) {
+                    scaleBadge.className = 'scale-live-indicator-badge auto-active';
+                    scaleText.innerText = '🔒 OTO ÖLÇEK: AÇIK';
+                } else {
+                    scaleBadge.className = 'scale-live-indicator-badge manual-free';
+                    scaleText.innerText = '🔓 OTO ÖLÇEK: DEVRE DIŞI (SERBEST)';
+                }
+            }
+            const alertBadge = document.getElementById('hud-alert-badge');
+            const alertText = document.getElementById('hud-alert-text');
+            if (alertBadge && alertText) {
+                if (isAutoPriceScale) {
+                    alertBadge.className = 'hud-status-badge alert-locked';
+                    alertText.innerText = 'OTO KİLİTLİ';
+                } else {
+                    alertBadge.className = 'hud-status-badge free';
+                    alertText.innerText = 'MANUEL SERBEST';
+                }
+            }
+            const livePill = document.getElementById('live-status-pill');
+            if (livePill) {
+                livePill.innerText = isAutoPriceScale ? 'OTO KİLİTLENDİ' : 'MANUEL SERBEST';
+                livePill.className = isAutoPriceScale ? 'status-pill locked' : 'status-pill free';
+            }
         }
+
+        // 🛑 KESİN VE ANINDA OTO KİLİT KAPATMA (Global Window Mousedown Capture)
+        window.addEventListener('mousedown', (e) => {
+            if (e.button !== 0) return;
+            const insideChart = e.target.closest('#canvas-container') || e.target.closest('#glcanvas') || e.target.closest('#overlay-canvas') || e.target.closest('#time-axis') || e.target.closest('.chart-body');
+            if (insideChart && !e.target.closest('.axis-corner-reset') && !e.target.closest('.scale-live-indicator-badge')) {
+                isAutoPriceScale = false;
+                smoothViewStart = viewStart;
+                smoothViewEnd = viewEnd;
+                if (smoothMinPrice && isFinite(smoothMinPrice) && smoothMinPrice !== 0) {
+                    manualBaseMinPrice = smoothMinPrice;
+                    manualBaseMaxPrice = smoothMaxPrice;
+                }
+                smoothMinPrice = manualBaseMinPrice;
+                smoothMaxPrice = manualBaseMaxPrice;
+                minPrice = manualBaseMinPrice;
+                maxPrice = manualBaseMaxPrice;
+                priceOffset = 0;
+                origPriceOffset = 0;
+                chartDragStartY = e.clientY;
+                chartDragStartX = e.clientX;
+                lastDragX = e.clientX;
+                lastDragY = e.clientY;
+                dragVelocityX = 0;
+                dragVelocityY = 0;
+                momentumVelocityX = 0;
+                updateOtoButtonState();
+            }
+        }, true);
 
         priceAxisElem.addEventListener('mousedown', (e) => {
             isPriceDragging = true;
