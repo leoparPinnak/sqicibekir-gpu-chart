@@ -5030,8 +5030,18 @@
         }
 
         canvasContainer.addEventListener('mousedown', (e) => {
-            // Mousedown ve Pan yönetimi tamamen drawingEngine içindeki handleMouseDown tarafından yapılır
-        });
+            if (e.button === 0) {
+                // 🛑 CLICK TUŞUNA BASILDIĞI AN OTO ÖLÇEKLENDİRMEYİ ANINDA KAPAT!
+                isAutoPriceScale = false;
+                updateOtoButtonState();
+                if (smoothMinPrice && isFinite(smoothMinPrice) && smoothMinPrice !== 0) {
+                    manualBaseMinPrice = smoothMinPrice;
+                    manualBaseMaxPrice = smoothMaxPrice;
+                }
+                priceOffset = 0;
+                origPriceOffset = 0;
+            }
+        }, true);
 
         timeAxisElem.addEventListener('mousedown', (e) => {
             startPan(e.clientX, e.clientY);
@@ -5130,7 +5140,7 @@
                 const livePillElem = document.getElementById('live-status-pill');
 
                 // 🎯 İVMEYE VE YÖNE GÖRE DİNAMİK KİLİTLEME VE ÇÖZME (Continuous Gesture Dynamic Axis Lock & Unlock):
-                const isFastHorizontalSwipe = (absVx >= velocityThreshold && absVx >= absVy * 1.15);
+                const isFastHorizontalSwipe = (absVx >= velocityThreshold && absVx >= absVy * 3.0 && Math.abs(e.clientY - chartDragStartY) < 3);
 
                 if (isFastHorizontalSwipe) {
                     // ⚡ EŞİK AŞILDI & OTO KİLİT AKTİF
