@@ -5733,15 +5733,11 @@
                 return;
             }
 
-            // 🌟 ZOOM ESNASINDA MODA GÖRE ÖLÇEKLENDİRME:
-            if (scaleMode === 'free') {
-                isAutoPriceScale = false;
-            } else {
-                isAutoPriceScale = true;
-                priceOffset = 0;
-                origPriceOffset = 0;
-                priceScaleFactor = 1.0;
-            }
+            // 🌟 ZOOM ESNASINDA (Serbest, İvmeli veya Kilitli fark etmeksizin) görünür mumlara oto-ölçeklendirme yapılır
+            isAutoPriceScale = true;
+            priceOffset = 0;
+            origPriceOffset = 0;
+            priceScaleFactor = 1.0;
             updateOtoButtonState();
 
             const rect = canvas.getBoundingClientRect();
@@ -7249,6 +7245,12 @@
                         if (progress >= 1.0) {
                             isZoomAnimating = false;
                             window.isZoomAnimating = false;
+                            if (scaleMode === 'free') {
+                                isAutoPriceScale = false;
+                                manualBaseMinPrice = smoothMinPrice;
+                                manualBaseMaxPrice = smoothMaxPrice;
+                                updateOtoButtonState();
+                            }
                         }
                     } else {
                         // Durgun durum hafif LERP
