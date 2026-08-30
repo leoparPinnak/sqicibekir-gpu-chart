@@ -5216,7 +5216,7 @@
                 const livePillElem = document.getElementById('live-status-pill');
 
                 // 🎯 İVMEYE VE YÖNE GÖRE DİNAMİK KİLİTLEME VE ÇÖZME (Continuous Gesture Dynamic Axis Lock & Unlock):
-                const isFastHorizontalSwipe = (absVx >= velocityThreshold && absVx >= absVy * 3.0 && Math.abs(e.clientY - chartDragStartY) < 3);
+                const isFastHorizontalSwipe = (absVx >= velocityThreshold && absVx >= absVy * 1.25);
 
                 if (isFastHorizontalSwipe) {
                     // ⚡ EŞİK AŞILDI & OTO KİLİT AKTİF
