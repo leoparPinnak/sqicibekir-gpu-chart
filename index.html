@@ -4801,6 +4801,14 @@
         let origPriceOffset = 0;
         let isAutoPriceScale = true; // 🌟 Otomatik Fiyat Ölçekleme (OTO Modu)
         let dragAxisLocked = null; // 'horizontal' | 'vertical' | null
+        Object.defineProperty(window, 'isAutoPriceScale', {
+            get() { return isAutoPriceScale; },
+            set(v) { isAutoPriceScale = v; }
+        });
+        Object.defineProperty(window, 'priceOffset', {
+            get() { return priceOffset; },
+            set(v) { priceOffset = v; }
+        });
 
         
         // 🚀 İVME EŞİK VE KALİBRASYON YÖNETİMİ
@@ -5033,7 +5041,7 @@
                 const alertText = document.getElementById('hud-alert-text');
                 const livePillElem = document.getElementById('live-status-pill');
 
-                // 🎯 İVMEYE VE YÖNE GÖRE KUSURSUZ KİLİTLEME:
+                // 🎯 İVMEYE VE YÖNE GÖRE DİNAMİK KİLİTLEME VE ÇÖZME (Continuous Gesture Dynamic Axis Lock & Unlock):
                 const isFastHorizontalSwipe = (absVx >= velocityThreshold && absVx >= absVy * 1.15);
 
                 if (isFastHorizontalSwipe) {
@@ -5054,21 +5062,26 @@
                         livePillElem.innerText = 'OTO KİLİTLENDİ';
                         livePillElem.className = 'status-pill locked';
                     }
-                } else if (dragAxisLocked !== 'horizontal' && (Math.abs(e.clientY - chartDragStartY) > 4 && absVy > absVx * 0.85 && absVy > 0.04)) {
-                    dragAxisLocked = 'vertical';
-                    isAutoPriceScale = false;
-                    updateOtoButtonState();
-                    if (alertBadge) {
-                        alertBadge.className = 'hud-status-badge free';
-                        alertText.innerText = 'MANUEL SERBEST';
-                    }
-                    if (livePillElem) {
-                        livePillElem.innerText = 'MANUEL SERBEST';
-                        livePillElem.className = 'status-pill free';
-                    }
                 } else {
+                    // 🔓 HIZ EŞİK ALTINA İNDİĞİNDE:
+                    // Kullanıcı fareyi bırakmadan basılı tutmaya devam etse bile, hız eşiğin altına indiği an
+                    // dikey hareket algılanır algılanmaz kilit anında çözülür ve serbest dikey kaydırmaya izin verilir!
                     if (alertBadge) {
                         alertBadge.className = 'hud-status-badge free';
+                    }
+
+                    const isVerticalIntent = Math.abs(e.clientY - chartDragStartY) > 3 || (absVy > 0.03 && absVy > absVx * 0.5);
+
+                    if (isVerticalIntent && isAutoPriceScale) {
+                        // OTO KİLİTTEN MANUEL DİKEY SÜRÜKLEMEYE KESİNTİSİZ GEÇİŞ
+                        isAutoPriceScale = false;
+                        dragAxisLocked = 'vertical';
+                        updateOtoButtonState();
+                        origPriceOffset = priceOffset;
+                        chartDragStartY = e.clientY;
+                    }
+
+                    if (alertText) {
                         alertText.innerText = isAutoPriceScale ? 'OTO KİLİTLİ' : 'MANUEL SERBEST';
                     }
                     if (livePillElem) {
