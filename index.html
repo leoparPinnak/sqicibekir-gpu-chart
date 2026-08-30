@@ -961,6 +961,47 @@
             gap: 2px;
             margin-left: 8px;
             user-select: none;
+            position: relative;
+            z-index: 9999;
+            pointer-events: auto !important;
+        }
+        .scale-mode-btn {
+            background: transparent;
+            border: 1px solid transparent;
+            color: #94a3b8;
+            padding: 4px 9px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 700;
+            font-family: 'SF Pro Text', 'Segoe UI', sans-serif;
+            cursor: pointer !important;
+            pointer-events: auto !important;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.15s ease;
+        }
+        .scale-mode-btn:hover {
+            color: #f1f5f9;
+            background: rgba(255, 255, 255, 0.08);
+        }
+        .scale-mode-btn.active.mode-free {
+            background: rgba(245, 158, 11, 0.25) !important;
+            border-color: #f59e0b !important;
+            color: #fbbf24 !important;
+            box-shadow: 0 0 10px rgba(245, 158, 11, 0.4);
+        }
+        .scale-mode-btn.active.mode-velocity {
+            background: rgba(56, 189, 248, 0.25) !important;
+            border-color: #38bdf8 !important;
+            color: #38bdf8 !important;
+            box-shadow: 0 0 10px rgba(56, 189, 248, 0.4);
+        }
+        .scale-mode-btn.active.mode-locked {
+            background: rgba(16, 185, 129, 0.25) !important;
+            border-color: #10b981 !important;
+            color: #10b981 !important;
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.4);
         }
         .scale-mode-btn {
             background: transparent;
@@ -1927,24 +1968,24 @@
 
                 <!-- 🎯 3 KADEMELİ ÖLÇEKLEME MODU SEÇİCİ (SERBEST | İVMELİ | KİLİTLİ) -->
                 <div class="scale-mode-segmented-group" id="scale-mode-group" title="Ölçekleme Modu: Serbest (Manuel), İvmeli (Akıllı) veya Kilitli (Sabit Oto). [Space: Anında Otomatik Sığdır]">
-                    <button class="scale-mode-btn" id="mode-btn-free" onclick="setScaleMode('free')" title="Serbest (Manuel) Mod: Otomatik kilit tamamen kapalı, serbest 2D kaydırma">
+                    <button class="scale-mode-btn" id="mode-btn-free" onclick="setScaleMode('free', event)" title="Serbest (Manuel) Mod: Otomatik kilit tamamen kapalı, serbest 2D kaydırma">
                         <span class="mode-dot dot-free"></span>
                         <span>Serbest</span>
                     </button>
-                    <button class="scale-mode-btn active mode-velocity" id="mode-btn-velocity" onclick="setScaleMode('velocity')" title="İvmeli (Akıllı) Mod: Yatayda hızlı kaydırınca kilitlenir, dikeyde serbest kalır">
+                    <button class="scale-mode-btn active mode-velocity" id="mode-btn-velocity" onclick="setScaleMode('velocity', event)" title="İvmeli (Akıllı) Mod: Yatayda hızlı kaydırınca kilitlenir, dikeyde serbest kalır">
                         <span class="mode-dot dot-velocity"></span>
                         <span>İvmeli</span>
                     </button>
-                    <button class="scale-mode-btn" id="mode-btn-locked" onclick="setScaleMode('locked')" title="Kilitli (Sabit Oto) Mod: Daima görünür mumlara kilitli kalır">
+                    <button class="scale-mode-btn" id="mode-btn-locked" onclick="setScaleMode('locked', event)" title="Kilitli (Sabit Oto) Mod: Daima görünür mumlara kilitli kalır">
                         <span class="mode-dot dot-locked"></span>
                         <span>Kilitli</span>
                     </button>
                 </div>
 
                 <!-- 🌟 CANLI OTO / MANUEL KİLİT GÖSTERGE ROZETİ -->
-                <div class="scale-live-indicator-badge auto-active" id="scale-live-indicator" onclick="toggleAutoPriceScale(event)" title="Otomatik Ölçekleme Durumu (Tıklayarak Aç/Kapat) [Space: Otomatik Sığdır]">
+                <div class="scale-live-indicator-badge auto-active" id="scale-live-indicator" onclick="toggleAutoPriceScale(event)" title="Otomatik Ölçekleme Durumu (Tıklayarak Mod Değiştir) [Space: Otomatik Sığdır]">
                     <span class="scale-indicator-dot" id="scale-dot"></span>
-                    <span id="scale-status-text">🔒 OTO ÖLÇEK: AÇIK</span>
+                    <span id="scale-status-text">⚡ İVMELİ MOD</span>
                 </div>
 
                 <!-- ⏱️ CANLI ZOOM GEÇİŞ SÜRESİ KONTROLÜ (0.00s - 1.00s) -->
@@ -5022,6 +5063,11 @@
         let zoomAnimStartViewEnd = 0;
         let zoomAnimStartMinPrice = 0;
         let zoomAnimStartMaxPrice = 0;
+        let _isZoomAnimating = false;
+        Object.defineProperty(window, 'isZoomAnimating', {
+            get() { return _isZoomAnimating; },
+            set(v) { _isZoomAnimating = v; }
+        });
         let isZoomAnimating = false;
 
         function triggerZoomAnimation() {
@@ -5031,6 +5077,7 @@
                 smoothMinPrice = targetMinPrice;
                 smoothMaxPrice = targetMaxPrice;
                 isZoomAnimating = false;
+                window.isZoomAnimating = false;
                 return;
             }
             zoomAnimStartTime = performance.now();
@@ -5039,6 +5086,7 @@
             zoomAnimStartMinPrice = smoothMinPrice;
             zoomAnimStartMaxPrice = smoothMaxPrice;
             isZoomAnimating = true;
+            window.isZoomAnimating = true;
         }
 
         window.updateZoomDuration = function(val) {
@@ -5066,11 +5114,17 @@
         let scaleMode = localStorage.getItem('tradechart_scale_mode') || 'velocity';
         window.scaleMode = scaleMode;
 
-        window.setScaleMode = function(mode) {
+        window.setScaleMode = function(mode, e) {
+            if (e) {
+                e.stopPropagation();
+                e.preventDefault();
+            }
             if (!['free', 'velocity', 'locked'].includes(mode)) mode = 'velocity';
             scaleMode = mode;
             window.scaleMode = scaleMode;
             localStorage.setItem('tradechart_scale_mode', scaleMode);
+
+            isZoomAnimating = false; // 🛑 Zoom animasyonunu anında durdur
 
             if (scaleMode === 'locked') {
                 isAutoPriceScale = true;
@@ -5083,8 +5137,16 @@
                     manualBaseMinPrice = smoothMinPrice;
                     manualBaseMaxPrice = smoothMaxPrice;
                 }
+                priceOffset = 0;
+                origPriceOffset = 0;
             } else if (scaleMode === 'velocity') {
-                // İvmeli mod varsayılan serbest durum
+                isAutoPriceScale = false;
+                if (smoothMinPrice && isFinite(smoothMinPrice) && smoothMinPrice !== 0) {
+                    manualBaseMinPrice = smoothMinPrice;
+                    manualBaseMaxPrice = smoothMaxPrice;
+                }
+                priceOffset = 0;
+                origPriceOffset = 0;
             }
 
             updateScaleModeUI();
@@ -5177,12 +5239,20 @@
             const scaleBadge = document.getElementById('scale-live-indicator');
             const scaleText = document.getElementById('scale-status-text');
             if (scaleBadge && scaleText) {
-                if (isAutoPriceScale) {
+                if (scaleMode === 'locked') {
                     scaleBadge.className = 'scale-live-indicator-badge auto-active';
-                    scaleText.innerText = '🔒 OTO ÖLÇEK: AÇIK';
-                } else {
+                    scaleText.innerText = '🔒 SABİT KİLİTLİ';
+                } else if (scaleMode === 'free') {
                     scaleBadge.className = 'scale-live-indicator-badge manual-free';
-                    scaleText.innerText = '🔓 OTO ÖLÇEK: DEVRE DIŞI (SERBEST)';
+                    scaleText.innerText = '🔓 SERBEST (MANUEL)';
+                } else {
+                    if (isAutoPriceScale) {
+                        scaleBadge.className = 'scale-live-indicator-badge auto-active';
+                        scaleText.innerText = '⚡ İVMELİ (KİLİTLİ)';
+                    } else {
+                        scaleBadge.className = 'scale-live-indicator-badge manual-free';
+                        scaleText.innerText = '⚡ İVMELİ (SERBEST)';
+                    }
                 }
             }
             const alertBadge = document.getElementById('hud-alert-badge');
@@ -5281,6 +5351,7 @@
 
         function startPan(clientX, clientY) {
             isChartDragging = true;
+            isZoomAnimating = false; // 🛑 SÜRÜKLEME BAŞLADIĞI AN ZOOM ANİMASYONUNU ANINDA KES!
             dragAxisLocked = null;
             chartDragStartX = clientX;
             chartDragStartY = clientY;
@@ -5349,7 +5420,9 @@
 
         canvasContainer.addEventListener('mousedown', (e) => {
             if (e.button === 0) {
-                // 🛑 CLICK TUŞUNA BASILDIĞINDA (Kilitli modda değilse) OTO ÖLÇEKLENDİRMEYİ ANINDA KAPAT!
+                // 🛑 CLICK TUŞUNA BASILDIĞI AN ZOOM ANİMASYONUNU ANINDA DURDUR!
+                isZoomAnimating = false;
+
                 if (scaleMode !== 'locked') {
                     isAutoPriceScale = false;
                     updateOtoButtonState();
@@ -5660,11 +5733,15 @@
                 return;
             }
 
-            // 🌟 ZOOM ESNASINDA OTO ÖLÇEKLENDİRME AÇILIR
-            isAutoPriceScale = true;
-            priceOffset = 0;
-            origPriceOffset = 0;
-            priceScaleFactor = 1.0;
+            // 🌟 ZOOM ESNASINDA MODA GÖRE ÖLÇEKLENDİRME:
+            if (scaleMode === 'free') {
+                isAutoPriceScale = false;
+            } else {
+                isAutoPriceScale = true;
+                priceOffset = 0;
+                origPriceOffset = 0;
+                priceScaleFactor = 1.0;
+            }
             updateOtoButtonState();
 
             const rect = canvas.getBoundingClientRect();
@@ -7130,6 +7207,8 @@
                 } else {
                     if (isChartDragging) {
                         // 🚀 SÜRÜKLEME ANINDA 0ms GECİKME (1:1 BİREBİR VE ANLIK İMLEÇ TAKİBİ - SIFIR TAKILMA)
+                        isZoomAnimating = false;
+                        window.isZoomAnimating = false;
                         smoothViewStart = viewStart;
                         smoothViewEnd = viewEnd;
                         if (!isAutoPriceScale) {
@@ -7169,6 +7248,7 @@
 
                         if (progress >= 1.0) {
                             isZoomAnimating = false;
+                            window.isZoomAnimating = false;
                         }
                     } else {
                         // Durgun durum hafif LERP
