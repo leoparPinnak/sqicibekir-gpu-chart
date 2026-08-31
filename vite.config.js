@@ -6,8 +6,11 @@ export default defineConfig({
     port: 5173,
     open: true,
     cors: true,
-    // Vite Host Güvenlik Korumasını Aç / İzin Ver
+    // Vite Host Guvenlik Korumasini Ac / Izin Ver
     allowedHosts: [
+      'tradingchart.com.tr',
+      'www.tradingchart.com.tr',
+      '.tradingchart.com.tr',
       'www.ottonline1553.com.tr',
       'ottonline1553.com.tr',
       '.ottonline1553.com.tr',

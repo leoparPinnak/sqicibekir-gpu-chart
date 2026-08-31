@@ -70,7 +70,7 @@ const obfuscationResult = JavaScriptObfuscator.obfuscate(jsWithArmor, {
     stringArrayThreshold: 0.85,
     transformObjectKeys: true,
     unicodeEscapeSequence: false,
-    domainLock: ['localhost', '127.0.0.1', 'tradechart.pro', 'yourtradingapp.com'], // 🌟 DOMAIN LOCK: Only runs on authorized hosts!
+    domainLock: ['localhost', '127.0.0.1', 'tradingchart.com.tr', 'www.tradingchart.com.tr', '.tradingchart.com.tr', 'tradechart.pro', 'ottonline1553.com.tr', 'www.ottonline1553.com.tr'], // 🌟 DOMAIN LOCK: Only runs on authorized hosts!
     domainLockRedirectUrl: 'about:blank'
 });
 
