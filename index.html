@@ -2499,6 +2499,11 @@
                     <span>CANLI</span>
                 </span>
 
+                <div class="scale-mode-segmented-group" id="scale-mode-group">
+                    <button class="scale-mode-btn active" id="mode-btn-free" onclick="setScaleMode('free', event)" title="Serbest (Manuel) Mod">Serbest</button>
+                    <button class="scale-mode-btn" id="mode-btn-locked" onclick="setScaleMode('locked', event)" title="Kilitli (Otomatik Mum Takibi) Mod">Kilitli</button>
+                </div>
+
                 <button class="fit-all-btn" onclick="triggerSpaceAutoFit()" style="background: #161b22; border: 1px solid #30363d; color: #e2e8f0; font-weight: 700; font-size: 11px; padding: 4px 12px; border-radius: 4px; cursor: pointer; transition: all 0.15s ease;" title="Görünür mumları dikeyde yumuşakça sığdır [Space]">SPACE: SIGDIR</button>
             </div>
 
@@ -15969,28 +15974,17 @@
                 e.stopPropagation();
                 e.preventDefault();
             }
-            if (!['free', 'velocity', 'locked'].includes(mode)) mode = 'velocity';
+            if (mode !== 'locked') mode = 'free';
             scaleMode = mode;
             window.scaleMode = scaleMode;
             localStorage.setItem('tradechart_scale_mode', scaleMode);
 
-            isZoomAnimating = false; // Zoom animasyonunu anında durdur
-
             if (scaleMode === 'locked') {
                 isAutoPriceScale = true;
-                priceOffset = 0;
-                origPriceOffset = 0;
                 triggerSpaceAutoFit();
-            } else if (scaleMode === 'free') {
+            } else {
                 isAutoPriceScale = false;
-                if (smoothMinPrice && isFinite(smoothMinPrice) && smoothMinPrice !== 0) {
-                    manualBaseMinPrice = smoothMinPrice;
-                    manualBaseMaxPrice = smoothMaxPrice;
-                }
-                priceOffset = 0;
-                origPriceOffset = 0;
-            } else if (scaleMode === 'velocity') {
-                isAutoPriceScale = false;
+                isZoomAnimating = false;
                 if (smoothMinPrice && isFinite(smoothMinPrice) && smoothMinPrice !== 0) {
                     manualBaseMinPrice = smoothMinPrice;
                     manualBaseMaxPrice = smoothMaxPrice;
@@ -16004,12 +15998,10 @@
         };
 
         function updateScaleModeUI() {
-            ['free', 'velocity', 'locked'].forEach(m => {
-                const btn = document.getElementById('mode-btn-' + m);
-                if (btn) {
-                    btn.className = 'scale-mode-btn' + (scaleMode === m ? ' active mode-' + m : '');
-                }
-            });
+            const btnFree = document.getElementById('mode-btn-free');
+            const btnLocked = document.getElementById('mode-btn-locked');
+            if (btnFree) btnFree.className = 'scale-mode-btn' + (scaleMode === 'free' ? ' active' : '');
+            if (btnLocked) btnLocked.className = 'scale-mode-btn' + (scaleMode === 'locked' ? ' active' : '');
         }
 
         window.triggerSpaceAutoFit = function() {
@@ -16228,7 +16220,10 @@
 
         function startPan(clientX, clientY) {
             isChartDragging = true;
-            isZoomAnimating = false; // SÜRÜKLEME BAŞLADIĞI AN ZOOM ANİMASYONUNU ANINDA KES!
+            isZoomAnimating = false;
+            window.isZoomAnimating = false;
+            isWheelZooming = false;
+            if (wheelZoomTimeout) { clearTimeout(wheelZoomTimeout); wheelZoomTimeout = null; }
             dragAxisLocked = null;
             chartDragStartX = clientX;
             chartDragStartY = clientY;
@@ -16297,12 +16292,14 @@
 
         canvasContainer.addEventListener('mousedown', (e) => {
             if (e.button === 0) {
-                // CLICK TUŞUNA BASILDIĞI AN ZOOM ANİMASYONUNU ANINDA DURDUR!
+                // TIKLANDIGI AN ANIMASYONU VE OTOMATIK OLCEKLENDIRMEYI ANINDA KES!
                 isZoomAnimating = false;
+                window.isZoomAnimating = false;
+                isWheelZooming = false;
+                if (wheelZoomTimeout) { clearTimeout(wheelZoomTimeout); wheelZoomTimeout = null; }
 
-                if (scaleMode !== 'locked') {
+                if (scaleMode === 'free') {
                     isAutoPriceScale = false;
-                    updateOtoButtonState();
                     if (smoothMinPrice && isFinite(smoothMinPrice) && smoothMinPrice !== 0) {
                         manualBaseMinPrice = smoothMinPrice;
                         manualBaseMaxPrice = smoothMaxPrice;
@@ -16310,6 +16307,7 @@
                     priceOffset = 0;
                     origPriceOffset = 0;
                 }
+                updateOtoButtonState();
             }
         }, true);
 
@@ -16644,23 +16642,19 @@
             viewStart = nStart;
             viewEnd = nEnd;
 
-            // Zoom esnasında fiyat ekseni serbest modda bile olsa dikeyde görünür mumları kadrajda tutar
-            isAutoPriceScale = true;
-            priceOffset = 0;
-            origPriceOffset = 0;
-            priceScaleFactor = 1.0;
+            // Serbest modda dikey eksen serbest kalır; Kilitli modda otomatik kadrajlanır
+            if (scaleMode === 'locked') {
+                isAutoPriceScale = true;
+                priceOffset = 0;
+                origPriceOffset = 0;
+            } else {
+                isAutoPriceScale = false;
+            }
             updateOtoButtonState();
 
-            // Zoom hareketi bittiğinde (150ms sonra) serbest moddaysa geri bırak
             wheelZoomTimeout = setTimeout(() => {
                 isWheelZooming = false;
-                if (scaleMode === 'free') {
-                    isAutoPriceScale = false;
-                    manualBaseMinPrice = smoothMinPrice;
-                    manualBaseMaxPrice = smoothMaxPrice;
-                    updateOtoButtonState();
-                }
-            }, 150);
+            }, 100);
 
             updateVisibleBacktestSummary();
         }, { passive: false });
