@@ -2132,6 +2132,312 @@
             color: #8b949e !important;
             margin-top: 2px !important;
         }
+    
+        /* ============================================================ */
+        /* TRADINGVIEW STİLİ KESKİN VE PROFESYONEL BUTONLAR (RADIUS: 0)  */
+        /* ============================================================ */
+        button, .tf-btn, .ind-btn, .scale-mode-btn, .fit-all-btn, 
+        .axis-corner-reset, .symbol-btn-wrapper, .tv-tool-btn, 
+        .pine-btn, .fx-tab-btn, .symbol-tab-btn, .fx-btn-add, 
+        .status-badge, .theme-toggle-btn, .candle-depth-select {
+            border-radius: 0px !important;
+        }
+
+        /* CANLI ROZETİ (AÇIK PARLAK YEŞİL YANIP SÖNEN GLOW) */
+        .status-badge.live {
+            background: rgba(34, 197, 94, 0.12) !important;
+            border: 1px solid rgba(34, 197, 94, 0.4) !important;
+            color: #22c55e !important;
+            font-weight: 800 !important;
+            letter-spacing: 0.5px !important;
+        }
+        .status-badge.live .live-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50% !important;
+            background: #22c55e;
+            box-shadow: 0 0 10px #22c55e, 0 0 4px #22c55e;
+            animation: liveGlowPulse 1.6s infinite ease-in-out;
+        }
+        @keyframes liveGlowPulse {
+            0%, 100% { transform: scale(1.0); opacity: 1; box-shadow: 0 0 10px #22c55e, 0 0 4px #22c55e; }
+            50% { transform: scale(1.35); opacity: 0.75; box-shadow: 0 0 18px #22c55e, 0 0 8px #4ade80; }
+        }
+
+        /* SERBEST / KİLİTLİ SEÇİCİ VE NET DURUM VURGULARI */
+        .scale-mode-segmented-group {
+            display: inline-flex;
+            align-items: center;
+            background: #111622;
+            border: 1px solid #30363d;
+            border-radius: 0px !important;
+            padding: 2px;
+            gap: 2px;
+        }
+        .scale-mode-btn {
+            background: transparent;
+            border: 1px solid transparent;
+            color: #8b949e;
+            padding: 3px 12px;
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.15s ease;
+        }
+        .scale-mode-btn:hover {
+            color: #f1f5f9;
+            background: #1c212c;
+        }
+        .scale-mode-btn.active.mode-free {
+            background: rgba(234, 179, 8, 0.18) !important;
+            border: 1px solid #eab308 !important;
+            color: #fef08a !important;
+            box-shadow: 0 0 8px rgba(234, 179, 8, 0.25);
+        }
+        .scale-mode-btn.active.mode-locked {
+            background: rgba(34, 197, 94, 0.18) !important;
+            border: 1px solid #22c55e !important;
+            color: #86efac !important;
+            box-shadow: 0 0 8px rgba(34, 197, 94, 0.25);
+        }
+        .mode-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50% !important;
+        }
+        .dot-free { background: #eab308; box-shadow: 0 0 6px #eab308; }
+        .dot-locked { background: #22c55e; box-shadow: 0 0 6px #22c55e; }
+
+        /* TEMA SEÇİCİ BUTONU */
+        .theme-toggle-btn {
+            background: #161b22;
+            border: 1px solid #30363d;
+            color: #cbd5e1;
+            padding: 4px 10px;
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.15s ease;
+        }
+        .theme-toggle-btn:hover {
+            background: #21262d;
+            color: #ffffff;
+            border-color: #484f58;
+        }
+
+        /* ARKA PLAN BETA BİLGİLENDİRME WATERMARK'I */
+        .chart-beta-watermark {
+            position: absolute;
+            bottom: 35px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1;
+            pointer-events: none;
+            user-select: none;
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.04);
+            white-space: nowrap;
+            transition: color 0.3s ease;
+        }
+
+        /* ============================================================ */
+        /* TRADINGVIEW RESMİ BEYAZ / AÇIK TEMA (LIGHT THEME) STİLLERİ    */
+        /* ============================================================ */
+        body.light-theme, html.light-theme {
+            background-color: #ffffff !important;
+            color: #131722 !important;
+        }
+        body.light-theme #app-root {
+            background-color: #ffffff !important;
+        }
+        body.light-theme .top-toolbar {
+            background: #ffffff !important;
+            border-bottom: 1px solid #e0e3eb !important;
+        }
+        body.light-theme .indicator-badge {
+            background: #f0f3fa !important;
+            border: 1px solid #e0e3eb !important;
+            color: #131722 !important;
+        }
+        body.light-theme .symbol-btn-wrapper {
+            background: #f0f3fa !important;
+            border: 1px solid #e0e3eb !important;
+            color: #131722 !important;
+        }
+        body.light-theme .symbol-ticker {
+            color: #131722 !important;
+        }
+        body.light-theme .symbol-exchange-tag {
+            color: #787b86 !important;
+        }
+        body.light-theme .tf-btn {
+            background: #f0f3fa !important;
+            border: 1px solid #e0e3eb !important;
+            color: #787b86 !important;
+        }
+        body.light-theme .tf-btn:hover {
+            background: #e0e3eb !important;
+            color: #131722 !important;
+        }
+        body.light-theme .tf-btn.active {
+            background: #2962ff !important;
+            border-color: #2962ff !important;
+            color: #ffffff !important;
+        }
+        body.light-theme .ind-btn {
+            background: #f0f3fa !important;
+            border: 1px solid #e0e3eb !important;
+            color: #131722 !important;
+        }
+        body.light-theme .ind-btn:hover {
+            background: #e0e3eb !important;
+        }
+        body.light-theme .candle-depth-select {
+            background: #f0f3fa !important;
+            border: 1px solid #e0e3eb !important;
+            color: #131722 !important;
+        }
+        body.light-theme .live-price-box {
+            background: #f0f3fa !important;
+            border: 1px solid #e0e3eb !important;
+            color: #131722 !important;
+        }
+        body.light-theme .live-price-box #price-val {
+            color: #089981 !important;
+        }
+        body.light-theme .api-source-badge {
+            background: #e0e3eb !important;
+            color: #787b86 !important;
+        }
+        body.light-theme .tv-left-toolbar {
+            background: #ffffff !important;
+            border-right: 1px solid #e0e3eb !important;
+        }
+        body.light-theme .tv-tool-btn {
+            color: #787b86 !important;
+        }
+        body.light-theme .tv-tool-btn:hover, body.light-theme .tv-tool-btn.active {
+            background: #f0f3fa !important;
+            color: #2962ff !important;
+        }
+        body.light-theme .bottom-statusbar {
+            background: #ffffff !important;
+            border-top: 1px solid #e0e3eb !important;
+            color: #787b86 !important;
+        }
+        body.light-theme .scale-mode-segmented-group {
+            background: #f0f3fa !important;
+            border: 1px solid #e0e3eb !important;
+        }
+        body.light-theme .scale-mode-btn {
+            color: #787b86 !important;
+        }
+        body.light-theme .scale-mode-btn:hover {
+            background: #e0e3eb !important;
+            color: #131722 !important;
+        }
+        body.light-theme .scale-mode-btn.active.mode-free {
+            background: rgba(234, 179, 8, 0.22) !important;
+            border: 1px solid #ca8a04 !important;
+            color: #854d0e !important;
+        }
+        body.light-theme .scale-mode-btn.active.mode-locked {
+            background: rgba(34, 197, 94, 0.22) !important;
+            border: 1px solid #16a34a !important;
+            color: #14532d !important;
+        }
+        body.light-theme .fit-all-btn {
+            background: #f0f3fa !important;
+            border: 1px solid #e0e3eb !important;
+            color: #131722 !important;
+        }
+        body.light-theme .fit-all-btn:hover {
+            background: #e0e3eb !important;
+        }
+        body.light-theme .price-axis-sidebar, body.light-theme .time-axis-bar {
+            background: #ffffff !important;
+            border-color: #e0e3eb !important;
+        }
+        body.light-theme .axis-corner-reset {
+            background: #f0f3fa !important;
+            border: 1px solid #e0e3eb !important;
+            color: #787b86 !important;
+        }
+        body.light-theme .axis-corner-reset:hover {
+            background: #e0e3eb !important;
+            color: #131722 !important;
+        }
+        body.light-theme .subpanes-wrapper {
+            background: #ffffff !important;
+            border-top: 1px solid #e0e3eb !important;
+        }
+        body.light-theme .subpane-container {
+            background: #ffffff !important;
+            border-bottom: 1px solid #e0e3eb !important;
+        }
+        body.light-theme .subpane-header {
+            background: #f0f3fa !important;
+            border: 1px solid #e0e3eb !important;
+            color: #131722 !important;
+        }
+        body.light-theme .subpane-title {
+            color: #131722 !important;
+        }
+        body.light-theme .subpane-val {
+            color: #131722 !important;
+        }
+        body.light-theme .symbol-modal-card, body.light-theme .fx-modal-card, body.light-theme .pine-editor-card {
+            background: #ffffff !important;
+            border: 1px solid #e0e3eb !important;
+            color: #131722 !important;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15) !important;
+        }
+        body.light-theme .symbol-tab-btn, body.light-theme .fx-tab-btn, body.light-theme .pine-btn {
+            background: #f0f3fa !important;
+            border: 1px solid #e0e3eb !important;
+            color: #787b86 !important;
+        }
+        body.light-theme .symbol-tab-btn.active, body.light-theme .fx-tab-btn.active {
+            background: #2962ff !important;
+            border-color: #2962ff !important;
+            color: #ffffff !important;
+        }
+        body.light-theme .symbol-search-input, body.light-theme .fx-search-input {
+            background: #f0f3fa !important;
+            border: 1px solid #e0e3eb !important;
+            color: #131722 !important;
+        }
+        body.light-theme .symbol-item:hover, body.light-theme .fx-item:hover, body.light-theme .fx-indicator-item:hover {
+            background: #f0f3fa !important;
+        }
+        body.light-theme .fx-indicator-item {
+            background: #ffffff !important;
+            border: 1px solid #e0e3eb !important;
+        }
+        body.light-theme .fx-indicator-name {
+            color: #131722 !important;
+        }
+        body.light-theme .fx-indicator-desc {
+            color: #787b86 !important;
+        }
+        body.light-theme .theme-toggle-btn {
+            background: #f0f3fa !important;
+            border: 1px solid #e0e3eb !important;
+            color: #131722 !important;
+        }
+        body.light-theme .chart-beta-watermark {
+            color: rgba(0, 0, 0, 0.05) !important;
+        }
     </style>
 </head>
 <body>
@@ -2188,9 +2494,13 @@
                     <span id="price-val">Yükleniyor...</span>
                     <span class="api-source-badge" id="header-api-source">Binance WS API</span>
                 </div>
-            </div>
 
-            <div class="indicator-nav"></div>
+                <!-- TEMA DEĞİŞTİRME BUTONU (BEYAZ / SİYAH TEMA) -->
+                <button class="theme-toggle-btn" id="btn-theme-toggle" onclick="toggleTheme()" title="Açık (Beyaz) / Koyu Tema">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+                    <span id="theme-btn-label">BEYAZ TEMA</span>
+                </button>
+            </div>
         </div>
 
         <!-- ANA ÇALIŞMA ALANI -->
@@ -2427,6 +2737,7 @@
             <div class="chart-body" id="chart-body-wrapper">
                 <div class="chart-viewport-column">
                     <div class="canvas-container" id="canvas-container">
+                    <div class="chart-beta-watermark" id="chart-beta-watermark">TRADINGCHART · BETA (GELİŞTİRME SÜRECİ DEVAM ETMEKTEDİR)</div>
                         <div class="loading-overlay" id="loading-overlay">Binance MTF (1D + 4H + 1H) Verileri Yükleniyor...</div>
 
                         <!-- ⭐ TRADINGVIEW HAREKETLİ FAVORİ ARAÇLAR ÇUBUĞU -->
@@ -2522,20 +2833,26 @@
         <!-- ALT BİLGİ VE DURUM (TRADINGVIEW PRODÜKSİYON STİLİ) -->
         <div class="bottom-statusbar">
             <div class="status-left">
-                <span class="status-badge live" style="background: #161b22; border: 1px solid #30363d; color: #e2e8f0; padding: 3px 10px; border-radius: 4px; font-weight: 700; font-size: 11px; display: inline-flex; align-items: center; gap: 6px;">
-                    <span style="width: 6px; height: 6px; border-radius: 50%; background: #94a3b8;"></span>
+                <span class="status-badge live" title="Canlı Veri Akışı Aktif">
+                    <span class="live-dot"></span>
                     <span>CANLI</span>
                 </span>
 
-                <div class="scale-mode-segmented-group" id="scale-mode-group">
-                    <button class="scale-mode-btn active" id="mode-btn-free" onclick="setScaleMode('free', event)" title="Serbest (Manuel) Mod">Serbest</button>
-                    <button class="scale-mode-btn" id="mode-btn-locked" onclick="setScaleMode('locked', event)" title="Kilitli (Otomatik Mum Takibi) Mod">Kilitli</button>
+                <div class="scale-mode-segmented-group" id="scale-mode-group" title="Fiyat Ölçekleme Modu">
+                    <button class="scale-mode-btn active mode-free" id="mode-btn-free" onclick="setScaleMode('free', event)" title="Serbest (Manuel) Mod">
+                        <span class="mode-dot dot-free"></span>
+                        <span>SERBEST</span>
+                    </button>
+                    <button class="scale-mode-btn mode-locked" id="mode-btn-locked" onclick="setScaleMode('locked', event)" title="Kilitli (Otomatik Mum Takip) Mod">
+                        <span class="mode-dot dot-locked"></span>
+                        <span>KİLİTLİ</span>
+                    </button>
                 </div>
 
-                <button class="fit-all-btn" onclick="triggerSpaceAutoFit()" style="background: #161b22; border: 1px solid #30363d; color: #e2e8f0; font-weight: 700; font-size: 11px; padding: 4px 12px; border-radius: 4px; cursor: pointer; transition: all 0.15s ease;" title="Görünür mumları dikeyde yumuşakça sığdır [Space]">SPACE: SIGDIR</button>
+                <button class="fit-all-btn" onclick="triggerSpaceAutoFit()" title="Görünür mumları dikeyde yumuşakça sığdır [Space]">SPACE: SIGDIR</button>
             </div>
 
-            <div style="display: flex; align-items: center; gap: 14px; font-size: 11px; color: #64748b; font-family: monospace;">
+            <div style="display: flex; align-items: center; gap: 14px; font-size: 11px; color: #8b949e; font-family: monospace;">
                 <span>% log</span>
                 <span>UTC+3 (Istanbul)</span>
             </div>
@@ -2564,12 +2881,13 @@
     uniform int u_show_cloud;
     uniform int u_show_ema;
     uniform int u_show_bg;
+    uniform int u_is_light_theme;
 
     uniform sampler2D u_candle_tex;
     uniform sampler2D u_ind_tex;
     uniform float u_total_candles;
-        uniform float u_load_anim; // 0.0 -> 1.0 Doğal Logaritmik Açılış Animasyonu
-        out vec4 fragColor;
+    uniform float u_load_anim;
+    out vec4 fragColor;
 
     float priceToY(float price) {
         float diff = u_price_range.y - u_price_range.x;
@@ -2584,8 +2902,8 @@
         float topBound = 0.985;
         float bottomBound = 0.015;
 
-        // Koyu Uzay Arka Planı
-        vec3 col = vec3(0.042, 0.062, 0.105);
+        // Arka Plan Rengi: Açık (Beyaz) veya Koyu (Siyah)
+        vec3 col = (u_is_light_theme == 1) ? vec3(0.988, 0.992, 0.996) : vec3(0.042, 0.062, 0.105);
 
         float visibleCount = max(1.0, u_view_range.y - u_view_range.x);
         float currentCandleIdx = u_view_range.x + uv.x * visibleCount;
@@ -2600,19 +2918,20 @@
 
         if (u_show_bg == 1 && u_total_candles > 0.0) {
             if (htfRegime > 0.5) {
-                col = mix(col, vec3(0.06, 0.85, 0.35), 0.07);
+                col = mix(col, (u_is_light_theme == 1) ? vec3(0.12, 0.85, 0.45) : vec3(0.06, 0.85, 0.35), 0.06);
             } else if (htfRegime < -0.5) {
-                col = mix(col, vec3(0.95, 0.15, 0.25), 0.07);
+                col = mix(col, (u_is_light_theme == 1) ? vec3(0.95, 0.25, 0.35) : vec3(0.95, 0.15, 0.25), 0.06);
             }
         }
 
         float gridY = fract(uv.y * 8.0);
         float hLine = smoothstep(0.025, 0.0, abs(gridY - 0.5) * 2.0);
-        col += vec3(0.12, 0.18, 0.28) * hLine * 0.4;
+        vec3 gridCol = (u_is_light_theme == 1) ? vec3(0.85, 0.88, 0.92) : vec3(0.12, 0.18, 0.28);
+        col = mix(col, gridCol, hLine * (u_is_light_theme == 1 ? 0.35 : 0.4));
 
         float gridX = fract(uv.x * 10.0);
         float vLine = smoothstep(0.025, 0.0, abs(gridX - 0.5) * 2.0);
-        col += vec3(0.12, 0.18, 0.28) * vLine * 0.25;
+        col = mix(col, gridCol, vLine * (u_is_light_theme == 1 ? 0.25 : 0.25));
 
         if (uv.y >= bottomBound && uv.y <= topBound) {
             if (u_show_cloud == 1 && sa1H > 0.0 && sb1H > 0.0) {
@@ -2729,6 +3048,38 @@
 
     <!-- ==================== JAVASCRIPT MOTORU ==================== -->
     <script>
+
+        // ============================================================
+        // 🌓 TRADINGVIEW AÇIK / KOYU TEMA YÖNETİMİ
+        // ============================================================
+        let currentTheme = localStorage.getItem('tradechart_theme') || 'dark';
+        window.currentTheme = currentTheme;
+
+        function applyTheme(theme) {
+            currentTheme = theme;
+            window.currentTheme = currentTheme;
+            localStorage.setItem('tradechart_theme', currentTheme);
+
+            const btnLabel = document.getElementById('theme-btn-label');
+            if (currentTheme === 'light') {
+                document.body.classList.add('light-theme');
+                document.documentElement.classList.add('light-theme');
+                if (btnLabel) btnLabel.innerText = 'KOYU TEMA';
+            } else {
+                document.body.classList.remove('light-theme');
+                document.documentElement.classList.remove('light-theme');
+                if (btnLabel) btnLabel.innerText = 'BEYAZ TEMA';
+            }
+        }
+
+        window.toggleTheme = function() {
+            applyTheme(currentTheme === 'dark' ? 'light' : 'dark');
+        };
+
+        // Initialize Theme on startup
+        applyTheme(currentTheme);
+    
+
         // ============================================================
         // TEKNİK HESAPLAMA MOTORU VE FORMÜL KÜTÜPHANESİ
         // ============================================================
@@ -3776,6 +4127,7 @@
                 uIndTex = gl.getUniformLocation(prog, 'u_ind_tex');
                 uTotalCandles = gl.getUniformLocation(prog, 'u_total_candles');
                 uLoadAnim = gl.getUniformLocation(prog, 'u_load_anim');
+                uIsLightTheme = gl.getUniformLocation(prog, 'u_is_light_theme');
 
                 isGpuActive = true;
             }
@@ -16028,8 +16380,16 @@
         function updateScaleModeUI() {
             const btnFree = document.getElementById('mode-btn-free');
             const btnLocked = document.getElementById('mode-btn-locked');
-            if (btnFree) btnFree.className = 'scale-mode-btn' + (scaleMode === 'free' ? ' active' : '');
-            if (btnLocked) btnLocked.className = 'scale-mode-btn' + (scaleMode === 'locked' ? ' active' : '');
+            if (btnFree) {
+                btnFree.className = 'scale-mode-btn mode-free' + (scaleMode === 'free' ? ' active' : '');
+            }
+            if (btnLocked) {
+                btnLocked.className = 'scale-mode-btn mode-locked' + (scaleMode === 'locked' ? ' active' : '');
+            }
+            const cornerReset = document.querySelector('.axis-corner-reset');
+            if (cornerReset) {
+                cornerReset.classList.toggle('active', scaleMode === 'locked');
+            }
         }
 
         window.triggerSpaceAutoFit = function() {
@@ -18188,6 +18548,9 @@
                     gl.uniform1i(uShowCloud, layers.cloud);
                     gl.uniform1i(uShowEma, layers.ema);
                     gl.uniform1i(uShowBg, layers.bg);
+                    if (uIsLightTheme) {
+                        gl.uniform1i(uIsLightTheme, currentTheme === 'light' ? 1 : 0);
+                    }
 
                     gl.activeTexture(gl.TEXTURE0);
                     gl.bindTexture(gl.TEXTURE_2D, candleTex);
