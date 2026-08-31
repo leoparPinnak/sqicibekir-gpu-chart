@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Piyasaları Keşfedin // BIST, Kripto, NASDAQ ve Emtia | TradingChart Pro</title>
+    
+    <!-- Temel Meta Bilgileri -->
+    <meta name="description" content="Borsa İstanbul (BIST), Kripto Para (Binance), ABD Hisseleri (NASDAQ / NYSE) ve Emtia piyasalarında anlık canlı fiyatlar, hacimler ve grafikler.">
+    <meta name="keywords" content="piyasalar, canlı borsa, hisse senetleri, bist 100, kripto para, nasdaq, ons altın, forex, teknik analiz">
+    <meta name="author" content="TradingChart Pro">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://tradingchart.com.tr/explore">
+
+    <!-- Inter Typography (Uniswap V4 Style) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="./styles/liquid-glass.css">
+    <style>
+        body {
+            background-color: #060913;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            overflow-y: auto !important;
+        }
+
+        .explore-page-wrapper {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .explore-page-main {
+            flex: 1;
+            padding-top: 30px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 🌈 UNISWAP AMBIENT GLOW ORBS -->
+    <div class="ambient-glow-layer">
+        <div class="glow-orb orb-pink" style="top: -100px; left: 15%;"></div>
+        <div class="glow-orb orb-blue" style="top: 200px; right: 10%;"></div>
+        <div class="glow-orb orb-green" style="bottom: 100px; left: 30%;"></div>
+    </div>
+
+    <div class="explore-page-wrapper">
+        
+        <!-- ÜST NAVİGASYON -->
+        <header class="portal-header">
+            <div class="portal-brand" onclick="window.location.href='./index.html'">
+                <div class="portal-logo-badge">
+                    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+                </div>
+                <div class="portal-brand-text">
+                    <span>TRADINGCHART</span>
+                    <span class="pro">PRO</span>
+                </div>
+            </div>
+
+            <nav class="portal-nav-links">
+                <a class="portal-nav-item" href="./index.html">Canlı Grafik</a>
+                <a class="portal-nav-item active" href="./explore.html">Piyasalar</a>
+                <a class="portal-nav-item" href="../indikator_sablonu.html">Göstergeler</a>
+                <a class="portal-nav-item" href="../indikator_sablonu.html">Script Editörü</a>
+                <a class="portal-nav-item" href="../indikator_sablonu.html">Portföy</a>
+            </nav>
+
+            <div class="portal-header-actions">
+                <button class="portal-btn-primary" onclick="window.location.href='../indikator_sablonu.html'">
+                    <span class="autonomous-pulse-dot"></span>
+                    <span>Terminali Başlat</span>
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+                </button>
+            </div>
+        </header>
+
+        <!-- 📊 PİYASALAR KEŞİF BÖLÜMÜ -->
+        <main class="explore-page-main">
+            <section class="explore-section-container" id="explore-section">
+                <!-- Dinamik piyasa tablosu MarketExploreDirector tarafından yüklenecek -->
+            </section>
+        </main>
+
+        <!-- FOOTER METRİKLER -->
+        <footer class="portal-footer" style="margin-top: auto;">
+            <div class="portal-stat-group">
+                <div class="portal-stat-item">
+                    <span class="portal-stat-num">858+</span>
+                    <span class="portal-stat-label">Canlı Parite</span>
+                </div>
+            </div>
+
+            <div style="font-size: 12px; color: #64748b; font-family: monospace;">
+                TRADINGCHART PRO · BETA v2.4
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- SADE MOBİL UYARI EKRANI -->
+    <div id="portal-mobile-overlay" class="portal-mobile-overlay">
+        <div class="portal-mobile-card">
+            <div class="portal-mobile-icon">
+                <svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                    <line x1="8" y1="21" x2="16" y2="21"></line>
+                    <line x1="12" y1="17" x2="12" y2="21"></line>
+                </svg>
+            </div>
+            <h2 class="portal-mobile-title">Mobil Desteklenmiyor</h2>
+            <p class="portal-mobile-desc">Bu platform şu an için mobil cihazları desteklememektedir. Lütfen en iyi analiz deneyimi için masaüstü veya tablet tarayıcınızdan giriş yapın.</p>
+        </div>
+    </div>
+
+    <!-- 📊 PİYASALAR YÖNETİCİSİ -->
+    <script type="module">
+        import { MarketExploreDirector } from './js/market-explore.js';
+
+        window.launchTerminal = function(symbolId) {
+            const targetUrl = symbolId ? `../indikator_sablonu.html?symbol=${symbolId}` : '../indikator_sablonu.html';
+            window.location.href = targetUrl;
+        };
+
+        const exploreContainer = document.getElementById('explore-section');
+        if (exploreContainer) {
+            window.__exploreDirector = new MarketExploreDirector(exploreContainer);
+            window.__exploreDirector.init();
+        }
+    </script>
+</body>
+</html>
