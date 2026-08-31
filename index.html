@@ -1092,23 +1092,38 @@
             color: #f1f5f9;
             background: rgba(255, 255, 255, 0.08);
         }
-        .scale-mode-btn.active.mode-free {
-            background: rgba(245, 158, 11, 0.25) !important;
-            border-color: #f59e0b !important;
-            color: #fbbf24 !important;
-            box-shadow: 0 0 10px rgba(245, 158, 11, 0.4);
+        .scale-mode-btn {
+            background: transparent !important;
+            border: 1px solid transparent !important;
+            color: #8b949e !important;
+            padding: 4px 14px !important;
+            font-size: 11px !important;
+            font-weight: 600 !important;
+            cursor: pointer !important;
+            transition: all 0.15s ease !important;
         }
-        .scale-mode-btn.active.mode-velocity {
-            background: rgba(56, 189, 248, 0.25) !important;
-            border-color: #38bdf8 !important;
-            color: #38bdf8 !important;
-            box-shadow: 0 0 10px rgba(56, 189, 248, 0.4);
+        .scale-mode-btn:hover {
+            color: #f1f5f9 !important;
+            background: #21262d !important;
         }
-        .scale-mode-btn.active.mode-locked {
-            background: rgba(16, 185, 129, 0.25) !important;
-            border-color: #10b981 !important;
-            color: #10b981 !important;
-            box-shadow: 0 0 10px rgba(16, 185, 129, 0.4);
+        .scale-mode-btn.active {
+            background: #21262d !important;
+            border: 1px solid #484f58 !important;
+            color: #ffffff !important;
+            font-weight: 800 !important;
+        }
+        body.light-theme .scale-mode-btn {
+            color: #64748b !important;
+        }
+        body.light-theme .scale-mode-btn:hover {
+            background: #e2e8f0 !important;
+            color: #0f172a !important;
+        }
+        body.light-theme .scale-mode-btn.active {
+            background: #e2e8f0 !important;
+            border: 1px solid #94a3b8 !important;
+            color: #0f172a !important;
+            font-weight: 800 !important;
         }
         .scale-mode-btn {
             background: transparent;
@@ -1147,14 +1162,7 @@
             color: #10b981;
             box-shadow: 0 0 10px rgba(16, 185, 129, 0.35);
         }
-        .mode-dot {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-        }
-        .dot-free { background: #f59e0b; }
-        .dot-velocity { background: #38bdf8; }
-        .dot-locked { background: #10b981; }
+        
 
         .scale-live-indicator-badge {
             display: inline-flex;
@@ -2191,25 +2199,13 @@
             color: #f1f5f9;
             background: #1c212c;
         }
-        .scale-mode-btn.active.mode-free {
-            background: rgba(234, 179, 8, 0.18) !important;
-            border: 1px solid #eab308 !important;
-            color: #fef08a !important;
-            box-shadow: 0 0 8px rgba(234, 179, 8, 0.25);
+        .scale-mode-btn.active {
+            background: #21262d !important;
+            border: 1px solid #484f58 !important;
+            color: #ffffff !important;
+            font-weight: 800 !important;
         }
-        .scale-mode-btn.active.mode-locked {
-            background: rgba(34, 197, 94, 0.18) !important;
-            border: 1px solid #22c55e !important;
-            color: #86efac !important;
-            box-shadow: 0 0 8px rgba(34, 197, 94, 0.25);
-        }
-        .mode-dot {
-            width: 6px;
-            height: 6px;
-            border-radius: 50% !important;
-        }
-        .dot-free { background: #eab308; box-shadow: 0 0 6px #eab308; }
-        .dot-locked { background: #22c55e; box-shadow: 0 0 6px #22c55e; }
+        
 
         /* TEMA SEÇİCİ BUTONU */
         .theme-toggle-btn {
@@ -2346,15 +2342,11 @@
             background: #e0e3eb !important;
             color: #131722 !important;
         }
-        body.light-theme .scale-mode-btn.active.mode-free {
-            background: rgba(234, 179, 8, 0.22) !important;
-            border: 1px solid #ca8a04 !important;
-            color: #854d0e !important;
-        }
-        body.light-theme .scale-mode-btn.active.mode-locked {
-            background: rgba(34, 197, 94, 0.22) !important;
-            border: 1px solid #16a34a !important;
-            color: #14532d !important;
+        body.light-theme .scale-mode-btn.active {
+            background: #e0e3eb !important;
+            border: 1px solid #787b86 !important;
+            color: #131722 !important;
+            font-weight: 800 !important;
         }
         body.light-theme .fit-all-btn {
             background: #f0f3fa !important;
@@ -2839,14 +2831,8 @@
                 </span>
 
                 <div class="scale-mode-segmented-group" id="scale-mode-group" title="Fiyat Ölçekleme Modu">
-                    <button class="scale-mode-btn active mode-free" id="mode-btn-free" onclick="setScaleMode('free', event)" title="Serbest (Manuel) Mod">
-                        <span class="mode-dot dot-free"></span>
-                        <span>SERBEST</span>
-                    </button>
-                    <button class="scale-mode-btn mode-locked" id="mode-btn-locked" onclick="setScaleMode('locked', event)" title="Kilitli (Otomatik Mum Takip) Mod">
-                        <span class="mode-dot dot-locked"></span>
-                        <span>KİLİTLİ</span>
-                    </button>
+                    <button class="scale-mode-btn active mode-free" id="mode-btn-free" onclick="setScaleMode('free', event)" title="Serbest (Manuel) Mod">SERBEST</button>
+                    <button class="scale-mode-btn mode-locked" id="mode-btn-locked" onclick="setScaleMode('locked', event)" title="Kilitli (Otomatik Mum Takip) Mod">KİLİTLİ</button>
                 </div>
 
                 <button class="fit-all-btn" onclick="triggerSpaceAutoFit()" title="Görünür mumları dikeyde yumuşakça sığdır [Space]">SPACE: SIGDIR</button>
@@ -16381,10 +16367,10 @@
             const btnFree = document.getElementById('mode-btn-free');
             const btnLocked = document.getElementById('mode-btn-locked');
             if (btnFree) {
-                btnFree.className = 'scale-mode-btn mode-free' + (scaleMode === 'free' ? ' active' : '');
+                btnFree.className = 'scale-mode-btn' + (scaleMode === 'free' ? ' active' : '');
             }
             if (btnLocked) {
-                btnLocked.className = 'scale-mode-btn mode-locked' + (scaleMode === 'locked' ? ' active' : '');
+                btnLocked.className = 'scale-mode-btn' + (scaleMode === 'locked' ? ' active' : '');
             }
             const cornerReset = document.querySelector('.axis-corner-reset');
             if (cornerReset) {
