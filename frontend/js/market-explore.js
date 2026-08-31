@@ -1,40 +1,446 @@
 /**
  * 📊 UNISWAP V4 STYLE MARKET EXPLORE DIRECTOR
- * Renders interactive stock, crypto, US market, and forex tables with live search,
- * category tabs, SVG sparkline trend graphs, and direct terminal launching.
+ * Renders interactive stock, crypto, US market, and forex tables with original pre-warmed brand logos.
  */
 
+import './logo-preloader.js';
+
 export const POPULAR_MARKET_ASSETS = [
-    // BIST 100
-    { id: 'THYAO', symbol: 'THYAO', name: 'Türk Hava Yolları A.O.', category: 'bist', exchange: 'BIST', price: '₺312.50', priceNum: 312.50, change: '+3.42%', isPositive: true, volume: '₺5.84 Milyar', color: '#ef4444', sparkline: [40, 42, 41, 45, 48, 47, 52] },
-    { id: 'ASELS', symbol: 'ASELS', name: 'Aselsan Elektronik Sanayi', category: 'bist', exchange: 'BIST', price: '₺62.40', priceNum: 62.40, change: '+4.18%', isPositive: true, volume: '₺3.20 Milyar', color: '#0284c7', sparkline: [20, 22, 21, 24, 23, 26, 28] },
-    { id: 'EREGL', symbol: 'EREGL', name: 'Ereğli Demir ve Çelik', category: 'bist', exchange: 'BIST', price: '₺48.90', priceNum: 48.90, change: '-0.85%', isPositive: false, volume: '₺2.15 Milyar', color: '#f59e0b', sparkline: [35, 34, 36, 33, 34, 32, 31] },
-    { id: 'GARAN', symbol: 'GARAN', name: 'Türkiye Garanti Bankası', category: 'bist', exchange: 'BIST', price: '₺118.60', priceNum: 118.60, change: '+2.45%', isPositive: true, volume: '₺4.10 Milyar', color: '#10b981', sparkline: [60, 62, 61, 65, 68, 70, 74] },
-    { id: 'TUPRS', symbol: 'TUPRS', name: 'Tüpraş Türkiye Petrol Rafinerileri', category: 'bist', exchange: 'BIST', price: '₺165.20', priceNum: 165.20, change: '+1.90%', isPositive: true, volume: '₺3.75 Milyar', color: '#6366f1', sparkline: [50, 51, 49, 53, 54, 52, 56] },
-    { id: 'BIMAS', symbol: 'BIMAS', name: 'BİM Birleşik Mağazalar', category: 'bist', exchange: 'BIST', price: '₺486.00', priceNum: 486.00, change: '+0.75%', isPositive: true, volume: '₺1.90 Milyar', color: '#3b82f6', sparkline: [40, 41, 42, 41, 43, 44, 45] },
-    { id: 'KCHOL', symbol: 'KCHOL', name: 'Koç Holding A.Ş.', category: 'bist', exchange: 'BIST', price: '₺216.00', priceNum: 216.00, change: '+1.60%', isPositive: true, volume: '₺2.40 Milyar', color: '#a855f7', sparkline: [30, 31, 33, 32, 34, 35, 37] },
-    { id: 'SISE', symbol: 'SISE', name: 'Şişecam Fabrikaları', category: 'bist', exchange: 'BIST', price: '₺46.90', priceNum: 46.90, change: '+1.10%', isPositive: true, volume: '₺1.65 Milyar', color: '#06b6d4', sparkline: [25, 26, 25, 27, 26, 28, 29] },
+    // ==========================================
+    // 🇹🇷 BORSA İSTANBUL (BIST 100)
+    // ==========================================
+    {
+        id: 'THYAO',
+        symbol: 'THYAO',
+        name: 'Türk Hava Yolları A.O.',
+        category: 'bist',
+        exchange: 'BIST',
+        price: '₺312.50',
+        priceNum: 312.50,
+        change: '+3.42%',
+        isPositive: true,
+        volume: '₺5.84 Milyar',
+        color: '#ef4444',
+        sparkline: [40, 42, 41, 45, 48, 47, 52],
+        logoUrl: './assets/logos/thyao.png'
+    },
+    {
+        id: 'ASELS',
+        symbol: 'ASELS',
+        name: 'Aselsan Elektronik Sanayi',
+        category: 'bist',
+        exchange: 'BIST',
+        price: '₺62.40',
+        priceNum: 62.40,
+        change: '+4.18%',
+        isPositive: true,
+        volume: '₺3.20 Milyar',
+        color: '#0284c7',
+        sparkline: [20, 22, 21, 24, 23, 26, 28],
+        logoUrl: './assets/logos/asels.png'
+    },
+    {
+        id: 'EREGL',
+        symbol: 'EREGL',
+        name: 'Ereğli Demir ve Çelik Fabrikaları',
+        category: 'bist',
+        exchange: 'BIST',
+        price: '₺48.90',
+        priceNum: 48.90,
+        change: '-0.85%',
+        isPositive: false,
+        volume: '₺2.15 Milyar',
+        color: '#f59e0b',
+        sparkline: [35, 34, 36, 33, 34, 32, 31],
+        logoUrl: './assets/logos/eregl.svg'
+    },
+    {
+        id: 'GARAN',
+        symbol: 'GARAN',
+        name: 'Türkiye Garanti Bankası',
+        category: 'bist',
+        exchange: 'BIST',
+        price: '₺118.60',
+        priceNum: 118.60,
+        change: '+2.45%',
+        isPositive: true,
+        volume: '₺4.10 Milyar',
+        color: '#10b981',
+        sparkline: [60, 62, 61, 65, 68, 70, 74],
+        logoUrl: './assets/logos/garan.png'
+    },
+    {
+        id: 'TUPRS',
+        symbol: 'TUPRS',
+        name: 'Tüpraş Türkiye Petrol Rafinerileri',
+        category: 'bist',
+        exchange: 'BIST',
+        price: '₺165.20',
+        priceNum: 165.20,
+        change: '+1.90%',
+        isPositive: true,
+        volume: '₺3.75 Milyar',
+        color: '#6366f1',
+        sparkline: [50, 51, 49, 53, 54, 52, 56],
+        logoUrl: './assets/logos/tuprs.png'
+    },
+    {
+        id: 'BIMAS',
+        symbol: 'BIMAS',
+        name: 'BİM Birleşik Mağazalar',
+        category: 'bist',
+        exchange: 'BIST',
+        price: '₺486.00',
+        priceNum: 486.00,
+        change: '+0.75%',
+        isPositive: true,
+        volume: '₺1.90 Milyar',
+        color: '#ef4444',
+        sparkline: [40, 41, 42, 41, 43, 44, 45],
+        logoUrl: './assets/logos/bimas.png'
+    },
+    {
+        id: 'KCHOL',
+        symbol: 'KCHOL',
+        name: 'Koç Holding A.Ş.',
+        category: 'bist',
+        exchange: 'BIST',
+        price: '₺216.00',
+        priceNum: 216.00,
+        change: '+1.60%',
+        isPositive: true,
+        volume: '₺2.40 Milyar',
+        color: '#a855f7',
+        sparkline: [30, 31, 33, 32, 34, 35, 37],
+        logoUrl: './assets/logos/kchol.svg'
+    },
+    {
+        id: 'SISE',
+        symbol: 'SISE',
+        name: 'Türkiye Şişecam Fabrikaları',
+        category: 'bist',
+        exchange: 'BIST',
+        price: '₺46.90',
+        priceNum: 46.90,
+        change: '+1.10%',
+        isPositive: true,
+        volume: '₺1.65 Milyar',
+        color: '#06b6d4',
+        sparkline: [25, 26, 25, 27, 26, 28, 29],
+        logoUrl: './assets/logos/sise.png'
+    },
+    {
+        id: 'ISCTR',
+        symbol: 'ISCTR',
+        name: 'Türkiye İş Bankası (C)',
+        category: 'bist',
+        exchange: 'BIST',
+        price: '₺13.90',
+        priceNum: 13.90,
+        change: '+1.70%',
+        isPositive: true,
+        volume: '₺2.80 Milyar',
+        color: '#1e40af',
+        sparkline: [20, 21, 22, 21, 23, 24, 25],
+        logoUrl: './assets/logos/isctr.png'
+    },
+    {
+        id: 'AKBNK',
+        symbol: 'AKBNK',
+        name: 'Akbank T.A.Ş.',
+        category: 'bist',
+        exchange: 'BIST',
+        price: '₺56.40',
+        priceNum: 56.40,
+        change: '+2.10%',
+        isPositive: true,
+        volume: '₺3.10 Milyar',
+        color: '#dc2626',
+        sparkline: [30, 31, 32, 34, 33, 35, 37],
+        logoUrl: './assets/logos/akbnk.png'
+    },
+    {
+        id: 'PGSUS',
+        symbol: 'PGSUS',
+        name: 'Pegasus Hava Taşımacılığı',
+        category: 'bist',
+        exchange: 'BIST',
+        price: '₺229.50',
+        priceNum: 229.50,
+        change: '+3.20%',
+        isPositive: true,
+        volume: '₺1.75 Milyar',
+        color: '#f59e0b',
+        sparkline: [40, 42, 41, 44, 46, 45, 48],
+        logoUrl: './assets/logos/pgsus.png'
+    },
+    {
+        id: 'TCELL',
+        symbol: 'TCELL',
+        name: 'Turkcell İletişim Hizmetleri',
+        category: 'bist',
+        exchange: 'BIST',
+        price: '₺96.20',
+        priceNum: 96.20,
+        change: '+1.45%',
+        isPositive: true,
+        volume: '₺1.50 Milyar',
+        color: '#0284c7',
+        sparkline: [35, 36, 37, 36, 38, 39, 40],
+        logoUrl: './assets/logos/tcell.png'
+    },
 
-    // ABD HİSSELERİ (NASDAQ / NYSE)
-    { id: 'NVDA', symbol: 'NVDA', name: 'NVIDIA Corporation', category: 'stocks', exchange: 'NASDAQ', price: '$128.40', priceNum: 128.40, change: '+5.60%', isPositive: true, volume: '$48.2 Milyar', color: '#10b981', sparkline: [50, 53, 52, 58, 62, 60, 68] },
-    { id: 'AAPL', symbol: 'AAPL', name: 'Apple Inc.', category: 'stocks', exchange: 'NASDAQ', price: '$228.60', priceNum: 228.60, change: '+1.35%', isPositive: true, volume: '$32.1 Milyar', color: '#94a3b8', sparkline: [70, 71, 70, 73, 72, 75, 76] },
-    { id: 'TSLA', symbol: 'TSLA', name: 'Tesla Motors Inc.', category: 'stocks', exchange: 'NASDAQ', price: '$242.30', priceNum: 242.30, change: '+4.20%', isPositive: true, volume: '$28.4 Milyar', color: '#ef4444', sparkline: [45, 48, 46, 52, 55, 53, 60] },
-    { id: 'MSFT', symbol: 'MSFT', name: 'Microsoft Corporation', category: 'stocks', exchange: 'NASDAQ', price: '$448.50', priceNum: 448.50, change: '+1.10%', isPositive: true, volume: '$22.5 Milyar', color: '#0284c7', sparkline: [65, 66, 68, 67, 69, 70, 72] },
-    { id: 'GOOGL', symbol: 'GOOGL', name: 'Alphabet Inc. (Google)', category: 'stocks', exchange: 'NASDAQ', price: '$182.20', priceNum: 182.20, change: '-0.45%', isPositive: false, volume: '$18.9 Milyar', color: '#f59e0b', sparkline: [50, 52, 51, 49, 50, 48, 47] },
-    { id: 'AMZN', symbol: 'AMZN', name: 'Amazon.com Inc.', category: 'stocks', exchange: 'NASDAQ', price: '$186.40', priceNum: 186.40, change: '+2.05%', isPositive: true, volume: '$21.3 Milyar', color: '#f97316', sparkline: [40, 41, 43, 42, 45, 46, 48] },
+    // ==========================================
+    // 🇺🇸 ABD HİSSELERİ (NASDAQ / NYSE)
+    // ==========================================
+    {
+        id: 'NVDA',
+        symbol: 'NVDA',
+        name: 'NVIDIA Corporation',
+        category: 'stocks',
+        exchange: 'NASDAQ',
+        price: '$128.40',
+        priceNum: 128.40,
+        change: '+5.60%',
+        isPositive: true,
+        volume: '$48.2 Milyar',
+        color: '#10b981',
+        sparkline: [50, 53, 52, 58, 62, 60, 68],
+        logoUrl: './assets/logos/nvda.png'
+    },
+    {
+        id: 'AAPL',
+        symbol: 'AAPL',
+        name: 'Apple Inc.',
+        category: 'stocks',
+        exchange: 'NASDAQ',
+        price: '$228.60',
+        priceNum: 228.60,
+        change: '+1.35%',
+        isPositive: true,
+        volume: '$32.1 Milyar',
+        color: '#94a3b8',
+        sparkline: [70, 71, 70, 73, 72, 75, 76],
+        logoUrl: './assets/logos/aapl.png'
+    },
+    {
+        id: 'TSLA',
+        symbol: 'TSLA',
+        name: 'Tesla Motors Inc.',
+        category: 'stocks',
+        exchange: 'NASDAQ',
+        price: '$242.30',
+        priceNum: 242.30,
+        change: '+4.20%',
+        isPositive: true,
+        volume: '$28.4 Milyar',
+        color: '#ef4444',
+        sparkline: [45, 48, 46, 52, 55, 53, 60],
+        logoUrl: './assets/logos/tsla.png'
+    },
+    {
+        id: 'MSFT',
+        symbol: 'MSFT',
+        name: 'Microsoft Corporation',
+        category: 'stocks',
+        exchange: 'NASDAQ',
+        price: '$448.50',
+        priceNum: 448.50,
+        change: '+1.10%',
+        isPositive: true,
+        volume: '$22.5 Milyar',
+        color: '#0284c7',
+        sparkline: [65, 66, 68, 67, 69, 70, 72],
+        logoUrl: './assets/logos/msft.png'
+    },
+    {
+        id: 'GOOGL',
+        symbol: 'GOOGL',
+        name: 'Alphabet Inc. (Google)',
+        category: 'stocks',
+        exchange: 'NASDAQ',
+        price: '$182.20',
+        priceNum: 182.20,
+        change: '-0.45%',
+        isPositive: false,
+        volume: '$18.9 Milyar',
+        color: '#f59e0b',
+        sparkline: [50, 52, 51, 49, 50, 48, 47],
+        logoUrl: './assets/logos/googl.png'
+    },
+    {
+        id: 'AMZN',
+        symbol: 'AMZN',
+        name: 'Amazon.com Inc.',
+        category: 'stocks',
+        exchange: 'NASDAQ',
+        price: '$186.40',
+        priceNum: 186.40,
+        change: '+2.05%',
+        isPositive: true,
+        volume: '$21.3 Milyar',
+        color: '#f97316',
+        sparkline: [40, 41, 43, 42, 45, 46, 48],
+        logoUrl: './assets/logos/amzn.png'
+    },
+    {
+        id: 'META',
+        symbol: 'META',
+        name: 'Meta Platforms Inc.',
+        category: 'stocks',
+        exchange: 'NASDAQ',
+        price: '$512.80',
+        priceNum: 512.80,
+        change: '+2.40%',
+        isPositive: true,
+        volume: '$19.8 Milyar',
+        color: '#0668e1',
+        sparkline: [45, 46, 48, 50, 52, 54, 56],
+        logoUrl: './assets/logos/meta.png'
+    },
 
-    // KRİPTO (BINANCE SPOT)
-    { id: 'BTCUSDT', symbol: 'BTC / USDT', name: 'Bitcoin', category: 'crypto', exchange: 'Binance', price: '$78,650.00', priceNum: 78650, change: '+3.42%', isPositive: true, volume: '$42.5 Milyar', color: '#f59e0b', sparkline: [60, 63, 62, 68, 72, 70, 78] },
-    { id: 'ETHUSDT', symbol: 'ETH / USDT', name: 'Ethereum', category: 'crypto', exchange: 'Binance', price: '$3,145.20', priceNum: 3145.2, change: '+2.80%', isPositive: true, volume: '$24.8 Milyar', color: '#6366f1', sparkline: [45, 47, 46, 50, 53, 51, 56] },
-    { id: 'SOLUSDT', symbol: 'SOL / USDT', name: 'Solana', category: 'crypto', exchange: 'Binance', price: '$188.50', priceNum: 188.5, change: '+6.15%', isPositive: true, volume: '$12.4 Milyar', color: '#ec4899', sparkline: [30, 34, 33, 39, 44, 42, 48] },
-    { id: 'BNBUSDT', symbol: 'BNB / USDT', name: 'BNB Coin', category: 'crypto', exchange: 'Binance', price: '$585.40', priceNum: 585.4, change: '+1.45%', isPositive: true, volume: '$3.80 Milyar', color: '#eab308', sparkline: [50, 51, 50, 53, 54, 55, 56] },
-    { id: 'XRPUSDT', symbol: 'XRP / USDT', name: 'Ripple', category: 'crypto', exchange: 'Binance', price: '$0.5820', priceNum: 0.582, change: '+4.90%', isPositive: true, volume: '$2.90 Milyar', color: '#38bdf8', sparkline: [20, 22, 21, 25, 27, 26, 30] },
-    { id: 'AVAXUSDT', symbol: 'AVAX / USDT', name: 'Avalanche', category: 'crypto', exchange: 'Binance', price: '$28.40', priceNum: 28.4, change: '+3.75%', isPositive: true, volume: '$1.40 Milyar', color: '#ef4444', sparkline: [30, 32, 31, 35, 37, 36, 40] },
+    // ==========================================
+    // 🪙 KRİPTO PARALAR (BINANCE SPOT)
+    // ==========================================
+    {
+        id: 'BTCUSDT',
+        symbol: 'BTC / USDT',
+        name: 'Bitcoin',
+        category: 'crypto',
+        exchange: 'Binance',
+        price: '$78,650.00',
+        priceNum: 78650,
+        change: '+3.42%',
+        isPositive: true,
+        volume: '$42.5 Milyar',
+        color: '#f59e0b',
+        sparkline: [60, 63, 62, 68, 72, 70, 78],
+        logoUrl: './assets/logos/btc.png'
+    },
+    {
+        id: 'ETHUSDT',
+        symbol: 'ETH / USDT',
+        name: 'Ethereum',
+        category: 'crypto',
+        exchange: 'Binance',
+        price: '$3,145.20',
+        priceNum: 3145.2,
+        change: '+2.80%',
+        isPositive: true,
+        volume: '$24.8 Milyar',
+        color: '#6366f1',
+        sparkline: [45, 47, 46, 50, 53, 51, 56],
+        logoUrl: './assets/logos/eth.png'
+    },
+    {
+        id: 'SOLUSDT',
+        symbol: 'SOL / USDT',
+        name: 'Solana',
+        category: 'crypto',
+        exchange: 'Binance',
+        price: '$188.50',
+        priceNum: 188.5,
+        change: '+6.15%',
+        isPositive: true,
+        volume: '$12.4 Milyar',
+        color: '#ec4899',
+        sparkline: [30, 34, 33, 39, 44, 42, 48],
+        logoUrl: './assets/logos/sol.png'
+    },
+    {
+        id: 'BNBUSDT',
+        symbol: 'BNB / USDT',
+        name: 'BNB Coin',
+        category: 'crypto',
+        exchange: 'Binance',
+        price: '$585.40',
+        priceNum: 585.4,
+        change: '+1.45%',
+        isPositive: true,
+        volume: '$3.80 Milyar',
+        color: '#eab308',
+        sparkline: [50, 51, 50, 53, 54, 55, 56],
+        logoUrl: './assets/logos/bnb.png'
+    },
+    {
+        id: 'XRPUSDT',
+        symbol: 'XRP / USDT',
+        name: 'Ripple',
+        category: 'crypto',
+        exchange: 'Binance',
+        price: '$0.5820',
+        priceNum: 0.582,
+        change: '+4.90%',
+        isPositive: true,
+        volume: '$2.90 Milyar',
+        color: '#38bdf8',
+        sparkline: [20, 22, 21, 25, 27, 26, 30],
+        logoUrl: './assets/logos/xrp.png'
+    },
+    {
+        id: 'AVAXUSDT',
+        symbol: 'AVAX / USDT',
+        name: 'Avalanche',
+        category: 'crypto',
+        exchange: 'Binance',
+        price: '$28.40',
+        priceNum: 28.4,
+        change: '+3.75%',
+        isPositive: true,
+        volume: '$1.40 Milyar',
+        color: '#ef4444',
+        sparkline: [30, 32, 31, 35, 37, 36, 40],
+        logoUrl: './assets/logos/avax.png'
+    },
 
-    // EMTİA & FOREX
-    { id: 'XAUUSD', symbol: 'XAU / USD', name: 'Ons Altın Spot (Gold)', category: 'fx', exchange: 'Emtia & FX', price: '$2,648.80', priceNum: 2648.8, change: '+0.75%', isPositive: true, volume: '$84.5 Milyar', color: '#fbbf24', sparkline: [70, 71, 72, 71, 73, 74, 76] },
-    { id: 'USDTRY', symbol: 'USD / TRY', name: 'Amerikan Doları / TL', category: 'fx', exchange: 'Forex', price: '₺34.15', priceNum: 34.15, change: '+0.12%', isPositive: true, volume: '$4.20 Milyar', color: '#10b981', sparkline: [50, 50.1, 50.2, 50.3, 50.4, 50.5, 50.6] },
-    { id: 'BRENT', symbol: 'BRENT', name: 'Brent Ham Petrol', category: 'fx', exchange: 'Emtia', price: '$78.40', priceNum: 78.40, change: '-1.40%', isPositive: false, volume: '$16.2 Milyar', color: '#475569', sparkline: [55, 54, 56, 52, 53, 50, 48] }
+    // ==========================================
+    // 🌍 EMTİA & FOREX
+    // ==========================================
+    {
+        id: 'XAUUSD',
+        symbol: 'XAU / USD',
+        name: 'Ons Altın Spot (Gold)',
+        category: 'fx',
+        exchange: 'Emtia & FX',
+        price: '$2,648.80',
+        priceNum: 2648.8,
+        change: '+0.75%',
+        isPositive: true,
+        volume: '$84.5 Milyar',
+        color: '#fbbf24',
+        sparkline: [70, 71, 72, 71, 73, 74, 76],
+        logoUrl: './assets/logos/xauusd.svg'
+    },
+    {
+        id: 'USDTRY',
+        symbol: 'USD / TRY',
+        name: 'Amerikan Doları / TL',
+        category: 'fx',
+        exchange: 'Forex',
+        price: '₺34.15',
+        priceNum: 34.15,
+        change: '+0.12%',
+        isPositive: true,
+        volume: '$4.20 Milyar',
+        color: '#10b981',
+        sparkline: [50, 50.1, 50.2, 50.3, 50.4, 50.5, 50.6],
+        logoUrl: './assets/logos/usdtry.svg'
+    },
+    {
+        id: 'BRENT',
+        symbol: 'BRENT',
+        name: 'Brent Ham Petrol',
+        category: 'fx',
+        exchange: 'Emtia',
+        price: '$78.40',
+        priceNum: 78.40,
+        change: '-1.40%',
+        isPositive: false,
+        volume: '$16.2 Milyar',
+        color: '#475569',
+        sparkline: [55, 54, 56, 52, 53, 50, 48],
+        logoUrl: './assets/logos/brent.svg'
+    }
 ];
 
 export class MarketExploreDirector {
@@ -151,8 +557,8 @@ export class MarketExploreDirector {
                                     <td style="text-align: center; color: #64748b; font-size: 13px; font-weight: 600;">${idx + 1}</td>
                                     <td>
                                         <div class="explore-asset-cell">
-                                            <div class="explore-asset-icon" style="background: linear-gradient(135deg, ${item.color}33, ${item.color}11); border-color: ${item.color}55;">
-                                                <span style="font-weight: 800; font-size: 11px; color: #ffffff;">${item.symbol.substring(0, 3)}</span>
+                                            <div class="explore-asset-icon">
+                                                <img src="${item.logoUrl}" alt="${item.symbol}" width="24" height="24" loading="eager" decoding="async" style="border-radius: 50%; object-fit: contain;">
                                             </div>
                                             <div class="explore-asset-meta">
                                                 <div class="explore-asset-symbol">${item.symbol}</div>

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <defs><linearGradient id="kg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#c5161d"/><stop offset="100%" stop-color="#8a0c11"/></linearGradient></defs>
+  <circle cx="64" cy="64" r="62" fill="url(#kg)"/>
+  <path d="M64 26 C42 26 32 40 32 54 C32 68 44 76 56 74 C50 68 48 60 52 52 C56 44 64 42 74 46 C68 40 66 34 64 26 Z" fill="#ffffff"/>
+  <path d="M64 26 C86 26 96 40 96 54 C96 68 84 76 72 74 C78 68 80 60 76 52 C72 44 64 42 54 46 C60 40 62 34 64 26 Z" fill="#ffffff"/>
+  <text x="64" y="104" font-family="sans-serif" font-weight="900" font-size="22" fill="#ffffff" text-anchor="middle" letter-spacing="1.5">KOC</text>
+</svg>
