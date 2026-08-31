@@ -2832,6 +2832,47 @@
             transform: translateY(-1.5px) scale(1.02) !important;
             box-shadow: inset 0 2px 3px rgba(255, 255, 255, 1.0), 0 10px 25px rgba(0, 0, 0, 0.12) !important;
         }
+    
+        /* ============================================================ */
+        /* 🎬 CLEAN CANVAS DEMO MODE (PURE CHART / ZERO TOOLBARS)       */
+        /* ============================================================ */
+        body.demo-mode .top-toolbar,
+        body.demo-mode .tv-left-toolbar,
+        body.demo-mode #drawing-toolbar,
+        body.demo-mode .tv-floating-toolbar,
+        body.demo-mode #tv-favorite-bar,
+        body.demo-mode .tv-property-toolbar,
+        body.demo-mode #tv-prop-toolbar,
+        body.demo-mode .hud-overlay-card,
+        body.demo-mode .bottom-statusbar,
+        body.demo-mode .time-axis-bar,
+        body.demo-mode .price-axis-sidebar,
+        body.demo-mode .axis-corner-reset,
+        body.demo-mode .subpanes-wrapper,
+        body.demo-mode .device-restriction-overlay {
+            display: none !important;
+        }
+
+        body.demo-mode,
+        body.demo-mode #app-root,
+        body.demo-mode .main-workspace,
+        body.demo-mode .chart-body,
+        body.demo-mode .chart-viewport-column,
+        body.demo-mode .canvas-container {
+            width: 100vw !important;
+            height: 100vh !important;
+            max-width: 100vw !important;
+            max-height: 100vh !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            border: none !important;
+            overflow: hidden !important;
+        }
+
+        body.demo-mode canvas {
+            width: 100vw !important;
+            height: 100vh !important;
+        }
     </style>
 </head>
 <body>
@@ -19048,6 +19089,26 @@
 
         fetchAllMultiTimeframeKlines('BTCUSDT');
         requestAnimationFrame(render);
+    
+        // 🎬 GLOBAL DEMO MODE CONTROLLER
+        window.setDemoMode = function(isDemo) {
+            if (isDemo) {
+                document.body.classList.add('demo-mode');
+            } else {
+                document.body.classList.remove('demo-mode');
+            }
+            if (typeof resizeCanvas === 'function') {
+                setTimeout(resizeCanvas, 50);
+            }
+        };
+
+        // Otomatik Demo Mod Tespiti (Iframe veya URL Parametresi)
+        try {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('demo') === 'true' || urlParams.get('demo') === '1' || window.self !== window.top) {
+                document.body.classList.add('demo-mode');
+            }
+        } catch(e) {}
     </script>
 
     <!-- ============================================================ -->

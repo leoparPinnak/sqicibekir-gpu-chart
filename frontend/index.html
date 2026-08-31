@@ -18,7 +18,7 @@
 
     <!-- 🌌 1. ARKA PLAN CANLI ÇİZİM SAHNESİ (OTONOM SİNEMATİK KAMERA) -->
     <div id="bg-chart-stage" class="blurred">
-        <iframe id="chart-engine-frame" src="../indikator_sablonu.html" style="width: 100vw; height: 100vh; border: none; pointer-events: none;"></iframe>
+        <iframe id="chart-engine-frame" src="../indikator_sablonu.html?demo=true" style="width: 100vw; height: 100vh; border: none; pointer-events: none;"></iframe>
     </div>
 
     <!-- 🌈 2. UNISWAP AMBIENT GLOW ORBS -->
@@ -162,6 +162,14 @@
                 cameraDirector.stop();
             }
 
+            // Tell chart engine to leave demo mode and show full professional toolbars
+            try {
+                const chartWin = iframe.contentWindow;
+                if (chartWin && typeof chartWin.setDemoMode === 'function') {
+                    chartWin.setDemoMode(false);
+                }
+            } catch(e) {}
+
             // Unblur background and allow interactive pointer events
             bgStage.className = 'unblurred';
             iframe.style.pointerEvents = 'auto';
@@ -176,6 +184,14 @@
 
         window.closeTerminalAndReturn = function() {
             isTerminalActive = false;
+
+            // Tell chart engine to enter clean canvas demo mode
+            try {
+                const chartWin = iframe.contentWindow;
+                if (chartWin && typeof chartWin.setDemoMode === 'function') {
+                    chartWin.setDemoMode(true);
+                }
+            } catch(e) {}
 
             // Re-blur background and disable direct pointer events
             bgStage.className = 'blurred';
