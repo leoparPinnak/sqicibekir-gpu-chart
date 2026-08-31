@@ -477,3 +477,113 @@ body, html {
     background: rgba(255, 255, 255, 0.15);
     border-color: rgba(255, 255, 255, 0.35);
 }
+
+
+/* ============================================================ */
+/* 🍎 APPLE LIQUID GLASS COMPLETE DESIGN SYSTEM (PORTAL & TERMINAL) */
+/* ============================================================ */
+
+/* 1. ÜST MENÜ LİNKLERİ VE KAPSÜLLER */
+.portal-nav-links {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.10) 0%, rgba(255, 255, 255, 0.02) 100%), rgba(10, 15, 25, 0.65) !important;
+    padding: 5px;
+    border-radius: 9999px;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-top: 1px solid rgba(255, 255, 255, 0.30);
+    backdrop-filter: blur(24px) saturate(190%) !important;
+    -webkit-backdrop-filter: blur(24px) saturate(190%) !important;
+    box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.25), 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
+.portal-nav-item {
+    padding: 7px 18px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #94a3b8;
+    cursor: pointer;
+    border-radius: 9999px;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    text-decoration: none;
+}
+
+.portal-nav-item:hover {
+    color: #ffffff;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0.05) 100%), rgba(255, 255, 255, 0.08);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.30);
+    transform: translateY(-1px);
+}
+
+.portal-nav-item.active {
+    color: #ffffff;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.08) 100%), rgba(41, 98, 255, 0.40) !important;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-top: 1px solid rgba(255, 255, 255, 0.50);
+    font-weight: 700;
+    box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.40), 0 4px 15px rgba(41, 98, 255, 0.35);
+}
+
+/* 2. MERKEZİ KART VE İÇ PİLL BUTONLARI */
+.portal-market-pill {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.04) 100%), rgba(18, 24, 38, 0.60) !important;
+    border: 1px solid rgba(255, 255, 255, 0.16) !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.45) !important;
+    backdrop-filter: blur(20px) saturate(180%) !important;
+    padding: 8px 18px;
+    border-radius: 9999px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #f1f5f9;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.35), 0 6px 18px rgba(0, 0, 0, 0.30);
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.portal-market-pill:hover {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.08) 100%), rgba(30, 40, 65, 0.75) !important;
+    border-top-color: rgba(255, 255, 255, 0.70) !important;
+    transform: translateY(-1.5px) scale(1.02);
+    box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.55), 0 10px 25px rgba(0, 0, 0, 0.45);
+}
+
+.portal-market-pill:active {
+    transform: scale(0.97);
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+/* 3. DÖNÜŞ BUTONU */
+.return-to-portal-btn {
+    position: fixed;
+    top: 14px;
+    right: 20px;
+    z-index: 10000;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0.06) 100%), rgba(13, 17, 23, 0.85) !important;
+    border: 1px solid rgba(255, 255, 255, 0.20) !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.50) !important;
+    backdrop-filter: blur(28px) saturate(200%) !important;
+    -webkit-backdrop-filter: blur(28px) saturate(200%) !important;
+    color: #f1f5f9;
+    padding: 9px 20px;
+    border-radius: 9999px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    display: none;
+    align-items: center;
+    gap: 8px;
+    box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.40), 0 12px 30px rgba(0, 0, 0, 0.55);
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.return-to-portal-btn:hover {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.28) 0%, rgba(255, 255, 255, 0.10) 100%), rgba(25, 35, 55, 0.90) !important;
+    border-top-color: rgba(255, 255, 255, 0.75) !important;
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: inset 0 1.5px 2px rgba(255, 255, 255, 0.60), 0 16px 40px rgba(0, 0, 0, 0.65);
+}
+    
