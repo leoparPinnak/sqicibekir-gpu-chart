@@ -1,0 +1,44 @@
+{
+  "title": "Uniswap | Trade Crypto on DeFi’s Leading Exchange",
+  "hasNext": false,
+  "hasReact": true,
+  "bodyBg": "rgb(255, 255, 255)",
+  "bodyColor": "rgb(19, 19, 19)",
+  "fontFamilies": [
+    "Basel, sans-serif"
+  ],
+  "backgroundColors": [
+    "rgb(255, 255, 255)"
+  ],
+  "textColors": [
+    "rgb(19, 19, 19)"
+  ],
+  "borderRadii": [],
+  "navLinks": [
+    {
+      "text": "Uniswap",
+      "tag": "A"
+    },
+    {
+      "text": "İşlem yap",
+      "tag": "A"
+    },
+    {
+      "text": "Keşfet",
+      "tag": "A"
+    },
+    {
+      "text": "Lansmanlar\nBeta",
+      "tag": "A"
+    },
+    {
+      "text": "Havuz",
+      "tag": "A"
+    },
+    {
+      "text": "Portföy",
+      "tag": "A"
+    }
+  ],
+  "headerHtml": "<nav class=\"is_Nav _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _pr-t-space-pad1331704929 _pl-t-space-pad1331704929 _width-10037 _height-72px _zIndex-1020 _justifyContent-center\"><div class=\"_display-_platformweb_grid _gridTemplateColumns-_platformweb_minmax01fra1149804355 _display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _width-10037 _alignItems-center\"><div class=\"_gap-_md_t-space-spa94665589 _display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _flexShrink-0 _flexDirection-row _minWidth-0px _alignItems-center _flexWrap-nowrap _justifyContent-flex-start _gap-t-space-spa1360334080\"><div role=\"button\" tabindex=\"0\" data-base-ui-click-trigger=\"\" id=\"base-ui-_r_9_\" aria-haspopup=\"dialog\" aria-expanded=\"false\" data-slot=\"ui-popover-trigger\" data-testid=\"nav-company-menu\" style=\"align-items: stretch; box-sizing: border-box; display: flex; flex-basis: auto; flex-direction: column; flex-shrink: 0; margin: 0px; min-height: 0px; min-width: 0px; padding: 0px; position: relative;\"><div class=\"_pt-_md_t-space-spa1360334080 _pb-_md_t-space-spa1360334080 _containerType-_platformweb_normal _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _gap-t-space-gap52 _pt-t-space-spa94665593 _pr-t-space-spa94665593 _pb-t-space-spa94"
+}
