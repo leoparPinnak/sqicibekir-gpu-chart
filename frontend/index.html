@@ -49,8 +49,8 @@
             </div>
 
             <nav class="portal-nav-links">
-                <a class="portal-nav-item active" href="./index.html">Canlı Grafik</a>
-                <a class="portal-nav-item" href="./explore.html">Piyasalar</a>
+                <a class="portal-nav-item active" href="#" onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return false;">Canlı Grafik</a>
+                <a class="portal-nav-item" href="#explore-section" onclick="document.getElementById('explore-section').scrollIntoView({behavior: 'smooth'}); return false;">Piyasalar</a>
                 <a class="portal-nav-item" href="#" onclick="launchTerminal(); return false;">Göstergeler</a>
                 <a class="portal-nav-item" href="#" onclick="launchTerminal(); return false;">Script Editörü</a>
                 <a class="portal-nav-item" href="#" onclick="launchTerminal(); return false;">Portföy</a>
@@ -89,6 +89,11 @@
 
         </main>
 
+        <!-- 📊 UNISWAP V4 STYLE MARKET EXPLORE SECTION (HİSSE SENETLERİ & PİYASALAR) -->
+        <section class="explore-section-container" id="explore-section">
+            <!-- Dinamik piyasa tablosu MarketExploreDirector tarafından yüklenecek -->
+        </section>
+
         <!-- FOOTER METRİKLER -->
         <footer class="portal-footer">
             <div class="portal-stat-group">
@@ -115,6 +120,7 @@
     <script type="module">
         import { CinematicCameraDirector } from './js/cinematic-camera.js';
         import { AssetShowcaseDirector } from './js/asset-showcase.js';
+        import { MarketExploreDirector } from './js/market-explore.js';
 
         let cameraDirector = null;
         let showcaseDirector = null;
@@ -126,11 +132,18 @@
         const returnBtn = document.getElementById('return-to-portal-btn');
         const glowLayer = document.getElementById('ambient-glow-layer');
         const showcaseContainer = document.getElementById('portal-showcase-container');
+        const exploreContainer = document.getElementById('explore-section');
 
         // Start rotating asset showcase immediately
         if (showcaseContainer) {
             showcaseDirector = new AssetShowcaseDirector(showcaseContainer);
             showcaseDirector.start(2800);
+        }
+
+        // Initialize Market Explore Table immediately
+        if (exploreContainer) {
+            window.__exploreDirector = new MarketExploreDirector(exploreContainer);
+            window.__exploreDirector.init();
         }
 
         iframe.onload = () => {
