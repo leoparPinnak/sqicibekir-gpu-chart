@@ -15760,15 +15760,15 @@
             if (totalCandles === 0) return;
             priceOffset = 0;
             origPriceOffset = 0;
+            priceScaleFactor = 1.0;
 
-            const targetStart = Math.max(0, totalCandles - 130);
-            const targetEnd = totalCandles + 25;
-            viewStart = targetStart;
-            viewEnd = targetEnd;
+            // Yatay zaman eksenini KORU (Grafiğin sonuna/başına atlamaz, mevcut ekrandaki mumları dikeyde sığdırır)
+            const curVStart = (smoothViewStart && isFinite(smoothViewStart)) ? smoothViewStart : viewStart;
+            const curVEnd = (smoothViewEnd && isFinite(smoothViewEnd)) ? smoothViewEnd : viewEnd;
+            const sI = Math.max(0, Math.floor(Math.min(viewStart, curVStart)));
+            const eI = Math.min(totalCandles, Math.ceil(Math.max(viewEnd, curVEnd)));
 
             let minP = Infinity, maxP = -Infinity;
-            const sI = Math.max(0, Math.floor(targetStart));
-            const eI = Math.min(totalCandles, Math.ceil(targetEnd));
             for (let i = sI; i < eI; i++) {
                 const c = candleDataBase[i];
                 if (c) {
@@ -15787,7 +15787,7 @@
                 }
             }
 
-            const pad = (maxP - minP) * 0.10;
+            const pad = (maxP - minP) * 0.10; // %10 ust ve alt tampon payi
             targetMinPrice = minP - pad;
             targetMaxPrice = maxP + pad;
             manualBaseMinPrice = targetMinPrice;
@@ -15799,7 +15799,7 @@
                 isAutoPriceScale = true;
             }
 
-            // Yumusak 120 FPS kamera suzulmesi (Smooth Fluid Glide)
+            // Dikeyde yumusak 120 FPS kamera suzulmesi (Smooth Vertical Glide)
             isWheelZooming = true;
             if (wheelZoomTimeout) clearTimeout(wheelZoomTimeout);
             wheelZoomTimeout = setTimeout(() => {
