@@ -146,13 +146,17 @@
             window.__exploreDirector.init();
         }
 
-        iframe.onload = () => {
+        function attachCameraDirector() {
+            if (cameraDirector && cameraDirector.isRunning) return;
             try {
                 const chartWin = iframe.contentWindow;
                 if (chartWin) {
                     const checkReady = () => {
-                        if (chartWin.totalCandles > 0 || (chartWin.candleDataBase && chartWin.candleDataBase.length > 0)) {
-                            cameraDirector = new CinematicCameraDirector(chartWin);
+                        const count = chartWin.totalCandles || (chartWin.candleDataBase ? chartWin.candleDataBase.length : 0);
+                        if (count > 0) {
+                            if (!cameraDirector) {
+                                cameraDirector = new CinematicCameraDirector(chartWin);
+                            }
                             cameraDirector.start();
                         } else {
                             setTimeout(checkReady, 100);
@@ -163,7 +167,10 @@
             } catch (e) {
                 console.warn('Iframe bridge warning:', e);
             }
-        };
+        }
+
+        iframe.onload = attachCameraDirector;
+        setTimeout(attachCameraDirector, 200);
 
         window.launchTerminal = function() {
             if (isTerminalActive) return;
@@ -194,21 +201,14 @@
         };
 
         window.closeTerminalAndReturn = function() {
+            if (!isTerminalActive) return;
             isTerminalActive = false;
 
-            // Tell chart engine to enter clean canvas demo mode
-            try {
-                const chartWin = iframe.contentWindow;
-                if (chartWin && typeof chartWin.setDemoMode === 'function') {
-                    chartWin.setDemoMode(true);
-                }
-            } catch(e) {}
-
-            // Re-blur background and disable direct pointer events
+            // Blur background & block interactive events on bg
             bgStage.className = 'blurred';
             iframe.style.pointerEvents = 'none';
 
-            // Show landing portal & glow
+            // Show portal & glow
             portal.classList.remove('hidden');
             if (glowLayer) glowLayer.style.opacity = '1';
 

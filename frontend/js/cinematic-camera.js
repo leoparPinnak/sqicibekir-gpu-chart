@@ -6,7 +6,6 @@
  * 3. Zoom Out (Geniş Açıya Uzaklaşma)
  * 4. Kombine Hareket: Yana Kayarken Zoom In (Drone Pan-Zoom In)
  * 5. Kombine Hareket: Yana Kayarken Zoom Out (Drone Pan-Zoom Out)
- * (Space oto ölçeklendirme animasyonu demodan kaldırılmıştır)
  * Her hareket bitiminde 0.5s - 1.0s dinlenme/bekleme uygulanır.
  */
 
@@ -59,7 +58,7 @@ export class CinematicCameraDirector {
 
     centerInitialView() {
         if (!this.win) return;
-        const total = this.win.totalCandles || (this.win.candleDataBase ? this.win.candleDataBase.length : 0);
+        const total = this.win.totalCandles || (this.win.candleDataBase ? this.win.candleDataBase.length : 0) || 3000;
         if (total < 10) return;
 
         // Ekranın tam ortasında 75 mumluk dengeli başlangıç kadrajı
@@ -72,10 +71,15 @@ export class CinematicCameraDirector {
         this.win.viewEnd = e;
         if (this.win.smoothViewStart !== undefined) this.win.smoothViewStart = s;
         if (this.win.smoothViewEnd !== undefined) this.win.smoothViewEnd = e;
+        this.startViewStart = s;
+        this.startViewEnd = e;
+        this.targetViewStart = s;
+        this.targetViewEnd = e;
     }
 
     pickNewAction() {
-        if (!this.win || !this.win.totalCandles || this.win.totalCandles < 30) return;
+        const total = (this.win ? this.win.totalCandles : 0) || 3000;
+        if (total < 30) return;
 
         // Sadece Pan, Zoom In, Zoom Out ve Kombine (Pan + Zoom) hareketleri
         const actions = [
@@ -90,12 +94,11 @@ export class CinematicCameraDirector {
         this.currentAction = next;
         this.state = 'moving';
         this.stateStartTime = performance.now();
-        this.actionDuration = 3800 + Math.random() * 3200; // 3.8s - 7.0s akıcı hareket süresi
+        this.actionDuration = 4000 + Math.random() * 3000; // 4.0s - 7.0s akıcı hareket süresi
 
-        const curStart = this.win.viewStart;
-        const curEnd = this.win.viewEnd;
-        const total = this.win.totalCandles;
-        const curCount = Math.max(20, curEnd - curStart);
+        const curStart = this.win ? this.win.viewStart : 1500;
+        const curEnd = this.win ? this.win.viewEnd : 1580;
+        const curCount = Math.max(25, curEnd - curStart);
         const curCenter = (curStart + curEnd) * 0.5;
 
         this.startViewStart = curStart;
@@ -114,15 +117,15 @@ export class CinematicCameraDirector {
                 break;
             }
             case 'zoom_in': {
-                // 2. SADECE ZOOM IN (Mevcut merkeze doğru yaklaşma, 35-55 mum)
-                const targetCount = 35 + Math.random() * 20;
+                // 2. SADECE ZOOM IN (Mevcut merkeze doğru yaklaşma, 40-60 mum)
+                const targetCount = 40 + Math.random() * 20;
                 this.targetViewStart = Math.max(0, curCenter - targetCount * 0.5);
                 this.targetViewEnd = Math.min(total, this.targetViewStart + targetCount);
                 break;
             }
             case 'zoom_out': {
-                // 3. SADECE ZOOM OUT (Mevcut merkezden geniş açıya uzaklaşma, 140-240 mum)
-                const targetCount = Math.min(total, 140 + Math.random() * 100);
+                // 3. SADECE ZOOM OUT (Mevcut merkezden geniş açıya uzaklaşma, 120-200 mum)
+                const targetCount = Math.min(total, 120 + Math.random() * 80);
                 this.targetViewStart = Math.max(0, curCenter - targetCount * 0.5);
                 this.targetViewEnd = Math.min(total, this.targetViewStart + targetCount);
                 break;
@@ -130,7 +133,7 @@ export class CinematicCameraDirector {
             case 'pan_and_zoom_in': {
                 // 4. KOMBİNE: YANA KAYARKEN AYNI ANDA ZOOM IN
                 const deltaCenter = (Math.random() > 0.5 ? 1 : -1) * (30 + Math.random() * 60);
-                const targetCount = 40 + Math.random() * 25; // Yakınlaşma
+                const targetCount = 45 + Math.random() * 20; // Yakınlaşma
                 const targetCenter = Math.max(targetCount * 0.6, Math.min(total - targetCount * 0.6, curCenter + deltaCenter));
                 this.targetViewStart = Math.max(0, targetCenter - targetCount * 0.5);
                 this.targetViewEnd = Math.min(total, this.targetViewStart + targetCount);
@@ -139,7 +142,7 @@ export class CinematicCameraDirector {
             case 'pan_and_zoom_out': {
                 // 5. KOMBİNE: YANA KAYARKEN AYNI ANDA ZOOM OUT
                 const deltaCenter = (Math.random() > 0.5 ? 1 : -1) * (30 + Math.random() * 60);
-                const targetCount = Math.min(total, 150 + Math.random() * 90); // Uzaklaşma
+                const targetCount = Math.min(total, 130 + Math.random() * 70); // Uzaklaşma
                 const targetCenter = Math.max(targetCount * 0.6, Math.min(total - targetCount * 0.6, curCenter + deltaCenter));
                 this.targetViewStart = Math.max(0, targetCenter - targetCount * 0.5);
                 this.targetViewEnd = Math.min(total, this.targetViewStart + targetCount);
@@ -175,13 +178,15 @@ export class CinematicCameraDirector {
                 const newEnd = this.startViewEnd + (this.targetViewEnd - this.startViewEnd) * ease;
                 this.win.viewStart = newStart;
                 this.win.viewEnd = newEnd;
+                if (this.win.smoothViewStart !== undefined) this.win.smoothViewStart = newStart;
+                if (this.win.smoothViewEnd !== undefined) this.win.smoothViewEnd = newEnd;
             }
 
             if (progress >= 1.0) {
                 // Hareket tamamlandı -> 500ms - 950ms DİNLENME FAZINA GİR
                 this.state = 'pausing';
                 this.stateStartTime = performance.now();
-                this.pauseDuration = 500 + Math.random() * 450; // 0.5s ila 0.95s ara bekleme
+                this.pauseDuration = 600 + Math.random() * 400; // 0.6s ila 1.0s ara bekleme
             }
         }
 
