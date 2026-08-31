@@ -155,8 +155,15 @@
             try {
                 const chartWin = iframe.contentWindow;
                 if (chartWin) {
-                    cameraDirector = new CinematicCameraDirector(chartWin);
-                    cameraDirector.start();
+                    const checkReady = () => {
+                        if (chartWin.totalCandles > 0 || (chartWin.candleDataBase && chartWin.candleDataBase.length > 0)) {
+                            cameraDirector = new CinematicCameraDirector(chartWin);
+                            cameraDirector.start();
+                        } else {
+                            setTimeout(checkReady, 100);
+                        }
+                    };
+                    checkReady();
                 }
             } catch (e) {
                 console.warn('Iframe bridge warning:', e);
