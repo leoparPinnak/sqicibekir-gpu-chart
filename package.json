@@ -11,6 +11,7 @@
   },
   "devDependencies": {
     "javascript-obfuscator": "^5.6.0",
+    "liquid-gl": "^2.0.1",
     "playwright": "^1.62.1",
     "vite": "^5.4.2"
   },
