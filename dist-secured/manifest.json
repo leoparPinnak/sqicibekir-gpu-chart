@@ -1,0 +1,18 @@
+{
+  "name": "TradingChart Pro // Finansal Grafik & Teknik Analiz Platformu",
+  "short_name": "TradingChart",
+  "description": "Borsa İstanbul, Kripto Para, ABD Hisseleri ve Forex piyasaları için anlık canlı grafikler ve profesyonel teknik analiz platformu.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#060913",
+  "theme_color": "#0d1117",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    }
+  ],
+  "categories": ["finance", "productivity", "business"]
+}

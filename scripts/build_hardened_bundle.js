@@ -85,3 +85,12 @@ const hardenedHtml = htmlContent.replace(scriptRegex, () => `<script>\n${hardene
 
 fs.writeFileSync(outputHtmlPath, hardenedHtml, 'utf8');
 console.log(`[4/4] ✓ Ironclad Secured Production Bundle saved to: ${outputHtmlPath}\n`);
+
+// Copy SEO and manifest assets to dist-secured
+['robots.txt', 'sitemap.xml', 'manifest.json'].forEach(f => {
+    if (fs.existsSync(f)) {
+        fs.copyFileSync(f, `${outputDir}/${f}`);
+        console.log(`✓ Copied ${f} to ${outputDir}/${f}`);
+    }
+});
+

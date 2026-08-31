@@ -1,0 +1,6 @@
+# Robots.txt for TradingChart Pro (https://tradingchart.com.tr)
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://tradingchart.com.tr/sitemap.xml
