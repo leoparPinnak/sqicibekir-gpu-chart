@@ -74,17 +74,9 @@
             <!-- APPLE LIQUID GLASS MERKEZİ KART -->
             <div class="portal-glass-card">
                 
-                <div class="portal-card-row">
-                    <div>
-                        <div class="portal-card-label">Seçili Parite</div>
-                        <div class="portal-symbol-val" id="portal-symbol-display">
-                            <span>BTC / USDT</span>
-                        </div>
-                    </div>
-                    <div class="portal-market-pill" onclick="launchTerminal()">
-                        <span>Binance Spot</span>
-                        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-                    </div>
+                <!-- DÖNÜŞÜMLÜ MARKA LOGOLU PARİTE GÖSTERGESİ -->
+                <div class="portal-card-row showcase-row" id="portal-showcase-container">
+                    <!-- Dinamik marka logosu ve parite JS ile yüklenecek -->
                 </div>
 
                 <button class="portal-card-btn" onclick="launchTerminal()">
@@ -122,8 +114,10 @@
     <!-- 🎬 OTONOM KAMERA VE ETKİLEŞİM YÖNETİCİSİ -->
     <script type="module">
         import { CinematicCameraDirector } from './js/cinematic-camera.js';
+        import { AssetShowcaseDirector } from './js/asset-showcase.js';
 
         let cameraDirector = null;
+        let showcaseDirector = null;
         let isTerminalActive = false;
 
         const iframe = document.getElementById('chart-engine-frame');
@@ -131,6 +125,13 @@
         const portal = document.getElementById('landing-portal');
         const returnBtn = document.getElementById('return-to-portal-btn');
         const glowLayer = document.getElementById('ambient-glow-layer');
+        const showcaseContainer = document.getElementById('portal-showcase-container');
+
+        // Start rotating asset showcase immediately
+        if (showcaseContainer) {
+            showcaseDirector = new AssetShowcaseDirector(showcaseContainer);
+            showcaseDirector.start(2800);
+        }
 
         iframe.onload = () => {
             try {
