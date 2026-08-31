@@ -3043,6 +3043,7 @@
     uniform int u_show_ema;
     uniform int u_show_bg;
     uniform int u_is_light_theme;
+        uniform float u_candle_growth;
 
     uniform sampler2D u_candle_tex;
     uniform sampler2D u_ind_tex;
@@ -3158,10 +3159,17 @@
 
                 vec4 candleData = texture(u_candle_tex, vec2(texCoordX, 0.5));
 
-                float openPrice = candleData.r;
-                float highPrice = candleData.g;
-                float lowPrice = candleData.b;
-                float closePrice = candleData.a;
+                float rawOpen = candleData.r;
+                float rawHigh = candleData.g;
+                float rawLow = candleData.b;
+                float rawClose = candleData.a;
+
+                float growthVal = clamp(u_candle_growth, 0.0, 1.0);
+                float centerPrice = (rawOpen + rawClose) * 0.5;
+                float openPrice = mix(centerPrice, rawOpen, growthVal);
+                float highPrice = mix(centerPrice, rawHigh, growthVal);
+                float lowPrice = mix(centerPrice, rawLow, growthVal);
+                float closePrice = mix(centerPrice, rawClose, growthVal);
 
                 bool isBull = closePrice >= openPrice;
                 vec3 bullColor = vec3(0.06, 0.85, 0.55);
@@ -4246,6 +4254,24 @@
         let prog = null;
         let candleTex = null;
         let indTex = null;
+        
+        // ============================================================
+        // 🌸 ORGANİK SİNEMATİK MUM BÜYÜME (BLOOM INCEPTION) MOTORU
+        // ============================================================
+        window.candleGrowthProgress = 0.0;
+        window.isCandleBloomAnimating = false;
+        window.candleBloomStartTime = 0;
+        window.candleBloomDuration = 1200;
+        let uCandleGrowth = null;
+
+        window.triggerCandleBloomAnimation = function(duration = 1200) {
+            window.candleGrowthProgress = 0.0;
+            window.isCandleBloomAnimating = true;
+            window.candleBloomStartTime = performance.now();
+            window.candleBloomDuration = duration;
+            console.log('🌸 [Candle Bloom] Organik mum büyüme animasyonu başlatıldı (Süre: ' + duration + 'ms)');
+        };
+    
         let uRes, uViewRange, uPriceRange, uMouse, uTime, uShowCloud, uShowEma, uShowBg, uCandleTex, uIndTex, uTotalCandles;
 
         const ctx2d = overlayCanvas.getContext('2d');
@@ -4285,6 +4311,7 @@
                 uShowBg = gl.getUniformLocation(prog, 'u_show_bg');
 
                 uCandleTex = gl.getUniformLocation(prog, 'u_candle_tex');
+            uCandleGrowth = gl.getUniformLocation(prog, 'u_candle_growth');
                 uIndTex = gl.getUniformLocation(prog, 'u_ind_tex');
                 uTotalCandles = gl.getUniformLocation(prog, 'u_total_candles');
                 uLoadAnim = gl.getUniformLocation(prog, 'u_load_anim');
@@ -16218,8 +16245,14 @@
                 }
 
                 totalCandles = candleDataBase.length;
-                viewStart = Math.max(0, totalCandles - 130);
-                viewEnd = totalCandles + 25; // Sağa doğru 25 mumluk modern TradingView boşluk payı
+                // Başlangıçta tam ortada 80 mumluk estetik kadraj ile başla ve bloom başlat
+                const initialWindow = Math.min(totalCandles, 80);
+                const midPoint = Math.round(totalCandles * 0.55);
+                viewStart = Math.max(0, midPoint - Math.round(initialWindow * 0.5));
+                viewEnd = viewStart + initialWindow;
+                smoothViewStart = viewStart;
+                smoothViewEnd = viewEnd;
+                if (typeof window.triggerCandleBloomAnimation === "function") window.triggerCandleBloomAnimation(1200);
 
                 // Sembol veya veri değiştiğinde fiyat sınırlarını anında yeni pariteye sıfırla
                 let pMin = Infinity, pMax = -Infinity;
@@ -18711,6 +18744,18 @@
                     gl.uniform1i(uShowBg, layers.bg);
                     if (uIsLightTheme) {
                         gl.uniform1i(uIsLightTheme, currentTheme === 'light' ? 1 : 0);
+            if (isCandleBloomAnimating) {
+                const elapsedBloom = now - candleBloomStartTime;
+                const pBloom = Math.min(1.0, elapsedBloom / candleBloomDuration);
+                candleGrowthProgress = 1.0 - Math.pow(1.0 - pBloom, 4); // Quartic ease out
+                if (pBloom >= 1.0) {
+                    candleGrowthProgress = 1.0;
+                    isCandleBloomAnimating = false;
+                }
+            }
+            if (uCandleGrowth) {
+                gl.uniform1f(uCandleGrowth, candleGrowthProgress);
+            }
                     }
 
                     gl.activeTexture(gl.TEXTURE0);
