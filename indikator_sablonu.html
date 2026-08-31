@@ -30,6 +30,85 @@
             height: 100vh;
         }
 
+        /* 📱 SADECE MASAÜSTÜ VE TABLET KORUMA EKRANI */
+        .device-restriction-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: radial-gradient(circle at 50% 30%, #0e172a 0%, #060913 100%);
+            z-index: 9999999;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            text-align: center;
+            backdrop-filter: blur(12px);
+        }
+        .device-restriction-card {
+            background: rgba(15, 23, 42, 0.90);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            border-radius: 20px;
+            padding: 36px 28px;
+            max-width: 460px;
+            width: 100%;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 35px rgba(56, 189, 248, 0.2);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 18px;
+        }
+        .device-icon-box {
+            width: 72px;
+            height: 72px;
+            background: rgba(56, 189, 248, 0.12);
+            border: 1px solid rgba(56, 189, 248, 0.35);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #38bdf8;
+            box-shadow: 0 0 25px rgba(56, 189, 248, 0.3);
+        }
+        .device-title {
+            font-size: 20px;
+            font-weight: 800;
+            color: #f8fafc;
+            letter-spacing: -0.3px;
+        }
+        .device-desc {
+            font-size: 13.5px;
+            line-height: 1.6;
+            color: #94a3b8;
+        }
+        .device-badge-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 6px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .device-badge {
+            background: rgba(16, 185, 129, 0.12);
+            border: 1px solid #10b981;
+            color: #34d399;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .device-badge.blocked {
+            background: rgba(239, 68, 68, 0.12);
+            border-color: #ef4444;
+            color: #f87171;
+        }
+
         /* 1. ÜST TOOLBAR (TRADINGVIEW DARK THEME NAVBAR) */
         .top-toolbar {
             height: 48px;
@@ -7310,6 +7389,37 @@
 
         // btn-backtest removed for clean modular chart
 
+        // 📱 SADECE MASAÜSTÜ & TABLET CİHAZ DOĞRULAMA MOTORU
+        function checkDeviceCompatibility() {
+            const minTabletWidth = 768; // Standart tablet (iPad) minimum genişliği
+            const w = Math.max(window.innerWidth || 0, screen.width || 0);
+            const ua = navigator.userAgent.toLowerCase();
+            
+            // Akıllı telefon kontrolü
+            const isMobilePhone = /iphone|ipod|android.*mobile|windows phone|blackberry|iemobile|opera mini/i.test(ua);
+            const isTablet = /(ipad|tablet|(android(?!.*mobile))|(windows(?!.*phone)(.*touch))|kindle|playbook|silk)/i.test(ua);
+            
+            // İzin verilen: Masaüstü / Laptop veya Tablet (veya ekran genişliği >= 768px)
+            const isAllowed = isTablet || (!isMobilePhone && w >= minTabletWidth) || (w >= minTabletWidth);
+
+            const overlay = document.getElementById('device-restriction-overlay');
+            if (overlay) {
+                if (!isAllowed) {
+                    overlay.style.display = 'flex';
+                    return false;
+                } else {
+                    overlay.style.display = 'none';
+                    return true;
+                }
+            }
+            return true;
+        }
+
+        window.addEventListener('resize', checkDeviceCompatibility);
+        window.addEventListener('orientationchange', checkDeviceCompatibility);
+        document.addEventListener('DOMContentLoaded', checkDeviceCompatibility);
+        checkDeviceCompatibility();
+
         fetchAllMultiTimeframeKlines('BTCUSDT');
         requestAnimationFrame(render);
     </script>
@@ -7324,40 +7434,63 @@
                     <svg viewBox="0 0 28 28" width="18" height="18" fill="#38bdf8"><path d="M11 6a1 1 0 0 1 1-1h10a1 1 0 1 1 0 2h-9v3.1a6.5 6.5 0 0 1 2.37 1.83l.07.07h6.56a1 1 0 1 1 0 2h-5.26a6.5 6.5 0 0 1-.74 4H21a1 1 0 1 1 0 2h-6.2a6.5 6.5 0 0 1-5.8 4H5a1 1 0 1 1 0-2h3.1a6.5 6.5 0 0 1 2.37-1.83l.07-.07H4a1 1 0 1 1 0-2h5.26a6.5 6.5 0 0 1 .74-4H4a1 1 0 1 1 0-2h6.2a6.5 6.5 0 0 1 5.8-4H11V6Z"></path></svg>
                     <span>Göstergeler ve Stratejiler (fx)</span>
                 </div>
-                <button class="fx-modal-close" id="btn-close-fx-modal" onclick="closeIndicatorModal()">✕</button>
+                <button class="fx-modal-close" onclick="closeIndicatorModal(event)">&times;</button>
             </div>
-            <div class="fx-search-bar">
-                <input type="text" class="fx-search-input" id="fx-search-input" placeholder="🔍 Göstergeleri ara (RSI, MACD, Bollinger, EMA...)" oninput="filterIndicators(this.value)">
-            </div>
-            <div class="fx-modal-tabs">
-                <button class="fx-tab-btn active" id="fx-tab-tech" onclick="switchFxTab('tech')">Teknik Göstergeler (Dahili)</button>
-                <button class="fx-tab-btn" id="fx-tab-active" onclick="switchFxTab('active')">Aktif Göstergeler (<span id="active-ind-count">0</span>)</button>
-            </div>
-            <div class="fx-modal-body" id="fx-modal-body">
-                <!-- Dinamik Liste JS ile Doldurulacak -->
+            <div class="fx-modal-body">
+                <div class="fx-category-title">Yerleşik İndikatörler</div>
+                <div class="fx-indicator-item" onclick="toggleOverlayIndicator('bollinger')">
+                    <input type="checkbox" id="chk-bollinger" class="fx-checkbox" onchange="toggleOverlayIndicator('bollinger', this.checked)">
+                    <div class="fx-indicator-info">
+                        <div class="fx-indicator-name">Bollinger Bantları (BB)</div>
+                        <div class="fx-indicator-desc">20 Periyotluk SMA ve &plusmn;2 Standart Sapma Volatilite Kanalı</div>
+                    </div>
+                </div>
+                <div class="fx-indicator-item" onclick="toggleOverlayIndicator('supertrend')">
+                    <input type="checkbox" id="chk-supertrend" class="fx-checkbox" onchange="toggleOverlayIndicator('supertrend', this.checked)">
+                    <div class="fx-indicator-info">
+                        <div class="fx-indicator-name">SuperTrend (ATR 10, Multiplier 3.0)</div>
+                        <div class="fx-indicator-desc">Volatilite Tabanlı Dinamik Trend Takip İndikatörü</div>
+                    </div>
+                </div>
+                <div class="fx-indicator-item" onclick="toggleOverlayIndicator('vwap')">
+                    <input type="checkbox" id="chk-vwap" class="fx-checkbox" onchange="toggleOverlayIndicator('vwap', this.checked)">
+                    <div class="fx-indicator-info">
+                        <div class="fx-indicator-name">Hacim Ağırlıklı Ortalama Fiyat (VWAP)</div>
+                        <div class="fx-indicator-desc">Kurumsal Seviye Hacim Destekli Gerçek Fiyat Dengesi</div>
+                    </div>
+                </div>
+                <div class="fx-category-title">Alt Panel Osilatörleri (Subpanes)</div>
+                <div class="fx-indicator-item" onclick="toggleSubpaneIndicator('rsi')">
+                    <input type="checkbox" id="chk-rsi" class="fx-checkbox" onchange="toggleSubpaneIndicator('rsi', this.checked)">
+                    <div class="fx-indicator-info">
+                        <div class="fx-indicator-name">Göreceli Güç Endeksi (RSI 14)</div>
+                        <div class="fx-indicator-desc">Aşırı Alım/Satım Seviyeleri (70/30) Osilatörü</div>
+                    </div>
+                </div>
+                <div class="fx-indicator-item" onclick="toggleSubpaneIndicator('macd')">
+                    <input type="checkbox" id="chk-macd" class="fx-checkbox" onchange="toggleSubpaneIndicator('macd', this.checked)">
+                    <div class="fx-indicator-info">
+                        <div class="fx-indicator-name">MACD (12, 26, 9)</div>
+                        <div class="fx-indicator-desc">Hareketli Ortalama Yakınsama/Iraksama Histogramı</div>
+                    </div>
+                </div>
+                <div class="fx-indicator-item" onclick="toggleSubpaneIndicator('atr')">
+                    <input type="checkbox" id="chk-atr" class="fx-checkbox" onchange="toggleSubpaneIndicator('atr', this.checked)">
+                    <div class="fx-indicator-info">
+                        <div class="fx-indicator-name">Ortalama Gerçek Aralık (ATR 14)</div>
+                        <div class="fx-indicator-desc">Piyasa Volatilite ve Risk Ölçüm Göstergesi</div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- ⚙️ GÖSTERGE AYARLARI MODALI -->
-    <div class="fx-settings-modal" id="fx-settings-modal" onclick="closeIndicatorSettings(event)">
-        <div class="fx-settings-card" onclick="event.stopPropagation()">
-            <div class="fx-modal-header">
-                <div class="fx-modal-title" id="fx-settings-title">⚙️ Gösterge Ayarları</div>
-                <button class="fx-modal-close" id="btn-close-settings-modal" onclick="closeIndicatorSettings()">✕</button>
-            </div>
-            <div class="fx-settings-body" id="fx-settings-body"></div>
-            <div class="fx-settings-footer">
-                <button class="pine-btn" onclick="closeIndicatorSettings()">İptal</button>
-                <button class="pine-btn primary" onclick="saveIndicatorSettings()">Kaydet ve Uygula</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- 💻 PINE / SCRIPT EDİTÖRÜ PANELİ -->
+    <!-- ============================================================ -->
+    <!-- 🌲 PINE SCRIPT & JS İNDİKATÖR EDİTÖR PANELİ                  -->
+    <!-- ============================================================ -->
     <div class="pine-editor-panel" id="pine-editor-panel">
-        <div class="pine-editor-header">
-            <div class="pine-editor-title">
+        <div class="pine-header">
+            <div class="pine-title">
                 <svg viewBox="0 0 28 28" width="16" height="16" fill="#f59e0b"><path d="M9.5 7.5L3 14l6.5 6.5 1.4-1.4L5.8 14l5.1-5.1zM18.5 7.5l-1.4 1.4 5.1 5.1-5.1 5.1 1.4 1.4 6.5-6.5zM15.5 4l-5 20h2l5-20z"></path></svg>
                 <span>TradeChart Pine & JavaScript Script Editörü</span>
             </div>
@@ -7385,6 +7518,30 @@ plot(ema21, "EMA 21", "#f59e0b", 2, true);
         </div>
         <div class="pine-console" id="pine-console">
             <span>✓ Hazır. Scriptinizi yazıp "▶ Grafiğe Ekle" butonuna tıklayın.</span>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- 📱 SADECE MASAÜSTÜ VE TABLET KORUMA EKRANI OVERLAY           -->
+    <!-- ============================================================ -->
+    <div id="device-restriction-overlay" class="device-restriction-overlay">
+        <div class="device-restriction-card">
+            <div class="device-icon-box">
+                <svg viewBox="0 0 24 24" width="38" height="38" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                    <line x1="8" y1="21" x2="16" y2="21"></line>
+                    <line x1="12" y1="17" x2="12" y2="21"></line>
+                </svg>
+            </div>
+            <div class="device-title">Masaüstü & Tablet Uyumlu</div>
+            <div class="device-desc">
+                TradeChart Pro, çoklu zaman dilimli WebGL 2.0 grafik motoru ve profesyonel analiz araçları nedeniyle <b>sadece bilgisayar ve tablet</b> ekranları için optimize edilmiştir.
+            </div>
+            <div class="device-badge-row">
+                <span class="device-badge">💻 Bilgisayar (Desktop)</span>
+                <span class="device-badge">📱 Tablet (iPad & Android)</span>
+                <span class="device-badge blocked">🚫 Telefon Kapalı</span>
+            </div>
         </div>
     </div>
 
