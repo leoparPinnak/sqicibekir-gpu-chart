@@ -148,29 +148,54 @@ document.addEventListener('DOMContentLoaded', () => {
         card: { hex: '#2563eb', rgb: '37, 99, 235' }
     };
 
-    // Bileşen Bazlı Renk Paletleri
+    // Helper to parse hex to RGB
+    function hexToRgb(hex) {
+        const raw = hex.replace('#', '');
+        let r = 255, g = 255, b = 255;
+        if (raw.length === 6) {
+            r = parseInt(raw.substring(0, 2), 16);
+            g = parseInt(raw.substring(2, 4), 16);
+            b = parseInt(raw.substring(4, 6), 16);
+        } else if (raw.length === 3) {
+            r = parseInt(raw[0] + raw[0], 16);
+            g = parseInt(raw[1] + raw[1], 16);
+            b = parseInt(raw[2] + raw[2], 16);
+        }
+        return `${r}, ${g}, ${b}`;
+    }
+
+    // Bileşen Bazlı Neon Renk Paletleri & Custom Color Picker
     document.querySelectorAll('.comp-color-palette').forEach(palette => {
         const comp = palette.getAttribute('data-comp');
+        
+        // 1. Preset Dots
         palette.querySelectorAll('.color-dot').forEach(dot => {
             dot.addEventListener('click', () => {
                 palette.querySelectorAll('.color-dot').forEach(d => d.classList.remove('active'));
                 dot.classList.add('active');
 
                 const hex = dot.getAttribute('data-color');
-                const rawHex = hex.replace('#', '');
-                let r = 255, g = 255, b = 255;
-                if (rawHex.length === 6) {
-                    r = parseInt(rawHex.substring(0, 2), 16);
-                    g = parseInt(rawHex.substring(2, 4), 16);
-                    b = parseInt(rawHex.substring(4, 6), 16);
-                }
                 if (compColors[comp]) {
                     compColors[comp].hex = hex;
-                    compColors[comp].rgb = `${r}, ${g}, ${b}`;
+                    compColors[comp].rgb = hexToRgb(hex);
                 }
                 updateGlassEngine();
             });
         });
+
+        // 2. Custom Color Picker Input
+        const customPicker = palette.querySelector('.comp-custom-color-picker');
+        if (customPicker) {
+            customPicker.addEventListener('input', (e) => {
+                palette.querySelectorAll('.color-dot').forEach(d => d.classList.remove('active'));
+                const hex = e.target.value;
+                if (compColors[comp]) {
+                    compColors[comp].hex = hex;
+                    compColors[comp].rgb = hexToRgb(hex);
+                }
+                updateGlassEngine();
+            });
+        }
     });
 
     const PRESETS = {

@@ -1148,28 +1148,69 @@ body.lab-body {
 
 .color-palette {
     display: flex;
-    gap: 8px;
+    gap: 7px;
     flex-wrap: wrap;
+    align-items: center;
 }
 
 .color-dot {
-    width: 26px;
-    height: 26px;
+    width: 24px;
+    height: 24px;
     border-radius: 50%;
     background: var(--c);
-    border: 2px solid transparent;
+    border: 2px solid rgba(255, 255, 255, 0.15);
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.40);
+    position: relative;
 }
 
 .color-dot:hover {
-    transform: scale(1.15);
+    transform: scale(1.22);
+    box-shadow: 0 0 12px var(--c);
+    border-color: rgba(255, 255, 255, 0.60);
 }
 
 .color-dot.active {
     border-color: #ffffff;
-    box-shadow: 0 0 14px var(--c);
-    transform: scale(1.2);
+    box-shadow: 0 0 16px var(--c), 0 0 4px #ffffff;
+    transform: scale(1.25);
+}
+
+.custom-color-picker-wrapper {
+    position: relative;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #f43f5e, #8b5cf6, #06b6d4, #10b981);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid rgba(255, 255, 255, 0.30);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.25);
+    overflow: hidden;
+}
+
+.custom-color-picker-wrapper:hover {
+    transform: scale(1.22);
+    border-color: #ffffff;
+    box-shadow: 0 0 14px rgba(255, 255, 255, 0.50);
+}
+
+.custom-picker-icon {
+    font-size: 11px;
+    pointer-events: none;
+}
+
+.comp-custom-color-picker {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
 }
 
 .code-export-box {
