@@ -117,13 +117,22 @@
                     <input type="range" id="param-blur" min="0" max="50" value="20" class="lab-slider">
                 </div>
 
-                <!-- ÜST KENAR PARILTISI (SPECULAR BEVEL) -->
+                <!-- ÜST KENAR PARILTISI & BLOOM (SPECULAR BEVEL & SUPERCHARGED BLOOM) -->
                 <div class="control-group">
                     <div class="control-label-row">
                         <span>Üst Kenar Elmas Işıltısı (Parlaklık)</span>
-                        <span class="control-value" id="val-specular">85%</span>
+                        <span class="control-value" id="val-specular">100%</span>
                     </div>
-                    <input type="range" id="param-specular" min="10" max="100" value="85" class="lab-slider">
+                    <input type="range" id="param-specular" min="10" max="250" step="5" value="100" class="lab-slider">
+                </div>
+
+                <!-- ELMAS IŞILTISI KALINLIĞI (SPECULAR RIM THICKNESS / STROKE) -->
+                <div class="control-group">
+                    <div class="control-label-row">
+                        <span>Işıltı Çerçeve Kalınlığı (Thickness)</span>
+                        <span class="control-value" id="val-specular-width">1.5px</span>
+                    </div>
+                    <input type="range" id="param-specular-width" min="0.5" max="6.0" step="0.5" value="1.5" class="lab-slider">
                 </div>
 
                 <!-- ELMAS IŞILTISI YAYILIMI / YUMUŞATMA (SPECULAR TAPER & FEATHER) -->

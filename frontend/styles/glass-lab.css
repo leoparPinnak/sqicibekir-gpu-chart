@@ -6,7 +6,9 @@
     /* DİNAMİK CANLI CAM PARAMETRELERİ */
     --glass-opacity: 0.35;
     --glass-blur: 20px;
-    --glass-specular-alpha: 0.85;
+    --glass-specular-alpha: 1.0;
+    --glass-specular-width: 1.5px;
+    --glass-specular-bloom: 4px;
     --glass-specular-taper: 80%;
     --glass-inner-glow-alpha: 0.65;
     --glass-radius: 9999px;
@@ -45,8 +47,11 @@ body.lab-body {
     color: #f8fafc;
     font-family: var(--font-ui);
     min-height: 100vh;
+    height: auto;
+    overflow-y: auto !important;
     overflow-x: hidden;
     position: relative;
+    scroll-behavior: smooth;
 }
 
 /* ============================================================ */
@@ -423,16 +428,38 @@ body.lab-body {
     border: 1px solid rgba(255, 255, 255, 0.16);
     border-top: 1.5px solid rgba(255, 255, 255, 0.60);
     border-radius: 24px;
-    padding: 20px;
+    padding: 20px 18px 24px 20px;
     box-shadow: 
         inset 0 1.5px 2px rgba(255, 255, 255, 0.40),
         0 25px 60px rgba(0, 0, 0, 0.65);
-    height: fit-content;
+    height: auto;
+    max-height: calc(100vh - 105px);
+    overflow-y: auto;
+    overflow-x: hidden;
     position: sticky;
-    top: 90px;
+    top: 86px;
     display: flex;
     flex-direction: column;
     gap: 16px;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.20) transparent;
+}
+
+.lab-controls-panel::-webkit-scrollbar {
+    width: 5px;
+}
+
+.lab-controls-panel::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.lab-controls-panel::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.22);
+    border-radius: 9999px;
+}
+
+.lab-controls-panel::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.40);
 }
 
 /* PANEL SEKMELERİ (CAM FİZİĞİ & AURORA) */
@@ -1071,7 +1098,7 @@ body.lab-body {
         0 6px 18px rgba(0, 0, 0, 0.30);
 }
 
-/* 💎 PRİZMATİK ELMAS IŞILTISI (İPEKSİ GEÇİŞLİ SPECULAR CAUSTIC RIM) */
+/* 💎 PRİZMATİK ELMAS IŞILTISI (İPEKSİ GEÇİŞLİ & AYARLANABİLİR KALINLIKLI SPECULAR CAUSTIC RIM) */
 .dynamic-glass-btn::before,
 .dynamic-glass-input::before,
 .dynamic-glass-stepper::before {
@@ -1079,7 +1106,7 @@ body.lab-body {
     position: absolute;
     inset: 0;
     border-radius: inherit;
-    padding: 1.5px;
+    padding: var(--glass-specular-width, 1.5px);
     background: radial-gradient(
         ellipse var(--glass-specular-taper) 70% at 50% -5%,
         rgba(255, 255, 255, var(--glass-specular-alpha)) 0%,
@@ -1093,6 +1120,7 @@ body.lab-body {
     mask-composite: exclude;
     pointer-events: none;
     z-index: 2;
+    filter: drop-shadow(0 0 var(--glass-specular-bloom, 2px) rgba(255, 255, 255, calc(var(--glass-specular-alpha) * 0.5)));
     transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
