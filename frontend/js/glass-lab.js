@@ -528,48 +528,46 @@ document.addEventListener('DOMContentLoaded', () => {
         if (defaultPreset) defaultPreset.click();
     });
 
-    // Sub-Nav Component Filter Switcher
-    document.querySelectorAll('.comp-filter-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            document.querySelectorAll('.comp-filter-btn').forEach(b => {
-                b.classList.remove('active');
-                b.style.background = 'rgba(255,255,255,0.05)';
-                b.style.color = '#94a3b8';
-                b.style.borderColor = 'rgba(255,255,255,0.1)';
-            });
-            btn.classList.add('active');
-            btn.style.background = 'rgba(37,99,235,0.35)';
-            btn.style.color = '#ffffff';
-            btn.style.borderColor = 'rgba(255,255,255,0.15)';
+    // Sub-Nav In-Situ Section Smooth Scroller & Active Spy
+    const subnavPills = document.querySelectorAll('.subnav-pill');
+    subnavPills.forEach(pill => {
+        pill.addEventListener('click', (e) => {
+            e.preventDefault();
+            subnavPills.forEach(p => p.classList.remove('active'));
+            pill.classList.add('active');
 
-            const target = btn.getAttribute('data-comp-target');
-            const sections = {
-                btn: document.getElementById('section-comp-btn'),
-                input: document.getElementById('section-comp-input'),
-                tab: document.getElementById('section-comp-tab'),
-                card: document.getElementById('section-comp-card')
-            };
-
-            const showcaseSections = {
-                login: document.getElementById('showcase-section-login'),
-                markets: document.getElementById('showcase-section-markets')
-            };
-
-            if (target === 'all') {
-                Object.values(sections).forEach(s => { if (s) s.style.display = 'block'; });
-            } else if (target === 'login') {
-                Object.values(sections).forEach(s => { if (s) s.style.display = 'block'; });
-                if (showcaseSections.login) showcaseSections.login.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            } else if (target === 'markets') {
-                Object.values(sections).forEach(s => { if (s) s.style.display = 'block'; });
-                if (showcaseSections.markets) showcaseSections.markets.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            } else {
-                Object.entries(sections).forEach(([key, s]) => {
-                    if (s) s.style.display = (key === target) ? 'block' : 'none';
-                });
+            const targetId = pill.getAttribute('href');
+            const targetEl = document.querySelector(targetId);
+            if (targetEl) {
+                targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
         });
     });
+
+    // Scroll Spy for Subnav Dock
+    window.addEventListener('scroll', () => {
+        const scrollPos = window.scrollY + 140;
+        const sections = [
+            '#section-buttons-studio',
+            '#section-inputs-studio',
+            '#section-tabs-studio',
+            '#section-cards-studio',
+            '#section-login-studio',
+            '#section-markets-studio',
+            '#section-aurora-studio',
+            '#section-saved-studio'
+        ];
+
+        for (let i = sections.length - 1; i >= 0; i--) {
+            const sec = document.querySelector(sections[i]);
+            if (sec && sec.offsetTop <= scrollPos) {
+                subnavPills.forEach(p => {
+                    p.classList.toggle('active', p.getAttribute('href') === sections[i]);
+                });
+                break;
+            }
+        }
+    }, { passive: true });
 
     // Mock Market Table Dynamic Filtering
     const mockMarketData = [
@@ -645,6 +643,8 @@ document.addEventListener('DOMContentLoaded', () => {
             renderMockMarketTable();
         });
     }
+
+    renderMockMarketTable();
 
     // ========================================================
     // 3. AURORA IŞIKLARI & GALAKSİ MOTORU KONTROLCÜSÜ

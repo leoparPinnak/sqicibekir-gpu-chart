@@ -28,7 +28,7 @@
         </div>
     </div>
 
-    <!-- ÜST NAVİGASYON VE HIZLI KONTROLLER -->
+    <!-- 🌟 ÜST SABİT KOMUTA BAR (STICKY COMMAND BAR) -->
     <header class="lab-header">
         <div class="lab-brand">
             <div class="lab-brand-icon">
@@ -44,15 +44,34 @@
             </div>
         </div>
 
+        <!-- HIZLI MASTER ŞABLONLAR & ARKA PLAN SEÇİCİ -->
         <div class="lab-header-actions">
+            <!-- Genel Tasarım Şablonları -->
+            <div class="header-preset-bar">
+                <span class="lab-label">Şablonlar:</span>
+                <button class="preset-pill active" data-preset="visionos">Apple VisionOS</button>
+                <button class="preset-pill" data-preset="sapphire">Safir</button>
+                <button class="preset-pill" data-preset="emerald">Zümrüt</button>
+                <button class="preset-pill" data-preset="cyberpunk">Ametist</button>
+                <button class="preset-pill" data-preset="crystal">Kristal</button>
+                <button class="preset-pill" data-preset="frost">Buzlu</button>
+            </div>
+
+            <!-- Çerez Hızlı Seçim -->
+            <select id="quick-preset-select" class="lab-text-input" style="padding: 6px 10px; font-size: 11.5px; width: 170px; cursor: pointer; background: rgba(15, 23, 42, 0.90); border: 1px solid rgba(59, 130, 246, 0.50);">
+                <option value="">📂 Çerez Şablonları...</option>
+            </select>
+
             <!-- Arka Plan Değiştirici -->
             <div class="lab-bg-switcher">
                 <span class="lab-label">Arka Plan:</span>
-                <button class="lab-pill-btn active" data-bg="aurora">Aurora Işıkları</button>
-                <button class="lab-pill-btn" data-bg="candles">Canlı Mum Grafiği</button>
-                <button class="lab-pill-btn" data-bg="mesh">Neon Mesh</button>
-                <button class="lab-pill-btn" data-bg="dark">Obsidian Siyah</button>
+                <button class="lab-pill-btn active" data-bg="aurora">Aurora</button>
+                <button class="lab-pill-btn" data-bg="candles">Mumlar</button>
+                <button class="lab-pill-btn" data-bg="mesh">Mesh</button>
+                <button class="lab-pill-btn" data-bg="dark">Obsidian</button>
             </div>
+
+            <button class="reset-btn" id="reset-params-btn" title="Tüm Bileşenleri Varsayılana Döndür">Sıfırla</button>
 
             <a href="./index.html" class="lab-btn-back">
                 <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
@@ -61,76 +80,40 @@
         </div>
     </header>
 
-    <!-- ANA LABORATUVAR ALANI: SOLDA CANLI EDİTÖR / SAĞDA BİLEŞENLER -->
-    <div class="lab-main-layout">
+    <!-- HIZLI BÖLÜM ATLAMA SUB-NAV DOCK -->
+    <nav class="studio-subnav-dock">
+        <a href="#section-buttons-studio" class="subnav-pill active">🔘 1. Butonlar</a>
+        <a href="#section-inputs-studio" class="subnav-pill">⌨️ 2. Girdiler</a>
+        <a href="#section-tabs-studio" class="subnav-pill">📑 3. Sekmeler & Rozetler</a>
+        <a href="#section-cards-studio" class="subnav-pill">🖼️ 4. Konteynır Kartlar</a>
+        <a href="#section-login-studio" class="subnav-pill">🔐 5. Giriş Portalı</a>
+        <a href="#section-markets-studio" class="subnav-pill">📊 6. Piyasalar Tablosu</a>
+        <a href="#section-aurora-studio" class="subnav-pill">🌌 7. Aurora Motoru</a>
+        <a href="#section-saved-studio" class="subnav-pill">💾 8. Kayıt Arşivi <span class="save-seq-badge" id="header-seq-badge">#1</span></a>
+    </nav>
 
-        <!-- 🎛️ SOL PANEL: CANLI PARAMETRE AYARLAYICI (STUDIO CONTROLS) -->
-        <aside class="lab-controls-panel">
-            
-            <!-- PANEL SEKMELERİ (CAM FİZİĞİ, AURORA MOTORU, JSON KAYITLAR) -->
-            <div class="panel-tab-switcher">
-                <button class="panel-tab-btn active" data-panel-tab="glass">🎛️ Cam Fiziği</button>
-                <button class="panel-tab-btn" data-panel-tab="aurora">🌌 Aurora</button>
-                <button class="panel-tab-btn" data-panel-tab="saved" style="position: relative;">
-                    💾 JSON Kayıt 
-                    <span class="save-seq-badge" id="header-seq-badge">#1</span>
-                </button>
+    <!-- ============================================================ -->
+    <!-- 🏗️ ANA STÜDYO AKIŞI: HER BÖLÜM KENDİ AYARLARINI YANINDA TAŞIR -->
+    <!-- ============================================================ -->
+    <main class="studio-main-container">
+
+        <!-- ======================================================== -->
+        <!-- 🔘 BÖLÜM 1: SIVI CAM BUTONLAR STÜDYOSU                   -->
+        <!-- ======================================================== -->
+        <section class="studio-section-card" id="section-buttons-studio">
+            <div class="studio-section-header">
+                <div>
+                    <h2>🔘 1. Sıvı Cam Butonlar (Liquid Glass Buttons Studio)</h2>
+                    <p>Butonların saydamlık, kırılma, elmas ışıltısı ve renk ayarlarını doğrudan yanında test edin.</p>
+                </div>
+                <span class="comp-badge-tag">.dynamic-glass-btn</span>
             </div>
 
-            <!-- ======================================================== -->
-            <!-- 1. SEKME: CAM FİZİK PARAMETRELERİ (MODÜLER BİLEŞEN LABI) -->
-            <!-- ======================================================== -->
-            <div class="panel-tab-content active" id="tab-content-glass">
-                <div class="panel-header">
-                    <h3>Cam Yansıma & Kırılma</h3>
-                    <button class="reset-btn" id="reset-params-btn" title="Tüm Bileşenleri Varsayılana Döndür">Sıfırla</button>
-                </div>
-
-                <!-- ÖN AYARLAR (PRESETS) -->
-                <div class="control-group">
-                    <label class="control-label">Genel Tasarım Şablonları (Master Presets)</label>
-                    <div class="preset-grid">
-                        <button class="preset-pill active" data-preset="visionos">Apple VisionOS</button>
-                        <button class="preset-pill" data-preset="sapphire">Safir Sıvı Cam</button>
-                        <button class="preset-pill" data-preset="emerald">Zümrüt Yeşil</button>
-                        <button class="preset-pill" data-preset="cyberpunk">Neon Ametist</button>
-                        <button class="preset-pill" data-preset="crystal">Saf Su Kristali</button>
-                        <button class="preset-pill" data-preset="frost">Buzlu Cam (Frost)</button>
-                    </div>
-                </div>
-
-                <!-- 📂 KAYITLI ŞABLONLARDAN HIZLI SEÇİM -->
-                <div class="control-group" id="quick-preset-selector-group">
-                    <div class="control-label-row">
-                        <span>📂 Çerezdeki Şablonları Seç</span>
-                        <span class="control-value" id="quick-preset-count">0 Kayıt</span>
-                    </div>
-                    <select id="quick-preset-select" class="lab-text-input" style="padding: 7px 10px; font-size: 12px; cursor: pointer; background: rgba(15, 23, 42, 0.85); border: 1px solid rgba(59, 130, 246, 0.40);">
-                        <option value="">-- Kaydedilmiş Bir Şablon Seç --</option>
-                    </select>
-                </div>
-
-                <!-- 🎛️ BİLEŞEN HEDEF SEÇİCİ SUB-NAV (COMPONENT SELECTOR) -->
-                <div class="component-filter-bar" style="display: flex; gap: 4px; overflow-x: auto; padding-bottom: 8px; margin-bottom: 12px;">
-                    <button class="comp-filter-btn active" data-comp-target="all" style="padding: 5px 10px; font-size: 11px; font-weight: 700; border-radius: 8px; border: 1px solid rgba(255,255,255,0.15); background: rgba(37,99,235,0.35); color: #fff; cursor: pointer; white-space: nowrap;">📜 Tümü</button>
-                    <button class="comp-filter-btn" data-comp-target="btn" style="padding: 5px 10px; font-size: 11px; font-weight: 700; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); color: #94a3b8; cursor: pointer; white-space: nowrap;">🔘 Butonlar</button>
-                    <button class="comp-filter-btn" data-comp-target="input" style="padding: 5px 10px; font-size: 11px; font-weight: 700; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); color: #94a3b8; cursor: pointer; white-space: nowrap;">⌨️ Girdiler</button>
-                    <button class="comp-filter-btn" data-comp-target="tab" style="padding: 5px 10px; font-size: 11px; font-weight: 700; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); color: #94a3b8; cursor: pointer; white-space: nowrap;">📑 Sekmeler</button>
-                    <button class="comp-filter-btn" data-comp-target="card" style="padding: 5px 10px; font-size: 11px; font-weight: 700; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); color: #94a3b8; cursor: pointer; white-space: nowrap;">🖼️ Konteynır</button>
-                    <button class="comp-filter-btn" data-comp-target="login" style="padding: 5px 10px; font-size: 11px; font-weight: 700; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); color: #94a3b8; cursor: pointer; white-space: nowrap;">🔐 Giriş Portalı</button>
-                    <button class="comp-filter-btn" data-comp-target="markets" style="padding: 5px 10px; font-size: 11px; font-weight: 700; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); color: #94a3b8; cursor: pointer; white-space: nowrap;">📊 Piyasalar</button>
-                </div>
-
-                <!-- ======================================================== -->
-                <!-- 🔘 MODÜL 1: SIVI CAM BUTONLAR (BUTTONS ENGINE)          -->
-                <!-- ======================================================== -->
-                <div class="comp-control-section" id="section-comp-btn" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(59,130,246,0.25); border-radius: 14px; padding: 14px; margin-bottom: 14px;">
-                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 6px;">
-                        <span style="font-size: 12px; font-weight: 800; color: #60a5fa; text-transform: uppercase; letter-spacing: 0.5px;">🔘 1. Sıvı Cam Butonlar</span>
-                        <span style="font-size: 10px; color: #94a3b8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px;">.dynamic-glass-btn</span>
-                    </div>
-
-                    <!-- SAYDAMLIK (ALPHA) -->
+            <div class="studio-split-layout">
+                <!-- SOL: BUTON AYARLARI -->
+                <div class="studio-controls-box">
+                    <h3 class="controls-box-title">⚙️ Buton Fizik Parametreleri</h3>
+                    
                     <div class="control-group">
                         <div class="control-label-row">
                             <span>Saydamlık</span>
@@ -139,7 +122,6 @@
                         <input type="range" id="param-btn-opacity" min="5" max="95" value="35" class="lab-slider">
                     </div>
 
-                    <!-- BULANIKLIK (BLUR) -->
                     <div class="control-group">
                         <div class="control-label-row">
                             <span>Bulanıklık (Blur)</span>
@@ -148,7 +130,6 @@
                         <input type="range" id="param-btn-blur" min="0" max="60" value="20" class="lab-slider">
                     </div>
 
-                    <!-- ELMAS IŞILTISI -->
                     <div class="control-group">
                         <div class="control-label-row">
                             <span>Elmas Işıltısı (Parlaklık)</span>
@@ -157,7 +138,6 @@
                         <input type="range" id="param-btn-specular" min="10" max="250" step="5" value="100" class="lab-slider">
                     </div>
 
-                    <!-- ÇERÇEVE KALINLIĞI -->
                     <div class="control-group">
                         <div class="control-label-row">
                             <span>Işıltı Çerçeve Kalınlığı</span>
@@ -166,43 +146,38 @@
                         <input type="range" id="param-btn-specular-width" min="0.5" max="6.0" step="0.5" value="1.5" class="lab-slider">
                     </div>
 
-                    <!-- IŞILTI TAPER -->
                     <div class="control-group">
                         <div class="control-label-row">
-                            <span>Işıltı Kenar Taper</span>
-                            <span class="control-value" id="val-btn-specular-taper">80% (İpeksi)</span>
+                            <span>Işıltı Kenar Taper (Yumuşatma)</span>
+                            <span class="control-value" id="val-btn-specular-taper">80%</span>
                         </div>
-                        <input type="range" id="param-btn-specular-taper" min="20" max="100" value="80" class="lab-slider">
+                        <input type="range" id="param-btn-specular-taper" min="20" max="100" step="5" value="80" class="lab-slider">
                     </div>
 
-                    <!-- İÇ IŞIK KIRILMASI -->
                     <div class="control-group">
                         <div class="control-label-row">
-                            <span>İç Işık Kırılması</span>
+                            <span>İç Işık Kırılması (Depth Glow)</span>
                             <span class="control-value" id="val-btn-inner-glow">65%</span>
                         </div>
                         <input type="range" id="param-btn-inner-glow" min="0" max="200" step="5" value="65" class="lab-slider">
                     </div>
 
-                    <!-- İÇ IŞIK YAYILIMI -->
                     <div class="control-group">
                         <div class="control-label-row">
-                            <span>İç Işık Yayılımı</span>
+                            <span>İç Işık Yayılımı (Glow Spread)</span>
                             <span class="control-value" id="val-btn-inner-glow-spread">6px</span>
                         </div>
                         <input type="range" id="param-btn-inner-glow-spread" min="1" max="30" step="1" value="6" class="lab-slider">
                     </div>
 
-                    <!-- RADIUS -->
                     <div class="control-group">
                         <div class="control-label-row">
-                            <span>Köşe Yuvarlaklığı</span>
+                            <span>Köşe Yuvarlaklığı (Radius)</span>
                             <span class="control-value" id="val-btn-radius">9999px (Hap)</span>
                         </div>
                         <input type="range" id="param-btn-radius" min="4" max="9999" step="2" value="9999" class="lab-slider">
                     </div>
 
-                    <!-- RENK TONU -->
                     <div class="control-group">
                         <label class="control-label">Buton Neon Vurgu Rengi</label>
                         <div class="color-palette comp-color-palette" data-comp="btn">
@@ -217,16 +192,92 @@
                     </div>
                 </div>
 
-                <!-- ======================================================== -->
-                <!-- ⌨️ MODÜL 2: GİRDİ ALANLARI & ARAMA (INPUTS ENGINE)       -->
-                <!-- ======================================================== -->
-                <div class="comp-control-section" id="section-comp-input" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(16,185,129,0.25); border-radius: 14px; padding: 14px; margin-bottom: 14px;">
-                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 6px;">
-                        <span style="font-size: 12px; font-weight: 800; color: #34d399; text-transform: uppercase; letter-spacing: 0.5px;">⌨️ 2. Girdi & Arama Kapsülleri</span>
-                        <span style="font-size: 10px; color: #94a3b8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px;">.dynamic-glass-input</span>
+                <!-- SAĞ: BUTON CANLI ÖNİZLEME -->
+                <div class="studio-preview-box">
+                    <h3 class="preview-box-title">👁️ Canlı Buton Vitrini</h3>
+                    
+                    <div class="demo-row">
+                        <div class="demo-item">
+                            <span class="demo-tag">Primary Action Pill (Büyük)</span>
+                            <button class="dynamic-glass-btn btn-lg">
+                                <span class="live-dot"></span>
+                                <span>Google Hesabı ile Giriş Yap</span>
+                                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+                            </button>
+                        </div>
+
+                        <div class="demo-item">
+                            <span class="demo-tag">Translucent Action Pill (Orta)</span>
+                            <button class="dynamic-glass-btn btn-md">
+                                <span>Giriş Yap</span>
+                                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+                            </button>
+                        </div>
+
+                        <div class="demo-item">
+                            <span class="demo-tag">Table / Micro Action (İncele)</span>
+                            <button class="dynamic-glass-btn btn-sm">
+                                <span>İncele</span>
+                                <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+                            </button>
+                        </div>
                     </div>
 
-                    <!-- SAYDAMLIK -->
+                    <div class="demo-row" style="margin-top: 16px;">
+                        <div class="demo-item">
+                            <span class="demo-tag">İkonlu Kapsül Butonlar</span>
+                            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                                <button class="dynamic-glass-btn btn-icon">
+                                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                                    <span>Ara</span>
+                                </button>
+                                <button class="dynamic-glass-btn btn-icon">
+                                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                                    <span>PineScript</span>
+                                </button>
+                                <button class="dynamic-glass-btn btn-icon">
+                                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+                                    <span>Kaydet</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="demo-item">
+                            <span class="demo-tag">Dairesel İkon Butonlar</span>
+                            <div style="display: flex; gap: 10px;">
+                                <button class="dynamic-glass-btn btn-circle" title="Ayarlar">
+                                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                                </button>
+                                <button class="dynamic-glass-btn btn-circle" title="Bildirimler">
+                                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                                </button>
+                                <button class="dynamic-glass-btn btn-circle" title="Paylaş">
+                                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ======================================================== -->
+        <!-- ⌨️ BÖLÜM 2: SIVI CAM GİRDİ ALANLARI STÜDYOSU              -->
+        <!-- ======================================================== -->
+        <section class="studio-section-card" id="section-inputs-studio">
+            <div class="studio-section-header">
+                <div>
+                    <h2>⌨️ 2. Sıvı Cam Girdi Alanları (Inputs & Search Studio)</h2>
+                    <p>Arama çubukları, e-posta, şifre ve stepper girdilerinin anlık fizik ayarları.</p>
+                </div>
+                <span class="comp-badge-tag" style="color: #34d399; border-color: rgba(52,211,153,0.3);">.dynamic-glass-input</span>
+            </div>
+
+            <div class="studio-split-layout">
+                <!-- SOL: GİRDİ AYARLARI -->
+                <div class="studio-controls-box">
+                    <h3 class="controls-box-title">⚙️ Girdi Fizik Parametreleri</h3>
+
                     <div class="control-group">
                         <div class="control-label-row">
                             <span>Girdi Saydamlığı</span>
@@ -235,7 +286,6 @@
                         <input type="range" id="param-input-opacity" min="5" max="95" value="25" class="lab-slider">
                     </div>
 
-                    <!-- BULANIKLIK -->
                     <div class="control-group">
                         <div class="control-label-row">
                             <span>Bulanıklık (Blur)</span>
@@ -244,7 +294,6 @@
                         <input type="range" id="param-input-blur" min="0" max="60" value="20" class="lab-slider">
                     </div>
 
-                    <!-- ELMAS IŞILTISI -->
                     <div class="control-group">
                         <div class="control-label-row">
                             <span>Üst Kenar Işıltısı</span>
@@ -253,7 +302,6 @@
                         <input type="range" id="param-input-specular" min="10" max="250" step="5" value="90" class="lab-slider">
                     </div>
 
-                    <!-- ÇERÇEVE KALINLIĞI -->
                     <div class="control-group">
                         <div class="control-label-row">
                             <span>Kenar Kalınlığı</span>
@@ -262,7 +310,6 @@
                         <input type="range" id="param-input-specular-width" min="0.5" max="6.0" step="0.5" value="1.5" class="lab-slider">
                     </div>
 
-                    <!-- İÇ GÖLGE & IŞIK -->
                     <div class="control-group">
                         <div class="control-label-row">
                             <span>İç Derinlik / Işık</span>
@@ -271,7 +318,6 @@
                         <input type="range" id="param-input-inner-glow" min="0" max="200" step="5" value="50" class="lab-slider">
                     </div>
 
-                    <!-- RADIUS -->
                     <div class="control-group">
                         <div class="control-label-row">
                             <span>Köşe Yuvarlaklığı</span>
@@ -280,9 +326,8 @@
                         <input type="range" id="param-input-radius" min="4" max="9999" step="2" value="9999" class="lab-slider">
                     </div>
 
-                    <!-- RENK TONU -->
                     <div class="control-group">
-                        <label class="control-label">Girdi Odaklanma Vurgu Rengi</label>
+                        <label class="control-label">Girdi Vurgu & Odak Rengi</label>
                         <div class="color-palette comp-color-palette" data-comp="input">
                             <button class="color-dot active" data-color="#2563eb" style="--c: #2563eb;" title="Safir Mavi"></button>
                             <button class="color-dot" data-color="#10b981" style="--c: #10b981;" title="Zümrüt Yeşil"></button>
@@ -295,25 +340,75 @@
                     </div>
                 </div>
 
-                <!-- ======================================================== -->
-                <!-- 📑 MODÜL 3: CAM SEKMELER, ROZET & ŞALTER (TABS ENGINE)   -->
-                <!-- ======================================================== -->
-                <div class="comp-control-section" id="section-comp-tab" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(139,92,246,0.25); border-radius: 14px; padding: 14px; margin-bottom: 14px;">
-                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 6px;">
-                        <span style="font-size: 12px; font-weight: 800; color: #a78bfa; text-transform: uppercase; letter-spacing: 0.5px;">📑 3. Sekmeler, Rozetler & Şalter</span>
-                        <span style="font-size: 10px; color: #94a3b8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px;">.dynamic-tab</span>
-                    </div>
+                <!-- SAĞ: GİRDİ CANLI ÖNİZLEME -->
+                <div class="studio-preview-box">
+                    <h3 class="preview-box-title">👁️ Canlı Girdi Vitrini</h3>
+                    
+                    <div class="demo-grid-2">
+                        <div class="demo-item">
+                            <span class="demo-tag">Arama Çubuğu (Search Capsule)</span>
+                            <div class="dynamic-glass-input">
+                                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" class="input-icon"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                                <input type="text" placeholder="Sembol veya şirket ara (THYAO, BTC...)" value="BTC/USDT">
+                                <button class="input-clear-btn">✕</button>
+                            </div>
+                        </div>
 
-                    <!-- SAYDAMLIK -->
+                        <div class="demo-item">
+                            <span class="demo-tag">E-posta Girdisi (Email Field)</span>
+                            <div class="dynamic-glass-input">
+                                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" class="input-icon"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                                <input type="email" placeholder="ornek@alanadi.com" value="trader@tradingchart.com">
+                            </div>
+                        </div>
+
+                        <div class="demo-item">
+                            <span class="demo-tag">Şifre Girdisi (Password Field)</span>
+                            <div class="dynamic-glass-input">
+                                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" class="input-icon"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                                <input type="password" placeholder="Şifreniz" value="••••••••••••">
+                                <button class="input-eye-btn" title="Göster/Gizle">👁️</button>
+                            </div>
+                        </div>
+
+                        <div class="demo-item">
+                            <span class="demo-tag">Miktar / Sayı Aracı (Stepper)</span>
+                            <div class="dynamic-glass-stepper">
+                                <button class="stepper-btn">-</button>
+                                <input type="text" value="1.500 LOT" readonly>
+                                <button class="stepper-btn">+</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ======================================================== -->
+        <!-- 📑 BÖLÜM 3: CAM SEKMELER & ŞALTERLER STÜDYOSU             -->
+        <!-- ======================================================== -->
+        <section class="studio-section-card" id="section-tabs-studio">
+            <div class="studio-section-header">
+                <div>
+                    <h2>📑 3. Cam Sekmeler, Rozetler & Şalterler (Tabs & Toggles Studio)</h2>
+                    <p>Borsa kategori sekmeleri, durum rozetleri ve kaydırmalı şalter butonları.</p>
+                </div>
+                <span class="comp-badge-tag" style="color: #a78bfa; border-color: rgba(167,139,250,0.3);">.dynamic-tab.active</span>
+            </div>
+
+            <div class="studio-split-layout">
+                <!-- SOL: SEKME AYARLARI -->
+                <div class="studio-controls-box">
+                    <h3 class="controls-box-title">⚙️ Sekme & Rozet Parametreleri</h3>
+
                     <div class="control-group">
                         <div class="control-label-row">
-                            <span>Sekme / Rozet Saydamlığı</span>
+                            <span>Sekme Saydamlığı</span>
                             <span class="control-value" id="val-tab-opacity">40%</span>
                         </div>
                         <input type="range" id="param-tab-opacity" min="5" max="95" value="40" class="lab-slider">
                     </div>
 
-                    <!-- BULANIKLIK -->
                     <div class="control-group">
                         <div class="control-label-row">
                             <span>Bulanıklık (Blur)</span>
@@ -322,7 +417,6 @@
                         <input type="range" id="param-tab-blur" min="0" max="60" value="16" class="lab-slider">
                     </div>
 
-                    <!-- AKTİF PARLAKLIK -->
                     <div class="control-group">
                         <div class="control-label-row">
                             <span>Aktif Sekme Işıltısı</span>
@@ -331,18 +425,16 @@
                         <input type="range" id="param-tab-specular" min="10" max="250" step="5" value="120" class="lab-slider">
                     </div>
 
-                    <!-- RADIUS -->
                     <div class="control-group">
                         <div class="control-label-row">
-                            <span>Sekme Yuvarlaklığı</span>
+                            <span>Köşe Yuvarlaklığı</span>
                             <span class="control-value" id="val-tab-radius">9999px (Hap)</span>
                         </div>
                         <input type="range" id="param-tab-radius" min="4" max="9999" step="2" value="9999" class="lab-slider">
                     </div>
 
-                    <!-- RENK TONU -->
                     <div class="control-group">
-                        <label class="control-label">Sekme / Şalter Aktif Rengi</label>
+                        <label class="control-label">Sekme & Şalter Vurgu Rengi</label>
                         <div class="color-palette comp-color-palette" data-comp="tab">
                             <button class="color-dot active" data-color="#2563eb" style="--c: #2563eb;" title="Safir Mavi"></button>
                             <button class="color-dot" data-color="#10b981" style="--c: #10b981;" title="Zümrüt Yeşil"></button>
@@ -355,43 +447,104 @@
                     </div>
                 </div>
 
-                <!-- ======================================================== -->
-                <!-- 🖼️ MODÜL 4: ANA KAPSAYICI KONTEYNIR (CONTAINERS & CARDS) -->
-                <!-- ======================================================== -->
-                <div class="comp-control-section" id="section-comp-card" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(245,158,11,0.25); border-radius: 14px; padding: 14px; margin-bottom: 14px;">
-                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 6px;">
-                        <span style="font-size: 12px; font-weight: 800; color: #fbbf24; text-transform: uppercase; letter-spacing: 0.5px;">🖼️ 4. Ana Konteynır & Kart Çerçevesi</span>
-                        <span style="font-size: 10px; color: #94a3b8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px;">.component-card</span>
-                    </div>
+                <!-- SAĞ: SEKME CANLI ÖNİZLEME -->
+                <div class="studio-preview-box">
+                    <h3 class="preview-box-title">👁️ Canlı Sekme & Rozet Vitrini</h3>
+                    
+                    <div class="demo-grid-2">
+                        <div class="demo-item">
+                            <span class="demo-tag">Borsa Kategori Sekmeleri (Tabs)</span>
+                            <div class="dynamic-glass-tabs">
+                                <button class="dynamic-tab active">Tüm Piyasalar</button>
+                                <button class="dynamic-tab">BIST</button>
+                                <button class="dynamic-tab">NASDAQ</button>
+                                <button class="dynamic-tab">Kripto</button>
+                            </div>
+                        </div>
 
-                    <!-- KONTEYNIR SAYDAMLIK -->
+                        <div class="demo-item">
+                            <span class="demo-tag">Durum Rozetleri (Badges)</span>
+                            <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
+                                <span class="dynamic-badge positive">▲ +4.18%</span>
+                                <span class="dynamic-badge negative">▼ -1.25%</span>
+                                <span class="dynamic-badge neutral">CANLI 120 FPS</span>
+                                <span class="dynamic-badge pro">PRO VIP</span>
+                            </div>
+                        </div>
+
+                        <div class="demo-item">
+                            <span class="demo-tag">Sıvı Cam Şalterler (Switches)</span>
+                            <div style="display: flex; gap: 20px; align-items: center;">
+                                <label class="dynamic-glass-switch">
+                                    <input type="checkbox" checked>
+                                    <span class="switch-slider"></span>
+                                    <span class="switch-text">Otonom Demo</span>
+                                </label>
+
+                                <label class="dynamic-glass-switch">
+                                    <input type="checkbox">
+                                    <span class="switch-slider"></span>
+                                    <span class="switch-text">Gece Modu</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="demo-item">
+                            <span class="demo-tag">Periyot Seçici (Segmented Control)</span>
+                            <div class="dynamic-segmented-bar">
+                                <button class="seg-item active">1D</button>
+                                <button class="seg-item">1H</button>
+                                <button class="seg-item">15M</button>
+                                <button class="seg-item">5M</button>
+                                <button class="seg-item">1M</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ======================================================== -->
+        <!-- 🖼️ BÖLÜM 4: KONTEYNIR KART ÇERÇEVELERİ STÜDYOSU           -->
+        <!-- ======================================================== -->
+        <section class="studio-section-card" id="section-cards-studio">
+            <div class="studio-section-header">
+                <div>
+                    <h2>🖼️ 4. Sıvı Cam Konteynır Kartlar (Container Frames Studio)</h2>
+                    <p>Ana kapsayıcı kartların saydamlığı, derinliği ve çerçeve elmas ışıltısı.</p>
+                </div>
+                <span class="comp-badge-tag" style="color: #fbbf24; border-color: rgba(251,191,36,0.3);">.component-card</span>
+            </div>
+
+            <div class="studio-split-layout">
+                <!-- SOL: KONTEYNIR AYARLARI -->
+                <div class="studio-controls-box">
+                    <h3 class="controls-box-title">⚙️ Konteynır Fizik Parametreleri</h3>
+
                     <div class="control-group">
                         <div class="control-label-row">
-                            <span>Konteynır Arka Plan Saydamlığı</span>
+                            <span>Konteynır Saydamlığı</span>
                             <span class="control-value" id="val-card-opacity">20%</span>
                         </div>
                         <input type="range" id="param-card-opacity" min="0" max="95" value="20" class="lab-slider">
                     </div>
 
-                    <!-- KONTEYNIR BULANIKLIK -->
                     <div class="control-group">
                         <div class="control-label-row">
-                            <span>Konteynır Bulanıklığı (Blur)</span>
-                            <span class="control-value" id="val-card-blur">0px (Net)</span>
+                            <span>Bulanıklık (Blur)</span>
+                            <span class="control-value" id="val-card-blur">0px</span>
                         </div>
                         <input type="range" id="param-card-blur" min="0" max="60" value="0" class="lab-slider">
                     </div>
 
-                    <!-- ÇERÇEVE PARLAKLIĞI -->
                     <div class="control-group">
                         <div class="control-label-row">
-                            <span>Çerçeve Üst Elmas Işıltısı</span>
+                            <span>Çerçeve Üst Işıltısı</span>
                             <span class="control-value" id="val-card-specular">80%</span>
                         </div>
                         <input type="range" id="param-card-specular" min="0" max="250" step="5" value="80" class="lab-slider">
                     </div>
 
-                    <!-- ÇERÇEVE KALINLIĞI -->
                     <div class="control-group">
                         <div class="control-label-row">
                             <span>Çerçeve Kalınlığı</span>
@@ -400,25 +553,22 @@
                         <input type="range" id="param-card-specular-width" min="0.5" max="8.0" step="0.5" value="1.5" class="lab-slider">
                     </div>
 
-                    <!-- DERİNLİK & İÇ GÖLGE -->
                     <div class="control-group">
                         <div class="control-label-row">
-                            <span>Konteynır İç Işığı / Derinlik</span>
+                            <span>İç Işık & Derinlik</span>
                             <span class="control-value" id="val-card-inner-glow">40%</span>
                         </div>
                         <input type="range" id="param-card-inner-glow" min="0" max="200" step="5" value="40" class="lab-slider">
                     </div>
 
-                    <!-- KÖŞE YUVARLAKLIĞI -->
                     <div class="control-group">
                         <div class="control-label-row">
-                            <span>Konteynır Köşe Yuvarlaklığı</span>
+                            <span>Köşe Yuvarlaklığı</span>
                             <span class="control-value" id="val-card-radius">24px</span>
                         </div>
                         <input type="range" id="param-card-radius" min="8" max="60" step="2" value="24" class="lab-slider">
                     </div>
 
-                    <!-- RENK TONU -->
                     <div class="control-group">
                         <label class="control-label">Konteynır Vurgu & Gölge Rengi</label>
                         <div class="color-palette comp-color-palette" data-comp="card">
@@ -433,8 +583,71 @@
                     </div>
                 </div>
 
-                <!-- CANLI CSS KODU, AÇIKLAMA VE DOĞRUDAN ÇEREZLERE KAYIT ALANI -->
-                <div class="code-export-box">
+                <!-- SAĞ: KONTEYNIR CANLI ÖNİZLEME -->
+                <div class="studio-preview-box">
+                    <h3 class="preview-box-title">👁️ Canlı Konteynır Çerçeveleri</h3>
+                    
+                    <div class="demo-grid-2">
+                        <div class="dynamic-glass-frame">
+                            <div class="frame-top-bar">
+                                <div class="frame-asset-meta">
+                                    <div class="asset-logo-dot">₿</div>
+                                    <div>
+                                        <h4 class="asset-title">BTC / USDT</h4>
+                                        <span class="asset-sub">Bitcoin · Binance Spot</span>
+                                    </div>
+                                </div>
+                                <span class="dynamic-badge positive">+3.42%</span>
+                            </div>
+                            <div class="frame-body">
+                                <div class="stat-row">
+                                    <span class="stat-lbl">Son Fiyat:</span>
+                                    <span class="stat-val">$78,650.00</span>
+                                </div>
+                                <div class="stat-row">
+                                    <span class="stat-lbl">24S Hacim:</span>
+                                    <span class="stat-val">$4.28 Milyar</span>
+                                </div>
+                            </div>
+                            <button class="dynamic-glass-btn btn-md" style="margin-top: 12px;">Grafiği Aç</button>
+                        </div>
+
+                        <div class="dynamic-glass-frame">
+                            <div class="frame-top-bar">
+                                <h4 class="asset-title">Gösterge Ayarları</h4>
+                                <span class="dynamic-badge neutral">v2.4</span>
+                            </div>
+                            <div class="frame-body" style="gap: 12px;">
+                                <div class="dynamic-glass-input">
+                                    <input type="text" placeholder="İndikatör Ara..." value="Ichimoku Cloud (9, 26, 52)">
+                                </div>
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <span style="font-size: 13px; color: #cbd5e1;">Sinyal Çizgilerini Göster</span>
+                                    <label class="dynamic-glass-switch"><input type="checkbox" checked><span class="switch-slider"></span></label>
+                                </div>
+                            </div>
+                            <button class="dynamic-glass-btn btn-md" style="margin-top: 12px;">Değişiklikleri Kaydet</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ======================================================== -->
+        <!-- 🔐 BÖLÜM 5: ANA SAYFA GİRİŞ PORTALI & ÇEREZ/CSS KAYIT      -->
+        <!-- ======================================================== -->
+        <section class="studio-section-card" id="section-login-studio">
+            <div class="studio-section-header">
+                <div>
+                    <h2>🔐 5. Canlı Önizleme: Ana Sayfa Giriş Portalı (Auth Portal & Live Sync)</h2>
+                    <p>Ana sayfadaki Apple Liquid Glass giriş kartı ve canlı CSS / Çerez kayıt sistemi.</p>
+                </div>
+                <span class="dynamic-badge pro">CANLI ANA SAYFA KARTI</span>
+            </div>
+
+            <div class="studio-split-layout">
+                <!-- SOL: CANLI CSS KODU & ÇEREZ KAYIT FORMU -->
+                <div class="studio-controls-box">
                     <div class="code-export-header">
                         <div style="display: flex; align-items: center; gap: 6px;">
                             <span>CANLI CSS KODU</span>
@@ -442,16 +655,16 @@
                         </div>
                         <div style="display: flex; gap: 5px;">
                             <button class="copy-css-btn" id="copy-css-btn">📋 Kopyala</button>
-                            <button class="copy-css-btn" id="download-live-css-btn" style="background: rgba(37, 99, 235, 0.40); border-color: #3b82f6;" title="Canlı CSS'i .css dosyası olarak indir">📥 .css İndir</button>
+                            <button class="copy-css-btn" id="download-live-css-btn" style="background: rgba(37, 99, 235, 0.40); border-color: #3b82f6;">📥 .css İndir</button>
                         </div>
                     </div>
-                    
+
                     <pre class="code-display" id="css-output-preview"></pre>
 
-                    <!-- DİREKT CSS YANINDA AÇIKLAMA VE ÇEREZLERE KAYDETME ALANI -->
-                    <div class="inline-save-card" style="margin-top: 10px; background: rgba(0,0,0,0.30); padding: 10px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.10); border-top: 1px solid rgba(255,255,255,0.25);">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-                            <span style="font-size: 11px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px;">📝 Şablon Notu & Çerez Kaydı</span>
+                    <!-- ŞABLON NOTU VE ÇEREZLERE KAYDETME KUTUSU -->
+                    <div class="inline-save-card" style="margin-top: 12px; background: rgba(0,0,0,0.35); padding: 12px; border-radius: 14px; border: 1px solid rgba(255,255,255,0.12);">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                            <span style="font-size: 11px; font-weight: 700; color: #94a3b8; text-transform: uppercase;">📝 Şablon Notu & Çerez Kaydı</span>
                             <span style="font-size: 10.5px; color: #60a5fa; font-weight: 700;">🍪 Çerez Sayacı: <span id="inline-cookie-seq">#1</span></span>
                         </div>
 
@@ -460,430 +673,22 @@
                             <textarea id="save-preset-desc-input" class="lab-text-input" rows="2" placeholder="Tasarım açıklaması / not ekle (Çerezlere kaydedilir)..." style="padding: 7px 10px; font-size: 11.5px; resize: vertical; font-family: inherit;"></textarea>
                         </div>
 
-                        <div style="display: flex; gap: 6px; margin-top: 8px;">
-                            <button class="lab-primary-save-btn" id="save-json-btn" style="flex: 1; padding: 8px 12px; font-size: 12px;">
+                        <div style="display: flex; gap: 6px; margin-top: 10px;">
+                            <button class="lab-primary-save-btn" id="save-json-btn" style="flex: 1; padding: 9px 12px; font-size: 12px;">
                                 <span id="save-btn-label">🍪 Çerezlere & JSON Kaydet (#1)</span>
                             </button>
-                            <button class="lab-secondary-action-btn" id="save-css-file-btn" style="background: rgba(16, 185, 129, 0.35); border-color: #10b981; color: #6ee7b7; font-size: 11.5px; padding: 8px 12px;" title="Açıklamayla birlikte .css dosyası indir">
+                            <button class="lab-secondary-action-btn" id="save-css-file-btn" style="background: rgba(16, 185, 129, 0.35); border-color: #10b981; color: #6ee7b7; font-size: 11.5px; padding: 9px 12px;" title="Açıklamayla birlikte .css dosyası indir">
                                 🎨 .css Kaydet
                             </button>
                         </div>
-                    </div>
 
-                    <!-- BİLDİRİM KUTUSU (TOAST) -->
-                    <div class="lab-toast-msg" id="save-toast-msg" style="display: none; margin-top: 8px;"></div>
-                </div>
-            </div>
-
-            <!-- ======================================================== -->
-            <!-- 2. SEKME: AURORA IŞIKLARI DİNAMİK MOTORU                 -->
-            <!-- ======================================================== -->
-            <div class="panel-tab-content" id="tab-content-aurora">
-                <div class="panel-header">
-                    <h3>🌌 Aurora Atmosfer & Işık</h3>
-                    <button class="reset-btn" id="reset-aurora-btn" title="Işıkları Sıfırla">Sıfırla</button>
-                </div>
-
-                <!-- AURORA RENK TEMALARI -->
-                <div class="control-group">
-                    <label class="control-label">Aurora Renk Teması</label>
-                    <div class="preset-grid">
-                        <button class="aurora-theme-pill active" data-aurora-theme="cosmic">🌌 Kozmik Aurora</button>
-                        <button class="aurora-theme-pill" data-aurora-theme="cyber">⚡ Cyber Neon</button>
-                        <button class="aurora-theme-pill" data-aurora-theme="fire">🔥 Altın Ateş</button>
-                        <button class="aurora-theme-pill" data-aurora-theme="ocean">🌊 Derin Okyanus</button>
-                        <button class="aurora-theme-pill" data-aurora-theme="emerald">🌲 Zümrüt Vadi</button>
-                        <button class="aurora-theme-pill" data-aurora-theme="monochrome">🤍 Kristal Platin</button>
+                        <div class="lab-toast-msg" id="save-toast-msg" style="display: none; margin-top: 8px;"></div>
                     </div>
                 </div>
 
-                <!-- HAREKET VE DÖNÜŞ MODU -->
-                <div class="control-group">
-                    <label class="control-label">Dönüş / Hareket Modu</label>
-                    <div class="motion-mode-grid">
-                        <button class="motion-btn active" data-motion="galaxy">🌌 Galaksi Sarmalı</button>
-                        <button class="motion-btn" data-motion="clockwise">↻ Saat Yönü</button>
-                        <button class="motion-btn" data-motion="counter">↺ Ters Yön</button>
-                        <button class="motion-btn" data-motion="wave">〰 Dalgalı</button>
-                        <button class="motion-btn" data-motion="pulse">◉ Yaklaşma (Zoom)</button>
-                        <button class="motion-btn" data-motion="vortex">🌀 Kaotik Vortex</button>
-                    </div>
-                </div>
-
-                <!-- 🌌 GALAKSİ ODAK NOKTASI (GALACTIC CORE PIVOT) -->
-                <div class="control-group" id="galaxy-pivot-group">
-                    <label class="control-label">Galaksi Çekirdeği (Dönüş Merkezi)</label>
-                    <div class="preset-grid">
-                        <button class="pivot-btn active" data-pivot="center">🎯 Ekran Merkezi</button>
-                        <button class="pivot-btn" data-pivot="card">🎴 Kart Arkası</button>
-                        <button class="pivot-btn" data-pivot="mouse">🖱️ Canlı Fare Çekirdeği</button>
-                        <button class="pivot-btn" data-pivot="topleft">↖️ Sol Üst Nebula</button>
-                        <button class="pivot-btn" data-pivot="topright">↗️ Sağ Üst Pulsar</button>
-                        <button class="pivot-btn" data-pivot="bottom">⬇️ Dip Kozmoz</button>
-                    </div>
-                </div>
-
-                <!-- ANİMASYON HIZI (SPEED) -->
-                <div class="control-group">
-                    <div class="control-label-row">
-                        <span>Galaksi Dönüş Hızı (Yörünge Süresi)</span>
-                        <span class="control-value" id="val-aurora-speed">12s (Akıcı)</span>
-                    </div>
-                    <input type="range" id="aurora-speed" min="2" max="35" step="1" value="12" class="lab-slider">
-                </div>
-
-                <!-- GALAKSİ YÖRÜNGE ÇAPI (ORBIT RADIUS) -->
-                <div class="control-group">
-                    <div class="control-label-row">
-                        <span>Yörünge Genişliği & Çapı (Radius)</span>
-                        <span class="control-value" id="val-galaxy-radius">280px</span>
-                    </div>
-                    <input type="range" id="galaxy-radius" min="60" max="650" step="10" value="280" class="lab-slider">
-                </div>
-
-                <!-- GALAKSİ 3D DİSK EĞİMİ (PERSPECTIVE TILT) -->
-                <div class="control-group">
-                    <div class="control-label-row">
-                        <span>Galaksi 3D Eğim Açısı (Tilt)</span>
-                        <span class="control-value" id="val-galaxy-tilt">35° (Uzay Diski)</span>
-                    </div>
-                    <input type="range" id="galaxy-tilt" min="0" max="80" step="5" value="35" class="lab-slider">
-                </div>
-
-                <!-- IŞIK YAKLAŞMASI & BÜYÜKLÜK (SCALE & ZOOM) -->
-                <div class="control-group">
-                    <div class="control-label-row">
-                        <span>Işık Yaklaşması / Büyüklük (Scale)</span>
-                        <span class="control-value" id="val-aurora-scale">1.2x</span>
-                    </div>
-                    <input type="range" id="aurora-scale" min="0.4" max="2.8" step="0.1" value="1.2" class="lab-slider">
-                </div>
-
-                <!-- IŞIK ŞİDDETİ & PARLAKLIK (INTENSITY / OPACITY) -->
-                <div class="control-group">
-                    <div class="control-label-row">
-                        <span>Işık Parlaklığı & Şiddeti</span>
-                        <span class="control-value" id="val-aurora-intensity">65%</span>
-                    </div>
-                    <input type="range" id="aurora-intensity" min="10" max="100" value="65" class="lab-slider">
-                </div>
-
-                <!-- DİFÜZYON & DAĞILMA BLURU (DIFFUSION BLUR) -->
-                <div class="control-group">
-                    <div class="control-label-row">
-                        <span>Difüzyon & Yayılma Çapı (Blur)</span>
-                        <span class="control-value" id="val-aurora-blur">80px</span>
-                    </div>
-                    <input type="range" id="aurora-blur" min="30" max="180" value="80" class="lab-slider">
-                </div>
-
-                <!-- REAKTİF FARE TAKİBİ (INTERACTIVE MOUSE PARALLAX) -->
-                <div class="control-group" style="padding-top: 6px;">
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <div style="display: flex; flex-direction: column;">
-                            <span style="font-size: 12.5px; font-weight: 700; color: #e2e8f0;">Reaktif Fare Takibi</span>
-                            <span style="font-size: 11px; color: #64748b;">Fareyi hareket ettirdikçe ışıklar süzülür</span>
-                        </div>
-                        <label class="dynamic-glass-switch">
-                            <input type="checkbox" id="aurora-mouse-follow" checked>
-                            <span class="switch-slider"></span>
-                        </label>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ======================================================== -->
-            <!-- 3. SEKME: ŞABLON KÜTÜPHANESİ & İÇE/DIŞA AKTAR            -->
-            <!-- ======================================================== -->
-            <div class="panel-tab-content" id="tab-content-saved">
-                <div class="panel-header">
-                    <div>
-                        <h3>💾 Şablon Kütüphanesi</h3>
-                        <div style="font-size: 11px; color: #94a3b8; margin-top: 2px;">
-                            Çerez Sayacı: <strong id="current-cookie-seq-display" style="color: #60a5fa;">#1</strong> (365 Gün Aktif)
-                        </div>
-                    </div>
-                    <button class="reset-btn" id="reset-cookie-seq-btn" title="Kayıt Sayacını ve Çerezleri Sıfırla">Sıfırla</button>
-                </div>
-
-                <!-- İÇE/DIŞA AKTARMA ARAÇLARI -->
-                <div style="display: flex; gap: 8px;">
-                    <label class="lab-secondary-action-btn" style="flex: 1; cursor: pointer; text-align: center;">
-                        📂 JSON Yükle
-                        <input type="file" id="import-json-input" accept=".json" style="display: none;">
-                    </label>
-                    <button class="lab-secondary-action-btn" id="export-all-json-btn" style="flex: 1;" title="Tüm Kayıtları Tek JSON Dosyası Olarak İndir">
-                        📦 Tümünü İndir
-                    </button>
-                </div>
-
-                <!-- KAYITLI ŞABLONLAR LİSTESİ -->
-                <div class="saved-presets-container" style="max-height: 480px;">
-                    <div class="control-label-row" style="margin-bottom: 8px;">
-                        <span>Çerezlerdeki Şablonlar & Notlar</span>
-                        <span class="control-value" id="saved-presets-count">0 Kayıt</span>
-                    </div>
-                    <div class="saved-presets-list" id="saved-presets-list">
-                        <!-- JS ile doldurulacak -->
-                    </div>
-                </div>
-            </div>
-
-        </aside>
-
-        <!-- 🚀 SAĞ ALAN: BİLEŞEN VİTRİNİ (COMPONENT SHOWCASE) -->
-        <main class="lab-showcase-area">
-
-            <!-- 1. BÖLÜM: BUTON ÇERÇEVELERİ & BOYUTLARI -->
-            <section class="component-card">
-                <div class="component-header">
-                    <h2>1. Sıvı Cam Butonlar (Liquid Glass Buttons)</h2>
-                    <p>Farklı varyasyon, boyut ve kullanım senaryolarındaki etkileşimli cam butonlar.</p>
-                </div>
-
-                <div class="demo-row">
-                    <div class="demo-item">
-                        <span class="demo-tag">Primary Action Pill (Büyük)</span>
-                        <button class="dynamic-glass-btn btn-lg">
-                            <span class="live-dot"></span>
-                            <span>Google Hesabı ile Giriş Yap</span>
-                            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
-                        </button>
-                    </div>
-
-                    <div class="demo-item">
-                        <span class="demo-tag">Translucent Action Pill (Orta)</span>
-                        <button class="dynamic-glass-btn btn-md">
-                            <span>Giriş Yap</span>
-                            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
-                        </button>
-                    </div>
-
-                    <div class="demo-item">
-                        <span class="demo-tag">Table / Micro Action (İncele)</span>
-                        <button class="dynamic-glass-btn btn-sm">
-                            <span>İncele</span>
-                            <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
-                        </button>
-                    </div>
-                </div>
-
-                <div class="demo-row" style="margin-top: 20px;">
-                    <div class="demo-item">
-                        <span class="demo-tag">İkonlu Kapsül Butonlar</span>
-                        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                            <button class="dynamic-glass-btn btn-icon">
-                                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                                <span>Ara</span>
-                            </button>
-                            <button class="dynamic-glass-btn btn-icon">
-                                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-                                <span>PineScript</span>
-                            </button>
-                            <button class="dynamic-glass-btn btn-icon">
-                                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
-                                <span>Kaydet</span>
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="demo-item">
-                        <span class="demo-tag">Kare / Dairesel İkon Butonlar</span>
-                        <div style="display: flex; gap: 10px;">
-                            <button class="dynamic-glass-btn btn-circle" title="Ayarlar">
-                                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-                            </button>
-                            <button class="dynamic-glass-btn btn-circle" title="Bildirimler">
-                                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-                            </button>
-                            <button class="dynamic-glass-btn btn-circle" title="Paylaş">
-                                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- 2. BÖLÜM: GİRDİ ARAÇLARI (INPUTS, SEARCH & SELECT) -->
-            <section class="component-card">
-                <div class="component-header">
-                    <h2>2. Sıvı Cam Girdi Alanları (Liquid Glass Inputs)</h2>
-                    <p>Arama çubukları, e-posta, şifre ve veri giriş kapsülleri.</p>
-                </div>
-
-                <div class="demo-grid-2">
-                    <!-- Arama Kapsülü -->
-                    <div class="demo-item">
-                        <span class="demo-tag">Arama Çubuğu (Search Capsule)</span>
-                        <div class="dynamic-glass-input">
-                            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" class="input-icon"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                            <input type="text" placeholder="Sembol veya şirket ara (THYAO, BTC...)" value="BTC/USDT">
-                            <button class="input-clear-btn">✕</button>
-                        </div>
-                    </div>
-
-                    <!-- E-posta Kapsülü -->
-                    <div class="demo-item">
-                        <span class="demo-tag">E-posta Girdisi (Email Field)</span>
-                        <div class="dynamic-glass-input">
-                            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" class="input-icon"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-                            <input type="email" placeholder="ornek@alanadi.com">
-                        </div>
-                    </div>
-
-                    <!-- Şifre Kapsülü -->
-                    <div class="demo-item">
-                        <span class="demo-tag">Şifre Girdisi (Password Field)</span>
-                        <div class="dynamic-glass-input">
-                            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" class="input-icon"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-                            <input type="password" placeholder="Şifreniz" value="••••••••••••">
-                            <button class="input-eye-btn" title="Göster/Gizle">👁️</button>
-                        </div>
-                    </div>
-
-                    <!-- Sayı / Miktar Stepper -->
-                    <div class="demo-item">
-                        <span class="demo-tag">Miktar / Sayı Aracı (Stepper)</span>
-                        <div class="dynamic-glass-stepper">
-                            <button class="stepper-btn">-</button>
-                            <input type="text" value="1.500 LOT" readonly>
-                            <button class="stepper-btn">+</button>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- 3. BÖLÜM: KONTROL SEKMELERİ & ŞALTERLER (TABS, SWITCHES & BADGES) -->
-            <section class="component-card">
-                <div class="component-header">
-                    <h2>3. Cam Sekmeler, Rozetler & Şalterler (Tabs & Toggles)</h2>
-                    <p>Borsa kategori sekmeleri, durum rozetleri ve kaydırmalı butonlar.</p>
-                </div>
-
-                <div class="demo-grid-2">
-                    <!-- Kategori Sekmeleri -->
-                    <div class="demo-item">
-                        <span class="demo-tag">Borsa Kategori Sekmeleri (Tabs)</span>
-                        <div class="dynamic-glass-tabs">
-                            <button class="dynamic-tab active">Tüm Piyasalar</button>
-                            <button class="dynamic-tab">BIST</button>
-                            <button class="dynamic-tab">NASDAQ</button>
-                            <button class="dynamic-tab">Kripto</button>
-                        </div>
-                    </div>
-
-                    <!-- Rozetler & Durum Göstergeleri -->
-                    <div class="demo-item">
-                        <span class="demo-tag">Durum Rozetleri (Badges)</span>
-                        <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
-                            <span class="dynamic-badge positive">▲ +4.18%</span>
-                            <span class="dynamic-badge negative">▼ -1.25%</span>
-                            <span class="dynamic-badge neutral">CANLI 120 FPS</span>
-                            <span class="dynamic-badge pro">PRO VIP</span>
-                        </div>
-                    </div>
-
-                    <!-- iOS / VisionOS Şalterleri (Switches) -->
-                    <div class="demo-item">
-                        <span class="demo-tag">Sıvı Cam Şalterler (Switches)</span>
-                        <div style="display: flex; gap: 20px; align-items: center;">
-                            <label class="dynamic-glass-switch">
-                                <input type="checkbox" checked>
-                                <span class="switch-slider"></span>
-                                <span class="switch-text">Otonom Demo</span>
-                            </label>
-
-                            <label class="dynamic-glass-switch">
-                                <input type="checkbox">
-                                <span class="switch-slider"></span>
-                                <span class="switch-text">Gece Modu</span>
-                            </label>
-                        </div>
-                    </div>
-
-                    <!-- Segmented Kontrol -->
-                    <div class="demo-item">
-                        <span class="demo-tag">Periyot Seçici (Segmented Control)</span>
-                        <div class="dynamic-segmented-bar">
-                            <button class="seg-item active">1D</button>
-                            <button class="seg-item">1H</button>
-                            <button class="seg-item">15M</button>
-                            <button class="seg-item">5M</button>
-                            <button class="seg-item">1M</button>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- 4. BÖLÜM: ÇERÇEVE & KART MATERYALLERİ (GLASS CARDS) -->
-            <section class="component-card">
-                <div class="component-header">
-                    <h2>4. Sıvı Cam Çerçeve & Kart Panelleri (Glass Frames)</h2>
-                    <p>Çok katmanlı, ışık geçiren donanım hızlandırmalı çerçeve yüzeyleri.</p>
-                </div>
-
-                <div class="demo-grid-2">
-                    <!-- Örnek Varlık Kartı -->
-                    <div class="dynamic-glass-frame">
-                        <div class="frame-top-bar">
-                            <div class="frame-asset-meta">
-                                <div class="asset-logo-dot">₿</div>
-                                <div>
-                                    <h4 class="asset-title">BTC / USDT</h4>
-                                    <span class="asset-sub">Bitcoin · Binance Spot</span>
-                                </div>
-                            </div>
-                            <span class="dynamic-badge positive">+3.42%</span>
-                        </div>
-                        <div class="frame-body">
-                            <div class="stat-row">
-                                <span class="stat-lbl">Son Fiyat:</span>
-                                <span class="stat-val">$78,650.00</span>
-                            </div>
-                            <div class="stat-row">
-                                <span class="stat-lbl">24S Hacim:</span>
-                                <span class="stat-val">$4.28 Milyar</span>
-                            </div>
-                        </div>
-                        <button class="dynamic-glass-btn btn-md" style="margin-top: 12px;">Grafiği Aç</button>
-                    </div>
-
-                    <!-- Örnek Ayarlar Kartı -->
-                    <div class="dynamic-glass-frame">
-                        <div class="frame-top-bar">
-                            <h4 class="asset-title">Gösterge Ayarları</h4>
-                            <span class="dynamic-badge neutral">v2.4</span>
-                        </div>
-                        <div class="frame-body" style="gap: 12px;">
-                            <div class="dynamic-glass-input">
-                                <input type="text" placeholder="İndikatör Ara..." value="Ichimoku Cloud (9, 26, 52)">
-                            </div>
-                            <div style="display: flex; justify-content: space-between; align-items: center;">
-                                <span style="font-size: 13px; color: #cbd5e1;">Sinyal Çizgilerini Göster</span>
-                                <label class="dynamic-glass-switch"><input type="checkbox" checked><span class="switch-slider"></span></label>
-                            </div>
-                        </div>
-                        <button class="dynamic-glass-btn btn-md" style="margin-top: 12px;">Değişiklikleri Kaydet</button>
-                    </div>
-                </div>
-            </section>
-
-            <!-- 5. BÖLÜM: CANLI ÖNİZLEME: ANA SAYFA GİRİŞ PORTALI -->
-            <section class="component-card" id="showcase-section-login">
-                <div class="component-header">
-                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                        <div>
-                            <h2>5. Canlı Önizleme: Ana Sayfa Giriş Portalı (Auth Portal Card)</h2>
-                            <p>Ana sayfadaki Apple Liquid Glass giriş kartının ve butonlarının bağımsız canlı önizlemesi.</p>
-                        </div>
-                        <span class="dynamic-badge pro">CANLI ANA SAYFA</span>
-                    </div>
-                </div>
-
-                <div style="display: flex; justify-content: center; padding: 20px 0;">
-                    <!-- MERKEZİ GİRİŞ KARTI (HOMEPAGE REPLICA) -->
-                    <div class="portal-glass-card" style="width: 100%; max-width: 460px; margin: 0 auto;">
-                        
+                <!-- SAĞ: MERKEZİ GİRİŞ KARTI CANLI ÖNİZLEMESİ -->
+                <div class="studio-preview-box" style="display: flex; align-items: center; justify-content: center;">
+                    <div class="portal-glass-card" style="width: 100%; max-width: 440px; margin: 0 auto;">
                         <!-- PARİTE VE LOGO GÖSTERGESİ -->
                         <div style="background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 16px; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
                             <div style="display: flex; align-items: center; gap: 12px;">
@@ -903,7 +708,6 @@
 
                         <!-- GİRİŞ FORMU -->
                         <form style="display: flex; flex-direction: column; gap: 12px;" onsubmit="event.preventDefault();">
-                            <!-- E-POSTA KAPSÜLÜ -->
                             <div class="dynamic-glass-input">
                                 <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" class="input-icon">
                                     <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
@@ -912,7 +716,6 @@
                                 <input type="email" placeholder="E-posta adresiniz" value="pro.trader@tradingchart.com">
                             </div>
 
-                            <!-- ŞİFRE KAPSÜLÜ -->
                             <div class="dynamic-glass-input">
                                 <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" class="input-icon">
                                     <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
@@ -922,13 +725,11 @@
                                 <button class="input-eye-btn" type="button">👁️</button>
                             </div>
 
-                            <!-- GİRİŞ YAP BUTONU -->
                             <button type="submit" class="dynamic-glass-btn btn-lg" style="margin-top: 4px;">
                                 <span>Giriş Yap</span>
                                 <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
                             </button>
 
-                            <!-- ŞİFREMİ UNUTTUM & KAYIT LİNKLERİ -->
                             <div style="display: flex; justify-content: center; align-items: center; gap: 12px; margin: 4px 0 8px; font-size: 12px;">
                                 <a href="#" style="color: #94a3b8; text-decoration: none;" onclick="return false;">Şifremi Unuttum</a>
                                 <span style="color: #475569;">•</span>
@@ -936,14 +737,12 @@
                             </div>
                         </form>
 
-                        <!-- VEYA ÇİZGİSİ -->
                         <div style="display: flex; align-items: center; text-align: center; margin: 12px 0 16px; color: #64748b; font-size: 11px;">
                             <div style="flex: 1; border-bottom: 1px solid rgba(255,255,255,0.1);"></div>
                             <span style="padding: 0 10px; text-transform: uppercase; letter-spacing: 0.5px;">veya</span>
                             <div style="flex: 1; border-bottom: 1px solid rgba(255,255,255,0.1);"></div>
                         </div>
 
-                        <!-- GOOGLE İLE GİRİŞ BUTONU -->
                         <button class="dynamic-glass-btn btn-lg">
                             <svg viewBox="0 0 24 24" width="18" height="18" style="flex-shrink: 0;">
                                 <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -956,147 +755,203 @@
                         </button>
                     </div>
                 </div>
-            </section>
+            </div>
+        </section>
 
-            <!-- 6. BÖLÜM: CANLI ÖNİZLEME: PİYASALAR & VARLIK KEŞİF TABLOSU -->
-            <section class="component-card" id="showcase-section-markets">
-                <div class="component-header">
-                    <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
-                        <div>
-                            <h2>6. Canlı Önizleme: Piyasalar & Varlık Tahtası (Markets Table)</h2>
-                            <p>BIST, NASDAQ, Kripto ve Emtia varlıklarının dinamik sıvı cam tablosu ve trend grafikleri.</p>
+        <!-- ======================================================== -->
+        <!-- 📊 BÖLÜM 6: PİYASALAR & VARLIK KEŞİF TABLOSU             -->
+        <!-- ======================================================== -->
+        <section class="studio-section-card" id="section-markets-studio">
+            <div class="studio-section-header">
+                <div style="display: flex; align-items: center; justify-content: space-between; width: 100%; flex-wrap: wrap; gap: 10px;">
+                    <div>
+                        <h2>📊 6. Canlı Önizleme: Piyasalar & Varlık Tahtası (Markets Table Studio)</h2>
+                        <p>BIST, NASDAQ, Kripto ve Emtia varlıklarının dinamik sıvı cam tablosu ve trend grafikleri.</p>
+                    </div>
+                    <div class="dynamic-glass-input" style="padding: 7px 14px; min-width: 260px;">
+                        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" class="input-icon"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                        <input type="text" placeholder="Piyasalarda ara (THYAO, NVDA, BTC...)" id="mock-market-search" style="font-size: 12px;">
+                    </div>
+                </div>
+            </div>
+
+            <!-- KATEGORİ SEKMELERİ -->
+            <div class="dynamic-glass-tabs" style="margin-bottom: 16px;">
+                <button class="dynamic-tab active mock-tab-btn" data-market-tab="all">Tüm Piyasalar</button>
+                <button class="dynamic-tab mock-tab-btn" data-market-tab="bist">Borsa İstanbul (BIST)</button>
+                <button class="dynamic-tab mock-tab-btn" data-market-tab="stocks">ABD Hisseleri (NASDAQ / NYSE)</button>
+                <button class="dynamic-tab mock-tab-btn" data-market-tab="crypto">Kripto Paralar (Binance)</button>
+                <button class="dynamic-tab mock-tab-btn" data-market-tab="fx">Emtia & Forex</button>
+            </div>
+
+            <!-- SIVI CAM TABLOSU -->
+            <div class="dynamic-glass-frame" style="padding: 0; overflow: hidden;">
+                <div style="overflow-x: auto;">
+                    <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 13px;">
+                        <thead>
+                            <tr style="border-bottom: 1px solid rgba(255,255,255,0.10); background: rgba(0,0,0,0.25);">
+                                <th style="padding: 12px 16px; width: 40px; text-align: center; color: #64748b; font-size: 11px; text-transform: uppercase;">#</th>
+                                <th style="padding: 12px 16px; color: #94a3b8; font-size: 11px; text-transform: uppercase;">Varlık / Şirket</th>
+                                <th style="padding: 12px 16px; text-align: right; color: #94a3b8; font-size: 11px; text-transform: uppercase;">Fiyat</th>
+                                <th style="padding: 12px 16px; text-align: right; color: #94a3b8; font-size: 11px; text-transform: uppercase;">24s Değişim</th>
+                                <th style="padding: 12px 16px; text-align: right; color: #94a3b8; font-size: 11px; text-transform: uppercase;">24s Hacim</th>
+                                <th style="padding: 12px 16px; text-align: center; width: 140px; color: #94a3b8; font-size: 11px; text-transform: uppercase;">7G Trend</th>
+                                <th style="padding: 12px 16px; text-align: right; width: 110px; color: #94a3b8; font-size: 11px; text-transform: uppercase;">Aksiyon</th>
+                            </tr>
+                        </thead>
+                        <tbody id="mock-market-tbody">
+                            <!-- JS ile doldurulacak -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ======================================================== -->
+        <!-- 🌌 BÖLÜM 7: AURORA IŞIKLARI & GALAKSİ MOTORU STÜDYOSU      -->
+        <!-- ======================================================== -->
+        <section class="studio-section-card" id="section-aurora-studio">
+            <div class="studio-section-header">
+                <div>
+                    <h2>🌌 7. Aurora Işıkları & Galaksi Motoru (Dynamic Aurora Stage Studio)</h2>
+                    <p>Fizik tabanlı ışık kürelerinin hız, yörünge eğimi, odak modu ve renk skalası ayarları.</p>
+                </div>
+                <button class="reset-btn" id="reset-aurora-btn">Varsayılana Dön</button>
+            </div>
+
+            <div class="studio-split-layout">
+                <!-- SOL: AURORA AYARLARI -->
+                <div class="studio-controls-box">
+                    <h3 class="controls-box-title">⚙️ Aurora Işık Parametreleri</h3>
+
+                    <div class="control-group">
+                        <label class="control-label">Hareket & Yörünge Modu</label>
+                        <div class="motion-mode-grid">
+                            <button class="motion-btn active" data-motion="galaxy">🌌 Galaksi Sarmal</button>
+                            <button class="motion-btn" data-motion="pulse">💫 Kozmik Nabız</button>
+                            <button class="motion-btn" data-motion="wave">🌊 Kuantum Dalga</button>
+                            <button class="motion-btn" data-motion="vortex">🌀 Derin Girdap</button>
                         </div>
-                        <div class="dynamic-glass-input" style="padding: 7px 14px; min-width: 260px;">
-                            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" class="input-icon"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                            <input type="text" placeholder="Piyasalarda ara (THYAO, NVDA, BTC...)" id="mock-market-search" style="font-size: 12px;">
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label">Dönüş Odak Noktası (Pivot)</label>
+                        <div class="pivot-mode-grid">
+                            <button class="pivot-btn active" data-pivot="center">Merkez</button>
+                            <button class="pivot-btn" data-pivot="mouse">İmleç</button>
+                            <button class="pivot-btn" data-pivot="topleft">Sol Üst</button>
+                            <button class="pivot-btn" data-pivot="bottomright">Sağ Alt</button>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <div class="control-label-row">
+                            <span>Dönüş / Dalga Hızı</span>
+                            <span class="control-value" id="val-aurora-speed">12s (Akıcı)</span>
+                        </div>
+                        <input type="range" id="aurora-speed" min="2" max="30" step="1" value="12" class="lab-slider">
+                    </div>
+
+                    <div class="control-group">
+                        <div class="control-label-row">
+                            <span>Galaksi Yarıçapı</span>
+                            <span class="control-value" id="val-galaxy-radius">280px</span>
+                        </div>
+                        <input type="range" id="galaxy-radius" min="50" max="600" step="10" value="280" class="lab-slider">
+                    </div>
+
+                    <div class="control-group">
+                        <div class="control-label-row">
+                            <span>Yörünge Eğim Açısı</span>
+                            <span class="control-value" id="val-galaxy-tilt">35° (Uzay Diski)</span>
+                        </div>
+                        <input type="range" id="galaxy-tilt" min="0" max="75" step="5" value="35" class="lab-slider">
+                    </div>
+
+                    <div class="control-group">
+                        <div class="control-label-row">
+                            <span>Işık Küre Ölçeği</span>
+                            <span class="control-value" id="val-aurora-scale">1.2x</span>
+                        </div>
+                        <input type="range" id="aurora-scale" min="0.5" max="2.5" step="0.1" value="1.2" class="lab-slider">
+                    </div>
+
+                    <div class="control-group">
+                        <div class="control-label-row">
+                            <span>Işık Yoğunluğu</span>
+                            <span class="control-value" id="val-aurora-intensity">65%</span>
+                        </div>
+                        <input type="range" id="aurora-intensity" min="10" max="100" step="5" value="65" class="lab-slider">
+                    </div>
+
+                    <div class="control-group">
+                        <div class="control-label-row">
+                            <span>Işık Difüzyon Bulanıklığı</span>
+                            <span class="control-value" id="val-aurora-blur">80px</span>
+                        </div>
+                        <input type="range" id="aurora-blur" min="20" max="150" step="5" value="80" class="lab-slider">
+                    </div>
+
+                    <div class="control-group" style="flex-direction: row; justify-content: space-between; align-items: center;">
+                        <span class="control-label" style="margin: 0;">Canlı Fare Takibi</span>
+                        <input type="checkbox" id="aurora-mouse-follow" checked style="accent-color: #3b82f6; width: 16px; height: 16px; cursor: pointer;">
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label">Aurora Renk Temaları</label>
+                        <div class="aurora-theme-grid">
+                            <button class="aurora-theme-pill active" data-aurora-theme="cosmic">Kozmik Nebula</button>
+                            <button class="aurora-theme-pill" data-aurora-theme="emerald">Kuzey Işıkları</button>
+                            <button class="aurora-theme-pill" data-aurora-theme="cyberpunk">Siberpunk</button>
+                            <button class="aurora-theme-pill" data-aurora-theme="frost">Kutup Buzulu</button>
                         </div>
                     </div>
                 </div>
 
-                <!-- KATEGORİ SEKMELERİ -->
-                <div class="dynamic-glass-tabs" style="margin-bottom: 16px;">
-                    <button class="dynamic-tab active mock-tab-btn" data-market-tab="all">Tüm Piyasalar</button>
-                    <button class="dynamic-tab mock-tab-btn" data-market-tab="bist">Borsa İstanbul (BIST)</button>
-                    <button class="dynamic-tab mock-tab-btn" data-market-tab="stocks">ABD Hisseleri (NASDAQ / NYSE)</button>
-                    <button class="dynamic-tab mock-tab-btn" data-market-tab="crypto">Kripto Paralar (Binance)</button>
-                    <button class="dynamic-tab mock-tab-btn" data-market-tab="fx">Emtia & Forex</button>
-                </div>
-
-                <!-- SIVI CAM TABLOSU -->
-                <div class="dynamic-glass-frame" style="padding: 0; overflow: hidden;">
-                    <div style="overflow-x: auto;">
-                        <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 13px;">
-                            <thead>
-                                <tr style="border-bottom: 1px solid rgba(255,255,255,0.10); background: rgba(0,0,0,0.25);">
-                                    <th style="padding: 12px 16px; width: 40px; text-align: center; color: #64748b; font-size: 11px; text-transform: uppercase;">#</th>
-                                    <th style="padding: 12px 16px; color: #94a3b8; font-size: 11px; text-transform: uppercase;">Varlık / Şirket</th>
-                                    <th style="padding: 12px 16px; text-align: right; color: #94a3b8; font-size: 11px; text-transform: uppercase;">Fiyat</th>
-                                    <th style="padding: 12px 16px; text-align: right; color: #94a3b8; font-size: 11px; text-transform: uppercase;">24s Değişim</th>
-                                    <th style="padding: 12px 16px; text-align: right; color: #94a3b8; font-size: 11px; text-transform: uppercase;">24s Hacim</th>
-                                    <th style="padding: 12px 16px; text-align: center; width: 140px; color: #94a3b8; font-size: 11px; text-transform: uppercase;">7G Trend</th>
-                                    <th style="padding: 12px 16px; text-align: right; width: 110px; color: #94a3b8; font-size: 11px; text-transform: uppercase;">Aksiyon</th>
-                                </tr>
-                            </thead>
-                            <tbody id="mock-market-tbody">
-                                <!-- Satır 1: THYAO -->
-                                <tr style="border-bottom: 1px solid rgba(255,255,255,0.06); transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.03)'" onmouseout="this.style.background='transparent'">
-                                    <td style="padding: 14px 16px; text-align: center; color: #64748b; font-weight: 600;">1</td>
-                                    <td style="padding: 14px 16px;">
-                                        <div style="display: flex; align-items: center; gap: 10px;">
-                                            <div style="width: 32px; height: 32px; border-radius: 50%; background: #dc2626; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 13px;">THY</div>
-                                            <div>
-                                                <div style="font-weight: 700; color: #fff;">THYAO</div>
-                                                <div style="font-size: 11px; color: #94a3b8;">Türk Hava Yolları · <span style="color: #60a5fa;">BIST</span></div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td style="padding: 14px 16px; text-align: right; font-weight: 700; color: #fff; font-family: var(--font-mono);">₺314.50</td>
-                                    <td style="padding: 14px 16px; text-align: right;"><span class="dynamic-badge positive">▲ +3.75%</span></td>
-                                    <td style="padding: 14px 16px; text-align: right; color: #cbd5e1; font-weight: 600;">₺4.82 Milyar</td>
-                                    <td style="padding: 14px 16px; text-align: center;">
-                                        <svg width="120" height="28" viewBox="0 0 120 28" fill="none"><path d="M0 24 L20 20 L40 22 L60 14 L80 16 L100 8 L120 4" stroke="#10b981" stroke-width="2" stroke-linecap="round"/><path d="M0 24 L20 20 L40 22 L60 14 L80 16 L100 8 L120 4 V 28 H 0 Z" fill="rgba(16, 185, 129, 0.12)"/></svg>
-                                    </td>
-                                    <td style="padding: 14px 16px; text-align: right;">
-                                        <button class="dynamic-glass-btn btn-sm"><span>İncele</span> <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></button>
-                                    </td>
-                                </tr>
-
-                                <!-- Satır 2: BTC/USDT -->
-                                <tr style="border-bottom: 1px solid rgba(255,255,255,0.06); transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.03)'" onmouseout="this.style.background='transparent'">
-                                    <td style="padding: 14px 16px; text-align: center; color: #64748b; font-weight: 600;">2</td>
-                                    <td style="padding: 14px 16px;">
-                                        <div style="display: flex; align-items: center; gap: 10px;">
-                                            <div style="width: 32px; height: 32px; border-radius: 50%; background: #f59e0b; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 15px;">₿</div>
-                                            <div>
-                                                <div style="font-weight: 700; color: #fff;">BTC / USDT</div>
-                                                <div style="font-size: 11px; color: #94a3b8;">Bitcoin · <span style="color: #fbbf24;">Binance</span></div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td style="padding: 14px 16px; text-align: right; font-weight: 700; color: #fff; font-family: var(--font-mono);">$78,650.00</td>
-                                    <td style="padding: 14px 16px; text-align: right;"><span class="dynamic-badge positive">▲ +4.18%</span></td>
-                                    <td style="padding: 14px 16px; text-align: right; color: #cbd5e1; font-weight: 600;">$24.5 Milyar</td>
-                                    <td style="padding: 14px 16px; text-align: center;">
-                                        <svg width="120" height="28" viewBox="0 0 120 28" fill="none"><path d="M0 22 L20 18 L40 19 L60 12 L80 15 L100 6 L120 2" stroke="#10b981" stroke-width="2" stroke-linecap="round"/><path d="M0 22 L20 18 L40 19 L60 12 L80 15 L100 6 L120 2 V 28 H 0 Z" fill="rgba(16, 185, 129, 0.12)"/></svg>
-                                    </td>
-                                    <td style="padding: 14px 16px; text-align: right;">
-                                        <button class="dynamic-glass-btn btn-sm"><span>İncele</span> <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></button>
-                                    </td>
-                                </tr>
-
-                                <!-- Satır 3: NVDA -->
-                                <tr style="border-bottom: 1px solid rgba(255,255,255,0.06); transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.03)'" onmouseout="this.style.background='transparent'">
-                                    <td style="padding: 14px 16px; text-align: center; color: #64748b; font-weight: 600;">3</td>
-                                    <td style="padding: 14px 16px;">
-                                        <div style="display: flex; align-items: center; gap: 10px;">
-                                            <div style="width: 32px; height: 32px; border-radius: 50%; background: #16a34a; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 11px;">NVDA</div>
-                                            <div>
-                                                <div style="font-weight: 700; color: #fff;">NVDA</div>
-                                                <div style="font-size: 11px; color: #94a3b8;">NVIDIA Corp · <span style="color: #4ade80;">NASDAQ</span></div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td style="padding: 14px 16px; text-align: right; font-weight: 700; color: #fff; font-family: var(--font-mono);">$142.80</td>
-                                    <td style="padding: 14px 16px; text-align: right;"><span class="dynamic-badge positive">▲ +2.80%</span></td>
-                                    <td style="padding: 14px 16px; text-align: right; color: #cbd5e1; font-weight: 600;">$18.2 Milyar</td>
-                                    <td style="padding: 14px 16px; text-align: center;">
-                                        <svg width="120" height="28" viewBox="0 0 120 28" fill="none"><path d="M0 20 L25 16 L50 18 L75 10 L100 12 L120 5" stroke="#10b981" stroke-width="2" stroke-linecap="round"/><path d="M0 20 L25 16 L50 18 L75 10 L100 12 L120 5 V 28 H 0 Z" fill="rgba(16, 185, 129, 0.12)"/></svg>
-                                    </td>
-                                    <td style="padding: 14px 16px; text-align: right;">
-                                        <button class="dynamic-glass-btn btn-sm"><span>İncele</span> <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></button>
-                                    </td>
-                                </tr>
-
-                                <!-- Satır 4: ONS ALTIN -->
-                                <tr style="transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.03)'" onmouseout="this.style.background='transparent'">
-                                    <td style="padding: 14px 16px; text-align: center; color: #64748b; font-weight: 600;">4</td>
-                                    <td style="padding: 14px 16px;">
-                                        <div style="display: flex; align-items: center; gap: 10px;">
-                                            <div style="width: 32px; height: 32px; border-radius: 50%; background: #d97706; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 12px;">AU</div>
-                                            <div>
-                                                <div style="font-weight: 700; color: #fff;">XAU / USD</div>
-                                                <div style="font-size: 11px; color: #94a3b8;">Ons Altın Spot · <span style="color: #fbbf24;">Forex / Emtia</span></div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td style="padding: 14px 16px; text-align: right; font-weight: 700; color: #fff; font-family: var(--font-mono);">$2,748.60</td>
-                                    <td style="padding: 14px 16px; text-align: right;"><span class="dynamic-badge negative">▼ -0.42%</span></td>
-                                    <td style="padding: 14px 16px; text-align: right; color: #cbd5e1; font-weight: 600;">$9.45 Milyar</td>
-                                    <td style="padding: 14px 16px; text-align: center;">
-                                        <svg width="120" height="28" viewBox="0 0 120 28" fill="none"><path d="M0 6 L25 8 L50 14 L75 12 L100 20 L120 22" stroke="#ef4444" stroke-width="2" stroke-linecap="round"/><path d="M0 6 L25 8 L50 14 L75 12 L100 20 L120 22 V 28 H 0 Z" fill="rgba(239, 68, 68, 0.12)"/></svg>
-                                    </td>
-                                    <td style="padding: 14px 16px; text-align: right;">
-                                        <button class="dynamic-glass-btn btn-sm"><span>İncele</span> <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                <!-- SAĞ: BİLGİ & SİMÜLASYON KUTUSU -->
+                <div class="studio-preview-box">
+                    <h3 class="preview-box-title">🌌 Canlı Işık Sahnesi Açıklaması</h3>
+                    <div style="background: rgba(0,0,0,0.30); padding: 16px; border-radius: 14px; border: 1px solid rgba(255,255,255,0.08); color: #cbd5e1; font-size: 13px; line-height: 1.6;">
+                        <p>Aurora Işıkları motoru, arka plandaki 4 farklı optik küreyi GPU donanım hızlandırmalı 3D matris yörüngesinde döndürür.</p>
+                        <p style="margin-top: 10px;">Ön plandaki tüm Sıvı Cam butonları, girdi kapsülleri ve konteynır kartları bu dönen ışıkları gerçek zamanlı olarak kırıp yansıtır.</p>
                     </div>
                 </div>
-            </section>
+            </div>
+        </section>
 
-        </main>
-    </div>
+        <!-- ======================================================== -->
+        <!-- 💾 BÖLÜM 8: KAYITLI ŞABLONLAR & ÇEREZ ARŞİVİ              -->
+        <!-- ======================================================== -->
+        <section class="studio-section-card" id="section-saved-studio">
+            <div class="studio-section-header">
+                <div>
+                    <h2>💾 8. Kayıtlı Şablonlar & Çerez Arşivi (Saved Presets & Storage)</h2>
+                    <p>Çerezlere veya JSON dosyalarına kaydedilmiş tüm modüler tasarım şablonlarınız.</p>
+                </div>
+                <div style="display: flex; gap: 8px;">
+                    <label class="lab-secondary-action-btn" style="cursor: pointer; text-align: center;">
+                        📂 JSON Yükle
+                        <input type="file" id="import-json-input" accept=".json" style="display: none;">
+                    </label>
+                    <button class="lab-secondary-action-btn" id="export-all-json-btn" title="Tüm Kayıtları Tek JSON Dosyası Olarak İndir">
+                        📦 Tümünü İndir
+                    </button>
+                    <button class="reset-btn" id="reset-cookie-seq-btn" title="Kayıt Sayacını ve Çerezleri Sıfırla">Sayaç Sıfırla</button>
+                </div>
+            </div>
+
+            <div class="saved-presets-container" style="max-height: 500px;">
+                <div class="control-label-row" style="margin-bottom: 8px;">
+                    <span>Çerezlerdeki Şablonlar & Notlar</span>
+                    <span class="control-value" id="saved-presets-count">0 Kayıt</span>
+                </div>
+                <div class="saved-presets-list" id="saved-presets-list">
+                    <!-- JS ile doldurulacak -->
+                </div>
+            </div>
+        </section>
+
+    </main>
 
     <!-- SCRIPTS -->
     <script src="./js/glass-lab.js"></script>

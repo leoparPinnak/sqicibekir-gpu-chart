@@ -444,23 +444,175 @@ body.lab-body {
 }
 
 /* ============================================================ */
-/* 🏗️ ANA LAYOUT: SOL KONTROL / SAĞ BİLEŞENLER                  */
+/* 🌟 HIZLI SUB-NAV VE İN-SİTU STÜDYO LAYOUT                     */
 /* ============================================================ */
-.lab-main-layout {
-    display: grid;
-    grid-template-columns: 360px 1fr;
-    gap: 28px;
+.header-preset-bar {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    border-radius: 9999px;
+    padding: 3px 6px;
+}
+
+.studio-subnav-dock {
+    position: sticky;
+    top: 72px;
+    z-index: 40;
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    padding: 10px 24px;
+    background: rgba(10, 15, 28, 0.82);
+    backdrop-filter: blur(20px) saturate(190%);
+    -webkit-backdrop-filter: blur(20px) saturate(190%);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.10);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.40);
+    scrollbar-width: none;
+}
+
+.studio-subnav-dock::-webkit-scrollbar {
+    display: none;
+}
+
+.subnav-pill {
+    padding: 6px 14px;
+    font-size: 11.5px;
+    font-weight: 700;
+    border-radius: 9999px;
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    background: rgba(255, 255, 255, 0.04);
+    color: #94a3b8;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.subnav-pill:hover {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.10);
+    border-color: rgba(255, 255, 255, 0.25);
+    transform: translateY(-1px);
+}
+
+.subnav-pill.active {
+    background: linear-gradient(135deg, rgba(37, 99, 235, 0.45) 0%, rgba(29, 78, 216, 0.65) 100%);
+    border-color: rgba(59, 130, 246, 0.60);
+    border-top: 1px solid #93c5fd;
+    color: #ffffff;
+    box-shadow: 0 0 16px rgba(37, 99, 235, 0.40);
+}
+
+.studio-main-container {
     max-width: 1540px;
     margin: 0 auto;
-    padding: 28px 24px 80px 24px;
+    padding: 24px 24px 100px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
     position: relative;
     z-index: 10;
 }
 
-@media (max-width: 1024px) {
-    .lab-main-layout {
+.studio-section-card {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.005) 100%), rgba(10, 15, 28, var(--card-glass-opacity, 0.20));
+    backdrop-filter: blur(var(--card-glass-blur, 0px)) saturate(200%);
+    -webkit-backdrop-filter: blur(var(--card-glass-blur, 0px)) saturate(200%);
+    border: var(--card-glass-specular-width, 1.5px) solid rgba(255, 255, 255, 0.12);
+    border-top: var(--card-glass-specular-width, 1.5px) solid rgba(255, 255, 255, var(--card-glass-specular-alpha, 0.80));
+    border-radius: var(--card-glass-radius, 24px);
+    padding: 28px;
+    box-shadow: 
+        inset 0 2px 8px rgba(255, 255, 255, var(--card-glass-inner-glow-alpha, 0.40)),
+        0 20px 50px rgba(0, 0, 0, 0.45);
+    transition: all 0.25s ease;
+}
+
+.studio-section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.studio-section-header h2 {
+    font-size: 19px;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.3px;
+    margin-bottom: 4px;
+}
+
+.studio-section-header p {
+    font-size: 13px;
+    color: #94a3b8;
+}
+
+.comp-badge-tag {
+    font-size: 11px;
+    font-weight: 700;
+    font-family: var(--font-mono);
+    color: #60a5fa;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(59, 130, 246, 0.30);
+    padding: 4px 10px;
+    border-radius: 6px;
+}
+
+.studio-split-layout {
+    display: grid;
+    grid-template-columns: 380px 1fr;
+    gap: 28px;
+    align-items: start;
+}
+
+@media (max-width: 1100px) {
+    .studio-split-layout {
         grid-template-columns: 1fr;
     }
+}
+
+.studio-controls-box {
+    background: rgba(0, 0, 0, 0.30);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-top: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 18px;
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.controls-box-title {
+    font-size: 12.5px;
+    font-weight: 800;
+    color: #e2e8f0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+}
+
+.studio-preview-box {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 18px;
+    padding: 24px;
+    min-height: 100%;
+}
+
+.preview-box-title {
+    font-size: 12.5px;
+    font-weight: 800;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 16px;
 }
 
 /* ============================================================ */
