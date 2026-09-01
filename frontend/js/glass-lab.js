@@ -1125,7 +1125,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // 🕯️ 60 FPS GPU-HIZLANDIRMALI CANLI MUM GRAFİĞİ ANİMASYON MOTORU
+    // 🕯️ 60 FPS GPU-HIZLANDIRMALI CANLI MUM GRAFİĞİ & SİNEMATİK OTO-ZOOM MOTORU
     function startLiveCandleChartEngine() {
         const canvas = document.getElementById('lab-live-chart-canvas');
         if (!canvas) return;
@@ -1143,15 +1143,15 @@ document.addEventListener('DOMContentLoaded', () => {
         window.addEventListener('resize', resize);
         resize();
 
-        // 100 Canlı Mum Üret
+        // 120 Canlı Mum Havuzu
         const candles = [];
         let curPrice = 78650;
-        for (let i = 0; i < 90; i++) {
-            const delta = (Math.random() - 0.48) * 120;
+        for (let i = 0; i < 110; i++) {
+            const delta = (Math.random() - 0.48) * 110;
             const open = curPrice;
             const close = open + delta;
-            const high = Math.max(open, close) + Math.random() * 60;
-            const low = Math.min(open, close) - Math.random() * 60;
+            const high = Math.max(open, close) + Math.random() * 55;
+            const low = Math.min(open, close) - Math.random() * 55;
             const vol = Math.random() * 40 + 10;
             candles.push({ open, close, high, low, vol });
             curPrice = close;
@@ -1159,14 +1159,62 @@ document.addEventListener('DOMContentLoaded', () => {
 
         let scrollOffset = 0;
         let tickCounter = 0;
-        const candleWidth = 14;
-        const candleGap = 6;
-        const totalStep = candleWidth + candleGap;
+        let phaseTimer = 0;
+
+        // 🎥 Sinematik Kamera & Akıllı Zoom / Hız Evreleri
+        let currentZoom = 1.0;
+        let targetZoom = 1.0;
+        let currentScrollSpeed = 0.50;
+        let targetScrollSpeed = 0.50;
+        let smoothedMinP = 78000;
+        let smoothedMaxP = 79500;
+
+        const zoomModes = [
+            { zoom: 1.00, speed: 0.50, label: "Standart Akış" },
+            { zoom: 1.35, speed: 0.05, label: "Fiyat Aksiyonuna Yakınlaş (Zoom In & Yavaşla)" },
+            { zoom: 0.82, speed: 0.32, label: "Makro Genel Bakış (Zoom Out Panorama)" },
+            { zoom: 1.20, speed: 0.12, label: "Kırılım Odağı (Yumuşak Zoom)" },
+            { zoom: 0.92, speed: 0.58, label: "Trend Takip Akışı" }
+        ];
+        let modeIndex = 0;
 
         function renderFrame() {
             ctx.clearRect(0, 0, width, height);
 
-            // 1. Grid Çizgileri
+            // 1. Sinematik Kamera Evre Değişimi (Her ~7-9 saniyede bir yumuşakça evre değiştir)
+            phaseTimer++;
+            if (phaseTimer % 480 === 0) {
+                modeIndex = (modeIndex + 1) % zoomModes.length;
+                targetZoom = zoomModes[modeIndex].zoom;
+                targetScrollSpeed = zoomModes[modeIndex].speed;
+            }
+
+            // Ultra Yumuşak İnterpolasyon (Smooth Damping)
+            currentZoom += (targetZoom - currentZoom) * 0.007;
+            currentScrollSpeed += (targetScrollSpeed - currentScrollSpeed) * 0.012;
+
+            const baseCandleWidth = 14;
+            const baseCandleGap = 6;
+            const candleWidth = baseCandleWidth * currentZoom;
+            const candleGap = baseCandleGap * currentZoom;
+            const totalStep = candleWidth + candleGap;
+
+            // 2. Fiyat Min / Max Hesapla & Yumuşak Ölçeklendir
+            let minP = Infinity, maxP = -Infinity;
+            for (let c of candles) {
+                if (c.low < minP) minP = c.low;
+                if (c.high > maxP) maxP = c.high;
+            }
+            const pad = (maxP - minP) * 0.16 || 100;
+            const targetMinP = minP - pad;
+            const targetMaxP = maxP + pad;
+
+            smoothedMinP += (targetMinP - smoothedMinP) * 0.035;
+            smoothedMaxP += (targetMaxP - smoothedMaxP) * 0.035;
+
+            const getY = (val) => height - ((val - smoothedMinP) / (smoothedMaxP - smoothedMinP)) * (height * 0.80) - (height * 0.09);
+
+            // 3. Arka Plan Grid Çizgileri
             ctx.strokeStyle = 'rgba(255, 255, 255, 0.04)';
             ctx.lineWidth = 1;
             const gridGapY = height / 10;
@@ -1177,7 +1225,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 ctx.stroke();
             }
 
-            const gridGapX = 140;
+            const gridGapX = 140 * currentZoom;
             for (let x = (width - (scrollOffset % gridGapX)); x > 0; x -= gridGapX) {
                 ctx.beginPath();
                 ctx.moveTo(x, 0);
@@ -1185,19 +1233,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 ctx.stroke();
             }
 
-            // 2. Fiyat Min / Max Hesapla
-            let minP = Infinity, maxP = -Infinity;
-            for (let c of candles) {
-                if (c.low < minP) minP = c.low;
-                if (c.high > maxP) maxP = c.high;
-            }
-            const pad = (maxP - minP) * 0.15 || 100;
-            minP -= pad;
-            maxP += pad;
-
-            const getY = (val) => height - ((val - minP) / (maxP - minP)) * (height * 0.82) - (height * 0.08);
-
-            // 3. EMA 20 & EMA 50 Eğrileri
+            // 4. EMA 20 & EMA 50 Eğrileri
             const ema20Points = [];
             const ema50Points = [];
             let ema20 = candles[0].close, ema50 = candles[0].close;
@@ -1220,28 +1256,28 @@ document.addEventListener('DOMContentLoaded', () => {
                 ctx.closePath();
                 const grad = ctx.createLinearGradient(0, 0, 0, height);
                 grad.addColorStop(0, 'rgba(16, 185, 129, 0.15)');
-                grad.addColorStop(1, 'rgba(59, 130, 246, 0.06)');
+                grad.addColorStop(1, 'rgba(59, 130, 246, 0.05)');
                 ctx.fillStyle = grad;
                 ctx.fill();
             }
 
             // EMA Çizgileri
             ctx.strokeStyle = '#00f0ff';
-            ctx.lineWidth = 2;
+            ctx.lineWidth = Math.max(1.5, 2 * currentZoom);
             ctx.beginPath();
             ema20Points.forEach((p, i) => i === 0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y));
             ctx.stroke();
 
             ctx.strokeStyle = '#a855f7';
-            ctx.lineWidth = 1.5;
+            ctx.lineWidth = Math.max(1.2, 1.6 * currentZoom);
             ctx.beginPath();
             ema50Points.forEach((p, i) => i === 0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y));
             ctx.stroke();
 
-            // 4. Mum Çubukları & Hacim Barları
+            // 5. Mum Çubukları & Hacim Barları
             candles.forEach((c, idx) => {
                 const x = width - (candles.length - idx) * totalStep + scrollOffset;
-                if (x < -50 || x > width + 50) return;
+                if (x < -60 || x > width + 60) return;
 
                 const isUp = c.close >= c.open;
                 const color = isUp ? '#10b981' : '#ef4444';
@@ -1252,7 +1288,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 // Fitil
                 ctx.strokeStyle = color;
-                ctx.lineWidth = 1.5;
+                ctx.lineWidth = Math.max(1.2, 1.6 * currentZoom);
                 ctx.beginPath();
                 ctx.moveTo(x + candleWidth / 2, highY);
                 ctx.lineTo(x + candleWidth / 2, lowY);
@@ -1263,12 +1299,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 ctx.fillRect(x, bodyY, candleWidth, bodyH);
 
                 // Hacim Sütunu
-                const volH = (c.vol / 50) * 60;
+                const volH = (c.vol / 50) * 60 * currentZoom;
                 ctx.fillStyle = isUp ? 'rgba(16, 185, 129, 0.25)' : 'rgba(239, 68, 68, 0.25)';
                 ctx.fillRect(x, height - volH - 10, candleWidth, volH);
             });
 
-            // 5. Lazer Canlı Fiyat Çizgisi
+            // 6. Lazer Canlı Fiyat Çizgisi
             const lastCandle = candles[candles.length - 1];
             const lastY = getY(lastCandle.close);
             const isUp = lastCandle.close >= lastCandle.open;
@@ -1284,19 +1320,20 @@ document.addEventListener('DOMContentLoaded', () => {
             ctx.setLineDash([]);
 
             // Fiyat Rozeti
+            const badgeW = 95 * Math.min(1.15, Math.max(0.9, currentZoom));
             ctx.fillStyle = pColor;
-            ctx.fillRect(width - 95, lastY - 11, 95, 22);
+            ctx.fillRect(width - badgeW, lastY - 11, badgeW, 22);
             ctx.fillStyle = '#ffffff';
             ctx.font = 'bold 11px JetBrains Mono, monospace';
             ctx.textAlign = 'center';
-            ctx.fillText(`$${lastCandle.close.toFixed(2)}`, width - 48, lastY + 4);
+            ctx.fillText(`$${lastCandle.close.toFixed(2)}`, width - (badgeW / 2), lastY + 4);
 
-            // 60 FPS Akıcı Kaydırma
-            scrollOffset -= 0.65;
+            // 7. Akıllı Panning & Kaydırma (Sabit değil, dinamik hız kontrollü)
+            scrollOffset -= currentScrollSpeed;
             if (Math.abs(scrollOffset) >= totalStep) {
                 scrollOffset += totalStep;
                 const prev = candles[candles.length - 1];
-                const delta = (Math.random() - 0.48) * 90;
+                const delta = (Math.random() - 0.48) * 85;
                 const open = prev.close;
                 const close = open + delta;
                 candles.push({
@@ -1306,10 +1343,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     low: Math.min(open, close) - Math.random() * 40,
                     vol: Math.random() * 40 + 10
                 });
-                if (candles.length > 130) candles.shift();
+                if (candles.length > 140) candles.shift();
             }
 
-            // Canlı titreşen son mum hareketi
+            // Canlı titreşen son mum mikro-hareketi
             tickCounter++;
             if (tickCounter % 3 === 0) {
                 const last = candles[candles.length - 1];
