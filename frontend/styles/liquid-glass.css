@@ -310,13 +310,14 @@ body.portal-locked, html.portal-locked {
 
 /* APPLE LIQUID GLASS FLOATING CARD */
 .portal-glass-card {
+    position: relative;
+    overflow: hidden;
     width: 100%;
     max-width: 480px;
     background: rgba(15, 23, 42, 0.78);
     backdrop-filter: blur(36px) saturate(200%) contrast(105%);
     -webkit-backdrop-filter: blur(36px) saturate(200%) contrast(105%);
     border: 1px solid rgba(255, 255, 255, 0.16);
-    border-top: 1px solid rgba(255, 255, 255, 0.35);
     border-radius: 24px;
     padding: 24px;
     box-shadow: 
@@ -413,7 +414,8 @@ body.portal-locked, html.portal-locked {
 /* 💎 İpeksi Elmas Işıltısı Katmanı */
 .portal-card-btn::before,
 .portal-auth-submit-btn::before,
-.portal-input-capsule::before {
+.portal-input-capsule::before,
+.portal-glass-card::before {
     content: '';
     position: absolute;
     inset: 0;

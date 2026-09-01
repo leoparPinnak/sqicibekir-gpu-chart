@@ -428,13 +428,35 @@ document.addEventListener('DOMContentLoaded', () => {
 
 /* 🖼️ 4. ANA KONTEYNIR & KART ÇERÇEVESİ (CONTAINER CARDS) */
 .component-card {
+  position: relative;
+  overflow: hidden;
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.005) 100%), rgba(10, 15, 28, ${(cardOp / 100).toFixed(2)});
   backdrop-filter: blur(${cardBl}px) saturate(200%);
   -webkit-backdrop-filter: blur(${cardBl}px) saturate(200%);
   border: ${cardSpWidth}px solid rgba(255, 255, 255, 0.12);
-  border-top: ${cardSpWidth}px solid rgba(255, 255, 255, ${cardSpecAlpha});
   border-radius: ${cardRd}px;
   box-shadow: inset 0 2px 8px rgba(255, 255, 255, ${cardIgAlpha}), 0 20px 50px rgba(0, 0, 0, 0.45);
+}
+
+.component-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: ${cardSpWidth}px;
+  background: radial-gradient(
+    ellipse ${cardTpr}% 70% at 50% -5%,
+    rgba(255, 255, 255, ${cardSpecAlpha}) 0%,
+    rgba(255, 255, 255, ${(cardSpecAlpha * 0.70).toFixed(2)}) 25%,
+    rgba(255, 255, 255, ${(cardSpecAlpha * 0.20).toFixed(2)}) 60%,
+    rgba(255, 255, 255, 0.02) 85%,
+    transparent 100%
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  z-index: 2;
 }`;
         cssOutputPreview.textContent = cssCode;
     }

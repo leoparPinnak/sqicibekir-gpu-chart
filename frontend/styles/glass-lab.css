@@ -520,17 +520,43 @@ body.lab-body {
 }
 
 .studio-section-card {
+    position: relative;
+    overflow: hidden;
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.005) 100%), rgba(10, 15, 28, var(--card-glass-opacity, 0.20));
     backdrop-filter: blur(var(--card-glass-blur, 0px)) saturate(200%);
     -webkit-backdrop-filter: blur(var(--card-glass-blur, 0px)) saturate(200%);
-    border: var(--card-glass-specular-width, 1.5px) solid rgba(255, 255, 255, 0.12);
-    border-top: var(--card-glass-specular-width, 1.5px) solid rgba(255, 255, 255, var(--card-glass-specular-alpha, 0.80));
+    border: 1px solid rgba(255, 255, 255, 0.12);
     border-radius: var(--card-glass-radius, 24px);
     padding: 28px;
     box-shadow: 
-        inset 0 2px 8px rgba(255, 255, 255, var(--card-glass-inner-glow-alpha, 0.40)),
+        inset 0 2px var(--card-glass-inner-glow-spread, 8px) rgba(255, 255, 255, var(--card-glass-inner-glow-alpha, 0.40)),
+        inset 0 -2px calc(var(--card-glass-inner-glow-spread, 8px) * 0.75) rgba(0, 0, 0, 0.45),
+        inset 0 0 calc(var(--card-glass-inner-glow-spread, 8px) * 2.5) rgba(var(--card-glass-accent-rgb, 37, 99, 235), calc(var(--card-glass-inner-glow-alpha, 0.40) * 0.35)),
         0 20px 50px rgba(0, 0, 0, 0.45);
     transition: all 0.25s ease;
+}
+
+.studio-section-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: var(--card-glass-specular-width, 1.5px);
+    background: radial-gradient(
+        ellipse var(--card-glass-specular-taper, 80%) 80% at 50% -5%,
+        rgba(255, 255, 255, var(--card-glass-specular-alpha, 0.80)) 0%,
+        rgba(255, 255, 255, calc(var(--card-glass-specular-alpha, 0.80) * 0.75)) 25%,
+        rgba(255, 255, 255, calc(var(--card-glass-specular-alpha, 0.80) * 0.25)) 60%,
+        rgba(255, 255, 255, 0.02) 85%,
+        transparent 100%
+    );
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    z-index: 2;
+    filter: drop-shadow(0 0 var(--card-glass-specular-bloom, 0px) rgba(255, 255, 255, calc(var(--card-glass-specular-alpha, 0.80) * 0.5)));
+    transition: filter 0.25s cubic-bezier(0.16, 1, 0.3, 1), padding 0.25s ease;
 }
 
 .studio-section-header {
@@ -1203,17 +1229,43 @@ body.lab-body {
 }
 
 .component-card {
+    position: relative;
+    overflow: hidden;
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.005) 100%), rgba(10, 15, 28, var(--card-glass-opacity, 0.20));
     backdrop-filter: blur(var(--card-glass-blur, 0px)) saturate(200%);
     -webkit-backdrop-filter: blur(var(--card-glass-blur, 0px)) saturate(200%);
-    border: var(--card-glass-specular-width, 1.5px) solid rgba(255, 255, 255, 0.12);
-    border-top: var(--card-glass-specular-width, 1.5px) solid rgba(255, 255, 255, var(--card-glass-specular-alpha, 0.80));
+    border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: var(--card-glass-radius, 24px);
     padding: 28px;
     box-shadow: 
-        inset 0 2px 8px rgba(255, 255, 255, var(--card-glass-inner-glow-alpha, 0.40)),
+        inset 0 2px var(--card-glass-inner-glow-spread, 8px) rgba(255, 255, 255, var(--card-glass-inner-glow-alpha, 0.40)),
+        inset 0 -2px calc(var(--card-glass-inner-glow-spread, 8px) * 0.75) rgba(0, 0, 0, 0.45),
+        inset 0 0 calc(var(--card-glass-inner-glow-spread, 8px) * 2.5) rgba(var(--card-glass-accent-rgb, 37, 99, 235), calc(var(--card-glass-inner-glow-alpha, 0.40) * 0.35)),
         0 20px 50px rgba(0, 0, 0, 0.45);
     transition: all 0.25s ease;
+}
+
+.component-card::before {
+    content: '' !important;
+    position: absolute !important;
+    inset: 0 !important;
+    border-radius: inherit !important;
+    padding: var(--card-glass-specular-width, 1.5px) !important;
+    background: radial-gradient(
+        ellipse var(--card-glass-specular-taper, 80%) 85% at 50% -2px,
+        rgba(255, 255, 255, var(--card-glass-specular-alpha, 0.80)) 0%,
+        rgba(255, 255, 255, calc(var(--card-glass-specular-alpha, 0.80) * 0.75)) 25%,
+        rgba(255, 255, 255, calc(var(--card-glass-specular-alpha, 0.80) * 0.20)) 60%,
+        rgba(255, 255, 255, 0.02) 85%,
+        transparent 100%
+    ) !important;
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0) !important;
+    -webkit-mask-composite: xor !important;
+    mask-composite: exclude !important;
+    pointer-events: none !important;
+    z-index: 2 !important;
+    filter: drop-shadow(0 0 var(--card-glass-specular-bloom, 0px) rgba(255, 255, 255, calc(var(--card-glass-specular-alpha, 0.80) * 0.5))) !important;
+    transition: filter 0.25s cubic-bezier(0.16, 1, 0.3, 1), padding 0.25s ease !important;
 }
 
 .component-header {
@@ -1683,20 +1735,47 @@ body.lab-body {
 
 /* 4. DİNAMİK ÇERÇEVE & KARTLAR */
 .dynamic-glass-frame {
+    position: relative;
+    overflow: hidden;
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.01) 60%, rgba(255, 255, 255, 0.04) 100%), rgba(10, 15, 28, var(--card-glass-opacity, 0.20));
     backdrop-filter: blur(var(--card-glass-blur, 0px)) saturate(200%);
     -webkit-backdrop-filter: blur(var(--card-glass-blur, 0px)) saturate(200%);
-    border: var(--card-glass-specular-width, 1.5px) solid rgba(255, 255, 255, 0.16);
-    border-top: var(--card-glass-specular-width, 1.5px) solid rgba(255, 255, 255, var(--card-glass-specular-alpha, 0.80));
-    border-bottom: 1px solid rgba(255, 255, 255, 0.10);
+    border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: var(--card-glass-radius, 24px);
     padding: 20px;
     box-shadow: 
-        inset 0 1.5px 4px rgba(255, 255, 255, var(--card-glass-inner-glow-alpha, 0.40)),
+        inset 0 2px var(--card-glass-inner-glow-spread, 8px) rgba(255, 255, 255, var(--card-glass-inner-glow-alpha, 0.40)),
+        inset 0 -2px calc(var(--card-glass-inner-glow-spread, 8px) * 0.75) rgba(0, 0, 0, 0.45),
+        inset 0 0 calc(var(--card-glass-inner-glow-spread, 8px) * 2.5) rgba(var(--card-glass-accent-rgb, 37, 99, 235), calc(var(--card-glass-inner-glow-alpha, 0.40) * 0.35)),
         0 20px 45px rgba(0, 0, 0, 0.55);
     display: flex;
     flex-direction: column;
     gap: 14px;
+    transition: all 0.25s ease;
+}
+
+/* 💎 KONTEYNIR KARTLAR İPEKSİ ELMAS IŞILTI VE KENAR YUMUŞATMASI (SPECULAR CAUSTIC RIM & TAPER) */
+.dynamic-glass-frame::before {
+    content: '' !important;
+    position: absolute !important;
+    inset: 0 !important;
+    border-radius: inherit !important;
+    padding: var(--card-glass-specular-width, 1.5px) !important;
+    background: radial-gradient(
+        ellipse var(--card-glass-specular-taper, 80%) 85% at 50% -2px,
+        rgba(255, 255, 255, var(--card-glass-specular-alpha, 0.80)) 0%,
+        rgba(255, 255, 255, calc(var(--card-glass-specular-alpha, 0.80) * 0.75)) 25%,
+        rgba(255, 255, 255, calc(var(--card-glass-specular-alpha, 0.80) * 0.20)) 60%,
+        rgba(255, 255, 255, 0.02) 85%,
+        transparent 100%
+    ) !important;
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0) !important;
+    -webkit-mask-composite: xor !important;
+    mask-composite: exclude !important;
+    pointer-events: none !important;
+    z-index: 2 !important;
+    filter: drop-shadow(0 0 var(--card-glass-specular-bloom, 0px) rgba(255, 255, 255, calc(var(--card-glass-specular-alpha, 0.80) * 0.5))) !important;
+    transition: filter 0.25s cubic-bezier(0.16, 1, 0.3, 1), padding 0.25s ease !important;
 }
 
 .frame-top-bar {
