@@ -80,6 +80,11 @@
 
             <button class="reset-btn" id="reset-params-btn" title="Tüm Bileşenleri Varsayılana Döndür">Sıfırla</button>
 
+            <button class="lab-pill-btn active preview-mode-trigger-btn" id="header-open-preview-btn" style="background: linear-gradient(135deg, #2563eb, #1d4ed8); border-color: #60a5fa; color: #fff; font-weight: 700; padding: 7px 15px;" title="Mevcut Ayarlarla Tam Ekran Ana Sayfa Önizlemesi">
+                <span style="font-size: 14px;">👁️</span>
+                <span>Önizleme Modu</span>
+            </button>
+
             <a href="./index.html" class="lab-btn-back">
                 <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
                 <span>Ana Sayfaya Dön</span>
@@ -1177,6 +1182,255 @@
         </section>
 
     </main>
+
+    <!-- ======================================================== -->
+    <!-- 👁️ SCROLL İLE TAKİP EDEN YÜZEN ÖNİZLEME BUTONU (FLOATING FAB) -->
+    <!-- ======================================================== -->
+    <button class="floating-preview-fab preview-mode-trigger-btn" id="floating-preview-fab" title="Mevcut Glass Ayarlarıyla Canlı Ana Sayfayı Önizle">
+        <span class="fab-live-dot"></span>
+        <span style="font-size: 16px;">👁️</span>
+        <span>Ana Sayfa Önizleme Modu</span>
+    </button>
+
+    <!-- ======================================================== -->
+    <!-- 📱 CANLI ANA SAYFA ÖNİZLEME MODU (FULLSCREEN LANDING OVERLAY) -->
+    <!-- ======================================================== -->
+    <div class="lab-landing-preview-overlay" id="lab-landing-preview-overlay">
+        
+        <!-- ÜST SABİT DÖNÜŞ VE KONTROL BARI -->
+        <div class="preview-modal-topbar">
+            <div class="preview-topbar-left">
+                <button class="exit-preview-btn" id="exit-preview-btn">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+                    <span>🧪 Laboratuvara / Ayarlara Dön</span>
+                </button>
+                <div class="preview-status-pill">
+                    <span class="fab-live-dot" style="width: 7px; height: 7px;"></span>
+                    <span>CANLI ÖNİZLEME MODU AKTİF</span>
+                </div>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <span style="font-size: 12px; color: #94a3b8;">Aktif Şablon: <b style="color: #60a5fa;" id="preview-active-preset-name">Özel Ayarlar</b></span>
+                <button class="lab-primary-save-btn" id="preview-quick-save-btn" style="padding: 6px 14px; font-size: 11.5px;">
+                    🍪 Ayarları Kaydet
+                </button>
+            </div>
+        </div>
+
+        <!-- ANA SAYFA PORTAL SAHNESİ -->
+        <div class="preview-portal-wrapper">
+            <!-- UNISWAP AMBIENT GLOW ORBS -->
+            <div class="ambient-glow-layer" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; overflow: hidden;">
+                <div class="glow-orb orb-pink"></div>
+                <div class="glow-orb orb-blue"></div>
+                <div class="glow-orb orb-green"></div>
+            </div>
+
+            <div id="landing-portal" style="position: relative; z-index: 10; min-height: 100vh; padding-top: 20px;">
+            
+            <!-- ÜST NAVİGASYON -->
+            <header class="portal-header">
+                <div class="portal-brand">
+                    <div class="portal-logo-badge">
+                        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+                    </div>
+                    <div class="portal-brand-text">
+                        <span>TRADINGCHART</span>
+                        <span class="pro">PRO</span>
+                    </div>
+                </div>
+
+                <nav class="portal-nav-links">
+                    <a class="portal-nav-item active" href="#" onclick="return false;">Canlı Grafik</a>
+                    <a class="portal-nav-item" href="#preview-explore-section">Piyasalar</a>
+                    <a class="portal-nav-item" href="#" onclick="return false;">Göstergeler</a>
+                    <a class="portal-nav-item" href="#" onclick="return false;">Script Editörü</a>
+                    <a class="portal-nav-item" href="#" onclick="return false;">Portföy</a>
+                </nav>
+
+                <div class="portal-header-actions">
+                    <button class="dynamic-glass-btn btn-sm">
+                        <svg viewBox="0 0 24 24" width="16" height="16" style="flex-shrink: 0;">
+                            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+                            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+                        </svg>
+                        <span>Google ile Giriş Yap</span>
+                        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+                    </button>
+                </div>
+            </header>
+
+            <!-- HERO SECTION & MERKEZİ KART -->
+            <main class="portal-hero-container" style="max-width: 900px; margin: 40px auto 60px; text-align: center; padding: 0 20px;">
+
+                <h1 class="portal-headline" style="font-size: 42px; font-weight: 800; letter-spacing: -1px; margin-bottom: 12px;">Her piyasada, her an profesyonel analiz.</h1>
+                <p class="portal-subheadline" style="font-size: 16px; color: #94a3b8; max-width: 620px; margin: 0 auto 36px;">Borsa İstanbul, Kripto Para ve Dünya Borsalarını sıfır gecikmeli canlı grafikler ve akıllı göstergelerle takip edin.</p>
+
+                <!-- SIVI CAM MERKEZİ GİRİŞ KARTI -->
+                <div class="portal-glass-card" style="max-width: 460px; margin: 0 auto; text-align: left;">
+                    
+                    <!-- PARİTE & MARKA GÖSTERGESİ -->
+                    <div style="background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 16px; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <div style="width: 38px; height: 38px; border-radius: 50%; background: linear-gradient(135deg, #f59e0b, #d97706); display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 800; color: #fff; box-shadow: 0 0 14px rgba(245,158,11,0.4);">
+                                ₿
+                            </div>
+                            <div>
+                                <div style="font-size: 14.5px; font-weight: 700; color: #fff;">BTC / USDT</div>
+                                <div style="font-size: 11.5px; color: #94a3b8;">Bitcoin · Binance Canlı</div>
+                            </div>
+                        </div>
+                        <div style="text-align: right;">
+                            <div style="font-size: 14.5px; font-weight: 700; color: #fff; font-family: var(--font-mono);">$78,650.00</div>
+                            <span class="dynamic-badge positive" style="padding: 2px 8px; font-size: 11px;">▲ +4.18%</span>
+                        </div>
+                    </div>
+
+                    <!-- GİRİŞ FORMU -->
+                    <form style="display: flex; flex-direction: column; gap: 12px;" onsubmit="event.preventDefault();">
+                        <div class="dynamic-glass-input">
+                            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" class="input-icon">
+                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                                <polyline points="22,6 12,13 2,6"/>
+                            </svg>
+                            <input type="email" placeholder="E-posta adresiniz" value="pro.trader@tradingchart.com">
+                        </div>
+
+                        <div class="dynamic-glass-input">
+                            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" class="input-icon">
+                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                            </svg>
+                            <input type="password" placeholder="Şifreniz" value="••••••••••••">
+                            <button class="input-eye-btn" type="button">👁️</button>
+                        </div>
+
+                        <button type="submit" class="dynamic-glass-btn btn-lg" style="margin-top: 4px;">
+                            <span>Giriş Yap</span>
+                            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+                        </button>
+
+                        <div style="display: flex; justify-content: center; align-items: center; gap: 12px; margin: 4px 0 8px; font-size: 12px;">
+                            <a href="#" style="color: #94a3b8; text-decoration: none;" onclick="return false;">Şifremi Unuttum</a>
+                            <span style="color: #475569;">•</span>
+                            <a href="#" style="color: #60a5fa; font-weight: 600; text-decoration: none;" onclick="return false;">Hesap Oluştur (Üye Ol)</a>
+                        </div>
+                    </form>
+
+                    <div style="display: flex; align-items: center; text-align: center; margin: 12px 0 16px; color: #64748b; font-size: 11px;">
+                        <div style="flex: 1; border-bottom: 1px solid rgba(255,255,255,0.1);"></div>
+                        <span style="padding: 0 10px; text-transform: uppercase; letter-spacing: 0.5px;">veya</span>
+                        <div style="flex: 1; border-bottom: 1px solid rgba(255,255,255,0.1);"></div>
+                    </div>
+
+                    <button class="dynamic-glass-btn btn-lg">
+                        <svg viewBox="0 0 24 24" width="18" height="18" style="flex-shrink: 0;">
+                            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+                            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+                        </svg>
+                        <span>Google Hesabı ile Giriş Yap</span>
+                        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+                    </button>
+                </div>
+
+            </main>
+
+            <!-- PİYASALAR KEŞİF BÖLÜMÜ -->
+            <section class="explore-section-container" id="preview-explore-section" style="max-width: 1100px; margin: 0 auto 80px; padding: 0 20px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 14px;">
+                    <div>
+                        <h2 style="font-size: 24px; font-weight: 800; margin-bottom: 4px;">Piyasalar ve Trend Varlıklar</h2>
+                        <p style="font-size: 13.5px; color: #94a3b8;">BIST, NASDAQ, Kripto ve Emtia piyasalarında anlık fiyatlar.</p>
+                    </div>
+
+                    <div class="dynamic-glass-input" style="padding: 7px 14px; min-width: 260px;">
+                        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" class="input-icon"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                        <input type="text" placeholder="Piyasalarda ara (THYAO, NVDA, BTC...)" style="font-size: 12px;">
+                    </div>
+                </div>
+
+                <div class="dynamic-glass-tabs" style="margin-bottom: 16px;">
+                    <button class="dynamic-tab active">Tüm Piyasalar</button>
+                    <button class="dynamic-tab">Borsa İstanbul (BIST)</button>
+                    <button class="dynamic-tab">ABD Hisseleri (NASDAQ / NYSE)</button>
+                    <button class="dynamic-tab">Kripto Paralar (Binance)</button>
+                    <button class="dynamic-tab">Emtia & Forex</button>
+                </div>
+
+                <div class="dynamic-glass-frame" style="padding: 0; overflow: hidden;">
+                    <div style="overflow-x: auto;">
+                        <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 13px;">
+                            <thead>
+                                <tr style="border-bottom: 1px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.02);">
+                                    <th style="padding: 12px 16px; color: #94a3b8; font-weight: 600;">Varlık / Parite</th>
+                                    <th style="padding: 12px 16px; color: #94a3b8; font-weight: 600;">Piyasa</th>
+                                    <th style="padding: 12px 16px; color: #94a3b8; font-weight: 600; text-align: right;">Son Fiyat</th>
+                                    <th style="padding: 12px 16px; color: #94a3b8; font-weight: 600; text-align: right;">24S Değişim</th>
+                                    <th style="padding: 12px 16px; color: #94a3b8; font-weight: 600; text-align: center;">Mini Grafik</th>
+                                    <th style="padding: 12px 16px; color: #94a3b8; font-weight: 600; text-align: center;">İşlem</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr style="border-bottom: 1px solid rgba(255,255,255,0.04);">
+                                    <td style="padding: 14px 16px;">
+                                        <div style="display: flex; align-items: center; gap: 10px;">
+                                            <div style="width: 28px; height: 28px; border-radius: 50%; background: #f59e0b; color: #000; font-weight: 800; display: flex; align-items: center; justify-content: center; font-size: 13px;">₿</div>
+                                            <div><div style="font-weight: 700; color: #fff;">BTC/USDT</div><div style="font-size: 11px; color: #94a3b8;">Bitcoin</div></div>
+                                        </div>
+                                    </td>
+                                    <td style="padding: 14px 16px;"><span class="dynamic-badge neutral">Kripto</span></td>
+                                    <td style="padding: 14px 16px; text-align: right; font-family: var(--font-mono); font-weight: 700;">$78,650.00</td>
+                                    <td style="padding: 14px 16px; text-align: right;"><span class="dynamic-badge positive">+4.18%</span></td>
+                                    <td style="padding: 14px 16px; text-align: center;"><svg width="60" height="20" viewBox="0 0 60 20"><path d="M0,15 Q15,18 30,8 T60,3" fill="none" stroke="#10b981" stroke-width="2"/></svg></td>
+                                    <td style="padding: 14px 16px; text-align: center;"><button class="dynamic-glass-btn btn-xs">İncele</button></td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid rgba(255,255,255,0.04);">
+                                    <td style="padding: 14px 16px;">
+                                        <div style="display: flex; align-items: center; gap: 10px;">
+                                            <div style="width: 28px; height: 28px; border-radius: 50%; background: #ef4444; color: #fff; font-weight: 800; display: flex; align-items: center; justify-content: center; font-size: 12px;">🇹🇷</div>
+                                            <div><div style="font-weight: 700; color: #fff;">THYAO</div><div style="font-size: 11px; color: #94a3b8;">Türk Hava Yolları</div></div>
+                                        </div>
+                                    </td>
+                                    <td style="padding: 14px 16px;"><span class="dynamic-badge neutral">BIST</span></td>
+                                    <td style="padding: 14px 16px; text-align: right; font-family: var(--font-mono); font-weight: 700;">₺312.50</td>
+                                    <td style="padding: 14px 16px; text-align: right;"><span class="dynamic-badge positive">+2.46%</span></td>
+                                    <td style="padding: 14px 16px; text-align: center;"><svg width="60" height="20" viewBox="0 0 60 20"><path d="M0,16 Q20,14 40,6 T60,2" fill="none" stroke="#10b981" stroke-width="2"/></svg></td>
+                                    <td style="padding: 14px 16px; text-align: center;"><button class="dynamic-glass-btn btn-xs">İncele</button></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 14px 16px;">
+                                        <div style="display: flex; align-items: center; gap: 10px;">
+                                            <div style="width: 28px; height: 28px; border-radius: 50%; background: #10b981; color: #000; font-weight: 800; display: flex; align-items: center; justify-content: center; font-size: 11px;">NV</div>
+                                            <div><div style="font-weight: 700; color: #fff;">NVDA</div><div style="font-size: 11px; color: #94a3b8;">NVIDIA Corporation</div></div>
+                                        </div>
+                                    </td>
+                                    <td style="padding: 14px 16px;"><span class="dynamic-badge neutral">NASDAQ</span></td>
+                                    <td style="padding: 14px 16px; text-align: right; font-family: var(--font-mono); font-weight: 700;">$138.25</td>
+                                    <td style="padding: 14px 16px; text-align: right;"><span class="dynamic-badge positive">+3.82%</span></td>
+                                    <td style="padding: 14px 16px; text-align: center;"><svg width="60" height="20" viewBox="0 0 60 20"><path d="M0,17 Q15,12 35,6 T60,1" fill="none" stroke="#10b981" stroke-width="2"/></svg></td>
+                                    <td style="padding: 14px 16px; text-align: center;"><button class="dynamic-glass-btn btn-xs">İncele</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- FOOTER -->
+            <footer class="portal-footer" style="padding: 40px 20px; border-top: 1px solid rgba(255,255,255,0.08); text-align: center;">
+                <div style="font-size: 13px; color: #64748b; font-family: var(--font-mono);">
+                    TRADINGCHART PRO · LIQUID GLASS INTERACTIVE PREVIEW MODE
+                </div>
+            </footer>
+
+            </div>
+        </div>
+    </div>
 
     <!-- SCRIPTS -->
     <script type="module" src="./js/glass-lab.js"></script>

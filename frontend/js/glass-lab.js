@@ -1795,9 +1795,58 @@ ${config.cssCode || cssOutputPreview.textContent}
         });
     }
 
+    // ========================================================
+    // 📱 8. CANLI ANA SAYFA ÖNİZLEME MODU (FULLSCREEN PREVIEW)
+    // ========================================================
+    const previewOverlay = document.getElementById('lab-landing-preview-overlay');
+    const exitPreviewBtn = document.getElementById('exit-preview-btn');
+    const previewPresetNameEl = document.getElementById('preview-active-preset-name');
+    const previewQuickSaveBtn = document.getElementById('preview-quick-save-btn');
+
+    function openLandingPreviewMode() {
+        if (!previewOverlay) return;
+        previewOverlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+
+        if (previewPresetNameEl) {
+            const activePill = document.querySelector('.preset-pill.active');
+            const pName = activePill ? activePill.textContent.trim() : (savePresetNameInput ? savePresetNameInput.value.trim() : '') || 'Özel Ayarlar';
+            previewPresetNameEl.textContent = pName;
+        }
+        showToast('👁️ Canlı Ana Sayfa Önizleme Modu Açıldı!');
+    }
+
+    function closeLandingPreviewMode() {
+        if (!previewOverlay) return;
+        previewOverlay.classList.remove('active');
+        document.body.style.overflow = 'auto';
+    }
+
+    document.querySelectorAll('.preview-mode-trigger-btn').forEach(btn => {
+        btn.addEventListener('click', openLandingPreviewMode);
+    });
+
+    if (exitPreviewBtn) {
+        exitPreviewBtn.addEventListener('click', closeLandingPreviewMode);
+    }
+
+    if (previewQuickSaveBtn) {
+        previewQuickSaveBtn.addEventListener('click', () => {
+            if (saveJsonBtn) saveJsonBtn.click();
+        });
+    }
+
+    // Escape tuşu ile önizlemeden çıkma
+    window.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && previewOverlay && previewOverlay.classList.contains('active')) {
+            closeLandingPreviewMode();
+        }
+    });
+
     // Initial Engine Start
     updateGlassEngine();
     updateAuroraEngine();
     updateSequenceUI();
     renderSavedPresetsList();
 });
+

@@ -2042,3 +2042,145 @@ body.lab-body.bg-dark .aurora-orb {
     font-weight: 700;
     color: #ffffff;
 }
+
+/* ============================================================ */
+/* 👁️ SCROLL İLE TAKİP EDEN YÜZEN ÖNİZLEME BUTONU (FLOATING FAB) */
+/* ============================================================ */
+.floating-preview-fab {
+    position: fixed;
+    bottom: 30px;
+    right: 32px;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 13px 22px;
+    background: linear-gradient(135deg, rgba(37, 99, 235, 0.85) 0%, rgba(29, 78, 216, 0.95) 100%);
+    backdrop-filter: blur(16px) saturate(200%);
+    -webkit-backdrop-filter: blur(16px) saturate(200%);
+    border: 1.5px solid rgba(147, 197, 253, 0.60);
+    border-radius: 9999px;
+    color: #ffffff;
+    font-size: 13.5px;
+    font-weight: 700;
+    font-family: var(--font-ui);
+    letter-spacing: 0.2px;
+    cursor: pointer;
+    box-shadow: 0 10px 30px rgba(37, 99, 235, 0.50), inset 0 1px 2px rgba(255, 255, 255, 0.60);
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    animation: fabPulse 2.4s infinite alternate ease-in-out;
+}
+
+.floating-preview-fab:hover {
+    transform: translateY(-3px) scale(1.03);
+    box-shadow: 0 16px 40px rgba(37, 99, 235, 0.70), inset 0 1px 4px rgba(255, 255, 255, 0.80);
+    border-color: #93c5fd;
+}
+
+.floating-preview-fab:active {
+    transform: translateY(1px) scale(0.97);
+}
+
+.fab-live-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: #00f0ff;
+    box-shadow: 0 0 10px #00f0ff;
+    animation: livePulse 1.2s infinite alternate ease-in-out;
+}
+
+@keyframes fabPulse {
+    0% { box-shadow: 0 8px 24px rgba(37, 99, 235, 0.45); }
+    100% { box-shadow: 0 14px 38px rgba(0, 240, 255, 0.60); }
+}
+
+/* ============================================================ */
+/* 📱 CANLI ANA SAYFA ÖNİZLEME MODU (FULLSCREEN LANDING OVERLAY) */
+/* ============================================================ */
+.lab-landing-preview-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 10000;
+    overflow-y: auto;
+    overflow-x: hidden;
+    background: #060913;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1), transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    transform: scale(0.98);
+}
+
+.lab-landing-preview-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+    transform: scale(1.0);
+}
+
+.preview-portal-wrapper {
+    position: relative;
+    z-index: 5;
+    width: 100%;
+    min-height: 100vh;
+}
+
+/* ÜST DÖNÜŞ VE KONTROL BARI */
+.preview-modal-topbar {
+    position: sticky;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 10001;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 32px;
+    background: rgba(6, 9, 19, 0.85);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.preview-topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.exit-preview-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.25) 0%, rgba(185, 28, 28, 0.35) 100%);
+    border: 1px solid rgba(239, 68, 68, 0.50);
+    border-radius: 9999px;
+    padding: 8px 18px;
+    color: #fca5a5;
+    font-size: 12.5px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.exit-preview-btn:hover {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.50) 0%, rgba(185, 28, 28, 0.65) 100%);
+    color: #ffffff;
+    transform: translateX(-2px);
+    box-shadow: 0 0 16px rgba(239, 68, 68, 0.50);
+}
+
+.preview-status-pill {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(16, 185, 129, 0.15);
+    border: 1px solid rgba(16, 185, 129, 0.35);
+    padding: 5px 12px;
+    border-radius: 9999px;
+    color: #6ee7b7;
+    font-size: 11.5px;
+    font-weight: 700;
+}
