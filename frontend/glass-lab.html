@@ -99,6 +99,17 @@
                     </div>
                 </div>
 
+                <!-- 📂 KAYITLI ŞABLONLARDAN HIZLI SEÇİM -->
+                <div class="control-group" id="quick-preset-selector-group">
+                    <div class="control-label-row">
+                        <span>📂 Çerezdeki Şablonları Seç</span>
+                        <span class="control-value" id="quick-preset-count">0 Kayıt</span>
+                    </div>
+                    <select id="quick-preset-select" class="lab-text-input" style="padding: 7px 10px; font-size: 12px; cursor: pointer; background: rgba(15, 23, 42, 0.85); border: 1px solid rgba(59, 130, 246, 0.40);">
+                        <option value="">-- Kaydedilmiş Bir Şablon Seç --</option>
+                    </select>
+                </div>
+
                 <!-- SAYDAMLIK (ALPHA) -->
                 <div class="control-group">
                     <div class="control-label-row">
@@ -142,6 +153,15 @@
                         <span class="control-value" id="val-specular-taper">80% (İpeksi Geçiş)</span>
                     </div>
                     <input type="range" id="param-specular-taper" min="20" max="100" value="80" class="lab-slider">
+                </div>
+
+                <!-- 🔦 İMLEÇ FENER IŞIĞI / YANSIMA (SPOTLIGHT TORCH CURSOR FLARE) -->
+                <div class="control-group">
+                    <div class="control-label-row">
+                        <span>🔦 İmleç Fener Yansıması (Spotlight)</span>
+                        <span class="control-value" id="val-spotlight-intensity">45%</span>
+                    </div>
+                    <input type="range" id="param-spotlight-intensity" min="0" max="100" value="45" class="lab-slider">
                 </div>
 
                 <!-- İÇ GÖLGE / DERİNLİK (INNER CAUSTIC GLOW) -->

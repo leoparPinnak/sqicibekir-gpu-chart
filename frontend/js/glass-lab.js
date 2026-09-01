@@ -61,6 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const paramSpecular = document.getElementById('param-specular');
     const paramSpecularWidth = document.getElementById('param-specular-width');
     const paramSpecularTaper = document.getElementById('param-specular-taper');
+    const paramSpotlightIntensity = document.getElementById('param-spotlight-intensity');
     const paramInnerGlow = document.getElementById('param-inner-glow');
     const paramRadius = document.getElementById('param-radius');
 
@@ -69,8 +70,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const valSpecular = document.getElementById('val-specular');
     const valSpecularWidth = document.getElementById('val-specular-width');
     const valSpecularTaper = document.getElementById('val-specular-taper');
+    const valSpotlightIntensity = document.getElementById('val-spotlight-intensity');
     const valInnerGlow = document.getElementById('val-inner-glow');
     const valRadius = document.getElementById('val-radius');
+
+    const quickPresetSelect = document.getElementById('quick-preset-select');
+    const quickPresetCount = document.getElementById('quick-preset-count');
 
     const cssOutputPreview = document.getElementById('css-output-preview');
     const copyCssBtn = document.getElementById('copy-css-btn');
@@ -83,6 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
             specular: 100,
             specularWidth: 1.5,
             specularTaper: 80,
+            spotlight: 45,
             innerGlow: 65,
             radius: 9999,
             color: '#2563eb',
@@ -94,6 +100,7 @@ document.addEventListener('DOMContentLoaded', () => {
             specular: 140,
             specularWidth: 2.0,
             specularTaper: 85,
+            spotlight: 60,
             innerGlow: 75,
             radius: 9999,
             color: '#2563eb',
@@ -105,6 +112,7 @@ document.addEventListener('DOMContentLoaded', () => {
             specular: 120,
             specularWidth: 1.5,
             specularTaper: 75,
+            spotlight: 50,
             innerGlow: 70,
             radius: 9999,
             color: '#10b981',
@@ -116,6 +124,7 @@ document.addEventListener('DOMContentLoaded', () => {
             specular: 180,
             specularWidth: 2.5,
             specularTaper: 90,
+            spotlight: 75,
             innerGlow: 85,
             radius: 12,
             color: '#8b5cf6',
@@ -127,6 +136,7 @@ document.addEventListener('DOMContentLoaded', () => {
             specular: 150,
             specularWidth: 1.0,
             specularTaper: 70,
+            spotlight: 55,
             innerGlow: 80,
             radius: 9999,
             color: '#ffffff',
@@ -138,6 +148,7 @@ document.addEventListener('DOMContentLoaded', () => {
             specular: 70,
             specularWidth: 1.5,
             specularTaper: 60,
+            spotlight: 30,
             innerGlow: 40,
             radius: 18,
             color: '#64748b',
@@ -154,6 +165,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const sp = parseInt(paramSpecular.value, 10);
         const spWidth = parseFloat(paramSpecularWidth ? paramSpecularWidth.value : 1.5);
         const tpr = parseInt(paramSpecularTaper ? paramSpecularTaper.value : 80, 10);
+        const spot = parseInt(paramSpotlightIntensity ? paramSpotlightIntensity.value : 45, 10);
         const ig = parseInt(paramInnerGlow.value, 10);
         const rd = parseInt(paramRadius.value, 10);
 
@@ -164,6 +176,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (valSpecularTaper) {
             valSpecularTaper.textContent = tpr >= 80 ? `${tpr}% (İpeksi Geçiş)` : tpr <= 40 ? `${tpr}% (Dar Odak)` : `${tpr}% (Dengeli)`;
         }
+        if (valSpotlightIntensity) valSpotlightIntensity.textContent = `${spot}%`;
         valInnerGlow.textContent = `${ig}%`;
         valRadius.textContent = rd >= 9000 ? '9999px (Hap)' : `${rd}px`;
 
@@ -177,6 +190,7 @@ document.addEventListener('DOMContentLoaded', () => {
         root.style.setProperty('--glass-specular-width', `${spWidth}px`);
         root.style.setProperty('--glass-specular-bloom', `${bloomPx}px`);
         root.style.setProperty('--glass-specular-taper', `${tpr}%`);
+        root.style.setProperty('--glass-spotlight-intensity', (spot / 100).toFixed(2));
         root.style.setProperty('--glass-inner-glow-alpha', (ig / 100).toFixed(2));
         root.style.setProperty('--glass-radius', rd >= 9000 ? '9999px' : `${rd}px`);
         root.style.setProperty('--glass-accent-color', currentAccentHex);
@@ -218,16 +232,61 @@ document.addEventListener('DOMContentLoaded', () => {
   -webkit-mask-composite: xor;
   mask-composite: exclude;
   pointer-events: none;${bloomStyle}
+}
+
+/* 🔦 Canlı İmleç Fener Yansıması (Spotlight Cursor Flare) */
+.liquid-glass-element::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    circle 95px at var(--mouse-x, -300px) var(--mouse-y, -300px),
+    rgba(255, 255, 255, ${((spot / 100) * 1.6).toFixed(2)}) 0%,
+    rgba(${currentAccentRGB}, ${((spot / 100) * 0.85).toFixed(2)}) 35%,
+    rgba(${currentAccentRGB}, 0.05) 65%,
+    transparent 100%
+  );
+  opacity: 0;
+  pointer-events: none;
+  mix-blend-mode: screen;
+  transition: opacity 0.25s ease;
+}
+
+.liquid-glass-element:hover::after {
+  opacity: 1;
 }`;
         cssOutputPreview.textContent = cssCode;
     }
 
-    [paramOpacity, paramBlur, paramSpecular, paramSpecularWidth, paramSpecularTaper, paramInnerGlow, paramRadius].filter(Boolean).forEach(slider => {
+    [paramOpacity, paramBlur, paramSpecular, paramSpecularWidth, paramSpecularTaper, paramSpotlightIntensity, paramInnerGlow, paramRadius].filter(Boolean).forEach(slider => {
         slider.addEventListener('input', () => {
             document.querySelectorAll('.preset-pill').forEach(p => p.classList.remove('active'));
             updateGlassEngine();
         });
     });
+
+    // 🔦 CANLI İMLEÇ FENERİ TAKİPÇİSİ (INTERACTIVE MOUSE SPOTLIGHT TRACKER)
+    function initSpotlightHoverTracker() {
+        const interactiveTargets = document.querySelectorAll(
+            '.dynamic-glass-btn, .dynamic-glass-input, .dynamic-glass-stepper, .dynamic-tab, .portal-card-btn, .portal-auth-submit-btn, .portal-input-capsule, .component-card'
+        );
+        interactiveTargets.forEach(el => {
+            el.addEventListener('mousemove', (e) => {
+                const rect = el.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                el.style.setProperty('--mouse-x', `${x}px`);
+                el.style.setProperty('--mouse-y', `${y}px`);
+            });
+            el.addEventListener('mouseleave', () => {
+                el.style.setProperty('--mouse-x', '-400px');
+                el.style.setProperty('--mouse-y', '-400px');
+            });
+        });
+    }
+
+    initSpotlightHoverTracker();
 
     document.querySelectorAll('.preset-pill').forEach(btn => {
         btn.addEventListener('click', () => {
@@ -578,6 +637,21 @@ ${config.cssCode || cssOutputPreview.textContent}
     function renderSavedPresetsList() {
         const presets = getStoredPresets();
         savedPresetsCountEl.textContent = `${presets.length} Kayıt`;
+        if (quickPresetCount) quickPresetCount.textContent = `${presets.length} Kayıt`;
+
+        // Update Quick Preset Select Dropdown in Tab 1
+        if (quickPresetSelect) {
+            if (presets.length === 0) {
+                quickPresetSelect.innerHTML = `<option value="">-- Henüz Kayıtlı Şablon Yok --</option>`;
+            } else {
+                quickPresetSelect.innerHTML = `
+                    <option value="">-- 📂 Kayıtlı Şablon Seç (${presets.length}) --</option>
+                    ${presets.map((p, idx) => `
+                        <option value="${idx}">#${p.sequenceNumber} - ${escapeHtml(p.name)} (${p.formattedDate || ''})</option>
+                    `).join('')}
+                `;
+            }
+        }
 
         if (presets.length === 0) {
             savedPresetsListEl.innerHTML = `
@@ -624,7 +698,10 @@ ${config.cssCode || cssOutputPreview.textContent}
             btn.addEventListener('click', () => {
                 const idx = parseInt(btn.getAttribute('data-index'), 10);
                 const p = presets[idx];
-                if (p) applyConfigurationPayload(p);
+                if (p) {
+                    if (quickPresetSelect) quickPresetSelect.value = idx.toString();
+                    applyConfigurationPayload(p);
+                }
             });
         });
 
@@ -930,6 +1007,21 @@ ${config.cssCode || cssOutputPreview.textContent}
             item.classList.add('active');
         });
     });
+
+    // Quick Preset Select Dropdown Handler
+    if (quickPresetSelect) {
+        quickPresetSelect.addEventListener('change', (e) => {
+            const val = e.target.value;
+            if (val === '') return;
+            const idx = parseInt(val, 10);
+            const presets = getStoredPresets();
+            const p = presets[idx];
+            if (p) {
+                applyConfigurationPayload(p);
+                showToast(`✓ #${p.sequenceNumber} - ${p.name} Başarıyla Yüklendi!`);
+            }
+        });
+    }
 
     // Initial Engine Start
     updateGlassEngine();

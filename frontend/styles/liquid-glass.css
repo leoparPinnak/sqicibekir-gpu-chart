@@ -424,6 +424,34 @@ body, html {
     transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+/* 🔦 CANLI İMLEÇ FENERİ (SPOTLIGHT TORCH HOVER) */
+.portal-card-btn::after,
+.portal-auth-submit-btn::after,
+.portal-input-capsule::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(
+        circle 95px at var(--mouse-x, -300px) var(--mouse-y, -300px),
+        rgba(255, 255, 255, 0.65) 0%,
+        rgba(96, 165, 250, 0.35) 35%,
+        rgba(96, 165, 250, 0.05) 65%,
+        transparent 100%
+    );
+    opacity: 0;
+    pointer-events: none;
+    z-index: 3;
+    transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    mix-blend-mode: screen;
+}
+
+.portal-card-btn:hover::after,
+.portal-auth-submit-btn:hover::after,
+.portal-input-capsule:hover::after {
+    opacity: 1;
+}
+
 .portal-card-btn:hover {
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.28) 0%, rgba(255, 255, 255, 0.10) 45%, rgba(255, 255, 255, 0.04) 100%), rgba(25, 35, 60, 0.75) !important;
     transform: translateY(-2px) scale(1.015);

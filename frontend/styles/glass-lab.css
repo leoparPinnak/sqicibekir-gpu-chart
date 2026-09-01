@@ -12,6 +12,8 @@
     --glass-specular-taper: 80%;
     --glass-inner-glow-alpha: 0.65;
     --glass-radius: 9999px;
+    --glass-spotlight-intensity: 0.45;
+    --glass-spotlight-radius: 95px;
     --glass-accent-color: #2563eb;
     --glass-accent-rgb: 37, 99, 235;
 
@@ -1122,6 +1124,34 @@ body.lab-body {
     z-index: 2;
     filter: drop-shadow(0 0 var(--glass-specular-bloom, 2px) rgba(255, 255, 255, calc(var(--glass-specular-alpha) * 0.5)));
     transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* 🔦 CANLI İMLEÇ FENERİ / SPOTLIGHT CAUSTIC REFLECTION (APPLE VISIONOS OPTİK) */
+.dynamic-glass-btn::after,
+.dynamic-glass-input::after,
+.dynamic-glass-stepper::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(
+        circle var(--glass-spotlight-radius, 95px) at var(--mouse-x, -300px) var(--mouse-y, -300px),
+        rgba(255, 255, 255, calc(var(--glass-spotlight-intensity, 0.45) * 1.6)) 0%,
+        rgba(var(--glass-accent-rgb), calc(var(--glass-spotlight-intensity, 0.45) * 0.85)) 35%,
+        rgba(var(--glass-accent-rgb), 0.05) 65%,
+        transparent 100%
+    );
+    opacity: 0;
+    pointer-events: none;
+    z-index: 3;
+    transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    mix-blend-mode: screen;
+}
+
+.dynamic-glass-btn:hover::after,
+.dynamic-glass-input:hover::after,
+.dynamic-glass-stepper:hover::after {
+    opacity: 1;
 }
 
 .dynamic-glass-btn:hover {
