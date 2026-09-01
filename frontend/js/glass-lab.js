@@ -528,6 +528,124 @@ document.addEventListener('DOMContentLoaded', () => {
         if (defaultPreset) defaultPreset.click();
     });
 
+    // Sub-Nav Component Filter Switcher
+    document.querySelectorAll('.comp-filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.comp-filter-btn').forEach(b => {
+                b.classList.remove('active');
+                b.style.background = 'rgba(255,255,255,0.05)';
+                b.style.color = '#94a3b8';
+                b.style.borderColor = 'rgba(255,255,255,0.1)';
+            });
+            btn.classList.add('active');
+            btn.style.background = 'rgba(37,99,235,0.35)';
+            btn.style.color = '#ffffff';
+            btn.style.borderColor = 'rgba(255,255,255,0.15)';
+
+            const target = btn.getAttribute('data-comp-target');
+            const sections = {
+                btn: document.getElementById('section-comp-btn'),
+                input: document.getElementById('section-comp-input'),
+                tab: document.getElementById('section-comp-tab'),
+                card: document.getElementById('section-comp-card')
+            };
+
+            const showcaseSections = {
+                login: document.getElementById('showcase-section-login'),
+                markets: document.getElementById('showcase-section-markets')
+            };
+
+            if (target === 'all') {
+                Object.values(sections).forEach(s => { if (s) s.style.display = 'block'; });
+            } else if (target === 'login') {
+                Object.values(sections).forEach(s => { if (s) s.style.display = 'block'; });
+                if (showcaseSections.login) showcaseSections.login.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            } else if (target === 'markets') {
+                Object.values(sections).forEach(s => { if (s) s.style.display = 'block'; });
+                if (showcaseSections.markets) showcaseSections.markets.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            } else {
+                Object.entries(sections).forEach(([key, s]) => {
+                    if (s) s.style.display = (key === target) ? 'block' : 'none';
+                });
+            }
+        });
+    });
+
+    // Mock Market Table Dynamic Filtering
+    const mockMarketData = [
+        { id: 1, symbol: 'THYAO', name: 'Türk Hava Yolları', exchange: 'BIST', cat: 'bist', price: '₺314.50', change: '+3.75%', isPos: true, vol: '₺4.82 M', icon: 'THY', bg: '#dc2626', spark: 'M0 24 L20 20 L40 22 L60 14 L80 16 L100 8 L120 4' },
+        { id: 2, symbol: 'EREGL', name: 'Ereğli Demir Çelik', exchange: 'BIST', cat: 'bist', price: '₺52.40', change: '+1.85%', isPos: true, vol: '₺2.15 M', icon: 'ERE', bg: '#0284c7', spark: 'M0 20 L25 18 L50 12 L75 14 L100 8 L120 5' },
+        { id: 3, symbol: 'BTC / USDT', name: 'Bitcoin', exchange: 'Binance', cat: 'crypto', price: '$78,650.00', change: '+4.18%', isPos: true, vol: '$24.5 B', icon: '₿', bg: '#f59e0b', spark: 'M0 22 L20 18 L40 19 L60 12 L80 15 L100 6 L120 2' },
+        { id: 4, symbol: 'ETH / USDT', name: 'Ethereum', exchange: 'Binance', cat: 'crypto', price: '$3,420.50', change: '+2.90%', isPos: true, vol: '$12.8 B', icon: 'Ξ', bg: '#6366f1', spark: 'M0 20 L20 16 L40 18 L60 10 L80 14 L100 8 L120 3' },
+        { id: 5, symbol: 'NVDA', name: 'NVIDIA Corp', exchange: 'NASDAQ', cat: 'stocks', price: '$142.80', change: '+2.80%', isPos: true, vol: '$18.2 B', icon: 'NVDA', bg: '#16a34a', spark: 'M0 20 L25 16 L50 18 L75 10 L100 12 L120 5' },
+        { id: 6, symbol: 'AAPL', name: 'Apple Inc', exchange: 'NASDAQ', cat: 'stocks', price: '$232.15', change: '+1.15%', isPos: true, vol: '$11.4 B', icon: 'AAPL', bg: '#475569', spark: 'M0 18 L25 15 L50 14 L75 12 L100 8 L120 4' },
+        { id: 7, symbol: 'XAU / USD', name: 'Ons Altın Spot', exchange: 'Forex', cat: 'fx', price: '$2,748.60', change: '-0.42%', isPos: false, vol: '$9.45 B', icon: 'AU', bg: '#d97706', spark: 'M0 6 L25 8 L50 14 L75 12 L100 20 L120 22' },
+        { id: 8, symbol: 'EUR / USD', name: 'Euro / Dolar', exchange: 'Forex', cat: 'fx', price: '1.0845', change: '+0.12%', isPos: true, vol: '$32.1 B', icon: '€', bg: '#2563eb', spark: 'M0 16 L25 15 L50 13 L75 14 L100 11 L120 8' }
+    ];
+
+    let currentMarketTab = 'all';
+    let currentMarketSearch = '';
+
+    function renderMockMarketTable() {
+        const tbody = document.getElementById('mock-market-tbody');
+        if (!tbody) return;
+
+        const filtered = mockMarketData.filter(item => {
+            const matchesTab = currentMarketTab === 'all' || item.cat === currentMarketTab;
+            const q = currentMarketSearch.toLowerCase().trim();
+            const matchesSearch = !q || item.symbol.toLowerCase().includes(q) || item.name.toLowerCase().includes(q);
+            return matchesTab && matchesSearch;
+        });
+
+        tbody.innerHTML = filtered.map((item, idx) => `
+            <tr style="border-bottom: 1px solid rgba(255,255,255,0.06); transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.03)'" onmouseout="this.style.background='transparent'">
+                <td style="padding: 14px 16px; text-align: center; color: #64748b; font-weight: 600;">${idx + 1}</td>
+                <td style="padding: 14px 16px;">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <div style="width: 32px; height: 32px; border-radius: 50%; background: ${item.bg}; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 12px; box-shadow: 0 0 10px ${item.bg}55;">
+                            ${item.icon}
+                        </div>
+                        <div>
+                            <div style="font-weight: 700; color: #fff;">${item.symbol}</div>
+                            <div style="font-size: 11px; color: #94a3b8;">${item.name} · <span style="color: #60a5fa;">${item.exchange}</span></div>
+                        </div>
+                    </div>
+                </td>
+                <td style="padding: 14px 16px; text-align: right; font-weight: 700; color: #fff; font-family: var(--font-mono);">${item.price}</td>
+                <td style="padding: 14px 16px; text-align: right;">
+                    <span class="dynamic-badge ${item.isPos ? 'positive' : 'negative'}">${item.isPos ? '▲' : '▼'} ${item.change}</span>
+                </td>
+                <td style="padding: 14px 16px; text-align: right; color: #cbd5e1; font-weight: 600;">${item.vol}</td>
+                <td style="padding: 14px 16px; text-align: center;">
+                    <svg width="120" height="28" viewBox="0 0 120 28" fill="none">
+                        <path d="${item.spark}" stroke="${item.isPos ? '#10b981' : '#ef4444'}" stroke-width="2" stroke-linecap="round"/>
+                        <path d="${item.spark} V 28 H 0 Z" fill="${item.isPos ? 'rgba(16, 185, 129, 0.12)' : 'rgba(239, 68, 68, 0.12)'}"/>
+                    </svg>
+                </td>
+                <td style="padding: 14px 16px; text-align: right;">
+                    <button class="dynamic-glass-btn btn-sm"><span>İncele</span> <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></button>
+                </td>
+            </tr>
+        `).join('');
+    }
+
+    document.querySelectorAll('.mock-tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.mock-tab-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentMarketTab = btn.getAttribute('data-market-tab');
+            renderMockMarketTable();
+        });
+    });
+
+    const marketSearchInput = document.getElementById('mock-market-search');
+    if (marketSearchInput) {
+        marketSearchInput.addEventListener('input', (e) => {
+            currentMarketSearch = e.target.value;
+            renderMockMarketTable();
+        });
+    }
+
     // ========================================================
     // 3. AURORA IŞIKLARI & GALAKSİ MOTORU KONTROLCÜSÜ
     // ========================================================
