@@ -1100,7 +1100,7 @@ body.lab-body {
         0 6px 18px rgba(0, 0, 0, 0.30);
 }
 
-/* 💎 PRİZMATİK ELMAS IŞILTISI & DİNAMİK OPTİK IŞIK KIRILMASI (DYNAMIC SNELL CAUSTIC REFRACTION) */
+/* 💎 PRİZMATİK ELMAS IŞILTISI & DİNAMİK FRESNEL KENAR TAKİBİ (APPLE VISIONOS PHYSICAL BORDER CAUSTICS) */
 .dynamic-glass-btn::before,
 .dynamic-glass-input::before,
 .dynamic-glass-stepper::before {
@@ -1110,28 +1110,23 @@ body.lab-body {
     border-radius: inherit;
     padding: var(--glass-specular-width, 1.5px);
     background: 
-        /* 1. Dinamik Kırılma Işık Hüzmesi (Snell Refraksiyonu & Prizmatik Saçılma) */
-        conic-gradient(
-            from var(--caustic-angle, 180deg) at var(--opp-mouse-x, 50%) var(--opp-mouse-y, 50%),
-            transparent 0deg,
-            rgba(56, 189, 248, calc(var(--glass-spotlight-intensity, 0.65) * 0.75)) 15deg,
-            #ffffff 25deg,
-            rgba(255, 255, 255, calc(var(--glass-spotlight-intensity, 0.65) * 1.95)) 30deg,
-            #ffffff 35deg,
-            rgba(var(--glass-accent-rgb), calc(var(--glass-spotlight-intensity, 0.65) * 0.90)) 48deg,
-            transparent 75deg,
-            transparent 360deg
-        ),
-        /* 2. Zıt Yönlü Odaklı Kenar Parıltısı */
+        /* 1. Doğrudan İmleci Takip Eden Prizmatik Kenar Elması (Direct Fresnel Bevel Specular) */
         radial-gradient(
-            circle var(--glass-spotlight-radius, 120px) at var(--opp-mouse-x, -400px) var(--opp-mouse-y, -400px),
+            circle var(--glass-spotlight-radius, 130px) at var(--mouse-x, -400px) var(--mouse-y, -400px),
             #ffffff 0%,
-            rgba(255, 255, 255, calc(var(--glass-spotlight-intensity, 0.65) * 1.8)) 25%,
-            rgba(var(--glass-accent-rgb), calc(var(--glass-spotlight-intensity, 0.65) * 0.95)) 50%,
-            rgba(var(--glass-accent-rgb), 0.05) 75%,
+            rgba(255, 255, 255, calc(var(--glass-spotlight-intensity, 0.65) * 1.85)) 20%,
+            rgba(56, 189, 248, calc(var(--glass-spotlight-intensity, 0.65) * 0.90)) 45%,
+            rgba(var(--glass-accent-rgb), calc(var(--glass-spotlight-intensity, 0.65) * 0.40)) 65%,
             transparent 100%
         ),
-        /* 3. Statik Üst Kenar Elmas Işıltısı */
+        /* 2. Zıt Yöndeki İç Cam Kırılması ve Prizma Yansıması (Secondary Internal Caustic Bounce) */
+        radial-gradient(
+            circle calc(var(--glass-spotlight-radius, 130px) * 1.2) at var(--opp-mouse-x, -400px) var(--opp-mouse-y, -400px),
+            rgba(255, 255, 255, calc(var(--glass-spotlight-intensity, 0.65) * 0.75)) 0%,
+            rgba(var(--glass-accent-rgb), calc(var(--glass-spotlight-intensity, 0.65) * 0.45)) 40%,
+            transparent 75%
+        ),
+        /* 3. Statik Üst Kenar Elmas Işıltısı (Static Diamond Bevel Ambient) */
         radial-gradient(
             ellipse var(--glass-specular-taper) 70% at 50% -5%,
             rgba(255, 255, 255, var(--glass-specular-alpha)) 0%,
