@@ -76,45 +76,61 @@ document.addEventListener('DOMContentLoaded', () => {
     const valBtnInnerGlowSpread = document.getElementById('val-btn-inner-glow-spread');
     const valBtnRadius = document.getElementById('val-btn-radius');
 
-    // ⌨️ GİRDİ KONTROLLERİ
+    // ⌨️ GİRDİ KONTROLLERİ (8 PARAMETRE)
     const paramInputOpacity = document.getElementById('param-input-opacity');
     const paramInputBlur = document.getElementById('param-input-blur');
     const paramInputSpecular = document.getElementById('param-input-specular');
     const paramInputSpecularWidth = document.getElementById('param-input-specular-width');
+    const paramInputSpecularTaper = document.getElementById('param-input-specular-taper');
     const paramInputInnerGlow = document.getElementById('param-input-inner-glow');
+    const paramInputInnerGlowSpread = document.getElementById('param-input-inner-glow-spread');
     const paramInputRadius = document.getElementById('param-input-radius');
 
     const valInputOpacity = document.getElementById('val-input-opacity');
     const valInputBlur = document.getElementById('val-input-blur');
     const valInputSpecular = document.getElementById('val-input-specular');
     const valInputSpecularWidth = document.getElementById('val-input-specular-width');
+    const valInputSpecularTaper = document.getElementById('val-input-specular-taper');
     const valInputInnerGlow = document.getElementById('val-input-inner-glow');
+    const valInputInnerGlowSpread = document.getElementById('val-input-inner-glow-spread');
     const valInputRadius = document.getElementById('val-input-radius');
 
-    // 📑 SEKME & ROZET KONTROLLERİ
+    // 📑 SEKME & ROZET KONTROLLERİ (8 PARAMETRE)
     const paramTabOpacity = document.getElementById('param-tab-opacity');
     const paramTabBlur = document.getElementById('param-tab-blur');
     const paramTabSpecular = document.getElementById('param-tab-specular');
+    const paramTabSpecularWidth = document.getElementById('param-tab-specular-width');
+    const paramTabSpecularTaper = document.getElementById('param-tab-specular-taper');
+    const paramTabInnerGlow = document.getElementById('param-tab-inner-glow');
+    const paramTabInnerGlowSpread = document.getElementById('param-tab-inner-glow-spread');
     const paramTabRadius = document.getElementById('param-tab-radius');
 
     const valTabOpacity = document.getElementById('val-tab-opacity');
     const valTabBlur = document.getElementById('val-tab-blur');
     const valTabSpecular = document.getElementById('val-tab-specular');
+    const valTabSpecularWidth = document.getElementById('val-tab-specular-width');
+    const valTabSpecularTaper = document.getElementById('val-tab-specular-taper');
+    const valTabInnerGlow = document.getElementById('val-tab-inner-glow');
+    const valTabInnerGlowSpread = document.getElementById('val-tab-inner-glow-spread');
     const valTabRadius = document.getElementById('val-tab-radius');
 
-    // 🖼️ KONTEYNIR & KART KONTROLLERİ
+    // 🖼️ KONTEYNIR & KART KONTROLLERİ (8 PARAMETRE)
     const paramCardOpacity = document.getElementById('param-card-opacity');
     const paramCardBlur = document.getElementById('param-card-blur');
     const paramCardSpecular = document.getElementById('param-card-specular');
     const paramCardSpecularWidth = document.getElementById('param-card-specular-width');
+    const paramCardSpecularTaper = document.getElementById('param-card-specular-taper');
     const paramCardInnerGlow = document.getElementById('param-card-inner-glow');
+    const paramCardInnerGlowSpread = document.getElementById('param-card-inner-glow-spread');
     const paramCardRadius = document.getElementById('param-card-radius');
 
     const valCardOpacity = document.getElementById('val-card-opacity');
     const valCardBlur = document.getElementById('val-card-blur');
     const valCardSpecular = document.getElementById('val-card-specular');
     const valCardSpecularWidth = document.getElementById('val-card-specular-width');
+    const valCardSpecularTaper = document.getElementById('val-card-specular-taper');
     const valCardInnerGlow = document.getElementById('val-card-inner-glow');
+    const valCardInnerGlowSpread = document.getElementById('val-card-inner-glow-spread');
     const valCardRadius = document.getElementById('val-card-radius');
 
     const quickPresetSelect = document.getElementById('quick-preset-select');
@@ -131,39 +147,6 @@ document.addEventListener('DOMContentLoaded', () => {
         tab: { hex: '#2563eb', rgb: '37, 99, 235' },
         card: { hex: '#2563eb', rgb: '37, 99, 235' }
     };
-
-    // Filtre Barı (Sub-nav)
-    const compFilterBtns = document.querySelectorAll('.comp-filter-btn');
-    compFilterBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            compFilterBtns.forEach(b => {
-                b.classList.remove('active');
-                b.style.background = 'rgba(255,255,255,0.05)';
-                b.style.color = '#94a3b8';
-            });
-            btn.classList.add('active');
-            btn.style.background = 'rgba(37,99,235,0.35)';
-            btn.style.color = '#fff';
-
-            const target = btn.getAttribute('data-comp-target');
-            const secBtn = document.getElementById('section-comp-btn');
-            const secInput = document.getElementById('section-comp-input');
-            const secTab = document.getElementById('section-comp-tab');
-            const secCard = document.getElementById('section-comp-card');
-
-            if (target === 'all') {
-                if (secBtn) secBtn.style.display = 'block';
-                if (secInput) secInput.style.display = 'block';
-                if (secTab) secTab.style.display = 'block';
-                if (secCard) secCard.style.display = 'block';
-            } else {
-                if (secBtn) secBtn.style.display = target === 'btn' ? 'block' : 'none';
-                if (secInput) secInput.style.display = target === 'input' ? 'block' : 'none';
-                if (secTab) secTab.style.display = target === 'tab' ? 'block' : 'none';
-                if (secCard) secCard.style.display = target === 'card' ? 'block' : 'none';
-            }
-        });
-    });
 
     // Bileşen Bazlı Renk Paletleri
     document.querySelectorAll('.comp-color-palette').forEach(palette => {
@@ -193,44 +176,44 @@ document.addEventListener('DOMContentLoaded', () => {
     const PRESETS = {
         visionos: {
             btn: { opacity: 35, blur: 20, specular: 100, specWidth: 1.5, taper: 80, innerGlow: 65, spread: 6, radius: 9999, color: '#2563eb', rgb: '37, 99, 235' },
-            input: { opacity: 25, blur: 20, specular: 90, specWidth: 1.5, innerGlow: 50, radius: 9999, color: '#2563eb', rgb: '37, 99, 235' },
-            tab: { opacity: 40, blur: 16, specular: 120, radius: 9999, color: '#2563eb', rgb: '37, 99, 235' },
-            card: { opacity: 20, blur: 0, specular: 80, specWidth: 1.5, innerGlow: 40, radius: 24, color: '#2563eb', rgb: '37, 99, 235' }
+            input: { opacity: 25, blur: 20, specular: 90, specWidth: 1.5, taper: 80, innerGlow: 50, spread: 5, radius: 9999, color: '#2563eb', rgb: '37, 99, 235' },
+            tab: { opacity: 40, blur: 16, specular: 120, specWidth: 1.5, taper: 80, innerGlow: 60, spread: 6, radius: 9999, color: '#2563eb', rgb: '37, 99, 235' },
+            card: { opacity: 20, blur: 0, specular: 80, specWidth: 1.5, taper: 80, innerGlow: 40, spread: 8, radius: 24, color: '#2563eb', rgb: '37, 99, 235' }
         },
         sapphire: {
             btn: { opacity: 50, blur: 25, specular: 140, specWidth: 2.0, taper: 85, innerGlow: 110, spread: 8, radius: 9999, color: '#2563eb', rgb: '37, 99, 235' },
-            input: { opacity: 35, blur: 25, specular: 110, specWidth: 2.0, innerGlow: 70, radius: 9999, color: '#2563eb', rgb: '37, 99, 235' },
-            tab: { opacity: 55, blur: 20, specular: 140, radius: 9999, color: '#2563eb', rgb: '37, 99, 235' },
-            card: { opacity: 28, blur: 0, specular: 110, specWidth: 2.0, innerGlow: 60, radius: 26, color: '#2563eb', rgb: '37, 99, 235' }
+            input: { opacity: 35, blur: 25, specular: 110, specWidth: 2.0, taper: 85, innerGlow: 70, spread: 6, radius: 9999, color: '#2563eb', rgb: '37, 99, 235' },
+            tab: { opacity: 55, blur: 20, specular: 140, specWidth: 2.0, taper: 85, innerGlow: 80, spread: 7, radius: 9999, color: '#2563eb', rgb: '37, 99, 235' },
+            card: { opacity: 28, blur: 0, specular: 110, specWidth: 2.0, taper: 85, innerGlow: 60, spread: 10, radius: 26, color: '#2563eb', rgb: '37, 99, 235' }
         },
         emerald: {
             btn: { opacity: 30, blur: 18, specular: 120, specWidth: 1.5, taper: 75, innerGlow: 95, spread: 6, radius: 9999, color: '#10b981', rgb: '16, 185, 129' },
-            input: { opacity: 20, blur: 18, specular: 85, specWidth: 1.5, innerGlow: 45, radius: 9999, color: '#10b981', rgb: '16, 185, 129' },
-            tab: { opacity: 35, blur: 14, specular: 115, radius: 9999, color: '#10b981', rgb: '16, 185, 129' },
-            card: { opacity: 18, blur: 0, specular: 75, specWidth: 1.5, innerGlow: 35, radius: 22, color: '#10b981', rgb: '16, 185, 129' }
+            input: { opacity: 20, blur: 18, specular: 85, specWidth: 1.5, taper: 75, innerGlow: 45, spread: 5, radius: 9999, color: '#10b981', rgb: '16, 185, 129' },
+            tab: { opacity: 35, blur: 14, specular: 115, specWidth: 1.5, taper: 75, innerGlow: 55, spread: 5, radius: 9999, color: '#10b981', rgb: '16, 185, 129' },
+            card: { opacity: 18, blur: 0, specular: 75, specWidth: 1.5, taper: 75, innerGlow: 35, spread: 7, radius: 22, color: '#10b981', rgb: '16, 185, 129' }
         },
         cyberpunk: {
             btn: { opacity: 45, blur: 30, specular: 180, specWidth: 2.5, taper: 90, innerGlow: 140, spread: 12, radius: 12, color: '#8b5cf6', rgb: '139, 92, 246' },
-            input: { opacity: 30, blur: 30, specular: 140, specWidth: 2.0, innerGlow: 80, radius: 12, color: '#8b5cf6', rgb: '139, 92, 246' },
-            tab: { opacity: 50, blur: 24, specular: 160, radius: 12, color: '#8b5cf6', rgb: '139, 92, 246' },
-            card: { opacity: 25, blur: 0, specular: 130, specWidth: 2.0, innerGlow: 70, radius: 20, color: '#8b5cf6', rgb: '139, 92, 246' }
+            input: { opacity: 30, blur: 30, specular: 140, specWidth: 2.0, taper: 90, innerGlow: 80, spread: 8, radius: 12, color: '#8b5cf6', rgb: '139, 92, 246' },
+            tab: { opacity: 50, blur: 24, specular: 160, specWidth: 2.0, taper: 90, innerGlow: 90, spread: 9, radius: 12, color: '#8b5cf6', rgb: '139, 92, 246' },
+            card: { opacity: 25, blur: 0, specular: 130, specWidth: 2.0, taper: 90, innerGlow: 70, spread: 12, radius: 20, color: '#8b5cf6', rgb: '139, 92, 246' }
         },
         crystal: {
             btn: { opacity: 15, blur: 12, specular: 150, specWidth: 1.0, taper: 70, innerGlow: 120, spread: 7, radius: 9999, color: '#ffffff', rgb: '255, 255, 255' },
-            input: { opacity: 10, blur: 12, specular: 100, specWidth: 1.0, innerGlow: 40, radius: 9999, color: '#ffffff', rgb: '255, 255, 255' },
-            tab: { opacity: 20, blur: 10, specular: 130, radius: 9999, color: '#ffffff', rgb: '255, 255, 255' },
-            card: { opacity: 12, blur: 0, specular: 90, specWidth: 1.0, innerGlow: 30, radius: 24, color: '#ffffff', rgb: '255, 255, 255' }
+            input: { opacity: 10, blur: 12, specular: 100, specWidth: 1.0, taper: 70, innerGlow: 40, spread: 4, radius: 9999, color: '#ffffff', rgb: '255, 255, 255' },
+            tab: { opacity: 20, blur: 10, specular: 130, specWidth: 1.0, taper: 70, innerGlow: 50, spread: 5, radius: 9999, color: '#ffffff', rgb: '255, 255, 255' },
+            card: { opacity: 12, blur: 0, specular: 90, specWidth: 1.0, taper: 70, innerGlow: 30, spread: 6, radius: 24, color: '#ffffff', rgb: '255, 255, 255' }
         },
         frost: {
             btn: { opacity: 65, blur: 40, specular: 70, specWidth: 1.5, taper: 60, innerGlow: 50, spread: 5, radius: 18, color: '#64748b', rgb: '100, 116, 139' },
-            input: { opacity: 50, blur: 40, specular: 60, specWidth: 1.5, innerGlow: 35, radius: 18, color: '#64748b', rgb: '100, 116, 139' },
-            tab: { opacity: 60, blur: 35, specular: 80, radius: 18, color: '#64748b', rgb: '100, 116, 139' },
-            card: { opacity: 40, blur: 0, specular: 50, specWidth: 1.5, innerGlow: 25, radius: 24, color: '#64748b', rgb: '100, 116, 139' }
+            input: { opacity: 50, blur: 40, specular: 60, specWidth: 1.5, taper: 60, innerGlow: 35, spread: 4, radius: 18, color: '#64748b', rgb: '100, 116, 139' },
+            tab: { opacity: 60, blur: 35, specular: 80, specWidth: 1.5, taper: 60, innerGlow: 45, spread: 5, radius: 18, color: '#64748b', rgb: '100, 116, 139' },
+            card: { opacity: 40, blur: 0, specular: 50, specWidth: 1.5, taper: 60, innerGlow: 25, spread: 6, radius: 24, color: '#64748b', rgb: '100, 116, 139' }
         }
     };
 
     function updateGlassEngine() {
-        // 1. BUTONLAR
+        // 1. BUTONLAR (8 PARAMETRE)
         const btnOp = parseInt(paramBtnOpacity ? paramBtnOpacity.value : 35, 10);
         const btnBl = parseInt(paramBtnBlur ? paramBtnBlur.value : 20, 10);
         const btnSp = parseInt(paramBtnSpecular ? paramBtnSpecular.value : 100, 10);
@@ -254,19 +237,23 @@ document.addEventListener('DOMContentLoaded', () => {
         const btnIgAlpha = (btnIg / 100).toFixed(2);
         const btnRadiusStr = btnRd >= 9000 ? '9999px' : `${btnRd}px`;
 
-        // 2. GİRDİLER
+        // 2. GİRDİLER (8 PARAMETRE)
         const inputOp = parseInt(paramInputOpacity ? paramInputOpacity.value : 25, 10);
         const inputBl = parseInt(paramInputBlur ? paramInputBlur.value : 20, 10);
         const inputSp = parseInt(paramInputSpecular ? paramInputSpecular.value : 90, 10);
         const inputSpWidth = parseFloat(paramInputSpecularWidth ? paramInputSpecularWidth.value : 1.5);
+        const inputTpr = parseInt(paramInputSpecularTaper ? paramInputSpecularTaper.value : 80, 10);
         const inputIg = parseInt(paramInputInnerGlow ? paramInputInnerGlow.value : 50, 10);
+        const inputIgSpread = parseInt(paramInputInnerGlowSpread ? paramInputInnerGlowSpread.value : 5, 10);
         const inputRd = parseInt(paramInputRadius ? paramInputRadius.value : 9999, 10);
 
         if (valInputOpacity) valInputOpacity.textContent = `${inputOp}%`;
         if (valInputBlur) valInputBlur.textContent = inputBl === 0 ? '0px (Kristal)' : `${inputBl}px`;
         if (valInputSpecular) valInputSpecular.textContent = `${inputSp}%`;
         if (valInputSpecularWidth) valInputSpecularWidth.textContent = `${inputSpWidth.toFixed(1)}px`;
+        if (valInputSpecularTaper) valInputSpecularTaper.textContent = `${inputTpr}%`;
         if (valInputInnerGlow) valInputInnerGlow.textContent = `${inputIg}%`;
+        if (valInputInnerGlowSpread) valInputInnerGlowSpread.textContent = `${inputIgSpread}px`;
         if (valInputRadius) valInputRadius.textContent = inputRd >= 9000 ? '9999px (Hap)' : `${inputRd}px`;
 
         const inputSpecAlpha = Math.min(inputSp / 100, 1.0).toFixed(2);
@@ -274,36 +261,51 @@ document.addEventListener('DOMContentLoaded', () => {
         const inputIgAlpha = (inputIg / 100).toFixed(2);
         const inputRadiusStr = inputRd >= 9000 ? '9999px' : `${inputRd}px`;
 
-        // 3. SEKMELER
+        // 3. SEKMELER (8 PARAMETRE)
         const tabOp = parseInt(paramTabOpacity ? paramTabOpacity.value : 40, 10);
         const tabBl = parseInt(paramTabBlur ? paramTabBlur.value : 16, 10);
         const tabSp = parseInt(paramTabSpecular ? paramTabSpecular.value : 120, 10);
+        const tabSpWidth = parseFloat(paramTabSpecularWidth ? paramTabSpecularWidth.value : 1.5);
+        const tabTpr = parseInt(paramTabSpecularTaper ? paramTabSpecularTaper.value : 80, 10);
+        const tabIg = parseInt(paramTabInnerGlow ? paramTabInnerGlow.value : 60, 10);
+        const tabIgSpread = parseInt(paramTabInnerGlowSpread ? paramTabInnerGlowSpread.value : 6, 10);
         const tabRd = parseInt(paramTabRadius ? paramTabRadius.value : 9999, 10);
 
         if (valTabOpacity) valTabOpacity.textContent = `${tabOp}%`;
         if (valTabBlur) valTabBlur.textContent = `${tabBl}px`;
         if (valTabSpecular) valTabSpecular.textContent = `${tabSp}%`;
+        if (valTabSpecularWidth) valTabSpecularWidth.textContent = `${tabSpWidth.toFixed(1)}px`;
+        if (valTabSpecularTaper) valTabSpecularTaper.textContent = `${tabTpr}%`;
+        if (valTabInnerGlow) valTabInnerGlow.textContent = `${tabIg}%`;
+        if (valTabInnerGlowSpread) valTabInnerGlowSpread.textContent = `${tabIgSpread}px`;
         if (valTabRadius) valTabRadius.textContent = tabRd >= 9000 ? '9999px (Hap)' : `${tabRd}px`;
 
         const tabSpecAlpha = Math.min(tabSp / 100, 1.0).toFixed(2);
+        const tabBloomPx = tabSp > 100 ? Math.round((tabSp - 100) * 0.06) : 0;
+        const tabIgAlpha = (tabIg / 100).toFixed(2);
         const tabRadiusStr = tabRd >= 9000 ? '9999px' : `${tabRd}px`;
 
-        // 4. KONTEYNIR (KARTLAR)
+        // 4. KONTEYNIR (8 PARAMETRE)
         const cardOp = parseInt(paramCardOpacity ? paramCardOpacity.value : 20, 10);
         const cardBl = parseInt(paramCardBlur ? paramCardBlur.value : 0, 10);
         const cardSp = parseInt(paramCardSpecular ? paramCardSpecular.value : 80, 10);
         const cardSpWidth = parseFloat(paramCardSpecularWidth ? paramCardSpecularWidth.value : 1.5);
+        const cardTpr = parseInt(paramCardSpecularTaper ? paramCardSpecularTaper.value : 80, 10);
         const cardIg = parseInt(paramCardInnerGlow ? paramCardInnerGlow.value : 40, 10);
+        const cardIgSpread = parseInt(paramCardInnerGlowSpread ? paramCardInnerGlowSpread.value : 8, 10);
         const cardRd = parseInt(paramCardRadius ? paramCardRadius.value : 24, 10);
 
         if (valCardOpacity) valCardOpacity.textContent = `${cardOp}%`;
         if (valCardBlur) valCardBlur.textContent = cardBl === 0 ? '0px (Net)' : `${cardBl}px`;
         if (valCardSpecular) valCardSpecular.textContent = `${cardSp}%`;
         if (valCardSpecularWidth) valCardSpecularWidth.textContent = `${cardSpWidth.toFixed(1)}px`;
+        if (valCardSpecularTaper) valCardSpecularTaper.textContent = `${cardTpr}%`;
         if (valCardInnerGlow) valCardInnerGlow.textContent = `${cardIg}%`;
+        if (valCardInnerGlowSpread) valCardInnerGlowSpread.textContent = `${cardIgSpread}px`;
         if (valCardRadius) valCardRadius.textContent = `${cardRd}px`;
 
         const cardSpecAlpha = Math.min(cardSp / 100, 1.0).toFixed(2);
+        const cardBloomPx = cardSp > 100 ? Math.round((cardSp - 100) * 0.05) : 0;
         const cardIgAlpha = (cardIg / 100).toFixed(2);
 
         // Apply CSS Variables to Root
@@ -328,7 +330,9 @@ document.addEventListener('DOMContentLoaded', () => {
         root.style.setProperty('--input-glass-specular-alpha', inputSpecAlpha);
         root.style.setProperty('--input-glass-specular-width', `${inputSpWidth}px`);
         root.style.setProperty('--input-glass-specular-bloom', `${inputBloomPx}px`);
+        root.style.setProperty('--input-glass-specular-taper', `${inputTpr}%`);
         root.style.setProperty('--input-glass-inner-glow-alpha', inputIgAlpha);
+        root.style.setProperty('--input-glass-inner-glow-spread', `${inputIgSpread}px`);
         root.style.setProperty('--input-glass-radius', inputRadiusStr);
         root.style.setProperty('--input-glass-accent-color', compColors.input.hex);
         root.style.setProperty('--input-glass-accent-rgb', compColors.input.rgb);
@@ -337,6 +341,11 @@ document.addEventListener('DOMContentLoaded', () => {
         root.style.setProperty('--tab-glass-opacity', (tabOp / 100).toFixed(2));
         root.style.setProperty('--tab-glass-blur', `${tabBl}px`);
         root.style.setProperty('--tab-glass-specular-alpha', tabSpecAlpha);
+        root.style.setProperty('--tab-glass-specular-width', `${tabSpWidth}px`);
+        root.style.setProperty('--tab-glass-specular-bloom', `${tabBloomPx}px`);
+        root.style.setProperty('--tab-glass-specular-taper', `${tabTpr}%`);
+        root.style.setProperty('--tab-glass-inner-glow-alpha', tabIgAlpha);
+        root.style.setProperty('--tab-glass-inner-glow-spread', `${tabIgSpread}px`);
         root.style.setProperty('--tab-glass-radius', tabRadiusStr);
         root.style.setProperty('--tab-glass-accent-color', compColors.tab.hex);
         root.style.setProperty('--tab-glass-accent-rgb', compColors.tab.rgb);
@@ -346,7 +355,10 @@ document.addEventListener('DOMContentLoaded', () => {
         root.style.setProperty('--card-glass-blur', `${cardBl}px`);
         root.style.setProperty('--card-glass-specular-alpha', cardSpecAlpha);
         root.style.setProperty('--card-glass-specular-width', `${cardSpWidth}px`);
+        root.style.setProperty('--card-glass-specular-bloom', `${cardBloomPx}px`);
+        root.style.setProperty('--card-glass-specular-taper', `${cardTpr}%`);
         root.style.setProperty('--card-glass-inner-glow-alpha', cardIgAlpha);
+        root.style.setProperty('--card-glass-inner-glow-spread', `${cardIgSpread}px`);
         root.style.setProperty('--card-glass-radius', `${cardRd}px`);
         root.style.setProperty('--card-glass-accent-color', compColors.card.hex);
         root.style.setProperty('--card-glass-accent-rgb', compColors.card.rgb);
@@ -429,9 +441,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const allGlassSliders = [
         paramBtnOpacity, paramBtnBlur, paramBtnSpecular, paramBtnSpecularWidth, paramBtnSpecularTaper, paramBtnInnerGlow, paramBtnInnerGlowSpread, paramBtnRadius,
-        paramInputOpacity, paramInputBlur, paramInputSpecular, paramInputSpecularWidth, paramInputInnerGlow, paramInputRadius,
-        paramTabOpacity, paramTabBlur, paramTabSpecular, paramTabRadius,
-        paramCardOpacity, paramCardBlur, paramCardSpecular, paramCardSpecularWidth, paramCardInnerGlow, paramCardRadius
+        paramInputOpacity, paramInputBlur, paramInputSpecular, paramInputSpecularWidth, paramInputSpecularTaper, paramInputInnerGlow, paramInputInnerGlowSpread, paramInputRadius,
+        paramTabOpacity, paramTabBlur, paramTabSpecular, paramTabSpecularWidth, paramTabSpecularTaper, paramTabInnerGlow, paramTabInnerGlowSpread, paramTabRadius,
+        paramCardOpacity, paramCardBlur, paramCardSpecular, paramCardSpecularWidth, paramCardSpecularTaper, paramCardInnerGlow, paramCardInnerGlowSpread, paramCardRadius
     ].filter(Boolean);
 
     allGlassSliders.forEach(slider => {
@@ -463,35 +475,43 @@ document.addEventListener('DOMContentLoaded', () => {
                     compColors.btn.rgb = conf.btn.rgb;
                 }
 
-                // 2. Inputs
+                // 2. Inputs (8 params)
                 if (conf.input) {
                     if (paramInputOpacity) paramInputOpacity.value = conf.input.opacity;
                     if (paramInputBlur) paramInputBlur.value = conf.input.blur;
                     if (paramInputSpecular) paramInputSpecular.value = conf.input.specular;
                     if (paramInputSpecularWidth) paramInputSpecularWidth.value = conf.input.specWidth;
+                    if (paramInputSpecularTaper) paramInputSpecularTaper.value = conf.input.taper || 80;
                     if (paramInputInnerGlow) paramInputInnerGlow.value = conf.input.innerGlow;
+                    if (paramInputInnerGlowSpread) paramInputInnerGlowSpread.value = conf.input.spread || 5;
                     if (paramInputRadius) paramInputRadius.value = conf.input.radius;
                     compColors.input.hex = conf.input.color;
                     compColors.input.rgb = conf.input.rgb;
                 }
 
-                // 3. Tabs
+                // 3. Tabs (8 params)
                 if (conf.tab) {
                     if (paramTabOpacity) paramTabOpacity.value = conf.tab.opacity;
                     if (paramTabBlur) paramTabBlur.value = conf.tab.blur;
                     if (paramTabSpecular) paramTabSpecular.value = conf.tab.specular;
+                    if (paramTabSpecularWidth) paramTabSpecularWidth.value = conf.tab.specWidth || 1.5;
+                    if (paramTabSpecularTaper) paramTabSpecularTaper.value = conf.tab.taper || 80;
+                    if (paramTabInnerGlow) paramTabInnerGlow.value = conf.tab.innerGlow || 60;
+                    if (paramTabInnerGlowSpread) paramTabInnerGlowSpread.value = conf.tab.spread || 6;
                     if (paramTabRadius) paramTabRadius.value = conf.tab.radius;
                     compColors.tab.hex = conf.tab.color;
                     compColors.tab.rgb = conf.tab.rgb;
                 }
 
-                // 4. Cards
+                // 4. Cards (8 params)
                 if (conf.card) {
                     if (paramCardOpacity) paramCardOpacity.value = conf.card.opacity;
                     if (paramCardBlur) paramCardBlur.value = conf.card.blur;
                     if (paramCardSpecular) paramCardSpecular.value = conf.card.specular;
                     if (paramCardSpecularWidth) paramCardSpecularWidth.value = conf.card.specWidth;
+                    if (paramCardSpecularTaper) paramCardSpecularTaper.value = conf.card.taper || 80;
                     if (paramCardInnerGlow) paramCardInnerGlow.value = conf.card.innerGlow;
+                    if (paramCardInnerGlowSpread) paramCardInnerGlowSpread.value = conf.card.spread || 8;
                     if (paramCardRadius) paramCardRadius.value = conf.card.radius;
                     compColors.card.hex = conf.card.color;
                     compColors.card.rgb = conf.card.rgb;
@@ -1050,7 +1070,7 @@ ${config.cssCode || cssOutputPreview.textContent}
         if (config.glassModules) {
             const m = config.glassModules;
             
-            // Buttons
+            // Buttons (8 params)
             if (m.btn) {
                 if (paramBtnOpacity) paramBtnOpacity.value = Math.round((m.btn.opacity || 0.35) * 100);
                 if (paramBtnBlur) paramBtnBlur.value = m.btn.blur ?? 20;
@@ -1064,35 +1084,43 @@ ${config.cssCode || cssOutputPreview.textContent}
                 if (m.btn.rgb) compColors.btn.rgb = m.btn.rgb;
             }
 
-            // Inputs
+            // Inputs (8 params)
             if (m.input) {
                 if (paramInputOpacity) paramInputOpacity.value = Math.round((m.input.opacity || 0.25) * 100);
                 if (paramInputBlur) paramInputBlur.value = m.input.blur ?? 20;
                 if (paramInputSpecular) paramInputSpecular.value = m.input.specularRaw || Math.round((m.input.specularAlpha || 0.90) * 100);
                 if (paramInputSpecularWidth) paramInputSpecularWidth.value = m.input.specularWidth ?? 1.5;
+                if (paramInputSpecularTaper) paramInputSpecularTaper.value = m.input.specularTaper ?? 80;
                 if (paramInputInnerGlow) paramInputInnerGlow.value = m.input.innerGlowRaw || Math.round((m.input.innerGlowAlpha || 0.50) * 100);
+                if (paramInputInnerGlowSpread) paramInputInnerGlowSpread.value = m.input.innerGlowSpread ?? 5;
                 if (paramInputRadius) paramInputRadius.value = (m.input.radius || '').includes('9999') ? 9999 : parseInt(m.input.radius, 10) || 9999;
                 if (m.input.color) compColors.input.hex = m.input.color;
                 if (m.input.rgb) compColors.input.rgb = m.input.rgb;
             }
 
-            // Tabs
+            // Tabs (8 params)
             if (m.tab) {
                 if (paramTabOpacity) paramTabOpacity.value = Math.round((m.tab.opacity || 0.40) * 100);
                 if (paramTabBlur) paramTabBlur.value = m.tab.blur ?? 16;
                 if (paramTabSpecular) paramTabSpecular.value = m.tab.specularRaw || Math.round((m.tab.specularAlpha || 1.20) * 100);
+                if (paramTabSpecularWidth) paramTabSpecularWidth.value = m.tab.specularWidth ?? 1.5;
+                if (paramTabSpecularTaper) paramTabSpecularTaper.value = m.tab.specularTaper ?? 80;
+                if (paramTabInnerGlow) paramTabInnerGlow.value = m.tab.innerGlowRaw || Math.round((m.tab.innerGlowAlpha || 0.60) * 100);
+                if (paramTabInnerGlowSpread) paramTabInnerGlowSpread.value = m.tab.innerGlowSpread ?? 6;
                 if (paramTabRadius) paramTabRadius.value = (m.tab.radius || '').includes('9999') ? 9999 : parseInt(m.tab.radius, 10) || 9999;
                 if (m.tab.color) compColors.tab.hex = m.tab.color;
                 if (m.tab.rgb) compColors.tab.rgb = m.tab.rgb;
             }
 
-            // Cards
+            // Cards (8 params)
             if (m.card) {
                 if (paramCardOpacity) paramCardOpacity.value = Math.round((m.card.opacity || 0.20) * 100);
                 if (paramCardBlur) paramCardBlur.value = m.card.blur ?? 0;
                 if (paramCardSpecular) paramCardSpecular.value = m.card.specularRaw || Math.round((m.card.specularAlpha || 0.80) * 100);
                 if (paramCardSpecularWidth) paramCardSpecularWidth.value = m.card.specularWidth ?? 1.5;
+                if (paramCardSpecularTaper) paramCardSpecularTaper.value = m.card.specularTaper ?? 80;
                 if (paramCardInnerGlow) paramCardInnerGlow.value = m.card.innerGlowRaw || Math.round((m.card.innerGlowAlpha || 0.40) * 100);
+                if (paramCardInnerGlowSpread) paramCardInnerGlowSpread.value = m.card.innerGlowSpread ?? 8;
                 if (paramCardRadius) paramCardRadius.value = parseInt(m.card.radius, 10) || 24;
                 if (m.card.color) compColors.card.hex = m.card.color;
                 if (m.card.rgb) compColors.card.rgb = m.card.rgb;
@@ -1179,8 +1207,10 @@ ${config.cssCode || cssOutputPreview.textContent}
                     specularAlpha: parseFloat((parseInt(paramInputSpecular.value, 10) / 100).toFixed(2)),
                     specularRaw: parseInt(paramInputSpecular.value, 10),
                     specularWidth: parseFloat(paramInputSpecularWidth ? paramInputSpecularWidth.value : 1.5),
+                    specularTaper: parseInt(paramInputSpecularTaper ? paramInputSpecularTaper.value : 80, 10),
                     innerGlowAlpha: parseFloat((parseInt(paramInputInnerGlow.value, 10) / 100).toFixed(2)),
                     innerGlowRaw: parseInt(paramInputInnerGlow.value, 10),
+                    innerGlowSpread: parseInt(paramInputInnerGlowSpread ? paramInputInnerGlowSpread.value : 5, 10),
                     radius: parseInt(paramInputRadius.value, 10) >= 9000 ? '9999px' : `${paramInputRadius.value}px`,
                     color: compColors.input.hex,
                     rgb: compColors.input.rgb
@@ -1190,6 +1220,11 @@ ${config.cssCode || cssOutputPreview.textContent}
                     blur: parseInt(paramTabBlur.value, 10),
                     specularAlpha: parseFloat((parseInt(paramTabSpecular.value, 10) / 100).toFixed(2)),
                     specularRaw: parseInt(paramTabSpecular.value, 10),
+                    specularWidth: parseFloat(paramTabSpecularWidth ? paramTabSpecularWidth.value : 1.5),
+                    specularTaper: parseInt(paramTabSpecularTaper ? paramTabSpecularTaper.value : 80, 10),
+                    innerGlowAlpha: parseFloat((parseInt(paramTabInnerGlow.value, 10) / 100).toFixed(2)),
+                    innerGlowRaw: parseInt(paramTabInnerGlow.value, 10),
+                    innerGlowSpread: parseInt(paramTabInnerGlowSpread ? paramTabInnerGlowSpread.value : 6, 10),
                     radius: parseInt(paramTabRadius.value, 10) >= 9000 ? '9999px' : `${paramTabRadius.value}px`,
                     color: compColors.tab.hex,
                     rgb: compColors.tab.rgb
@@ -1200,8 +1235,10 @@ ${config.cssCode || cssOutputPreview.textContent}
                     specularAlpha: parseFloat((parseInt(paramCardSpecular.value, 10) / 100).toFixed(2)),
                     specularRaw: parseInt(paramCardSpecular.value, 10),
                     specularWidth: parseFloat(paramCardSpecularWidth ? paramCardSpecularWidth.value : 1.5),
+                    specularTaper: parseInt(paramCardSpecularTaper ? paramCardSpecularTaper.value : 80, 10),
                     innerGlowAlpha: parseFloat((parseInt(paramCardInnerGlow.value, 10) / 100).toFixed(2)),
                     innerGlowRaw: parseInt(paramCardInnerGlow.value, 10),
+                    innerGlowSpread: parseInt(paramCardInnerGlowSpread ? paramCardInnerGlowSpread.value : 8, 10),
                     radius: `${paramCardRadius.value}px`,
                     color: compColors.card.hex,
                     rgb: compColors.card.rgb
