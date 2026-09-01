@@ -190,7 +190,8 @@
                 <div class="control-group">
                     <label class="control-label">Dönüş / Hareket Modu</label>
                     <div class="motion-mode-grid">
-                        <button class="motion-btn active" data-motion="clockwise">↻ Saat Yönü</button>
+                        <button class="motion-btn active" data-motion="galaxy">🌌 Galaksi Sarmalı</button>
+                        <button class="motion-btn" data-motion="clockwise">↻ Saat Yönü</button>
                         <button class="motion-btn" data-motion="counter">↺ Ters Yön</button>
                         <button class="motion-btn" data-motion="wave">〰 Dalgalı</button>
                         <button class="motion-btn" data-motion="pulse">◉ Yaklaşma (Zoom)</button>
@@ -198,13 +199,44 @@
                     </div>
                 </div>
 
+                <!-- 🌌 GALAKSİ ODAK NOKTASI (GALACTIC CORE PIVOT) -->
+                <div class="control-group" id="galaxy-pivot-group">
+                    <label class="control-label">Galaksi Çekirdeği (Dönüş Merkezi)</label>
+                    <div class="preset-grid">
+                        <button class="pivot-btn active" data-pivot="center">🎯 Ekran Merkezi</button>
+                        <button class="pivot-btn" data-pivot="card">🎴 Kart Arkası</button>
+                        <button class="pivot-btn" data-pivot="mouse">🖱️ Canlı Fare Çekirdeği</button>
+                        <button class="pivot-btn" data-pivot="topleft">↖️ Sol Üst Nebula</button>
+                        <button class="pivot-btn" data-pivot="topright">↗️ Sağ Üst Pulsar</button>
+                        <button class="pivot-btn" data-pivot="bottom">⬇️ Dip Kozmoz</button>
+                    </div>
+                </div>
+
                 <!-- ANİMASYON HIZI (SPEED) -->
                 <div class="control-group">
                     <div class="control-label-row">
-                        <span>Animasyon Hızı (Tur Süresi)</span>
+                        <span>Galaksi Dönüş Hızı (Yörünge Süresi)</span>
                         <span class="control-value" id="val-aurora-speed">12s (Akıcı)</span>
                     </div>
-                    <input type="range" id="aurora-speed" min="2" max="30" step="1" value="12" class="lab-slider">
+                    <input type="range" id="aurora-speed" min="2" max="35" step="1" value="12" class="lab-slider">
+                </div>
+
+                <!-- GALAKSİ YÖRÜNGE ÇAPI (ORBIT RADIUS) -->
+                <div class="control-group">
+                    <div class="control-label-row">
+                        <span>Yörünge Genişliği & Çapı (Radius)</span>
+                        <span class="control-value" id="val-galaxy-radius">280px</span>
+                    </div>
+                    <input type="range" id="galaxy-radius" min="60" max="650" step="10" value="280" class="lab-slider">
+                </div>
+
+                <!-- GALAKSİ 3D DİSK EĞİMİ (PERSPECTIVE TILT) -->
+                <div class="control-group">
+                    <div class="control-label-row">
+                        <span>Galaksi 3D Eğim Açısı (Tilt)</span>
+                        <span class="control-value" id="val-galaxy-tilt">35° (Uzay Diski)</span>
+                    </div>
+                    <input type="range" id="galaxy-tilt" min="0" max="80" step="5" value="35" class="lab-slider">
                 </div>
 
                 <!-- IŞIK YAKLAŞMASI & BÜYÜKLÜK (SCALE & ZOOM) -->

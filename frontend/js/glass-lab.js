@@ -214,9 +214,11 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // ========================================================
-    // 3. AURORA IŞIKLARI DİNAMİK MOTORU KONTROLCÜSÜ
+    // 3. AURORA IŞIKLARI & GALAKSİ MOTORU KONTROLCÜSÜ
     // ========================================================
     const sliderAuroraSpeed = document.getElementById('aurora-speed');
+    const sliderGalaxyRadius = document.getElementById('galaxy-radius');
+    const sliderGalaxyTilt = document.getElementById('galaxy-tilt');
     const sliderAuroraScale = document.getElementById('aurora-scale');
     const sliderAuroraIntensity = document.getElementById('aurora-intensity');
     const sliderAuroraBlur = document.getElementById('aurora-blur');
@@ -224,48 +226,91 @@ document.addEventListener('DOMContentLoaded', () => {
     const resetAuroraBtn = document.getElementById('reset-aurora-btn');
 
     const valAuroraSpeed = document.getElementById('val-aurora-speed');
+    const valGalaxyRadius = document.getElementById('val-galaxy-radius');
+    const valGalaxyTilt = document.getElementById('val-galaxy-tilt');
     const valAuroraScale = document.getElementById('val-aurora-scale');
     const valAuroraIntensity = document.getElementById('val-aurora-intensity');
     const valAuroraBlur = document.getElementById('val-aurora-blur');
 
     const bodyEl = document.body;
-    let currentMotionClass = 'motion-clockwise';
+    let currentMotionClass = 'motion-galaxy';
+    let currentPivotMode = 'center';
 
     // Set initial motion class on body
+    bodyEl.classList.remove('motion-clockwise', 'motion-counter', 'motion-wave', 'motion-pulse', 'motion-vortex');
     bodyEl.classList.add(currentMotionClass);
 
     function updateAuroraEngine() {
         const spd = parseInt(sliderAuroraSpeed.value, 10);
+        const rad = parseInt(sliderGalaxyRadius.value, 10);
+        const tlt = parseInt(sliderGalaxyTilt.value, 10);
         const scl = parseFloat(sliderAuroraScale.value);
         const int = parseInt(sliderAuroraIntensity.value, 10);
         const blr = parseInt(sliderAuroraBlur.value, 10);
 
-        valAuroraSpeed.textContent = spd <= 4 ? `${spd}s (Çok Hızlı)` : spd >= 20 ? `${spd}s (Sinematik)` : `${spd}s (Akıcı)`;
+        valAuroraSpeed.textContent = spd <= 4 ? `${spd}s (Çok Hızlı)` : spd >= 24 ? `${spd}s (Sinematik)` : `${spd}s (Akıcı)`;
+        valGalaxyRadius.textContent = `${rad}px`;
+        valGalaxyTilt.textContent = `${tlt}° (${tlt === 0 ? 'Düz' : tlt > 50 ? 'Derin Uzay' : 'Uzay Diski'})`;
         valAuroraScale.textContent = `${scl.toFixed(1)}x`;
         valAuroraIntensity.textContent = `${int}%`;
         valAuroraBlur.textContent = `${blr}px`;
 
         const root = document.documentElement;
         root.style.setProperty('--aurora-speed', `${spd}s`);
+        root.style.setProperty('--galaxy-radius', `${rad}px`);
+        root.style.setProperty('--galaxy-tilt', `${tlt}deg`);
         root.style.setProperty('--aurora-scale', scl);
         root.style.setProperty('--aurora-intensity', (int / 100).toFixed(2));
         root.style.setProperty('--aurora-blur', `${blr}px`);
+
+        updatePivotCoordinates();
     }
 
-    [sliderAuroraSpeed, sliderAuroraScale, sliderAuroraIntensity, sliderAuroraBlur].forEach(slider => {
+    function updatePivotCoordinates() {
+        const root = document.documentElement;
+        if (currentPivotMode === 'center') {
+            root.style.setProperty('--galaxy-pivot-x', '50vw');
+            root.style.setProperty('--galaxy-pivot-y', '50vh');
+        } else if (currentPivotMode === 'card') {
+            root.style.setProperty('--galaxy-pivot-x', '65vw');
+            root.style.setProperty('--galaxy-pivot-y', '40vh');
+        } else if (currentPivotMode === 'topleft') {
+            root.style.setProperty('--galaxy-pivot-x', '20vw');
+            root.style.setProperty('--galaxy-pivot-y', '20vh');
+        } else if (currentPivotMode === 'topright') {
+            root.style.setProperty('--galaxy-pivot-x', '80vw');
+            root.style.setProperty('--galaxy-pivot-y', '25vh');
+        } else if (currentPivotMode === 'bottom') {
+            root.style.setProperty('--galaxy-pivot-x', '50vw');
+            root.style.setProperty('--galaxy-pivot-y', '85vh');
+        }
+    }
+
+    [sliderAuroraSpeed, sliderGalaxyRadius, sliderGalaxyTilt, sliderAuroraScale, sliderAuroraIntensity, sliderAuroraBlur].forEach(slider => {
         slider.addEventListener('input', updateAuroraEngine);
     });
 
-    // Motion Mode Buttons (Clockwise, Counter, Wave, Pulse, Vortex)
+    // Motion Mode Buttons (Galaxy, Clockwise, Counter, Wave, Pulse, Vortex)
     document.querySelectorAll('.motion-btn').forEach(btn => {
         btn.addEventListener('click', () => {
             document.querySelectorAll('.motion-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
 
             const mode = btn.getAttribute('data-motion');
-            bodyEl.classList.remove('motion-clockwise', 'motion-counter', 'motion-wave', 'motion-pulse', 'motion-vortex');
+            bodyEl.classList.remove('motion-galaxy', 'motion-clockwise', 'motion-counter', 'motion-wave', 'motion-pulse', 'motion-vortex');
             currentMotionClass = `motion-${mode}`;
             bodyEl.classList.add(currentMotionClass);
+        });
+    });
+
+    // Galactic Core Pivot Buttons (Center, Card, Mouse, TopLeft, TopRight, Bottom)
+    document.querySelectorAll('.pivot-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.pivot-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            currentPivotMode = btn.getAttribute('data-pivot');
+            updatePivotCoordinates();
         });
     });
 
@@ -284,12 +329,17 @@ document.addEventListener('DOMContentLoaded', () => {
     // Reset Aurora Button
     resetAuroraBtn.addEventListener('click', () => {
         sliderAuroraSpeed.value = 12;
+        sliderGalaxyRadius.value = 280;
+        sliderGalaxyTilt.value = 35;
         sliderAuroraScale.value = 1.2;
         sliderAuroraIntensity.value = 65;
         sliderAuroraBlur.value = 80;
         
-        const defaultMotion = document.querySelector('.motion-btn[data-motion="clockwise"]');
+        const defaultMotion = document.querySelector('.motion-btn[data-motion="galaxy"]');
         if (defaultMotion) defaultMotion.click();
+
+        const defaultPivot = document.querySelector('.pivot-btn[data-pivot="center"]');
+        if (defaultPivot) defaultPivot.click();
 
         const defaultTheme = document.querySelector('.aurora-theme-pill[data-aurora-theme="cosmic"]');
         if (defaultTheme) defaultTheme.click();
@@ -297,11 +347,17 @@ document.addEventListener('DOMContentLoaded', () => {
         updateAuroraEngine();
     });
 
-    // 4. Interactive Mouse Parallax (Reaktif Işık Süzülmesi)
+    // 4. Interactive Mouse Tracking & Galactic Core Following
     let mouseTargetX = 0, mouseTargetY = 0;
     let mouseCurrentX = 0, mouseCurrentY = 0;
 
     window.addEventListener('mousemove', (e) => {
+        // If mouse is chosen as Galactic Core, rotate around the cursor!
+        if (currentPivotMode === 'mouse') {
+            document.documentElement.style.setProperty('--galaxy-pivot-x', `${e.clientX}px`);
+            document.documentElement.style.setProperty('--galaxy-pivot-y', `${e.clientY}px`);
+        }
+
         if (!checkboxMouseFollow.checked) return;
         const cx = window.innerWidth / 2;
         const cy = window.innerHeight / 2;

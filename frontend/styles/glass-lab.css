@@ -20,6 +20,12 @@
     --aurora-mouse-x: 0px;
     --aurora-mouse-y: 0px;
 
+    /* 🌌 GALAKSİ ODAK & YÖRÜNGE PARAMETRELERİ */
+    --galaxy-pivot-x: 50vw;
+    --galaxy-pivot-y: 50vh;
+    --galaxy-radius: 280px;
+    --galaxy-tilt: 35deg;
+
     /* SABİT DEĞERLER */
     --color-bg-dark: #07090e;
     --font-ui: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -75,6 +81,55 @@ body.lab-body {
     animation-duration: var(--aurora-speed);
     animation-iteration-count: infinite;
     animation-timing-function: ease-in-out;
+}
+
+/* 0. 🌌 GALAKSİ SARMAL DÖNÜŞ (CELESTIAL GALAXY SPIRAL ORBIT) */
+.motion-galaxy .aurora-orb {
+    transform-origin: var(--galaxy-pivot-x) var(--galaxy-pivot-y);
+    animation-name: galaxySpiralOrbit;
+}
+
+@keyframes galaxySpiralOrbit {
+    0% {
+        transform: 
+            perspective(1000px)
+            rotateX(var(--galaxy-tilt))
+            rotateZ(0deg)
+            translate(calc(var(--galaxy-radius) * 0.8), calc(var(--galaxy-radius) * -0.4))
+            scale(calc(var(--aurora-scale) * 0.85));
+    }
+    25% {
+        transform: 
+            perspective(1000px)
+            rotateX(var(--galaxy-tilt))
+            rotateZ(90deg)
+            translate(calc(var(--galaxy-radius) * 1.2), calc(var(--galaxy-radius) * 0.2))
+            scale(calc(var(--aurora-scale) * 1.30));
+    }
+    50% {
+        transform: 
+            perspective(1000px)
+            rotateX(var(--galaxy-tilt))
+            rotateZ(180deg)
+            translate(calc(var(--galaxy-radius) * -0.6), calc(var(--galaxy-radius) * 0.9))
+            scale(calc(var(--aurora-scale) * 1.05));
+    }
+    75% {
+        transform: 
+            perspective(1000px)
+            rotateX(var(--galaxy-tilt))
+            rotateZ(270deg)
+            translate(calc(var(--galaxy-radius) * -1.1), calc(var(--galaxy-radius) * -0.3))
+            scale(calc(var(--aurora-scale) * 1.25));
+    }
+    100% {
+        transform: 
+            perspective(1000px)
+            rotateX(var(--galaxy-tilt))
+            rotateZ(360deg)
+            translate(calc(var(--galaxy-radius) * 0.8), calc(var(--galaxy-radius) * -0.4))
+            scale(calc(var(--aurora-scale) * 0.85));
+    }
 }
 
 /* 1. SAAT YÖNÜ DÖNÜŞ (CLOCKWISE ORBITAL) */
@@ -482,6 +537,34 @@ body.lab-body {
     border-top: 1px solid #ffffff;
     color: #ffffff;
     box-shadow: 0 0 16px rgba(16, 185, 129, 0.35);
+}
+
+/* GALAKSİ ODAK NOKTASI BUTONLARI */
+.pivot-btn {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    color: #94a3b8;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 7px 8px;
+    border-radius: 8px;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.15s ease;
+    white-space: nowrap;
+}
+
+.pivot-btn:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: #ffffff;
+}
+
+.pivot-btn.active {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.60) 0%, rgba(147, 51, 234, 0.65) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.30);
+    border-top: 1.5px solid #ffffff;
+    color: #ffffff;
+    box-shadow: 0 0 16px rgba(147, 51, 234, 0.45);
 }
 
 .panel-header {
