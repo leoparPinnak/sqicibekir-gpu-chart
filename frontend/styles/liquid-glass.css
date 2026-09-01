@@ -399,7 +399,7 @@ body, html {
     margin-top: 10px !important;
 }
 
-/* 💎 İpeksi Elmas Işıltısı Katmanı */
+/* 💎 İpeksi Elmas Işıltısı & Zıt Yönlü Kenar Süzülmesi Katmanı */
 .portal-card-btn::before,
 .portal-auth-submit-btn::before,
 .portal-input-capsule::before {
@@ -408,48 +408,29 @@ body, html {
     inset: 0;
     border-radius: inherit;
     padding: 1.5px;
-    background: radial-gradient(
-        ellipse 80% 65% at 50% -5%,
-        rgba(255, 255, 255, 0.85) 0%,
-        rgba(255, 255, 255, 0.60) 25%,
-        rgba(255, 255, 255, 0.18) 60%,
-        rgba(255, 255, 255, 0.02) 85%,
-        transparent 100%
-    );
+    background: 
+        radial-gradient(
+            circle 120px at var(--opp-mouse-x, -400px) var(--opp-mouse-y, -400px),
+            #ffffff 0%,
+            rgba(255, 255, 255, 0.85) 25%,
+            rgba(96, 165, 250, 0.40) 50%,
+            rgba(96, 165, 250, 0.05) 75%,
+            transparent 100%
+        ),
+        radial-gradient(
+            ellipse 80% 65% at 50% -5%,
+            rgba(255, 255, 255, 0.85) 0%,
+            rgba(255, 255, 255, 0.60) 25%,
+            rgba(255, 255, 255, 0.18) 60%,
+            rgba(255, 255, 255, 0.02) 85%,
+            transparent 100%
+        );
     -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
     -webkit-mask-composite: xor;
     mask-composite: exclude;
     pointer-events: none;
     z-index: 2;
     transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-/* 🔦 CANLI İMLEÇ FENERİ (SPOTLIGHT TORCH HOVER) */
-.portal-card-btn::after,
-.portal-auth-submit-btn::after,
-.portal-input-capsule::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    background: radial-gradient(
-        circle 95px at var(--mouse-x, -300px) var(--mouse-y, -300px),
-        rgba(255, 255, 255, 0.65) 0%,
-        rgba(96, 165, 250, 0.35) 35%,
-        rgba(96, 165, 250, 0.05) 65%,
-        transparent 100%
-    );
-    opacity: 0;
-    pointer-events: none;
-    z-index: 3;
-    transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-    mix-blend-mode: screen;
-}
-
-.portal-card-btn:hover::after,
-.portal-auth-submit-btn:hover::after,
-.portal-input-capsule:hover::after {
-    opacity: 1;
 }
 
 .portal-card-btn:hover {

@@ -213,48 +213,36 @@ document.addEventListener('DOMContentLoaded', () => {
     0 6px 18px rgba(0, 0, 0, 0.30);
 }
 
-/* 💎 İpeksi & Ayarlanabilir Kalınlıklı Elmas Işıltısı Katmanı */
+/* 💎 İpeksi & Zıt Yönlü Dinamik Kenar Kırılması Katmanı */
 .liquid-glass-element::before {
   content: '';
   position: absolute;
   inset: 0;
   border-radius: inherit;
   padding: ${spWidth}px;
-  background: radial-gradient(
-    ellipse ${tpr}% 70% at 50% -5%,
-    rgba(255, 255, 255, ${specularAlpha}) 0%,
-    rgba(255, 255, 255, ${(specularAlpha * 0.70).toFixed(2)}) 25%,
-    rgba(255, 255, 255, ${(specularAlpha * 0.20).toFixed(2)}) 60%,
-    rgba(255, 255, 255, 0.02) 85%,
-    transparent 100%
-  );
+  background: 
+    /* 1. Zıt Yönlü Dinamik Kenar Kırılması */
+    radial-gradient(
+      circle 120px at var(--opp-mouse-x, -400px) var(--opp-mouse-y, -400px),
+      #ffffff 0%,
+      rgba(255, 255, 255, ${((spot / 100) * 1.8).toFixed(2)}) 25%,
+      rgba(${currentAccentRGB}, ${((spot / 100) * 0.95).toFixed(2)}) 50%,
+      rgba(${currentAccentRGB}, 0.05) 75%,
+      transparent 100%
+    ),
+    /* 2. Statik Üst Kenar Elmas Işıltısı */
+    radial-gradient(
+      ellipse ${tpr}% 70% at 50% -5%,
+      rgba(255, 255, 255, ${specularAlpha}) 0%,
+      rgba(255, 255, 255, ${(specularAlpha * 0.70).toFixed(2)}) 25%,
+      rgba(255, 255, 255, ${(specularAlpha * 0.20).toFixed(2)}) 60%,
+      rgba(255, 255, 255, 0.02) 85%,
+      transparent 100%
+    );
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
   pointer-events: none;${bloomStyle}
-}
-
-/* 🔦 Canlı İmleç Fener Yansıması (Spotlight Cursor Flare) */
-.liquid-glass-element::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background: radial-gradient(
-    circle 95px at var(--mouse-x, -300px) var(--mouse-y, -300px),
-    rgba(255, 255, 255, ${((spot / 100) * 1.6).toFixed(2)}) 0%,
-    rgba(${currentAccentRGB}, ${((spot / 100) * 0.85).toFixed(2)}) 35%,
-    rgba(${currentAccentRGB}, 0.05) 65%,
-    transparent 100%
-  );
-  opacity: 0;
-  pointer-events: none;
-  mix-blend-mode: screen;
-  transition: opacity 0.25s ease;
-}
-
-.liquid-glass-element:hover::after {
-  opacity: 1;
 }`;
         cssOutputPreview.textContent = cssCode;
     }
@@ -266,7 +254,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // 🔦 CANLI İMLEÇ FENERİ TAKİPÇİSİ (INTERACTIVE MOUSE SPOTLIGHT TRACKER)
+    // 🔦 CANLI İMLEÇ ZIT YÖNLÜ KENAR IŞIĞI TAKİPÇİSİ (OPPOSING CAUSTIC RIM TRACKER)
     function initSpotlightHoverTracker() {
         const interactiveTargets = document.querySelectorAll(
             '.dynamic-glass-btn, .dynamic-glass-input, .dynamic-glass-stepper, .dynamic-tab, .portal-card-btn, .portal-auth-submit-btn, .portal-input-capsule, .component-card'
@@ -276,12 +264,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 const rect = el.getBoundingClientRect();
                 const x = e.clientX - rect.left;
                 const y = e.clientY - rect.top;
+                const oppX = rect.width - x;
+                const oppY = rect.height - y;
                 el.style.setProperty('--mouse-x', `${x}px`);
                 el.style.setProperty('--mouse-y', `${y}px`);
+                el.style.setProperty('--opp-mouse-x', `${oppX}px`);
+                el.style.setProperty('--opp-mouse-y', `${oppY}px`);
             });
             el.addEventListener('mouseleave', () => {
                 el.style.setProperty('--mouse-x', '-400px');
                 el.style.setProperty('--mouse-y', '-400px');
+                el.style.setProperty('--opp-mouse-x', '-400px');
+                el.style.setProperty('--opp-mouse-y', '-400px');
             });
         });
     }
