@@ -66,91 +66,189 @@
 
         <!-- 🎛️ SOL PANEL: CANLI PARAMETRE AYARLAYICI (STUDIO CONTROLS) -->
         <aside class="lab-controls-panel">
-            <div class="panel-header">
-                <h3>🎛️ Cam Fizik Parametreleri</h3>
-                <button class="reset-btn" id="reset-params-btn" title="Varsayılana Dön">Sıfırla</button>
+            
+            <!-- PANEL SEKMELERİ (CAM FİZİĞİ & AURORA MOTORU) -->
+            <div class="panel-tab-switcher">
+                <button class="panel-tab-btn active" data-panel-tab="glass">🎛️ Cam Fiziği</button>
+                <button class="panel-tab-btn" data-panel-tab="aurora">🌌 Aurora Motoru</button>
             </div>
 
-            <!-- ÖN AYARLAR (PRESETS) -->
-            <div class="control-group">
-                <label class="control-label">Tasarım Şablonları (Presets)</label>
-                <div class="preset-grid">
-                    <button class="preset-pill active" data-preset="visionos">Apple VisionOS</button>
-                    <button class="preset-pill" data-preset="sapphire">Safir Sıvı Cam</button>
-                    <button class="preset-pill" data-preset="emerald">Zümrüt Yeşil</button>
-                    <button class="preset-pill" data-preset="cyberpunk">Neon Ametist</button>
-                    <button class="preset-pill" data-preset="crystal">Saf Su Kristali</button>
-                    <button class="preset-pill" data-preset="frost">Buzlu Cam (Frost)</button>
+            <!-- ======================================================== -->
+            <!-- 1. SEKME: CAM FİZİK PARAMETRELERİ                        -->
+            <!-- ======================================================== -->
+            <div class="panel-tab-content active" id="tab-content-glass">
+                <div class="panel-header">
+                    <h3>Cam Yansıma & Kırılma</h3>
+                    <button class="reset-btn" id="reset-params-btn" title="Varsayılana Dön">Sıfırla</button>
+                </div>
+
+                <!-- ÖN AYARLAR (PRESETS) -->
+                <div class="control-group">
+                    <label class="control-label">Tasarım Şablonları (Presets)</label>
+                    <div class="preset-grid">
+                        <button class="preset-pill active" data-preset="visionos">Apple VisionOS</button>
+                        <button class="preset-pill" data-preset="sapphire">Safir Sıvı Cam</button>
+                        <button class="preset-pill" data-preset="emerald">Zümrüt Yeşil</button>
+                        <button class="preset-pill" data-preset="cyberpunk">Neon Ametist</button>
+                        <button class="preset-pill" data-preset="crystal">Saf Su Kristali</button>
+                        <button class="preset-pill" data-preset="frost">Buzlu Cam (Frost)</button>
+                    </div>
+                </div>
+
+                <!-- SAYDAMLIK (ALPHA) -->
+                <div class="control-group">
+                    <div class="control-label-row">
+                        <span>Cam Saydamlığı (Transmittance)</span>
+                        <span class="control-value" id="val-opacity">35%</span>
+                    </div>
+                    <input type="range" id="param-opacity" min="5" max="95" value="35" class="lab-slider">
+                </div>
+
+                <!-- BULANIKLIK (BLUR) -->
+                <div class="control-group">
+                    <div class="control-label-row">
+                        <span>Arka Plan Bulanıklığı (Blur)</span>
+                        <span class="control-value" id="val-blur">20px</span>
+                    </div>
+                    <input type="range" id="param-blur" min="0" max="50" value="20" class="lab-slider">
+                </div>
+
+                <!-- ÜST KENAR PARILTISI (SPECULAR BEVEL) -->
+                <div class="control-group">
+                    <div class="control-label-row">
+                        <span>Üst Kenar Elmas Işıltısı (Specular)</span>
+                        <span class="control-value" id="val-specular">85%</span>
+                    </div>
+                    <input type="range" id="param-specular" min="10" max="100" value="85" class="lab-slider">
+                </div>
+
+                <!-- İÇ GÖLGE / DERİNLİK (INNER CAUSTIC GLOW) -->
+                <div class="control-group">
+                    <div class="control-label-row">
+                        <span>İç Işık Kırılması (Inner Glow)</span>
+                        <span class="control-value" id="val-inner-glow">65%</span>
+                    </div>
+                    <input type="range" id="param-inner-glow" min="0" max="100" value="65" class="lab-slider">
+                </div>
+
+                <!-- KÖŞE YUVARLAKLIĞI (BORDER RADIUS) -->
+                <div class="control-group">
+                    <div class="control-label-row">
+                        <span>Köşe Yuvarlaklığı (Radius)</span>
+                        <span class="control-value" id="val-radius">9999px (Hap)</span>
+                    </div>
+                    <input type="range" id="param-radius" min="8" max="9999" step="2" value="9999" class="lab-slider">
+                </div>
+
+                <!-- VURGU RENGİ (ACCENT COLOR) -->
+                <div class="control-group">
+                    <label class="control-label">Aura / Neon Renk Tonu</label>
+                    <div class="color-palette">
+                        <button class="color-dot active" data-color="#2563eb" style="--c: #2563eb;" title="Safir Mavi"></button>
+                        <button class="color-dot" data-color="#10b981" style="--c: #10b981;" title="Zümrüt Yeşil"></button>
+                        <button class="color-dot" data-color="#8b5cf6" style="--c: #8b5cf6;" title="Ametist Mor"></button>
+                        <button class="color-dot" data-color="#f43f5e" style="--c: #f43f5e;" title="Yakut Kırmızı"></button>
+                        <button class="color-dot" data-color="#f59e0b" style="--c: #f59e0b;" title="Amber Altın"></button>
+                        <button class="color-dot" data-color="#06b6d4" style="--c: #06b6d4;" title="Siyan Buzul"></button>
+                        <button class="color-dot" data-color="#ffffff" style="--c: #ffffff;" title="Elmas Beyaz"></button>
+                    </div>
+                </div>
+
+                <!-- CSS KOPYALAYICI -->
+                <div class="code-export-box">
+                    <div class="code-export-header">
+                        <span>CANLI CSS KODU</span>
+                        <button class="copy-css-btn" id="copy-css-btn">📋 Kopyala</button>
+                    </div>
+                    <pre class="code-display" id="css-output-preview"></pre>
                 </div>
             </div>
 
-            <!-- SAYDAMLIK (ALPHA) -->
-            <div class="control-group">
-                <div class="control-label-row">
-                    <span>Cam Saydamlığı (Transmittance)</span>
-                    <span class="control-value" id="val-opacity">35%</span>
+            <!-- ======================================================== -->
+            <!-- 2. SEKME: AURORA IŞIKLARI DİNAMİK MOTORU                 -->
+            <!-- ======================================================== -->
+            <div class="panel-tab-content" id="tab-content-aurora">
+                <div class="panel-header">
+                    <h3>🌌 Aurora Atmosfer & Işık</h3>
+                    <button class="reset-btn" id="reset-aurora-btn" title="Işıkları Sıfırla">Sıfırla</button>
                 </div>
-                <input type="range" id="param-opacity" min="5" max="95" value="35" class="lab-slider">
+
+                <!-- AURORA RENK TEMALARI -->
+                <div class="control-group">
+                    <label class="control-label">Aurora Renk Teması</label>
+                    <div class="preset-grid">
+                        <button class="aurora-theme-pill active" data-aurora-theme="cosmic">🌌 Kozmik Aurora</button>
+                        <button class="aurora-theme-pill" data-aurora-theme="cyber">⚡ Cyber Neon</button>
+                        <button class="aurora-theme-pill" data-aurora-theme="fire">🔥 Altın Ateş</button>
+                        <button class="aurora-theme-pill" data-aurora-theme="ocean">🌊 Derin Okyanus</button>
+                        <button class="aurora-theme-pill" data-aurora-theme="emerald">🌲 Zümrüt Vadi</button>
+                        <button class="aurora-theme-pill" data-aurora-theme="monochrome">🤍 Kristal Platin</button>
+                    </div>
+                </div>
+
+                <!-- HAREKET VE DÖNÜŞ MODU -->
+                <div class="control-group">
+                    <label class="control-label">Dönüş / Hareket Modu</label>
+                    <div class="motion-mode-grid">
+                        <button class="motion-btn active" data-motion="clockwise">↻ Saat Yönü</button>
+                        <button class="motion-btn" data-motion="counter">↺ Ters Yön</button>
+                        <button class="motion-btn" data-motion="wave">〰 Dalgalı</button>
+                        <button class="motion-btn" data-motion="pulse">◉ Yaklaşma (Zoom)</button>
+                        <button class="motion-btn" data-motion="vortex">🌀 Kaotik Vortex</button>
+                    </div>
+                </div>
+
+                <!-- ANİMASYON HIZI (SPEED) -->
+                <div class="control-group">
+                    <div class="control-label-row">
+                        <span>Animasyon Hızı (Tur Süresi)</span>
+                        <span class="control-value" id="val-aurora-speed">12s (Akıcı)</span>
+                    </div>
+                    <input type="range" id="aurora-speed" min="2" max="30" step="1" value="12" class="lab-slider">
+                </div>
+
+                <!-- IŞIK YAKLAŞMASI & BÜYÜKLÜK (SCALE & ZOOM) -->
+                <div class="control-group">
+                    <div class="control-label-row">
+                        <span>Işık Yaklaşması / Büyüklük (Scale)</span>
+                        <span class="control-value" id="val-aurora-scale">1.2x</span>
+                    </div>
+                    <input type="range" id="aurora-scale" min="0.4" max="2.8" step="0.1" value="1.2" class="lab-slider">
+                </div>
+
+                <!-- IŞIK ŞİDDETİ & PARLAKLIK (INTENSITY / OPACITY) -->
+                <div class="control-group">
+                    <div class="control-label-row">
+                        <span>Işık Parlaklığı & Şiddeti</span>
+                        <span class="control-value" id="val-aurora-intensity">65%</span>
+                    </div>
+                    <input type="range" id="aurora-intensity" min="10" max="100" value="65" class="lab-slider">
+                </div>
+
+                <!-- DİFÜZYON & DAĞILMA BLURU (DIFFUSION BLUR) -->
+                <div class="control-group">
+                    <div class="control-label-row">
+                        <span>Difüzyon & Yayılma Çapı (Blur)</span>
+                        <span class="control-value" id="val-aurora-blur">80px</span>
+                    </div>
+                    <input type="range" id="aurora-blur" min="30" max="180" value="80" class="lab-slider">
+                </div>
+
+                <!-- REAKTİF FARE TAKİBİ (INTERACTIVE MOUSE PARALLAX) -->
+                <div class="control-group" style="padding-top: 6px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div style="display: flex; flex-direction: column;">
+                            <span style="font-size: 12.5px; font-weight: 700; color: #e2e8f0;">Reaktif Fare Takibi</span>
+                            <span style="font-size: 11px; color: #64748b;">Fareyi hareket ettirdikçe ışıklar süzülür</span>
+                        </div>
+                        <label class="dynamic-glass-switch">
+                            <input type="checkbox" id="aurora-mouse-follow" checked>
+                            <span class="switch-slider"></span>
+                        </label>
+                    </div>
+                </div>
             </div>
 
-            <!-- BULANIKLIK (BLUR) -->
-            <div class="control-group">
-                <div class="control-label-row">
-                    <span>Arka Plan Bulanıklığı (Blur)</span>
-                    <span class="control-value" id="val-blur">20px</span>
-                </div>
-                <input type="range" id="param-blur" min="0" max="50" value="20" class="lab-slider">
-            </div>
-
-            <!-- ÜST KENAR PARILTISI (SPECULAR BEVEL) -->
-            <div class="control-group">
-                <div class="control-label-row">
-                    <span>Üst Kenar Elmas Işıltısı (Specular)</span>
-                    <span class="control-value" id="val-specular">85%</span>
-                </div>
-                <input type="range" id="param-specular" min="10" max="100" value="85" class="lab-slider">
-            </div>
-
-            <!-- İÇ GÖLGE / DERİNLİK (INNER CAUSTIC GLOW) -->
-            <div class="control-group">
-                <div class="control-label-row">
-                    <span>İç Işık Kırılması (Inner Glow)</span>
-                    <span class="control-value" id="val-inner-glow">65%</span>
-                </div>
-                <input type="range" id="param-inner-glow" min="0" max="100" value="65" class="lab-slider">
-            </div>
-
-            <!-- KÖŞE YUVARLAKLIĞI (BORDER RADIUS) -->
-            <div class="control-group">
-                <div class="control-label-row">
-                    <span>Köşe Yuvarlaklığı (Radius)</span>
-                    <span class="control-value" id="val-radius">9999px (Hap)</span>
-                </div>
-                <input type="range" id="param-radius" min="8" max="9999" step="2" value="9999" class="lab-slider">
-            </div>
-
-            <!-- VURGU RENGİ (ACCENT COLOR) -->
-            <div class="control-group">
-                <label class="control-label">Aura / Neon Renk Tonu</label>
-                <div class="color-palette">
-                    <button class="color-dot active" data-color="#2563eb" style="--c: #2563eb;" title="Safir Mavi"></button>
-                    <button class="color-dot" data-color="#10b981" style="--c: #10b981;" title="Zümrüt Yeşil"></button>
-                    <button class="color-dot" data-color="#8b5cf6" style="--c: #8b5cf6;" title="Ametist Mor"></button>
-                    <button class="color-dot" data-color="#f43f5e" style="--c: #f43f5e;" title="Yakut Kırmızı"></button>
-                    <button class="color-dot" data-color="#f59e0b" style="--c: #f59e0b;" title="Amber Altın"></button>
-                    <button class="color-dot" data-color="#06b6d4" style="--c: #06b6d4;" title="Siyan Buzul"></button>
-                    <button class="color-dot" data-color="#ffffff" style="--c: #ffffff;" title="Elmas Beyaz"></button>
-                </div>
-            </div>
-
-            <!-- CSS KOPYALAYICI -->
-            <div class="code-export-box">
-                <div class="code-export-header">
-                    <span>CANLI CSS KODU</span>
-                    <button class="copy-css-btn" id="copy-css-btn">📋 Kopyala</button>
-                </div>
-                <pre class="code-display" id="css-output-preview"></pre>
-            </div>
         </aside>
 
         <!-- 🚀 SAĞ ALAN: BİLEŞEN VİTRİNİ (COMPONENT SHOWCASE) -->

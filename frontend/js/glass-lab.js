@@ -4,7 +4,32 @@
  */
 
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. Parameter Sliders & Value Labels
+    // ========================================================
+    // 1. PANEL TAB SWITCHER (CAM FİZİĞİ vs AURORA MOTORU)
+    // ========================================================
+    const panelTabBtns = document.querySelectorAll('.panel-tab-btn');
+    const tabContentGlass = document.getElementById('tab-content-glass');
+    const tabContentAurora = document.getElementById('tab-content-aurora');
+
+    panelTabBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            panelTabBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            const targetTab = btn.getAttribute('data-panel-tab');
+            if (targetTab === 'glass') {
+                tabContentGlass.classList.add('active');
+                tabContentAurora.classList.remove('active');
+            } else if (targetTab === 'aurora') {
+                tabContentGlass.classList.remove('active');
+                tabContentAurora.classList.add('active');
+            }
+        });
+    });
+
+    // ========================================================
+    // 2. CAM FİZİĞİ PARAMETRELERİ
+    // ========================================================
     const paramOpacity = document.getElementById('param-opacity');
     const paramBlur = document.getElementById('param-blur');
     const paramSpecular = document.getElementById('param-specular');
@@ -21,7 +46,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const copyCssBtn = document.getElementById('copy-css-btn');
     const resetParamsBtn = document.getElementById('reset-params-btn');
 
-    // 2. Presets Database
     const PRESETS = {
         visionos: {
             opacity: 35,
@@ -82,7 +106,6 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentAccentRGB = '37, 99, 235';
     let currentAccentHex = '#2563eb';
 
-    // Helper: Update CSS Variables & UI
     function updateGlassEngine() {
         const op = parseInt(paramOpacity.value, 10);
         const bl = parseInt(paramBlur.value, 10);
@@ -90,14 +113,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const ig = parseInt(paramInnerGlow.value, 10);
         const rd = parseInt(paramRadius.value, 10);
 
-        // Update Labels
         valOpacity.textContent = `${op}%`;
         valBlur.textContent = `${bl}px`;
         valSpecular.textContent = `${sp}%`;
         valInnerGlow.textContent = `${ig}%`;
-        valRadius.textContent = rd >= 9000 ? '9999px (Hap / Pill)' : `${rd}px`;
+        valRadius.textContent = rd >= 9000 ? '9999px (Hap)' : `${rd}px`;
 
-        // Update Root CSS Variables
         const root = document.documentElement;
         root.style.setProperty('--glass-opacity', (op / 100).toFixed(2));
         root.style.setProperty('--glass-blur', `${bl}px`);
@@ -107,7 +128,6 @@ document.addEventListener('DOMContentLoaded', () => {
         root.style.setProperty('--glass-accent-color', currentAccentHex);
         root.style.setProperty('--glass-accent-rgb', currentAccentRGB);
 
-        // Generate Exportable CSS String
         const radiusStr = rd >= 9000 ? '9999px' : `${rd}px`;
         const cssCode = `.liquid-glass-element {
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.20) 0%, rgba(255, 255, 255, 0.04) 50%, rgba(255, 255, 255, 0.10) 100%), rgba(${currentAccentRGB}, ${(op / 100).toFixed(2)});
@@ -126,16 +146,13 @@ document.addEventListener('DOMContentLoaded', () => {
         cssOutputPreview.textContent = cssCode;
     }
 
-    // Attach Slider Event Listeners
     [paramOpacity, paramBlur, paramSpecular, paramInnerGlow, paramRadius].forEach(slider => {
         slider.addEventListener('input', () => {
-            // Remove active preset highlight if user manually adjusts
             document.querySelectorAll('.preset-pill').forEach(p => p.classList.remove('active'));
             updateGlassEngine();
         });
     });
 
-    // Preset Buttons
     document.querySelectorAll('.preset-pill').forEach(btn => {
         btn.addEventListener('click', () => {
             document.querySelectorAll('.preset-pill').forEach(p => p.classList.remove('active'));
@@ -152,7 +169,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 currentAccentHex = conf.color;
                 currentAccentRGB = conf.rgb;
 
-                // Sync color dots
                 document.querySelectorAll('.color-dot').forEach(dot => {
                     dot.classList.toggle('active', dot.getAttribute('data-color') === conf.color);
                 });
@@ -162,14 +178,12 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Color Palette
     document.querySelectorAll('.color-dot').forEach(dot => {
         dot.addEventListener('click', () => {
             document.querySelectorAll('.color-dot').forEach(d => d.classList.remove('active'));
             dot.classList.add('active');
 
             currentAccentHex = dot.getAttribute('data-color');
-            // Convert hex to rgb
             const hex = currentAccentHex.replace('#', '');
             let r = 255, g = 255, b = 255;
             if (hex.length === 6) {
@@ -182,7 +196,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Copy CSS Button
     copyCssBtn.addEventListener('click', async () => {
         try {
             await navigator.clipboard.writeText(cssOutputPreview.textContent);
@@ -195,13 +208,124 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Reset Button
     resetParamsBtn.addEventListener('click', () => {
         const defaultPreset = document.querySelector('.preset-pill[data-preset="visionos"]');
         if (defaultPreset) defaultPreset.click();
     });
 
-    // 3. Background Stage Switcher
+    // ========================================================
+    // 3. AURORA IŞIKLARI DİNAMİK MOTORU KONTROLCÜSÜ
+    // ========================================================
+    const sliderAuroraSpeed = document.getElementById('aurora-speed');
+    const sliderAuroraScale = document.getElementById('aurora-scale');
+    const sliderAuroraIntensity = document.getElementById('aurora-intensity');
+    const sliderAuroraBlur = document.getElementById('aurora-blur');
+    const checkboxMouseFollow = document.getElementById('aurora-mouse-follow');
+    const resetAuroraBtn = document.getElementById('reset-aurora-btn');
+
+    const valAuroraSpeed = document.getElementById('val-aurora-speed');
+    const valAuroraScale = document.getElementById('val-aurora-scale');
+    const valAuroraIntensity = document.getElementById('val-aurora-intensity');
+    const valAuroraBlur = document.getElementById('val-aurora-blur');
+
+    const bodyEl = document.body;
+    let currentMotionClass = 'motion-clockwise';
+
+    // Set initial motion class on body
+    bodyEl.classList.add(currentMotionClass);
+
+    function updateAuroraEngine() {
+        const spd = parseInt(sliderAuroraSpeed.value, 10);
+        const scl = parseFloat(sliderAuroraScale.value);
+        const int = parseInt(sliderAuroraIntensity.value, 10);
+        const blr = parseInt(sliderAuroraBlur.value, 10);
+
+        valAuroraSpeed.textContent = spd <= 4 ? `${spd}s (Çok Hızlı)` : spd >= 20 ? `${spd}s (Sinematik)` : `${spd}s (Akıcı)`;
+        valAuroraScale.textContent = `${scl.toFixed(1)}x`;
+        valAuroraIntensity.textContent = `${int}%`;
+        valAuroraBlur.textContent = `${blr}px`;
+
+        const root = document.documentElement;
+        root.style.setProperty('--aurora-speed', `${spd}s`);
+        root.style.setProperty('--aurora-scale', scl);
+        root.style.setProperty('--aurora-intensity', (int / 100).toFixed(2));
+        root.style.setProperty('--aurora-blur', `${blr}px`);
+    }
+
+    [sliderAuroraSpeed, sliderAuroraScale, sliderAuroraIntensity, sliderAuroraBlur].forEach(slider => {
+        slider.addEventListener('input', updateAuroraEngine);
+    });
+
+    // Motion Mode Buttons (Clockwise, Counter, Wave, Pulse, Vortex)
+    document.querySelectorAll('.motion-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.motion-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            const mode = btn.getAttribute('data-motion');
+            bodyEl.classList.remove('motion-clockwise', 'motion-counter', 'motion-wave', 'motion-pulse', 'motion-vortex');
+            currentMotionClass = `motion-${mode}`;
+            bodyEl.classList.add(currentMotionClass);
+        });
+    });
+
+    // Aurora Themes (Cosmic, Cyber, Fire, Ocean, Emerald, Monochrome)
+    document.querySelectorAll('.aurora-theme-pill').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.aurora-theme-pill').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            const theme = btn.getAttribute('data-aurora-theme');
+            bodyEl.classList.remove('theme-cosmic', 'theme-cyber', 'theme-fire', 'theme-ocean', 'theme-emerald', 'theme-monochrome');
+            bodyEl.classList.add(`theme-${theme}`);
+        });
+    });
+
+    // Reset Aurora Button
+    resetAuroraBtn.addEventListener('click', () => {
+        sliderAuroraSpeed.value = 12;
+        sliderAuroraScale.value = 1.2;
+        sliderAuroraIntensity.value = 65;
+        sliderAuroraBlur.value = 80;
+        
+        const defaultMotion = document.querySelector('.motion-btn[data-motion="clockwise"]');
+        if (defaultMotion) defaultMotion.click();
+
+        const defaultTheme = document.querySelector('.aurora-theme-pill[data-aurora-theme="cosmic"]');
+        if (defaultTheme) defaultTheme.click();
+
+        updateAuroraEngine();
+    });
+
+    // 4. Interactive Mouse Parallax (Reaktif Işık Süzülmesi)
+    let mouseTargetX = 0, mouseTargetY = 0;
+    let mouseCurrentX = 0, mouseCurrentY = 0;
+
+    window.addEventListener('mousemove', (e) => {
+        if (!checkboxMouseFollow.checked) return;
+        const cx = window.innerWidth / 2;
+        const cy = window.innerHeight / 2;
+        mouseTargetX = ((e.clientX - cx) / cx) * 35; // max 35px parallax
+        mouseTargetY = ((e.clientY - cy) / cy) * 35;
+    });
+
+    function renderMouseParallax() {
+        if (checkboxMouseFollow.checked) {
+            mouseCurrentX += (mouseTargetX - mouseCurrentX) * 0.08;
+            mouseCurrentY += (mouseTargetY - mouseCurrentY) * 0.08;
+            document.documentElement.style.setProperty('--aurora-mouse-x', `${mouseCurrentX.toFixed(2)}px`);
+            document.documentElement.style.setProperty('--aurora-mouse-y', `${mouseCurrentY.toFixed(2)}px`);
+        } else {
+            document.documentElement.style.setProperty('--aurora-mouse-x', `0px`);
+            document.documentElement.style.setProperty('--aurora-mouse-y', `0px`);
+        }
+        requestAnimationFrame(renderMouseParallax);
+    }
+    renderMouseParallax();
+
+    // ========================================================
+    // 5. ARKA PLAN STAGE DEĞİŞTİRİCİ
+    // ========================================================
     const bgStage = document.getElementById('lab-bg-stage');
     document.querySelectorAll('.lab-pill-btn[data-bg]').forEach(btn => {
         btn.addEventListener('click', () => {
@@ -238,7 +362,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // 4. Interactive Tabs & Steppers in Demo Area
+    // 6. Interactive Tabs & Steppers in Demo Area
     document.querySelectorAll('.dynamic-tab').forEach(tab => {
         tab.addEventListener('click', () => {
             tab.parentElement.querySelectorAll('.dynamic-tab').forEach(t => t.classList.remove('active'));
@@ -255,4 +379,5 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Initial Engine Start
     updateGlassEngine();
+    updateAuroraEngine();
 });
