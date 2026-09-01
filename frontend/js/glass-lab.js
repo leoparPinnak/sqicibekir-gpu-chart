@@ -170,7 +170,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const rd = parseInt(paramRadius.value, 10);
 
         valOpacity.textContent = `${op}%`;
-        valBlur.textContent = `${bl}px`;
+        valBlur.textContent = bl === 0 ? '0px (Kristal Net)' : bl >= 35 ? `${bl}px (Buzlu Cam)` : `${bl}px`;
         valSpecular.textContent = sp > 100 ? `${sp}% (Süper Parlak)` : `${sp}%`;
         if (valSpecularWidth) valSpecularWidth.textContent = `${spWidth.toFixed(1)}px`;
         if (valSpecularTaper) {
