@@ -876,6 +876,54 @@ document.addEventListener('DOMContentLoaded', () => {
     renderMouseParallax();
 
     // ========================================================
+    // 🌌 4.5. ARKA PLAN SEÇİCİ & CANLI MUM GRAFİĞİ DEMO MOTORU
+    // ========================================================
+    let currentBgMode = 'hybrid';
+    const paramCandleOpacity = document.getElementById('param-candle-opacity');
+    const valCandleOpacity = document.getElementById('val-candle-opacity');
+    const paramCandleBlur = document.getElementById('param-candle-blur');
+    const valCandleBlur = document.getElementById('val-candle-blur');
+    const paramCandleBrightness = document.getElementById('param-candle-brightness');
+    const valCandleBrightness = document.getElementById('val-candle-brightness');
+    const paramCandleContrast = document.getElementById('param-candle-contrast');
+    const valCandleContrast = document.getElementById('val-candle-contrast');
+
+    function updateCandleEngine() {
+        const op = parseInt(paramCandleOpacity ? paramCandleOpacity.value : 60, 10);
+        const bl = parseInt(paramCandleBlur ? paramCandleBlur.value : 8, 10);
+        const br = parseInt(paramCandleBrightness ? paramCandleBrightness.value : 75, 10);
+        const ct = parseInt(paramCandleContrast ? paramCandleContrast.value : 110, 10);
+
+        if (valCandleOpacity) valCandleOpacity.textContent = `${op}%`;
+        if (valCandleBlur) valCandleBlur.textContent = `${bl}px`;
+        if (valCandleBrightness) valCandleBrightness.textContent = `${br}%`;
+        if (valCandleContrast) valCandleContrast.textContent = `${ct}%`;
+
+        const r = document.documentElement;
+        r.style.setProperty('--candle-bg-opacity', (op / 100).toFixed(2));
+        r.style.setProperty('--candle-bg-blur', `${bl}px`);
+        r.style.setProperty('--candle-bg-brightness', (br / 100).toFixed(2));
+        r.style.setProperty('--candle-bg-contrast', (ct / 100).toFixed(2));
+    }
+
+    [paramCandleOpacity, paramCandleBlur, paramCandleBrightness, paramCandleContrast].filter(Boolean).forEach(slider => {
+        slider.addEventListener('input', updateCandleEngine);
+    });
+
+    // Top Background Switcher
+    document.querySelectorAll('.lab-bg-switcher .lab-pill-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.lab-bg-switcher .lab-pill-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            const bg = btn.getAttribute('data-bg');
+            currentBgMode = bg;
+            document.body.className = `lab-body bg-${bg}`;
+            updateCandleEngine();
+        });
+    });
+
+    // ========================================================
     // 5. 💾 JSON & CSS KAYIT, AÇIKLAMA & ÇEREZ SAYACI YÖNETİMİ
     // ========================================================
     const COOKIE_SEQ_KEY = 'liquid_glass_seq_num';
@@ -1217,6 +1265,20 @@ ${config.cssCode || cssOutputPreview.textContent}
             updateAuroraEngine();
         }
 
+        // 3. Candle Demo & Background Mode
+        if (config.candleDemo) {
+            if (paramCandleOpacity) paramCandleOpacity.value = Math.round((config.candleDemo.opacity || 0.60) * 100);
+            if (paramCandleBlur) paramCandleBlur.value = config.candleDemo.blur ?? 8;
+            if (paramCandleBrightness) paramCandleBrightness.value = Math.round((config.candleDemo.brightness || 0.75) * 100);
+            if (paramCandleContrast) paramCandleContrast.value = Math.round((config.candleDemo.contrast || 1.10) * 100);
+            
+            const bg = config.candleDemo.bgMode || 'hybrid';
+            const bgBtn = document.querySelector(`.lab-bg-switcher .lab-pill-btn[data-bg="${bg}"]`);
+            if (bgBtn) bgBtn.click();
+            
+            updateCandleEngine();
+        }
+
         showToast(`✓ #${config.sequenceNumber || 1} Nolu Modüler Şablon Başarıyla Yüklendi!`);
     }
 
@@ -1290,6 +1352,13 @@ ${config.cssCode || cssOutputPreview.textContent}
                     color: compColors.card.hex,
                     rgb: compColors.card.rgb
                 }
+            },
+            candleDemo: {
+                bgMode: currentBgMode,
+                opacity: parseFloat((parseInt(paramCandleOpacity ? paramCandleOpacity.value : 60, 10) / 100).toFixed(2)),
+                blur: parseInt(paramCandleBlur ? paramCandleBlur.value : 8, 10),
+                brightness: parseFloat((parseInt(paramCandleBrightness ? paramCandleBrightness.value : 75, 10) / 100).toFixed(2)),
+                contrast: parseFloat((parseInt(paramCandleContrast ? paramCandleContrast.value : 110, 10) / 100).toFixed(2))
             },
             auroraGalaxy: {
                 motionMode: currentMotionClass.replace('motion-', ''),

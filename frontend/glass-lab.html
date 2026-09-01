@@ -14,10 +14,16 @@
     <link rel="stylesheet" href="./styles/liquid-glass.css">
     <link rel="stylesheet" href="./styles/glass-lab.css">
 </head>
-<body class="lab-body theme-aurora">
+<body class="lab-body bg-hybrid">
 
     <!-- ARKA PLAN GÖRSEL / GRAFİK KATMANI (IŞIK KIRILMASINI TEST ETMEK İÇİN) -->
     <div class="lab-bg-stage" id="lab-bg-stage">
+        <!-- 1. CANLI MUM GRAFİĞİ DEMO KATMANI (İNTERAKTİF PİYASA DEMOSU) -->
+        <div class="lab-candle-bg-layer" id="lab-candle-bg-layer">
+            <iframe id="lab-chart-frame" src="../indikator_sablonu.html?demo=true" style="width: 100vw; height: 100vh; border: none; pointer-events: none;"></iframe>
+        </div>
+
+        <!-- 2. AURORA GALAXY IŞIK KANVASI -->
         <div class="lab-bg-canvas" id="lab-bg-canvas">
             <div class="aurora-orb orb-1"></div>
             <div class="aurora-orb orb-2"></div>
@@ -65,10 +71,11 @@
             <!-- Arka Plan Değiştirici -->
             <div class="lab-bg-switcher">
                 <span class="lab-label">Arka Plan:</span>
-                <button class="lab-pill-btn active" data-bg="aurora">Aurora</button>
-                <button class="lab-pill-btn" data-bg="candles">Mumlar</button>
-                <button class="lab-pill-btn" data-bg="mesh">Mesh</button>
-                <button class="lab-pill-btn" data-bg="dark">Obsidian</button>
+                <button class="lab-pill-btn active" data-bg="hybrid" title="Hibrit: Canlı Mum Demosu + Aurora Işıkları">🔥 Hibrit (Mum+Aurora)</button>
+                <button class="lab-pill-btn" data-bg="aurora" title="Sadece Aurora Işıkları">🌌 Aurora</button>
+                <button class="lab-pill-btn" data-bg="candles" title="Sadece Canlı Mum Grafiği">📊 Mumlar</button>
+                <button class="lab-pill-btn" data-bg="mesh" title="Mesh Radyal">🎨 Mesh</button>
+                <button class="lab-pill-btn" data-bg="dark" title="Obsidian Siyahı">🌑 Obsidian</button>
             </div>
 
             <button class="reset-btn" id="reset-params-btn" title="Tüm Bileşenleri Varsayılana Döndür">Sıfırla</button>
@@ -1016,12 +1023,47 @@
                     </div>
                 </div>
 
-                <!-- SAĞ: BİLGİ & SİMÜLASYON KUTUSU -->
+                <!-- SAĞ: BİLGİ & ARKA PLAN MUM GRAFİĞİ AYARLARI -->
                 <div class="studio-preview-box">
-                    <h3 class="preview-box-title">🌌 Canlı Işık Sahnesi Açıklaması</h3>
-                    <div style="background: rgba(0,0,0,0.30); padding: 16px; border-radius: 14px; border: 1px solid rgba(255,255,255,0.08); color: #cbd5e1; font-size: 13px; line-height: 1.6;">
-                        <p>Aurora Işıkları motoru, arka plandaki 4 farklı optik küreyi GPU donanım hızlandırmalı 3D matris yörüngesinde döndürür.</p>
-                        <p style="margin-top: 10px;">Ön plandaki tüm Sıvı Cam butonları, girdi kapsülleri ve konteynır kartları bu dönen ışıkları gerçek zamanlı olarak kırıp yansıtır.</p>
+                    <h3 class="preview-box-title">🕯️ Arka Plan Mum Grafiği & Demo Ayarları</h3>
+                    
+                    <div style="background: rgba(0,0,0,0.35); padding: 18px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.10); display: flex; flex-direction: column; gap: 14px; margin-bottom: 16px;">
+                        
+                        <div class="control-group">
+                            <div class="control-label-row">
+                                <span>Mum Grafiği Saydamlığı (Opacity)</span>
+                                <span class="control-value" id="val-candle-opacity">60%</span>
+                            </div>
+                            <input type="range" id="param-candle-opacity" min="0" max="100" step="5" value="60" class="lab-slider">
+                        </div>
+
+                        <div class="control-group">
+                            <div class="control-label-row">
+                                <span>Mum Grafiği Bulanıklığı (Blur)</span>
+                                <span class="control-value" id="val-candle-blur">8px</span>
+                            </div>
+                            <input type="range" id="param-candle-blur" min="0" max="40" step="1" value="8" class="lab-slider">
+                        </div>
+
+                        <div class="control-group">
+                            <div class="control-label-row">
+                                <span>Mum Grafiği Parlaklığı (Brightness)</span>
+                                <span class="control-value" id="val-candle-brightness">75%</span>
+                            </div>
+                            <input type="range" id="param-candle-brightness" min="20" max="150" step="5" value="75" class="lab-slider">
+                        </div>
+
+                        <div class="control-group">
+                            <div class="control-label-row">
+                                <span>Mum Grafiği Kontrastı (Contrast)</span>
+                                <span class="control-value" id="val-candle-contrast">110%</span>
+                            </div>
+                            <input type="range" id="param-candle-contrast" min="50" max="200" step="5" value="110" class="lab-slider">
+                        </div>
+                    </div>
+
+                    <div style="background: rgba(0,0,0,0.25); padding: 14px; border-radius: 14px; border: 1px solid rgba(255,255,255,0.06); color: #94a3b8; font-size: 12.5px; line-height: 1.5;">
+                        <span style="color: #60a5fa; font-weight: 700;">💡 Hibrit Mod:</span> Arka planda hem gerçek zamanlı hareket eden mum grafiği hem de 3D optik Aurora ışıkları aynı anda çalışarak ana sayfadaki tam derinlikli cam kırılmasını simüle eder.
                     </div>
                 </div>
             </div>
