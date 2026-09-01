@@ -18,9 +18,9 @@
 
     <!-- ARKA PLAN GÖRSEL / GRAFİK KATMANI (IŞIK KIRILMASINI TEST ETMEK İÇİN) -->
     <div class="lab-bg-stage" id="lab-bg-stage">
-        <!-- 1. CANLI MUM GRAFİĞİ DEMO KATMANI (İNTERAKTİF PİYASA DEMOSU) -->
+        <!-- 1. CANLI VE AKICI 60 FPS MUM GRAFİĞİ DEMO MOTORU (GPU ACCELERATED HTML5 CANVAS) -->
         <div class="lab-candle-bg-layer" id="lab-candle-bg-layer">
-            <iframe id="lab-chart-frame" src="../indikator_sablonu.html?demo=true" style="width: 100vw; height: 100vh; border: none; pointer-events: none;"></iframe>
+            <canvas id="lab-live-chart-canvas"></canvas>
         </div>
 
         <!-- 2. AURORA GALAXY IŞIK KANVASI -->
@@ -121,6 +121,22 @@
                 <div class="studio-controls-box">
                     <h3 class="controls-box-title">⚙️ Buton Fizik Parametreleri</h3>
                     
+                    <!-- 🎯 DİNAMİK HEDEF SEÇİCİ BANNER -->
+                    <div class="target-selection-banner" data-comp="btn">
+                        <div class="target-banner-header">
+                            <span class="target-title">🎯 Düzenlenen Hedef:</span>
+                            <span class="target-active-badge" id="target-badge-btn">Tüm Butonlar (Global)</span>
+                        </div>
+                        <div class="target-pill-selector" id="target-pills-btn">
+                            <button class="target-pill active" data-target="all">Tüm Butonlar</button>
+                            <button class="target-pill" data-target="btn-primary">Google Buton (Büyük)</button>
+                            <button class="target-pill" data-target="btn-action">Giriş Buton (Orta)</button>
+                            <button class="target-pill" data-target="btn-micro">İncele (Mikro)</button>
+                            <button class="target-pill" data-target="btn-icon-search">Ara Butonu</button>
+                            <button class="target-pill" data-target="btn-circle-settings">Dairesel İkon</button>
+                        </div>
+                    </div>
+
                     <div class="control-group">
                         <div class="control-label-row">
                             <span>Saydamlık</span>
@@ -212,12 +228,15 @@
 
                 <!-- SAĞ: BUTON CANLI ÖNİZLEME -->
                 <div class="studio-preview-box">
-                    <h3 class="preview-box-title">👁️ Canlı Buton Vitrini</h3>
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
+                        <h3 class="preview-box-title" style="margin: 0;">👁️ Canlı Buton Vitrini</h3>
+                        <span style="font-size: 11px; color: #60a5fa; font-weight: 600;">👉 İstediğin butona tıkla, sadece onu ayarla!</span>
+                    </div>
                     
                     <div class="demo-row">
                         <div class="demo-item">
                             <span class="demo-tag">Primary Action Pill (Büyük)</span>
-                            <button class="dynamic-glass-btn btn-lg">
+                            <button class="dynamic-glass-btn btn-lg" data-target-id="btn-primary" data-target-name="Google Buton (Büyük)">
                                 <span class="live-dot"></span>
                                 <span>Google Hesabı ile Giriş Yap</span>
                                 <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
@@ -226,7 +245,7 @@
 
                         <div class="demo-item">
                             <span class="demo-tag">Translucent Action Pill (Orta)</span>
-                            <button class="dynamic-glass-btn btn-md">
+                            <button class="dynamic-glass-btn btn-md" data-target-id="btn-action" data-target-name="Giriş Buton (Orta)">
                                 <span>Giriş Yap</span>
                                 <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
                             </button>
@@ -234,7 +253,7 @@
 
                         <div class="demo-item">
                             <span class="demo-tag">Table / Micro Action (İncele)</span>
-                            <button class="dynamic-glass-btn btn-sm">
+                            <button class="dynamic-glass-btn btn-sm" data-target-id="btn-micro" data-target-name="İncele (Mikro)">
                                 <span>İncele</span>
                                 <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
                             </button>
@@ -245,15 +264,15 @@
                         <div class="demo-item">
                             <span class="demo-tag">İkonlu Kapsül Butonlar</span>
                             <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                                <button class="dynamic-glass-btn btn-icon">
+                                <button class="dynamic-glass-btn btn-icon" data-target-id="btn-icon-search" data-target-name="Ara Butonu">
                                     <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
                                     <span>Ara</span>
                                 </button>
-                                <button class="dynamic-glass-btn btn-icon">
+                                <button class="dynamic-glass-btn btn-icon" data-target-id="btn-icon-pine" data-target-name="PineScript Butonu">
                                     <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
                                     <span>PineScript</span>
                                 </button>
-                                <button class="dynamic-glass-btn btn-icon">
+                                <button class="dynamic-glass-btn btn-icon" data-target-id="btn-icon-save" data-target-name="Kaydet Butonu">
                                     <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
                                     <span>Kaydet</span>
                                 </button>
@@ -263,13 +282,13 @@
                         <div class="demo-item">
                             <span class="demo-tag">Dairesel İkon Butonlar</span>
                             <div style="display: flex; gap: 10px;">
-                                <button class="dynamic-glass-btn btn-circle" title="Ayarlar">
+                                <button class="dynamic-glass-btn btn-circle" data-target-id="btn-circle-settings" data-target-name="Dairesel Ayarlar" title="Ayarlar">
                                     <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
                                 </button>
-                                <button class="dynamic-glass-btn btn-circle" title="Bildirimler">
+                                <button class="dynamic-glass-btn btn-circle" data-target-id="btn-circle-bell" data-target-name="Dairesel Bildirim" title="Bildirimler">
                                     <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
                                 </button>
-                                <button class="dynamic-glass-btn btn-circle" title="Paylaş">
+                                <button class="dynamic-glass-btn btn-circle" data-target-id="btn-circle-share" data-target-name="Dairesel Paylaş" title="Paylaş">
                                     <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
                                 </button>
                             </div>
@@ -295,6 +314,21 @@
                 <!-- SOL: GİRDİ AYARLARI -->
                 <div class="studio-controls-box">
                     <h3 class="controls-box-title">⚙️ Girdi Fizik Parametreleri</h3>
+
+                    <!-- 🎯 DİNAMİK HEDEF SEÇİCİ BANNER -->
+                    <div class="target-selection-banner" data-comp="input">
+                        <div class="target-banner-header">
+                            <span class="target-title">🎯 Düzenlenen Hedef:</span>
+                            <span class="target-active-badge" id="target-badge-input">Tüm Girdiler (Global)</span>
+                        </div>
+                        <div class="target-pill-selector" id="target-pills-input">
+                            <button class="target-pill active" data-target="all">Tüm Girdiler</button>
+                            <button class="target-pill" data-target="input-search">Arama Çubuğu</button>
+                            <button class="target-pill" data-target="input-email">E-posta Girdisi</button>
+                            <button class="target-pill" data-target="input-password">Şifre Alanı</button>
+                            <button class="target-pill" data-target="input-stepper">Miktar Stepper</button>
+                        </div>
+                    </div>
 
                     <div class="control-group">
                         <div class="control-label-row">
@@ -387,12 +421,15 @@
 
                 <!-- SAĞ: GİRDİ CANLI ÖNİZLEME -->
                 <div class="studio-preview-box">
-                    <h3 class="preview-box-title">👁️ Canlı Girdi Vitrini</h3>
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
+                        <h3 class="preview-box-title" style="margin: 0;">👁️ Canlı Girdi Vitrini</h3>
+                        <span style="font-size: 11px; color: #60a5fa; font-weight: 600;">👉 İstediğin girdi alanına tıkla, sadece onu ayarla!</span>
+                    </div>
                     
                     <div class="demo-grid-2">
                         <div class="demo-item">
                             <span class="demo-tag">Arama Çubuğu (Search Capsule)</span>
-                            <div class="dynamic-glass-input">
+                            <div class="dynamic-glass-input" data-target-id="input-search" data-target-name="Arama Çubuğu">
                                 <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" class="input-icon"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
                                 <input type="text" placeholder="Sembol veya şirket ara (THYAO, BTC...)" value="BTC/USDT">
                                 <button class="input-clear-btn">✕</button>
@@ -401,7 +438,7 @@
 
                         <div class="demo-item">
                             <span class="demo-tag">E-posta Girdisi (Email Field)</span>
-                            <div class="dynamic-glass-input">
+                            <div class="dynamic-glass-input" data-target-id="input-email" data-target-name="E-posta Girdisi">
                                 <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" class="input-icon"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
                                 <input type="email" placeholder="ornek@alanadi.com" value="trader@tradingchart.com">
                             </div>
@@ -409,7 +446,7 @@
 
                         <div class="demo-item">
                             <span class="demo-tag">Şifre Girdisi (Password Field)</span>
-                            <div class="dynamic-glass-input">
+                            <div class="dynamic-glass-input" data-target-id="input-password" data-target-name="Şifre Alanı">
                                 <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" class="input-icon"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
                                 <input type="password" placeholder="Şifreniz" value="••••••••••••">
                                 <button class="input-eye-btn" title="Göster/Gizle">👁️</button>
@@ -418,9 +455,9 @@
 
                         <div class="demo-item">
                             <span class="demo-tag">Miktar / Sayı Aracı (Stepper)</span>
-                            <div class="dynamic-glass-stepper">
+                            <div class="dynamic-glass-stepper" data-target-id="input-stepper" data-target-name="Miktar Stepper">
                                 <button class="stepper-btn">-</button>
-                                <input type="text" value="1.500 LOT" readonly>
+                                <span class="stepper-val">1.500 LOT</span>
                                 <button class="stepper-btn">+</button>
                             </div>
                         </div>
@@ -444,7 +481,26 @@
             <div class="studio-split-layout">
                 <!-- SOL: SEKME AYARLARI -->
                 <div class="studio-controls-box">
+            <div class="studio-split-layout">
+                <!-- SOL: SEKME AYARLARI -->
+                <div class="studio-controls-box">
                     <h3 class="controls-box-title">⚙️ Sekme & Rozet Parametreleri</h3>
+
+                    <!-- 🎯 DİNAMİK HEDEF SEÇİCİ BANNER -->
+                    <div class="target-selection-banner" data-comp="tab">
+                        <div class="target-banner-header">
+                            <span class="target-title">🎯 Düzenlenen Hedef:</span>
+                            <span class="target-active-badge" id="target-badge-tab">Tüm Sekmeler (Global)</span>
+                        </div>
+                        <div class="target-pill-selector" id="target-pills-tab">
+                            <button class="target-pill active" data-target="all">Tüm Sekmeler</button>
+                            <button class="target-pill" data-target="tab-all">Tüm Piyasalar Sekmesi</button>
+                            <button class="target-pill" data-target="tab-bist">BIST Sekmesi</button>
+                            <button class="target-pill" data-target="badge-pos">Pozitif Rozet</button>
+                            <button class="target-pill" data-target="badge-pro">PRO VIP Rozet</button>
+                            <button class="target-pill" data-target="switch-demo">Otonom Şalter</button>
+                        </div>
+                    </div>
 
                     <div class="control-group">
                         <div class="control-label-row">
@@ -537,39 +593,42 @@
 
                 <!-- SAĞ: SEKME CANLI ÖNİZLEME -->
                 <div class="studio-preview-box">
-                    <h3 class="preview-box-title">👁️ Canlı Sekme & Rozet Vitrini</h3>
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
+                        <h3 class="preview-box-title" style="margin: 0;">👁️ Canlı Sekme & Rozet Vitrini</h3>
+                        <span style="font-size: 11px; color: #60a5fa; font-weight: 600;">👉 İstediğin sekmeye/rozet/şaltere tıkla, sadece onu ayarla!</span>
+                    </div>
                     
                     <div class="demo-grid-2">
                         <div class="demo-item">
                             <span class="demo-tag">Borsa Kategori Sekmeleri (Tabs)</span>
                             <div class="dynamic-glass-tabs">
-                                <button class="dynamic-tab active">Tüm Piyasalar</button>
-                                <button class="dynamic-tab">BIST</button>
-                                <button class="dynamic-tab">NASDAQ</button>
-                                <button class="dynamic-tab">Kripto</button>
+                                <button class="dynamic-tab active" data-target-id="tab-all" data-target-name="Tüm Piyasalar Sekmesi">Tüm Piyasalar</button>
+                                <button class="dynamic-tab" data-target-id="tab-bist" data-target-name="BIST Sekmesi">BIST</button>
+                                <button class="dynamic-tab" data-target-id="tab-nasdaq" data-target-name="NASDAQ Sekmesi">NASDAQ</button>
+                                <button class="dynamic-tab" data-target-id="tab-crypto" data-target-name="Kripto Sekmesi">Kripto</button>
                             </div>
                         </div>
 
                         <div class="demo-item">
                             <span class="demo-tag">Durum Rozetleri (Badges)</span>
                             <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
-                                <span class="dynamic-badge positive">▲ +4.18%</span>
-                                <span class="dynamic-badge negative">▼ -1.25%</span>
-                                <span class="dynamic-badge neutral">CANLI 120 FPS</span>
-                                <span class="dynamic-badge pro">PRO VIP</span>
+                                <span class="dynamic-badge positive" data-target-id="badge-pos" data-target-name="Pozitif Rozet">▲ +4.18%</span>
+                                <span class="dynamic-badge negative" data-target-id="badge-neg" data-target-name="Negatif Rozet">▼ -1.25%</span>
+                                <span class="dynamic-badge neutral" data-target-id="badge-neutral" data-target-name="Nötr Rozet">CANLI 120 FPS</span>
+                                <span class="dynamic-badge pro" data-target-id="badge-pro" data-target-name="PRO VIP Rozet">PRO VIP</span>
                             </div>
                         </div>
 
                         <div class="demo-item">
                             <span class="demo-tag">Sıvı Cam Şalterler (Switches)</span>
                             <div style="display: flex; gap: 20px; align-items: center;">
-                                <label class="dynamic-glass-switch">
+                                <label class="dynamic-glass-switch" data-target-id="switch-demo" data-target-name="Otonom Demo Şalteri">
                                     <input type="checkbox" checked>
                                     <span class="switch-slider"></span>
                                     <span class="switch-text">Otonom Demo</span>
                                 </label>
 
-                                <label class="dynamic-glass-switch">
+                                <label class="dynamic-glass-switch" data-target-id="switch-night" data-target-name="Gece Modu Şalteri">
                                     <input type="checkbox">
                                     <span class="switch-slider"></span>
                                     <span class="switch-text">Gece Modu</span>
@@ -580,11 +639,11 @@
                         <div class="demo-item">
                             <span class="demo-tag">Periyot Seçici (Segmented Control)</span>
                             <div class="dynamic-segmented-bar">
-                                <button class="seg-item active">1D</button>
-                                <button class="seg-item">1H</button>
-                                <button class="seg-item">15M</button>
-                                <button class="seg-item">5M</button>
-                                <button class="seg-item">1M</button>
+                                <button class="seg-item active" data-target-id="seg-1d" data-target-name="Periyot (1D)">1D</button>
+                                <button class="seg-item" data-target-id="seg-1h" data-target-name="Periyot (1H)">1H</button>
+                                <button class="seg-item" data-target-id="seg-15m" data-target-name="Periyot (15M)">15M</button>
+                                <button class="seg-item" data-target-id="seg-5m" data-target-name="Periyot (5M)">5M</button>
+                                <button class="seg-item" data-target-id="seg-1m" data-target-name="Periyot (1M)">1M</button>
                             </div>
                         </div>
                     </div>
@@ -608,6 +667,19 @@
                 <!-- SOL: KONTEYNIR AYARLARI -->
                 <div class="studio-controls-box">
                     <h3 class="controls-box-title">⚙️ Konteynır Fizik Parametreleri</h3>
+
+                    <!-- 🎯 DİNAMİK HEDEF SEÇİCİ BANNER -->
+                    <div class="target-selection-banner" data-comp="card">
+                        <div class="target-banner-header">
+                            <span class="target-title">🎯 Düzenlenen Hedef:</span>
+                            <span class="target-active-badge" id="target-badge-card">Tüm Konteynırlar (Global)</span>
+                        </div>
+                        <div class="target-pill-selector" id="target-pills-card">
+                            <button class="target-pill active" data-target="all">Tüm Konteynırlar</button>
+                            <button class="target-pill" data-target="card-asset">BTC/USDT Kartı</button>
+                            <button class="target-pill" data-target="card-settings">Gösterge Ayarları Kartı</button>
+                        </div>
+                    </div>
 
                     <div class="control-group">
                         <div class="control-label-row">
@@ -700,10 +772,13 @@
 
                 <!-- SAĞ: KONTEYNIR CANLI ÖNİZLEME -->
                 <div class="studio-preview-box">
-                    <h3 class="preview-box-title">👁️ Canlı Konteynır Çerçeveleri</h3>
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
+                        <h3 class="preview-box-title" style="margin: 0;">👁️ Canlı Konteynır Çerçeveleri</h3>
+                        <span style="font-size: 11px; color: #60a5fa; font-weight: 600;">👉 İstediğin konteynır kartına tıkla, sadece onu ayarla!</span>
+                    </div>
                     
                     <div class="demo-grid-2">
-                        <div class="dynamic-glass-frame">
+                        <div class="dynamic-glass-frame" data-target-id="card-asset" data-target-name="BTC/USDT Varlık Kartı">
                             <div class="frame-top-bar">
                                 <div class="frame-asset-meta">
                                     <div class="asset-logo-dot">₿</div>
@@ -727,7 +802,7 @@
                             <button class="dynamic-glass-btn btn-md" style="margin-top: 12px;">Grafiği Aç</button>
                         </div>
 
-                        <div class="dynamic-glass-frame">
+                        <div class="dynamic-glass-frame" data-target-id="card-settings" data-target-name="Gösterge Ayarları Kartı">
                             <div class="frame-top-bar">
                                 <h4 class="asset-title">Gösterge Ayarları</h4>
                                 <span class="dynamic-badge neutral">v2.4</span>
