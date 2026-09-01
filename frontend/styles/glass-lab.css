@@ -3,12 +3,55 @@
 /* ============================================================ */
 
 :root {
-    /* DİNAMİK CANLI CAM PARAMETRELERİ */
+    /* 🔘 BUTONLAR MODÜL DEĞİŞKENLERİ */
+    --btn-glass-opacity: 0.35;
+    --btn-glass-blur: 20px;
+    --btn-glass-specular-alpha: 1.0;
+    --btn-glass-specular-width: 1.5px;
+    --btn-glass-specular-bloom: 0px;
+    --btn-glass-specular-taper: 80%;
+    --btn-glass-inner-glow-alpha: 0.65;
+    --btn-glass-inner-glow-spread: 6px;
+    --btn-glass-radius: 9999px;
+    --btn-glass-accent-color: #2563eb;
+    --btn-glass-accent-rgb: 37, 99, 235;
+
+    /* ⌨️ GİRDİLER & ARAMA MODÜL DEĞİŞKENLERİ */
+    --input-glass-opacity: 0.25;
+    --input-glass-blur: 20px;
+    --input-glass-specular-alpha: 0.90;
+    --input-glass-specular-width: 1.5px;
+    --input-glass-specular-bloom: 0px;
+    --input-glass-inner-glow-alpha: 0.50;
+    --input-glass-inner-glow-spread: 4px;
+    --input-glass-radius: 9999px;
+    --input-glass-accent-color: #2563eb;
+    --input-glass-accent-rgb: 37, 99, 235;
+
+    /* 📑 SEKMELER & ROZETLER MODÜL DEĞİŞKENLERİ */
+    --tab-glass-opacity: 0.40;
+    --tab-glass-blur: 16px;
+    --tab-glass-specular-alpha: 1.20;
+    --tab-glass-radius: 9999px;
+    --tab-glass-accent-color: #2563eb;
+    --tab-glass-accent-rgb: 37, 99, 235;
+
+    /* 🖼️ ANA KONTEYNIR & ÇERÇEVELER MODÜL DEĞİŞKENLERİ */
+    --card-glass-opacity: 0.20;
+    --card-glass-blur: 0px;
+    --card-glass-specular-alpha: 0.80;
+    --card-glass-specular-width: 1.5px;
+    --card-glass-inner-glow-alpha: 0.40;
+    --card-glass-radius: 24px;
+    --card-glass-accent-color: #2563eb;
+    --card-glass-accent-rgb: 37, 99, 235;
+
+    /* GENEL GERİYE UYUMLULUK */
     --glass-opacity: 0.35;
     --glass-blur: 20px;
     --glass-specular-alpha: 1.0;
     --glass-specular-width: 1.5px;
-    --glass-specular-bloom: 4px;
+    --glass-specular-bloom: 0px;
     --glass-specular-taper: 80%;
     --glass-inner-glow-alpha: 0.65;
     --glass-inner-glow-spread: 6px;
@@ -1007,12 +1050,17 @@ body.lab-body {
 }
 
 .component-card {
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.005) 100%), rgba(10, 15, 28, 0.15);
-    border: 1px solid rgba(255, 255, 255, 0.10);
-    border-top: 1.5px solid rgba(255, 255, 255, 0.30);
-    border-radius: 24px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.005) 100%), rgba(10, 15, 28, var(--card-glass-opacity, 0.20));
+    backdrop-filter: blur(var(--card-glass-blur, 0px)) saturate(200%);
+    -webkit-backdrop-filter: blur(var(--card-glass-blur, 0px)) saturate(200%);
+    border: var(--card-glass-specular-width, 1.5px) solid rgba(255, 255, 255, 0.12);
+    border-top: var(--card-glass-specular-width, 1.5px) solid rgba(255, 255, 255, var(--card-glass-specular-alpha, 0.80));
+    border-radius: var(--card-glass-radius, 24px);
     padding: 28px;
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
+    box-shadow: 
+        inset 0 2px 8px rgba(255, 255, 255, var(--card-glass-inner-glow-alpha, 0.40)),
+        0 20px 50px rgba(0, 0, 0, 0.45);
+    transition: all 0.25s ease;
 }
 
 .component-header {
@@ -1085,34 +1133,32 @@ body.lab-body {
     font-weight: 700;
     transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     
-    /* Canlı Değişkenler & İpeksi Cam Tabanı */
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.20) 0%, rgba(255, 255, 255, 0.04) 50%, rgba(255, 255, 255, 0.10) 100%), rgba(var(--glass-accent-rgb), var(--glass-opacity));
+    /* Buton Cam Tabanı */
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.20) 0%, rgba(255, 255, 255, 0.04) 50%, rgba(255, 255, 255, 0.10) 100%), rgba(var(--btn-glass-accent-rgb, 37, 99, 235), var(--btn-glass-opacity, 0.35));
     border: 1px solid rgba(255, 255, 255, 0.18);
-    border-radius: var(--glass-radius);
-    backdrop-filter: blur(var(--glass-blur)) saturate(200%);
-    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(200%);
+    border-radius: var(--btn-glass-radius, 9999px);
+    backdrop-filter: blur(var(--btn-glass-blur, 20px)) saturate(200%);
+    -webkit-backdrop-filter: blur(var(--btn-glass-blur, 20px)) saturate(200%);
     box-shadow: 
-        inset 0 2px var(--glass-inner-glow-spread, 6px) rgba(255, 255, 255, var(--glass-inner-glow-alpha)),
-        inset 0 -2px calc(var(--glass-inner-glow-spread, 6px) * 0.75) rgba(0, 0, 0, 0.40),
-        inset 0 0 calc(var(--glass-inner-glow-spread, 6px) * 2.5) rgba(var(--glass-accent-rgb), calc(var(--glass-inner-glow-alpha) * 0.45)),
-        0 0 20px rgba(var(--glass-accent-rgb), 0.30),
+        inset 0 2px var(--btn-glass-inner-glow-spread, 6px) rgba(255, 255, 255, var(--btn-glass-inner-glow-alpha, 0.65)),
+        inset 0 -2px calc(var(--btn-glass-inner-glow-spread, 6px) * 0.75) rgba(0, 0, 0, 0.40),
+        inset 0 0 calc(var(--btn-glass-inner-glow-spread, 6px) * 2.5) rgba(var(--btn-glass-accent-rgb, 37, 99, 235), calc(var(--btn-glass-inner-glow-alpha, 0.65) * 0.45)),
+        0 0 20px rgba(var(--btn-glass-accent-rgb, 37, 99, 235), 0.30),
         0 6px 18px rgba(0, 0, 0, 0.30);
 }
 
 /* 💎 PRİZMATİK ELMAS IŞILTISI (İPEKSİ GEÇİŞLİ & AYARLANABİLİR KALINLIKLI SPECULAR CAUSTIC RIM) */
-.dynamic-glass-btn::before,
-.dynamic-glass-input::before,
-.dynamic-glass-stepper::before {
+.dynamic-glass-btn::before {
     content: '';
     position: absolute;
     inset: 0;
     border-radius: inherit;
-    padding: var(--glass-specular-width, 1.5px);
+    padding: var(--btn-glass-specular-width, 1.5px);
     background: radial-gradient(
-        ellipse var(--glass-specular-taper) 70% at 50% -5%,
-        rgba(255, 255, 255, var(--glass-specular-alpha)) 0%,
-        rgba(255, 255, 255, calc(var(--glass-specular-alpha) * 0.70)) 25%,
-        rgba(255, 255, 255, calc(var(--glass-specular-alpha) * 0.20)) 60%,
+        ellipse var(--btn-glass-specular-taper, 80%) 70% at 50% -5%,
+        rgba(255, 255, 255, var(--btn-glass-specular-alpha, 1.0)) 0%,
+        rgba(255, 255, 255, calc(var(--btn-glass-specular-alpha, 1.0) * 0.70)) 25%,
+        rgba(255, 255, 255, calc(var(--btn-glass-specular-alpha, 1.0) * 0.20)) 60%,
         rgba(255, 255, 255, 0.02) 85%,
         transparent 100%
     );
@@ -1121,18 +1167,18 @@ body.lab-body {
     mask-composite: exclude;
     pointer-events: none;
     z-index: 2;
-    filter: drop-shadow(0 0 var(--glass-specular-bloom, 2px) rgba(255, 255, 255, calc(var(--glass-specular-alpha) * 0.5)));
+    filter: drop-shadow(0 0 var(--btn-glass-specular-bloom, 0px) rgba(255, 255, 255, calc(var(--btn-glass-specular-alpha, 1.0) * 0.5)));
     transition: filter 0.25s cubic-bezier(0.16, 1, 0.3, 1), padding 0.25s ease;
 }
 
 .dynamic-glass-btn:hover {
     transform: translateY(-2px) scale(1.015);
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.32) 0%, rgba(255, 255, 255, 0.08) 50%, rgba(255, 255, 255, 0.18) 100%), rgba(var(--glass-accent-rgb), calc(var(--glass-opacity) + 0.20));
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.32) 0%, rgba(255, 255, 255, 0.08) 50%, rgba(255, 255, 255, 0.18) 100%), rgba(var(--btn-glass-accent-rgb, 37, 99, 235), calc(var(--btn-glass-opacity, 0.35) + 0.20));
     box-shadow: 
-        inset 0 2px calc(var(--glass-inner-glow-spread, 6px) * 1.2) rgba(255, 255, 255, calc(var(--glass-inner-glow-alpha) * 1.2)),
-        inset 0 -2px calc(var(--glass-inner-glow-spread, 6px) * 0.9) rgba(0, 0, 0, 0.45),
-        inset 0 0 calc(var(--glass-inner-glow-spread, 6px) * 3) rgba(var(--glass-accent-rgb), calc(var(--glass-inner-glow-alpha) * 0.65)),
-        0 0 28px rgba(var(--glass-accent-rgb), 0.55),
+        inset 0 2px calc(var(--btn-glass-inner-glow-spread, 6px) * 1.2) rgba(255, 255, 255, calc(var(--btn-glass-inner-glow-alpha, 0.65) * 1.2)),
+        inset 0 -2px calc(var(--btn-glass-inner-glow-spread, 6px) * 0.9) rgba(0, 0, 0, 0.45),
+        inset 0 0 calc(var(--btn-glass-inner-glow-spread, 6px) * 3) rgba(var(--btn-glass-accent-rgb, 37, 99, 235), calc(var(--btn-glass-inner-glow-alpha, 0.65) * 0.65)),
+        0 0 28px rgba(var(--btn-glass-accent-rgb, 37, 99, 235), 0.55),
         0 8px 24px rgba(0, 0, 0, 0.40);
 }
 
@@ -1194,29 +1240,41 @@ body.lab-body {
     align-items: center;
     gap: 10px;
     padding: 11px 18px;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.10) 0%, rgba(255, 255, 255, 0.02) 100%), rgba(18, 24, 38, var(--glass-opacity));
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.10) 0%, rgba(255, 255, 255, 0.02) 100%), rgba(18, 24, 38, var(--input-glass-opacity, 0.25));
     border: 1px solid rgba(255, 255, 255, 0.16);
-    border-radius: var(--glass-radius);
-    backdrop-filter: blur(var(--glass-blur)) saturate(200%);
-    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(200%);
-    box-shadow: inset 0 1px 2px rgba(255, 255, 255, var(--glass-inner-glow-alpha)), 0 4px 16px rgba(0, 0, 0, 0.35);
+    border-radius: var(--input-glass-radius, 9999px);
+    backdrop-filter: blur(var(--input-glass-blur, 20px)) saturate(200%);
+    -webkit-backdrop-filter: blur(var(--input-glass-blur, 20px)) saturate(200%);
+    box-shadow: inset 0 1px 2px rgba(255, 255, 255, var(--input-glass-inner-glow-alpha, 0.50)), 0 4px 16px rgba(0, 0, 0, 0.35);
+    transition: all 0.25s ease;
+}
+
+.dynamic-glass-input::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: var(--input-glass-specular-width, 1.5px);
+    background: radial-gradient(
+        ellipse 80% 70% at 50% -5%,
+        rgba(255, 255, 255, var(--input-glass-specular-alpha, 0.90)) 0%,
+        rgba(255, 255, 255, calc(var(--input-glass-specular-alpha, 0.90) * 0.60)) 30%,
+        rgba(255, 255, 255, 0.10) 70%,
+        transparent 100%
+    );
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    z-index: 2;
+    filter: drop-shadow(0 0 var(--input-glass-specular-bloom, 0px) rgba(255, 255, 255, 0.4));
     transition: all 0.25s ease;
 }
 
 .dynamic-glass-input:focus-within {
-    border-color: rgba(var(--glass-accent-rgb), 0.75);
-    box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.45), 0 0 24px rgba(var(--glass-accent-rgb), 0.45);
+    border-color: rgba(var(--input-glass-accent-rgb, 37, 99, 235), 0.75);
+    box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.45), 0 0 24px rgba(var(--input-glass-accent-rgb, 37, 99, 235), 0.45);
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.04) 100%), rgba(22, 30, 48, 0.65);
-}
-
-.dynamic-glass-input:focus-within::before {
-    background: radial-gradient(
-        ellipse 95% 80% at 50% -10%,
-        #ffffff 0%,
-        rgba(255, 255, 255, 0.85) 30%,
-        rgba(255, 255, 255, 0.25) 70%,
-        transparent 100%
-    );
 }
 
 .input-icon {
@@ -1226,7 +1284,7 @@ body.lab-body {
 }
 
 .dynamic-glass-input:focus-within .input-icon {
-    color: var(--glass-accent-color);
+    color: var(--input-glass-accent-color, #2563eb);
 }
 
 .dynamic-glass-input input {
@@ -1263,13 +1321,13 @@ body.lab-body {
     overflow: hidden;
     display: inline-flex;
     align-items: center;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%), rgba(18, 24, 38, var(--glass-opacity));
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%), rgba(18, 24, 38, var(--input-glass-opacity, 0.25));
     border: 1px solid rgba(255, 255, 255, 0.16);
-    border-radius: var(--glass-radius);
-    backdrop-filter: blur(var(--glass-blur)) saturate(200%);
-    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(200%);
+    border-radius: var(--input-glass-radius, 9999px);
+    backdrop-filter: blur(var(--input-glass-blur, 20px)) saturate(200%);
+    -webkit-backdrop-filter: blur(var(--input-glass-blur, 20px)) saturate(200%);
     padding: 4px;
-    box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.25);
+    box-shadow: inset 0 1px 1px rgba(255, 255, 255, var(--input-glass-inner-glow-alpha, 0.50));
 }
 
 .stepper-btn {
@@ -1331,11 +1389,14 @@ body.lab-body {
 
 .dynamic-tab.active {
     color: #ffffff;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.06) 50%, rgba(255, 255, 255, 0.15) 100%), rgba(var(--glass-accent-rgb), 0.60);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.06) 50%, rgba(255, 255, 255, 0.15) 100%), rgba(var(--tab-glass-accent-rgb, 37, 99, 235), var(--tab-glass-opacity, 0.40));
     border: 1px solid rgba(255, 255, 255, 0.25);
-    border-top: 1.5px solid #ffffff;
+    border-top: 1.5px solid rgba(255, 255, 255, var(--tab-glass-specular-alpha, 1.20));
+    border-radius: var(--tab-glass-radius, 9999px);
+    backdrop-filter: blur(var(--tab-glass-blur, 16px)) saturate(200%);
+    -webkit-backdrop-filter: blur(var(--tab-glass-blur, 16px)) saturate(200%);
     font-weight: 700;
-    box-shadow: inset 0 1.5px 2px rgba(255, 255, 255, 0.60), 0 0 20px rgba(var(--glass-accent-rgb), 0.40);
+    box-shadow: inset 0 1.5px 2px rgba(255, 255, 255, 0.60), 0 0 20px rgba(var(--tab-glass-accent-rgb, 37, 99, 235), 0.40);
 }
 
 /* Rozetler */
@@ -1417,10 +1478,10 @@ body.lab-body {
 }
 
 .dynamic-glass-switch input:checked + .switch-slider {
-    background: linear-gradient(135deg, rgba(var(--glass-accent-rgb), 0.85), rgba(var(--glass-accent-rgb), 0.65));
+    background: linear-gradient(135deg, rgba(var(--tab-glass-accent-rgb, 37, 99, 235), 0.85), rgba(var(--tab-glass-accent-rgb, 37, 99, 235), 0.65));
     border-color: rgba(255, 255, 255, 0.30);
     border-top-color: #ffffff;
-    box-shadow: 0 0 16px rgba(var(--glass-accent-rgb), 0.50);
+    box-shadow: 0 0 16px rgba(var(--tab-glass-accent-rgb, 37, 99, 235), 0.50);
 }
 
 .dynamic-glass-switch input:checked + .switch-slider::before {
@@ -1469,16 +1530,16 @@ body.lab-body {
 
 /* 4. DİNAMİK ÇERÇEVE & KARTLAR */
 .dynamic-glass-frame {
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.01) 60%, rgba(255, 255, 255, 0.04) 100%), rgba(10, 15, 28, var(--glass-opacity));
-    backdrop-filter: blur(var(--glass-blur)) saturate(200%);
-    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(200%);
-    border: 1px solid rgba(255, 255, 255, 0.16);
-    border-top: 1.5px solid rgba(255, 255, 255, var(--glass-specular-alpha));
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.01) 60%, rgba(255, 255, 255, 0.04) 100%), rgba(10, 15, 28, var(--card-glass-opacity, 0.20));
+    backdrop-filter: blur(var(--card-glass-blur, 0px)) saturate(200%);
+    -webkit-backdrop-filter: blur(var(--card-glass-blur, 0px)) saturate(200%);
+    border: var(--card-glass-specular-width, 1.5px) solid rgba(255, 255, 255, 0.16);
+    border-top: var(--card-glass-specular-width, 1.5px) solid rgba(255, 255, 255, var(--card-glass-specular-alpha, 0.80));
     border-bottom: 1px solid rgba(255, 255, 255, 0.10);
-    border-radius: 20px;
+    border-radius: var(--card-glass-radius, 24px);
     padding: 20px;
     box-shadow: 
-        inset 0 1.5px 2px rgba(255, 255, 255, var(--glass-inner-glow-alpha)),
+        inset 0 1.5px 4px rgba(255, 255, 255, var(--card-glass-inner-glow-alpha, 0.40)),
         0 20px 45px rgba(0, 0, 0, 0.55);
     display: flex;
     flex-direction: column;

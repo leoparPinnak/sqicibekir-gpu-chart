@@ -78,17 +78,17 @@
             </div>
 
             <!-- ======================================================== -->
-            <!-- 1. SEKME: CAM FİZİK PARAMETRELERİ                        -->
+            <!-- 1. SEKME: CAM FİZİK PARAMETRELERİ (MODÜLER BİLEŞEN LABI) -->
             <!-- ======================================================== -->
             <div class="panel-tab-content active" id="tab-content-glass">
                 <div class="panel-header">
                     <h3>Cam Yansıma & Kırılma</h3>
-                    <button class="reset-btn" id="reset-params-btn" title="Varsayılana Dön">Sıfırla</button>
+                    <button class="reset-btn" id="reset-params-btn" title="Tüm Bileşenleri Varsayılana Döndür">Sıfırla</button>
                 </div>
 
                 <!-- ÖN AYARLAR (PRESETS) -->
                 <div class="control-group">
-                    <label class="control-label">Tasarım Şablonları (Presets)</label>
+                    <label class="control-label">Genel Tasarım Şablonları (Master Presets)</label>
                     <div class="preset-grid">
                         <button class="preset-pill active" data-preset="visionos">Apple VisionOS</button>
                         <button class="preset-pill" data-preset="sapphire">Safir Sıvı Cam</button>
@@ -110,89 +110,324 @@
                     </select>
                 </div>
 
-                <!-- SAYDAMLIK (ALPHA) -->
-                <div class="control-group">
-                    <div class="control-label-row">
-                        <span>Cam Saydamlığı (Transmittance)</span>
-                        <span class="control-value" id="val-opacity">35%</span>
-                    </div>
-                    <input type="range" id="param-opacity" min="5" max="95" value="35" class="lab-slider">
+                <!-- 🎛️ BİLEŞEN HEDEF SEÇİCİ SUB-NAV (COMPONENT SELECTOR) -->
+                <div class="component-filter-bar" style="display: flex; gap: 4px; overflow-x: auto; padding-bottom: 8px; margin-bottom: 12px;">
+                    <button class="comp-filter-btn active" data-comp-target="all" style="padding: 5px 10px; font-size: 11px; font-weight: 700; border-radius: 8px; border: 1px solid rgba(255,255,255,0.15); background: rgba(37,99,235,0.35); color: #fff; cursor: pointer; white-space: nowrap;">📜 Tümü</button>
+                    <button class="comp-filter-btn" data-comp-target="btn" style="padding: 5px 10px; font-size: 11px; font-weight: 700; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); color: #94a3b8; cursor: pointer; white-space: nowrap;">🔘 Butonlar</button>
+                    <button class="comp-filter-btn" data-comp-target="input" style="padding: 5px 10px; font-size: 11px; font-weight: 700; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); color: #94a3b8; cursor: pointer; white-space: nowrap;">⌨️ Girdiler</button>
+                    <button class="comp-filter-btn" data-comp-target="tab" style="padding: 5px 10px; font-size: 11px; font-weight: 700; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); color: #94a3b8; cursor: pointer; white-space: nowrap;">📑 Sekmeler</button>
+                    <button class="comp-filter-btn" data-comp-target="card" style="padding: 5px 10px; font-size: 11px; font-weight: 700; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); color: #94a3b8; cursor: pointer; white-space: nowrap;">🖼️ Konteynır</button>
                 </div>
 
-                <!-- BULANIKLIK (BLUR) -->
-                <div class="control-group">
-                    <div class="control-label-row">
-                        <span>Arka Plan Bulanıklığı (Blur)</span>
-                        <span class="control-value" id="val-blur">20px</span>
+                <!-- ======================================================== -->
+                <!-- 🔘 MODÜL 1: SIVI CAM BUTONLAR (BUTTONS ENGINE)          -->
+                <!-- ======================================================== -->
+                <div class="comp-control-section" id="section-comp-btn" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(59,130,246,0.25); border-radius: 14px; padding: 14px; margin-bottom: 14px;">
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 6px;">
+                        <span style="font-size: 12px; font-weight: 800; color: #60a5fa; text-transform: uppercase; letter-spacing: 0.5px;">🔘 1. Sıvı Cam Butonlar</span>
+                        <span style="font-size: 10px; color: #94a3b8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px;">.dynamic-glass-btn</span>
                     </div>
-                    <input type="range" id="param-blur" min="0" max="60" value="20" class="lab-slider">
+
+                    <!-- SAYDAMLIK (ALPHA) -->
+                    <div class="control-group">
+                        <div class="control-label-row">
+                            <span>Saydamlık</span>
+                            <span class="control-value" id="val-btn-opacity">35%</span>
+                        </div>
+                        <input type="range" id="param-btn-opacity" min="5" max="95" value="35" class="lab-slider">
+                    </div>
+
+                    <!-- BULANIKLIK (BLUR) -->
+                    <div class="control-group">
+                        <div class="control-label-row">
+                            <span>Bulanıklık (Blur)</span>
+                            <span class="control-value" id="val-btn-blur">20px</span>
+                        </div>
+                        <input type="range" id="param-btn-blur" min="0" max="60" value="20" class="lab-slider">
+                    </div>
+
+                    <!-- ELMAS IŞILTISI -->
+                    <div class="control-group">
+                        <div class="control-label-row">
+                            <span>Elmas Işıltısı (Parlaklık)</span>
+                            <span class="control-value" id="val-btn-specular">100%</span>
+                        </div>
+                        <input type="range" id="param-btn-specular" min="10" max="250" step="5" value="100" class="lab-slider">
+                    </div>
+
+                    <!-- ÇERÇEVE KALINLIĞI -->
+                    <div class="control-group">
+                        <div class="control-label-row">
+                            <span>Işıltı Çerçeve Kalınlığı</span>
+                            <span class="control-value" id="val-btn-specular-width">1.5px</span>
+                        </div>
+                        <input type="range" id="param-btn-specular-width" min="0.5" max="6.0" step="0.5" value="1.5" class="lab-slider">
+                    </div>
+
+                    <!-- IŞILTI TAPER -->
+                    <div class="control-group">
+                        <div class="control-label-row">
+                            <span>Işıltı Kenar Taper</span>
+                            <span class="control-value" id="val-btn-specular-taper">80% (İpeksi)</span>
+                        </div>
+                        <input type="range" id="param-btn-specular-taper" min="20" max="100" value="80" class="lab-slider">
+                    </div>
+
+                    <!-- İÇ IŞIK KIRILMASI -->
+                    <div class="control-group">
+                        <div class="control-label-row">
+                            <span>İç Işık Kırılması</span>
+                            <span class="control-value" id="val-btn-inner-glow">65%</span>
+                        </div>
+                        <input type="range" id="param-btn-inner-glow" min="0" max="200" step="5" value="65" class="lab-slider">
+                    </div>
+
+                    <!-- İÇ IŞIK YAYILIMI -->
+                    <div class="control-group">
+                        <div class="control-label-row">
+                            <span>İç Işık Yayılımı</span>
+                            <span class="control-value" id="val-btn-inner-glow-spread">6px</span>
+                        </div>
+                        <input type="range" id="param-btn-inner-glow-spread" min="1" max="30" step="1" value="6" class="lab-slider">
+                    </div>
+
+                    <!-- RADIUS -->
+                    <div class="control-group">
+                        <div class="control-label-row">
+                            <span>Köşe Yuvarlaklığı</span>
+                            <span class="control-value" id="val-btn-radius">9999px (Hap)</span>
+                        </div>
+                        <input type="range" id="param-btn-radius" min="4" max="9999" step="2" value="9999" class="lab-slider">
+                    </div>
+
+                    <!-- RENK TONU -->
+                    <div class="control-group">
+                        <label class="control-label">Buton Neon Vurgu Rengi</label>
+                        <div class="color-palette comp-color-palette" data-comp="btn">
+                            <button class="color-dot active" data-color="#2563eb" style="--c: #2563eb;" title="Safir Mavi"></button>
+                            <button class="color-dot" data-color="#10b981" style="--c: #10b981;" title="Zümrüt Yeşil"></button>
+                            <button class="color-dot" data-color="#8b5cf6" style="--c: #8b5cf6;" title="Ametist Mor"></button>
+                            <button class="color-dot" data-color="#f43f5e" style="--c: #f43f5e;" title="Yakut Kırmızı"></button>
+                            <button class="color-dot" data-color="#f59e0b" style="--c: #f59e0b;" title="Amber Altın"></button>
+                            <button class="color-dot" data-color="#06b6d4" style="--c: #06b6d4;" title="Siyan Buzul"></button>
+                            <button class="color-dot" data-color="#ffffff" style="--c: #ffffff;" title="Elmas Beyaz"></button>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- ÜST KENAR PARILTISI & BLOOM (SPECULAR BEVEL & SUPERCHARGED BLOOM) -->
-                <div class="control-group">
-                    <div class="control-label-row">
-                        <span>Üst Kenar Elmas Işıltısı (Parlaklık)</span>
-                        <span class="control-value" id="val-specular">100%</span>
+                <!-- ======================================================== -->
+                <!-- ⌨️ MODÜL 2: GİRDİ ALANLARI & ARAMA (INPUTS ENGINE)       -->
+                <!-- ======================================================== -->
+                <div class="comp-control-section" id="section-comp-input" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(16,185,129,0.25); border-radius: 14px; padding: 14px; margin-bottom: 14px;">
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 6px;">
+                        <span style="font-size: 12px; font-weight: 800; color: #34d399; text-transform: uppercase; letter-spacing: 0.5px;">⌨️ 2. Girdi & Arama Kapsülleri</span>
+                        <span style="font-size: 10px; color: #94a3b8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px;">.dynamic-glass-input</span>
                     </div>
-                    <input type="range" id="param-specular" min="10" max="250" step="5" value="100" class="lab-slider">
+
+                    <!-- SAYDAMLIK -->
+                    <div class="control-group">
+                        <div class="control-label-row">
+                            <span>Girdi Saydamlığı</span>
+                            <span class="control-value" id="val-input-opacity">25%</span>
+                        </div>
+                        <input type="range" id="param-input-opacity" min="5" max="95" value="25" class="lab-slider">
+                    </div>
+
+                    <!-- BULANIKLIK -->
+                    <div class="control-group">
+                        <div class="control-label-row">
+                            <span>Bulanıklık (Blur)</span>
+                            <span class="control-value" id="val-input-blur">20px</span>
+                        </div>
+                        <input type="range" id="param-input-blur" min="0" max="60" value="20" class="lab-slider">
+                    </div>
+
+                    <!-- ELMAS IŞILTISI -->
+                    <div class="control-group">
+                        <div class="control-label-row">
+                            <span>Üst Kenar Işıltısı</span>
+                            <span class="control-value" id="val-input-specular">90%</span>
+                        </div>
+                        <input type="range" id="param-input-specular" min="10" max="250" step="5" value="90" class="lab-slider">
+                    </div>
+
+                    <!-- ÇERÇEVE KALINLIĞI -->
+                    <div class="control-group">
+                        <div class="control-label-row">
+                            <span>Kenar Kalınlığı</span>
+                            <span class="control-value" id="val-input-specular-width">1.5px</span>
+                        </div>
+                        <input type="range" id="param-input-specular-width" min="0.5" max="6.0" step="0.5" value="1.5" class="lab-slider">
+                    </div>
+
+                    <!-- İÇ GÖLGE & IŞIK -->
+                    <div class="control-group">
+                        <div class="control-label-row">
+                            <span>İç Derinlik / Işık</span>
+                            <span class="control-value" id="val-input-inner-glow">50%</span>
+                        </div>
+                        <input type="range" id="param-input-inner-glow" min="0" max="200" step="5" value="50" class="lab-slider">
+                    </div>
+
+                    <!-- RADIUS -->
+                    <div class="control-group">
+                        <div class="control-label-row">
+                            <span>Köşe Yuvarlaklığı</span>
+                            <span class="control-value" id="val-input-radius">9999px (Hap)</span>
+                        </div>
+                        <input type="range" id="param-input-radius" min="4" max="9999" step="2" value="9999" class="lab-slider">
+                    </div>
+
+                    <!-- RENK TONU -->
+                    <div class="control-group">
+                        <label class="control-label">Girdi Odaklanma Vurgu Rengi</label>
+                        <div class="color-palette comp-color-palette" data-comp="input">
+                            <button class="color-dot active" data-color="#2563eb" style="--c: #2563eb;" title="Safir Mavi"></button>
+                            <button class="color-dot" data-color="#10b981" style="--c: #10b981;" title="Zümrüt Yeşil"></button>
+                            <button class="color-dot" data-color="#8b5cf6" style="--c: #8b5cf6;" title="Ametist Mor"></button>
+                            <button class="color-dot" data-color="#f43f5e" style="--c: #f43f5e;" title="Yakut Kırmızı"></button>
+                            <button class="color-dot" data-color="#f59e0b" style="--c: #f59e0b;" title="Amber Altın"></button>
+                            <button class="color-dot" data-color="#06b6d4" style="--c: #06b6d4;" title="Siyan Buzul"></button>
+                            <button class="color-dot" data-color="#ffffff" style="--c: #ffffff;" title="Elmas Beyaz"></button>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- ELMAS IŞILTISI KALINLIĞI (SPECULAR RIM THICKNESS / STROKE) -->
-                <div class="control-group">
-                    <div class="control-label-row">
-                        <span>Işıltı Çerçeve Kalınlığı (Thickness)</span>
-                        <span class="control-value" id="val-specular-width">1.5px</span>
+                <!-- ======================================================== -->
+                <!-- 📑 MODÜL 3: CAM SEKMELER, ROZET & ŞALTER (TABS ENGINE)   -->
+                <!-- ======================================================== -->
+                <div class="comp-control-section" id="section-comp-tab" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(139,92,246,0.25); border-radius: 14px; padding: 14px; margin-bottom: 14px;">
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 6px;">
+                        <span style="font-size: 12px; font-weight: 800; color: #a78bfa; text-transform: uppercase; letter-spacing: 0.5px;">📑 3. Sekmeler, Rozetler & Şalter</span>
+                        <span style="font-size: 10px; color: #94a3b8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px;">.dynamic-tab</span>
                     </div>
-                    <input type="range" id="param-specular-width" min="0.5" max="6.0" step="0.5" value="1.5" class="lab-slider">
+
+                    <!-- SAYDAMLIK -->
+                    <div class="control-group">
+                        <div class="control-label-row">
+                            <span>Sekme / Rozet Saydamlığı</span>
+                            <span class="control-value" id="val-tab-opacity">40%</span>
+                        </div>
+                        <input type="range" id="param-tab-opacity" min="5" max="95" value="40" class="lab-slider">
+                    </div>
+
+                    <!-- BULANIKLIK -->
+                    <div class="control-group">
+                        <div class="control-label-row">
+                            <span>Bulanıklık (Blur)</span>
+                            <span class="control-value" id="val-tab-blur">16px</span>
+                        </div>
+                        <input type="range" id="param-tab-blur" min="0" max="60" value="16" class="lab-slider">
+                    </div>
+
+                    <!-- AKTİF PARLAKLIK -->
+                    <div class="control-group">
+                        <div class="control-label-row">
+                            <span>Aktif Sekme Işıltısı</span>
+                            <span class="control-value" id="val-tab-specular">120%</span>
+                        </div>
+                        <input type="range" id="param-tab-specular" min="10" max="250" step="5" value="120" class="lab-slider">
+                    </div>
+
+                    <!-- RADIUS -->
+                    <div class="control-group">
+                        <div class="control-label-row">
+                            <span>Sekme Yuvarlaklığı</span>
+                            <span class="control-value" id="val-tab-radius">9999px (Hap)</span>
+                        </div>
+                        <input type="range" id="param-tab-radius" min="4" max="9999" step="2" value="9999" class="lab-slider">
+                    </div>
+
+                    <!-- RENK TONU -->
+                    <div class="control-group">
+                        <label class="control-label">Sekme / Şalter Aktif Rengi</label>
+                        <div class="color-palette comp-color-palette" data-comp="tab">
+                            <button class="color-dot active" data-color="#2563eb" style="--c: #2563eb;" title="Safir Mavi"></button>
+                            <button class="color-dot" data-color="#10b981" style="--c: #10b981;" title="Zümrüt Yeşil"></button>
+                            <button class="color-dot" data-color="#8b5cf6" style="--c: #8b5cf6;" title="Ametist Mor"></button>
+                            <button class="color-dot" data-color="#f43f5e" style="--c: #f43f5e;" title="Yakut Kırmızı"></button>
+                            <button class="color-dot" data-color="#f59e0b" style="--c: #f59e0b;" title="Amber Altın"></button>
+                            <button class="color-dot" data-color="#06b6d4" style="--c: #06b6d4;" title="Siyan Buzul"></button>
+                            <button class="color-dot" data-color="#ffffff" style="--c: #ffffff;" title="Elmas Beyaz"></button>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- ELMAS IŞILTISI YAYILIMI / YUMUŞATMA (SPECULAR TAPER & FEATHER) -->
-                <div class="control-group">
-                    <div class="control-label-row">
-                        <span>Işıltı Kenar Yumuşatma (Taper)</span>
-                        <span class="control-value" id="val-specular-taper">80% (İpeksi Geçiş)</span>
+                <!-- ======================================================== -->
+                <!-- 🖼️ MODÜL 4: ANA KAPSAYICI KONTEYNIR (CONTAINERS & CARDS) -->
+                <!-- ======================================================== -->
+                <div class="comp-control-section" id="section-comp-card" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(245,158,11,0.25); border-radius: 14px; padding: 14px; margin-bottom: 14px;">
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 6px;">
+                        <span style="font-size: 12px; font-weight: 800; color: #fbbf24; text-transform: uppercase; letter-spacing: 0.5px;">🖼️ 4. Ana Konteynır & Kart Çerçevesi</span>
+                        <span style="font-size: 10px; color: #94a3b8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px;">.component-card</span>
                     </div>
-                    <input type="range" id="param-specular-taper" min="20" max="100" value="80" class="lab-slider">
-                </div>
 
-                <!-- İÇ IŞIK KIRILMASI / DERİNLİK (SUPERCHARGED INNER CAUSTIC GLOW - %200) -->
-                <div class="control-group">
-                    <div class="control-label-row">
-                        <span>İç Işık Kırılması (Inner Caustic Glow)</span>
-                        <span class="control-value" id="val-inner-glow">65%</span>
+                    <!-- KONTEYNIR SAYDAMLIK -->
+                    <div class="control-group">
+                        <div class="control-label-row">
+                            <span>Konteynır Arka Plan Saydamlığı</span>
+                            <span class="control-value" id="val-card-opacity">20%</span>
+                        </div>
+                        <input type="range" id="param-card-opacity" min="0" max="95" value="20" class="lab-slider">
                     </div>
-                    <input type="range" id="param-inner-glow" min="0" max="200" step="5" value="65" class="lab-slider">
-                </div>
 
-                <!-- İÇ IŞIK YAYILIMI & HACİM (INNER CAUSTIC SPREAD & VOLUME) -->
-                <div class="control-group">
-                    <div class="control-label-row">
-                        <span>İç Işık Hacmi / Dağılımı (Spread)</span>
-                        <span class="control-value" id="val-inner-glow-spread">6px</span>
+                    <!-- KONTEYNIR BULANIKLIK -->
+                    <div class="control-group">
+                        <div class="control-label-row">
+                            <span>Konteynır Bulanıklığı (Blur)</span>
+                            <span class="control-value" id="val-card-blur">0px (Net)</span>
+                        </div>
+                        <input type="range" id="param-card-blur" min="0" max="60" value="0" class="lab-slider">
                     </div>
-                    <input type="range" id="param-inner-glow-spread" min="1" max="30" step="1" value="6" class="lab-slider">
-                </div>
 
-                <!-- KÖŞE YUVARLAKLIĞI (BORDER RADIUS) -->
-                <div class="control-group">
-                    <div class="control-label-row">
-                        <span>Köşe Yuvarlaklığı (Radius)</span>
-                        <span class="control-value" id="val-radius">9999px (Hap)</span>
+                    <!-- ÇERÇEVE PARLAKLIĞI -->
+                    <div class="control-group">
+                        <div class="control-label-row">
+                            <span>Çerçeve Üst Elmas Işıltısı</span>
+                            <span class="control-value" id="val-card-specular">80%</span>
+                        </div>
+                        <input type="range" id="param-card-specular" min="0" max="250" step="5" value="80" class="lab-slider">
                     </div>
-                    <input type="range" id="param-radius" min="8" max="9999" step="2" value="9999" class="lab-slider">
-                </div>
 
-                <!-- VURGU RENGİ (ACCENT COLOR) -->
-                <div class="control-group">
-                    <label class="control-label">Aura / Neon Renk Tonu</label>
-                    <div class="color-palette">
-                        <button class="color-dot active" data-color="#2563eb" style="--c: #2563eb;" title="Safir Mavi"></button>
-                        <button class="color-dot" data-color="#10b981" style="--c: #10b981;" title="Zümrüt Yeşil"></button>
-                        <button class="color-dot" data-color="#8b5cf6" style="--c: #8b5cf6;" title="Ametist Mor"></button>
-                        <button class="color-dot" data-color="#f43f5e" style="--c: #f43f5e;" title="Yakut Kırmızı"></button>
-                        <button class="color-dot" data-color="#f59e0b" style="--c: #f59e0b;" title="Amber Altın"></button>
-                        <button class="color-dot" data-color="#06b6d4" style="--c: #06b6d4;" title="Siyan Buzul"></button>
-                        <button class="color-dot" data-color="#ffffff" style="--c: #ffffff;" title="Elmas Beyaz"></button>
+                    <!-- ÇERÇEVE KALINLIĞI -->
+                    <div class="control-group">
+                        <div class="control-label-row">
+                            <span>Çerçeve Kalınlığı</span>
+                            <span class="control-value" id="val-card-specular-width">1.5px</span>
+                        </div>
+                        <input type="range" id="param-card-specular-width" min="0.5" max="8.0" step="0.5" value="1.5" class="lab-slider">
+                    </div>
+
+                    <!-- DERİNLİK & İÇ GÖLGE -->
+                    <div class="control-group">
+                        <div class="control-label-row">
+                            <span>Konteynır İç Işığı / Derinlik</span>
+                            <span class="control-value" id="val-card-inner-glow">40%</span>
+                        </div>
+                        <input type="range" id="param-card-inner-glow" min="0" max="200" step="5" value="40" class="lab-slider">
+                    </div>
+
+                    <!-- KÖŞE YUVARLAKLIĞI -->
+                    <div class="control-group">
+                        <div class="control-label-row">
+                            <span>Konteynır Köşe Yuvarlaklığı</span>
+                            <span class="control-value" id="val-card-radius">24px</span>
+                        </div>
+                        <input type="range" id="param-card-radius" min="8" max="60" step="2" value="24" class="lab-slider">
+                    </div>
+
+                    <!-- RENK TONU -->
+                    <div class="control-group">
+                        <label class="control-label">Konteynır Vurgu & Gölge Rengi</label>
+                        <div class="color-palette comp-color-palette" data-comp="card">
+                            <button class="color-dot active" data-color="#2563eb" style="--c: #2563eb;" title="Safir Mavi"></button>
+                            <button class="color-dot" data-color="#10b981" style="--c: #10b981;" title="Zümrüt Yeşil"></button>
+                            <button class="color-dot" data-color="#8b5cf6" style="--c: #8b5cf6;" title="Ametist Mor"></button>
+                            <button class="color-dot" data-color="#f43f5e" style="--c: #f43f5e;" title="Yakut Kırmızı"></button>
+                            <button class="color-dot" data-color="#f59e0b" style="--c: #f59e0b;" title="Amber Altın"></button>
+                            <button class="color-dot" data-color="#06b6d4" style="--c: #06b6d4;" title="Siyan Buzul"></button>
+                            <button class="color-dot" data-color="#ffffff" style="--c: #ffffff;" title="Elmas Beyaz"></button>
+                        </div>
                     </div>
                 </div>
 
