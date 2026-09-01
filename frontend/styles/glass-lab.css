@@ -7,6 +7,7 @@
     --glass-opacity: 0.35;
     --glass-blur: 20px;
     --glass-specular-alpha: 0.85;
+    --glass-specular-taper: 80%;
     --glass-inner-glow-alpha: 0.65;
     --glass-radius: 9999px;
     --glass-accent-color: #2563eb;
@@ -1057,30 +1058,62 @@ body.lab-body {
     font-weight: 700;
     transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     
-    /* Canlı Değişkenler */
+    /* Canlı Değişkenler & İpeksi Cam Tabanı */
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.20) 0%, rgba(255, 255, 255, 0.04) 50%, rgba(255, 255, 255, 0.10) 100%), rgba(var(--glass-accent-rgb), var(--glass-opacity));
-    border: 1px solid rgba(255, 255, 255, 0.22);
-    border-top: 1.5px solid rgba(255, 255, 255, var(--glass-specular-alpha));
-    border-bottom: 1px solid rgba(255, 255, 255, 0.10);
+    border: 1px solid rgba(255, 255, 255, 0.18);
     border-radius: var(--glass-radius);
     backdrop-filter: blur(var(--glass-blur)) saturate(200%);
     -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(200%);
     box-shadow: 
-        inset 0 1.5px 2px rgba(255, 255, 255, var(--glass-inner-glow-alpha)),
+        inset 0 1.5px 3px rgba(255, 255, 255, var(--glass-inner-glow-alpha)),
         inset 0 -1px 1.5px rgba(0, 0, 0, 0.30),
         0 0 20px rgba(var(--glass-accent-rgb), 0.30),
         0 6px 18px rgba(0, 0, 0, 0.30);
 }
 
+/* 💎 PRİZMATİK ELMAS IŞILTISI (İPEKSİ GEÇİŞLİ SPECULAR CAUSTIC RIM) */
+.dynamic-glass-btn::before,
+.dynamic-glass-input::before,
+.dynamic-glass-stepper::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1.5px;
+    background: radial-gradient(
+        ellipse var(--glass-specular-taper) 70% at 50% -5%,
+        rgba(255, 255, 255, var(--glass-specular-alpha)) 0%,
+        rgba(255, 255, 255, calc(var(--glass-specular-alpha) * 0.70)) 25%,
+        rgba(255, 255, 255, calc(var(--glass-specular-alpha) * 0.20)) 60%,
+        rgba(255, 255, 255, 0.02) 85%,
+        transparent 100%
+    );
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    z-index: 2;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
 .dynamic-glass-btn:hover {
     transform: translateY(-2px) scale(1.015);
-    border-top-color: #ffffff;
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.32) 0%, rgba(255, 255, 255, 0.08) 50%, rgba(255, 255, 255, 0.18) 100%), rgba(var(--glass-accent-rgb), calc(var(--glass-opacity) + 0.20));
     box-shadow: 
-        inset 0 2px 2.5px rgba(255, 255, 255, 0.90),
+        inset 0 2px 3.5px rgba(255, 255, 255, 0.95),
         inset 0 -1px 2px rgba(0, 0, 0, 0.25),
         0 0 28px rgba(var(--glass-accent-rgb), 0.55),
         0 8px 24px rgba(0, 0, 0, 0.40);
+}
+
+.dynamic-glass-btn:hover::before {
+    background: radial-gradient(
+        ellipse calc(var(--glass-specular-taper) + 15%) 85% at 50% -10%,
+        #ffffff 0%,
+        rgba(255, 255, 255, 0.90) 25%,
+        rgba(255, 255, 255, 0.35) 65%,
+        transparent 100%
+    );
 }
 
 .dynamic-glass-btn:active {
@@ -1135,23 +1168,33 @@ body.lab-body {
 
 /* 2. DİNAMİK GİRDİ ALANLARI (INPUTS) */
 .dynamic-glass-input {
+    position: relative;
+    overflow: hidden;
     display: flex;
     align-items: center;
     gap: 10px;
     padding: 11px 18px;
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.10) 0%, rgba(255, 255, 255, 0.02) 100%), rgba(18, 24, 38, var(--glass-opacity));
     border: 1px solid rgba(255, 255, 255, 0.16);
-    border-top: 1.5px solid rgba(255, 255, 255, var(--glass-specular-alpha));
     border-radius: var(--glass-radius);
-    box-shadow: inset 0 1px 1px rgba(255, 255, 255, var(--glass-inner-glow-alpha)), 0 4px 16px rgba(0, 0, 0, 0.35);
+    box-shadow: inset 0 1px 2px rgba(255, 255, 255, var(--glass-inner-glow-alpha)), 0 4px 16px rgba(0, 0, 0, 0.35);
     transition: all 0.25s ease;
 }
 
 .dynamic-glass-input:focus-within {
     border-color: rgba(var(--glass-accent-rgb), 0.75);
-    border-top-color: #ffffff;
-    box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.35), 0 0 24px rgba(var(--glass-accent-rgb), 0.45);
+    box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.45), 0 0 24px rgba(var(--glass-accent-rgb), 0.45);
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.04) 100%), rgba(22, 30, 48, 0.65);
+}
+
+.dynamic-glass-input:focus-within::before {
+    background: radial-gradient(
+        ellipse 95% 80% at 50% -10%,
+        #ffffff 0%,
+        rgba(255, 255, 255, 0.85) 30%,
+        rgba(255, 255, 255, 0.25) 70%,
+        transparent 100%
+    );
 }
 
 .input-icon {
@@ -1194,11 +1237,12 @@ body.lab-body {
 
 /* Stepper */
 .dynamic-glass-stepper {
+    position: relative;
+    overflow: hidden;
     display: inline-flex;
     align-items: center;
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%), rgba(18, 24, 38, var(--glass-opacity));
     border: 1px solid rgba(255, 255, 255, 0.16);
-    border-top: 1.5px solid rgba(255, 255, 255, var(--glass-specular-alpha));
     border-radius: var(--glass-radius);
     padding: 4px;
     box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.25);

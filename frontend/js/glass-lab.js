@@ -59,12 +59,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const paramOpacity = document.getElementById('param-opacity');
     const paramBlur = document.getElementById('param-blur');
     const paramSpecular = document.getElementById('param-specular');
+    const paramSpecularTaper = document.getElementById('param-specular-taper');
     const paramInnerGlow = document.getElementById('param-inner-glow');
     const paramRadius = document.getElementById('param-radius');
 
     const valOpacity = document.getElementById('val-opacity');
     const valBlur = document.getElementById('val-blur');
     const valSpecular = document.getElementById('val-specular');
+    const valSpecularTaper = document.getElementById('val-specular-taper');
     const valInnerGlow = document.getElementById('val-inner-glow');
     const valRadius = document.getElementById('val-radius');
 
@@ -77,6 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
             opacity: 35,
             blur: 20,
             specular: 85,
+            specularTaper: 80,
             innerGlow: 65,
             radius: 9999,
             color: '#2563eb',
@@ -86,6 +89,7 @@ document.addEventListener('DOMContentLoaded', () => {
             opacity: 50,
             blur: 25,
             specular: 95,
+            specularTaper: 85,
             innerGlow: 75,
             radius: 9999,
             color: '#2563eb',
@@ -95,6 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
             opacity: 30,
             blur: 18,
             specular: 90,
+            specularTaper: 75,
             innerGlow: 70,
             radius: 9999,
             color: '#10b981',
@@ -104,6 +109,7 @@ document.addEventListener('DOMContentLoaded', () => {
             opacity: 45,
             blur: 30,
             specular: 100,
+            specularTaper: 90,
             innerGlow: 85,
             radius: 12,
             color: '#8b5cf6',
@@ -113,6 +119,7 @@ document.addEventListener('DOMContentLoaded', () => {
             opacity: 15,
             blur: 12,
             specular: 95,
+            specularTaper: 70,
             innerGlow: 80,
             radius: 9999,
             color: '#ffffff',
@@ -122,6 +129,7 @@ document.addEventListener('DOMContentLoaded', () => {
             opacity: 65,
             blur: 40,
             specular: 50,
+            specularTaper: 60,
             innerGlow: 40,
             radius: 18,
             color: '#64748b',
@@ -136,12 +144,16 @@ document.addEventListener('DOMContentLoaded', () => {
         const op = parseInt(paramOpacity.value, 10);
         const bl = parseInt(paramBlur.value, 10);
         const sp = parseInt(paramSpecular.value, 10);
+        const tpr = parseInt(paramSpecularTaper ? paramSpecularTaper.value : 80, 10);
         const ig = parseInt(paramInnerGlow.value, 10);
         const rd = parseInt(paramRadius.value, 10);
 
         valOpacity.textContent = `${op}%`;
         valBlur.textContent = `${bl}px`;
         valSpecular.textContent = `${sp}%`;
+        if (valSpecularTaper) {
+            valSpecularTaper.textContent = tpr >= 80 ? `${tpr}% (İpeksi Geçiş)` : tpr <= 40 ? `${tpr}% (Dar Odak)` : `${tpr}% (Dengeli)`;
+        }
         valInnerGlow.textContent = `${ig}%`;
         valRadius.textContent = rd >= 9000 ? '9999px (Hap)' : `${rd}px`;
 
@@ -149,6 +161,7 @@ document.addEventListener('DOMContentLoaded', () => {
         root.style.setProperty('--glass-opacity', (op / 100).toFixed(2));
         root.style.setProperty('--glass-blur', `${bl}px`);
         root.style.setProperty('--glass-specular-alpha', (sp / 100).toFixed(2));
+        root.style.setProperty('--glass-specular-taper', `${tpr}%`);
         root.style.setProperty('--glass-inner-glow-alpha', (ig / 100).toFixed(2));
         root.style.setProperty('--glass-radius', rd >= 9000 ? '9999px' : `${rd}px`);
         root.style.setProperty('--glass-accent-color', currentAccentHex);
@@ -156,23 +169,43 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const radiusStr = rd >= 9000 ? '9999px' : `${rd}px`;
         const cssCode = `.liquid-glass-element {
+  position: relative;
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.20) 0%, rgba(255, 255, 255, 0.04) 50%, rgba(255, 255, 255, 0.10) 100%), rgba(${currentAccentRGB}, ${(op / 100).toFixed(2)});
   backdrop-filter: blur(${bl}px) saturate(200%);
   -webkit-backdrop-filter: blur(${bl}px) saturate(200%);
-  border: 1px solid rgba(255, 255, 255, 0.22);
-  border-top: 1.5px solid rgba(255, 255, 255, ${(sp / 100).toFixed(2)});
-  border-bottom: 1px solid rgba(255, 255, 255, 0.10);
+  border: 1px solid rgba(255, 255, 255, 0.18);
   border-radius: ${radiusStr};
   box-shadow: 
-    inset 0 1.5px 2px rgba(255, 255, 255, ${(ig / 100).toFixed(2)}),
+    inset 0 1.5px 3px rgba(255, 255, 255, ${(ig / 100).toFixed(2)}),
     inset 0 -1px 1.5px rgba(0, 0, 0, 0.30),
     0 0 20px rgba(${currentAccentRGB}, 0.30),
     0 6px 18px rgba(0, 0, 0, 0.30);
+}
+
+/* 💎 İpeksi Elmas Işıltısı Katmanı */
+.liquid-glass-element::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1.5px;
+  background: radial-gradient(
+    ellipse ${tpr}% 70% at 50% -5%,
+    rgba(255, 255, 255, ${(sp / 100).toFixed(2)}) 0%,
+    rgba(255, 255, 255, ${((sp / 100) * 0.70).toFixed(2)}) 25%,
+    rgba(255, 255, 255, ${((sp / 100) * 0.20).toFixed(2)}) 60%,
+    rgba(255, 255, 255, 0.02) 85%,
+    transparent 100%
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
 }`;
         cssOutputPreview.textContent = cssCode;
     }
 
-    [paramOpacity, paramBlur, paramSpecular, paramInnerGlow, paramRadius].forEach(slider => {
+    [paramOpacity, paramBlur, paramSpecular, paramSpecularTaper, paramInnerGlow, paramRadius].filter(Boolean).forEach(slider => {
         slider.addEventListener('input', () => {
             document.querySelectorAll('.preset-pill').forEach(p => p.classList.remove('active'));
             updateGlassEngine();
@@ -548,6 +581,9 @@ document.addEventListener('DOMContentLoaded', () => {
             paramOpacity.value = Math.round((config.glassPhysics.opacity || 0.35) * 100);
             paramBlur.value = config.glassPhysics.blur ?? 20;
             paramSpecular.value = Math.round((config.glassPhysics.specularAlpha || 0.85) * 100);
+            if (paramSpecularTaper) {
+                paramSpecularTaper.value = config.glassPhysics.specularTaper ?? 80;
+            }
             paramInnerGlow.value = Math.round((config.glassPhysics.innerGlowAlpha || 0.65) * 100);
             
             const rawRadius = config.glassPhysics.radius || '9999px';
@@ -605,6 +641,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 opacity: parseFloat((parseInt(paramOpacity.value, 10) / 100).toFixed(2)),
                 blur: parseInt(paramBlur.value, 10),
                 specularAlpha: parseFloat((parseInt(paramSpecular.value, 10) / 100).toFixed(2)),
+                specularTaper: parseInt(paramSpecularTaper ? paramSpecularTaper.value : 80, 10),
                 innerGlowAlpha: parseFloat((parseInt(paramInnerGlow.value, 10) / 100).toFixed(2)),
                 radius: parseInt(paramRadius.value, 10) >= 9000 ? '9999px' : `${paramRadius.value}px`,
                 accentColor: currentAccentHex,

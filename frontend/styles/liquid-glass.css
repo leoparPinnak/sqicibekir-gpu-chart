@@ -371,14 +371,14 @@ body, html {
 }
 
 .portal-card-btn {
+    position: relative;
+    overflow: hidden;
     width: 100%;
     padding: 13px 22px !important;
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0.06) 45%, rgba(255, 255, 255, 0.02) 100%), rgba(20, 28, 45, 0.65) !important;
     backdrop-filter: blur(32px) saturate(220%) contrast(108%) brightness(1.12) !important;
     -webkit-backdrop-filter: blur(32px) saturate(220%) contrast(108%) brightness(1.12) !important;
     border: 1px solid rgba(255, 255, 255, 0.16) !important;
-    border-top: 1px solid rgba(255, 255, 255, 0.55) !important;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
     border-radius: 9999px;
     color: #ffffff;
     font-size: 14px !important;
@@ -386,7 +386,7 @@ body, html {
     letter-spacing: 0.3px;
     cursor: pointer;
     box-shadow: 
-        inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 0.45),
+        inset 0 1.5px 2px 0 rgba(255, 255, 255, 0.45),
         inset 0 -1px 1px 0 rgba(0, 0, 0, 0.35),
         inset 0 0 18px 0 rgba(255, 255, 255, 0.06),
         0 14px 35px -5px rgba(0, 0, 0, 0.55),
@@ -399,15 +399,49 @@ body, html {
     margin-top: 10px !important;
 }
 
+/* 💎 İpeksi Elmas Işıltısı Katmanı */
+.portal-card-btn::before,
+.portal-auth-submit-btn::before,
+.portal-input-capsule::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1.5px;
+    background: radial-gradient(
+        ellipse 80% 65% at 50% -5%,
+        rgba(255, 255, 255, 0.85) 0%,
+        rgba(255, 255, 255, 0.60) 25%,
+        rgba(255, 255, 255, 0.18) 60%,
+        rgba(255, 255, 255, 0.02) 85%,
+        transparent 100%
+    );
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    z-index: 2;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
 .portal-card-btn:hover {
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.28) 0%, rgba(255, 255, 255, 0.10) 45%, rgba(255, 255, 255, 0.04) 100%), rgba(25, 35, 60, 0.75) !important;
-    border-top-color: rgba(255, 255, 255, 0.80) !important;
     transform: translateY(-2px) scale(1.015);
     box-shadow: 
-        inset 0 1.5px 2px 0 rgba(255, 255, 255, 0.70),
+        inset 0 1.5px 3px 0 rgba(255, 255, 255, 0.80),
         inset 0 -1px 1px 0 rgba(0, 0, 0, 0.25),
         0 22px 55px -5px rgba(0, 0, 0, 0.70),
         0 0 35px 2px rgba(16, 185, 129, 0.35);
+}
+
+.portal-card-btn:hover::before {
+    background: radial-gradient(
+        ellipse 95% 80% at 50% -10%,
+        #ffffff 0%,
+        rgba(255, 255, 255, 0.85) 30%,
+        rgba(255, 255, 255, 0.30) 70%,
+        transparent 100%
+    );
 }
 
 .portal-card-btn:active {
@@ -426,23 +460,33 @@ body, html {
 }
 
 .portal-input-capsule {
+    position: relative;
+    overflow: hidden;
     display: flex;
     align-items: center;
     gap: 12px;
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.10) 0%, rgba(255, 255, 255, 0.02) 100%), rgba(18, 24, 38, 0.45);
     border: 1px solid rgba(255, 255, 255, 0.16);
-    border-top: 1px solid rgba(255, 255, 255, 0.40);
     border-radius: 9999px;
     padding: 10px 18px;
-    box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.25), 0 4px 16px rgba(0, 0, 0, 0.35);
+    box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.25), 0 4px 16px rgba(0, 0, 0, 0.35);
     transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .portal-input-capsule:focus-within {
     border-color: rgba(41, 98, 255, 0.75);
-    border-top-color: #ffffff;
-    box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.35), 0 0 24px rgba(41, 98, 255, 0.45);
+    box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.45), 0 0 24px rgba(41, 98, 255, 0.45);
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.04) 100%), rgba(22, 30, 48, 0.65);
+}
+
+.portal-input-capsule:focus-within::before {
+    background: radial-gradient(
+        ellipse 95% 80% at 50% -10%,
+        #ffffff 0%,
+        rgba(255, 255, 255, 0.85) 30%,
+        rgba(255, 255, 255, 0.25) 70%,
+        transparent 100%
+    );
 }
 
 .portal-input-icon {
@@ -473,12 +517,12 @@ body, html {
 
 /* GİRİŞ YAP BUTONU (SAYDAM SAPPHIRE KRİSTAL SIVI CAM BUTON) */
 .portal-auth-submit-btn {
+    position: relative;
+    overflow: hidden;
     width: 100%;
     padding: 11px 20px;
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.20) 0%, rgba(255, 255, 255, 0.04) 50%, rgba(255, 255, 255, 0.10) 100%), rgba(41, 98, 255, 0.35);
     border: 1px solid rgba(255, 255, 255, 0.22);
-    border-top: 1.5px solid rgba(255, 255, 255, 0.85);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
     border-radius: 9999px;
     color: #ffffff;
     font-size: 14px;
@@ -490,7 +534,7 @@ body, html {
     justify-content: center;
     gap: 8px;
     box-shadow: 
-        inset 0 1.5px 2px rgba(255, 255, 255, 0.65),
+        inset 0 1.5px 3px rgba(255, 255, 255, 0.65),
         inset 0 -1px 1.5px rgba(0, 0, 0, 0.30),
         0 0 20px rgba(41, 98, 255, 0.25),
         0 6px 18px rgba(0, 0, 0, 0.35);
@@ -500,13 +544,22 @@ body, html {
 
 .portal-auth-submit-btn:hover {
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.32) 0%, rgba(255, 255, 255, 0.08) 50%, rgba(255, 255, 255, 0.18) 100%), rgba(41, 98, 255, 0.55);
-    border-top-color: #ffffff;
     transform: translateY(-1.5px) scale(1.015);
     box-shadow: 
-        inset 0 2px 2.5px rgba(255, 255, 255, 0.90),
+        inset 0 2px 3.5px rgba(255, 255, 255, 0.90),
         inset 0 -1px 2px rgba(0, 0, 0, 0.25),
         0 0 28px rgba(41, 98, 255, 0.45),
         0 8px 22px rgba(0, 0, 0, 0.40);
+}
+
+.portal-auth-submit-btn:hover::before {
+    background: radial-gradient(
+        ellipse 95% 85% at 50% -10%,
+        #ffffff 0%,
+        rgba(255, 255, 255, 0.90) 25%,
+        rgba(255, 255, 255, 0.35) 65%,
+        transparent 100%
+    );
 }
 
 .portal-auth-submit-btn:active {

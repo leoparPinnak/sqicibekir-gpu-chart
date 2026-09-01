@@ -120,10 +120,19 @@
                 <!-- ÜST KENAR PARILTISI (SPECULAR BEVEL) -->
                 <div class="control-group">
                     <div class="control-label-row">
-                        <span>Üst Kenar Elmas Işıltısı (Specular)</span>
+                        <span>Üst Kenar Elmas Işıltısı (Parlaklık)</span>
                         <span class="control-value" id="val-specular">85%</span>
                     </div>
                     <input type="range" id="param-specular" min="10" max="100" value="85" class="lab-slider">
+                </div>
+
+                <!-- ELMAS IŞILTISI YAYILIMI / YUMUŞATMA (SPECULAR TAPER & FEATHER) -->
+                <div class="control-group">
+                    <div class="control-label-row">
+                        <span>Işıltı Kenar Yumuşatma (Taper)</span>
+                        <span class="control-value" id="val-specular-taper">80% (İpeksi Geçiş)</span>
+                    </div>
+                    <input type="range" id="param-specular-taper" min="20" max="100" value="80" class="lab-slider">
                 </div>
 
                 <!-- İÇ GÖLGE / DERİNLİK (INNER CAUSTIC GLOW) -->
