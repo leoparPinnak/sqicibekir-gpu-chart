@@ -438,9 +438,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // 5. 💾 JSON & CSS KAYIT, AÇIKLAMA & ÇEREZ SAYACI YÖNETİMİ
     // ========================================================
     const COOKIE_SEQ_KEY = 'liquid_glass_seq_num';
+    const COOKIE_PRESETS_KEY = 'liquid_glass_presets_cookie';
     const LOCAL_PRESETS_KEY = 'liquid_glass_presets_db';
 
     const headerSeqBadge = document.getElementById('header-seq-badge');
+    const liveCookieBadge = document.getElementById('live-cookie-badge');
+    const inlineCookieSeq = document.getElementById('inline-cookie-seq');
     const currentCookieSeqDisplay = document.getElementById('current-cookie-seq-display');
     const saveBtnLabel = document.getElementById('save-btn-label');
     const savePresetNameInput = document.getElementById('save-preset-name-input');
@@ -467,31 +470,56 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateSequenceUI() {
         const nextSeq = getNextSequenceNumber();
         if (headerSeqBadge) headerSeqBadge.textContent = `#${nextSeq}`;
+        if (liveCookieBadge) liveCookieBadge.textContent = `#${nextSeq}`;
+        if (inlineCookieSeq) inlineCookieSeq.textContent = `#${nextSeq}`;
         if (currentCookieSeqDisplay) currentCookieSeqDisplay.textContent = `#${nextSeq}`;
-        if (saveBtnLabel) saveBtnLabel.textContent = `💾 JSON Olarak Kaydet & İndir (#${nextSeq})`;
+        if (saveBtnLabel) saveBtnLabel.textContent = `🍪 Çerezlere & JSON Kaydet (#${nextSeq})`;
     }
 
     function showToast(message) {
+        if (!saveToastMsg) return;
         saveToastMsg.textContent = message;
         saveToastMsg.style.display = 'block';
         setTimeout(() => {
             saveToastMsg.style.display = 'none';
-        }, 3200);
+        }, 3400);
     }
 
-    // Get presets DB from localStorage
+    // Get presets DB from Cookie or localStorage
     function getStoredPresets() {
         try {
-            const raw = localStorage.getItem(LOCAL_PRESETS_KEY);
-            return raw ? JSON.parse(raw) : [];
+            // Check cookie first
+            const cookieRaw = getCookie(COOKIE_PRESETS_KEY);
+            if (cookieRaw) {
+                const parsed = JSON.parse(decodeURIComponent(cookieRaw));
+                if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+            }
+            // Fallback to localStorage
+            const localRaw = localStorage.getItem(LOCAL_PRESETS_KEY);
+            return localRaw ? JSON.parse(localRaw) : [];
         } catch (e) {
             console.error('Presets parse error:', e);
-            return [];
+            try {
+                const localRaw = localStorage.getItem(LOCAL_PRESETS_KEY);
+                return localRaw ? JSON.parse(localRaw) : [];
+            } catch (err) {
+                return [];
+            }
         }
     }
 
     function saveStoredPresets(presets) {
-        localStorage.setItem(LOCAL_PRESETS_KEY, JSON.stringify(presets));
+        const jsonStr = JSON.stringify(presets);
+        localStorage.setItem(LOCAL_PRESETS_KEY, jsonStr);
+        
+        // Save to cookie (compact top 15 presets to adhere to 4KB cookie payload)
+        try {
+            const compactPresets = presets.slice(0, 15);
+            setCookie(COOKIE_PRESETS_KEY, encodeURIComponent(JSON.stringify(compactPresets)), 365);
+        } catch (e) {
+            console.warn('Cookie storage limit reached for presets, saved to localStorage', e);
+        }
+
         renderSavedPresetsList();
     }
 

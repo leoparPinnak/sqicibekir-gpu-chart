@@ -167,16 +167,45 @@
                     </div>
                 </div>
 
-                <!-- CSS KOPYALAYICI VE CSS İNDİRME ALANI -->
+                <!-- CANLI CSS KODU, AÇIKLAMA VE DOĞRUDAN ÇEREZLERE KAYIT ALANI -->
                 <div class="code-export-box">
                     <div class="code-export-header">
-                        <span>CANLI CSS KODU</span>
-                        <div style="display: flex; gap: 6px;">
+                        <div style="display: flex; align-items: center; gap: 6px;">
+                            <span>CANLI CSS KODU</span>
+                            <span class="save-seq-badge" id="live-cookie-badge">#1</span>
+                        </div>
+                        <div style="display: flex; gap: 5px;">
                             <button class="copy-css-btn" id="copy-css-btn">📋 Kopyala</button>
-                            <button class="copy-css-btn" id="download-live-css-btn" style="background: rgba(37, 99, 235, 0.40); border-color: #3b82f6;" title="Canlı CSS'i .css dosyası olarak kaydet">📥 CSS İndir</button>
+                            <button class="copy-css-btn" id="download-live-css-btn" style="background: rgba(37, 99, 235, 0.40); border-color: #3b82f6;" title="Canlı CSS'i .css dosyası olarak indir">📥 .css İndir</button>
                         </div>
                     </div>
+                    
                     <pre class="code-display" id="css-output-preview"></pre>
+
+                    <!-- DİREKT CSS YANINDA AÇIKLAMA VE ÇEREZLERE KAYDETME ALANI -->
+                    <div class="inline-save-card" style="margin-top: 10px; background: rgba(0,0,0,0.30); padding: 10px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.10); border-top: 1px solid rgba(255,255,255,0.25);">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                            <span style="font-size: 11px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px;">📝 Şablon Notu & Çerez Kaydı</span>
+                            <span style="font-size: 10.5px; color: #60a5fa; font-weight: 700;">🍪 Çerez Sayacı: <span id="inline-cookie-seq">#1</span></span>
+                        </div>
+
+                        <div style="display: flex; flex-direction: column; gap: 6px;">
+                            <input type="text" id="save-preset-name-input" class="lab-text-input" placeholder="Şablon İsmi (Örn: VisionOS Sapphire Buton)" style="padding: 7px 10px; font-size: 11.5px;">
+                            <textarea id="save-preset-desc-input" class="lab-text-input" rows="2" placeholder="Tasarım açıklaması / not ekle (Çerezlere kaydedilir)..." style="padding: 7px 10px; font-size: 11.5px; resize: vertical; font-family: inherit;"></textarea>
+                        </div>
+
+                        <div style="display: flex; gap: 6px; margin-top: 8px;">
+                            <button class="lab-primary-save-btn" id="save-json-btn" style="flex: 1; padding: 8px 12px; font-size: 12px;">
+                                <span id="save-btn-label">🍪 Çerezlere & JSON Kaydet (#1)</span>
+                            </button>
+                            <button class="lab-secondary-action-btn" id="save-css-file-btn" style="background: rgba(16, 185, 129, 0.35); border-color: #10b981; color: #6ee7b7; font-size: 11.5px; padding: 8px 12px;" title="Açıklamayla birlikte .css dosyası indir">
+                                🎨 .css Kaydet
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- BİLDİRİM KUTUSU (TOAST) -->
+                    <div class="lab-toast-msg" id="save-toast-msg" style="display: none; margin-top: 8px;"></div>
                 </div>
             </div>
 
@@ -298,41 +327,20 @@
             </div>
 
             <!-- ======================================================== -->
-            <!-- 3. SEKME: JSON & CSS KAYIT, AÇIKLAMA VE ŞABLONLAR        -->
+            <!-- 3. SEKME: ŞABLON KÜTÜPHANESİ & İÇE/DIŞA AKTAR            -->
             <!-- ======================================================== -->
             <div class="panel-tab-content" id="tab-content-saved">
                 <div class="panel-header">
                     <div>
-                        <h3>💾 JSON & CSS Kayıt Kütüphanesi</h3>
+                        <h3>💾 Şablon Kütüphanesi</h3>
                         <div style="font-size: 11px; color: #94a3b8; margin-top: 2px;">
-                            Sıradaki Kayıt: <strong id="current-cookie-seq-display" style="color: #60a5fa;">#1</strong> (Çerezde Tutulur)
+                            Çerez Sayacı: <strong id="current-cookie-seq-display" style="color: #60a5fa;">#1</strong> (365 Gün Aktif)
                         </div>
                     </div>
                     <button class="reset-btn" id="reset-cookie-seq-btn" title="Kayıt Sayacını ve Çerezleri Sıfırla">Sıfırla</button>
                 </div>
 
-                <!-- ŞABLON ADI VE AÇIKLAMA FORMU -->
-                <div class="control-group">
-                    <label class="control-label">Şablon İsmi</label>
-                    <input type="text" id="save-preset-name-input" class="lab-text-input" placeholder="Örn: VisionOS Sapphire Giriş Butonu">
-                </div>
-
-                <div class="control-group">
-                    <label class="control-label">Tasarım Açıklaması / Notlar</label>
-                    <textarea id="save-preset-desc-input" class="lab-text-input" rows="2" style="resize: vertical; font-family: inherit; font-size: 12px;" placeholder="Örn: Giriş kartı ve arama alanları için %80 ipeksi elmas parıltısı ve derin cam bluru içeren stil."></textarea>
-                </div>
-
-                <!-- ÇİFT KAYIT BUTONLARI: JSON VE CSS -->
-                <div style="display: flex; flex-direction: column; gap: 8px;">
-                    <button class="lab-primary-save-btn" id="save-json-btn">
-                        <span id="save-btn-label">💾 JSON Olarak Kaydet & İndir (#1)</span>
-                    </button>
-                    <button class="lab-secondary-action-btn" id="save-css-file-btn" style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.40) 0%, rgba(5, 150, 105, 0.45) 100%); border-color: #10b981; color: #ffffff; font-weight: 700; text-align: center; padding: 10px;">
-                        🎨 Canlı CSS Dosyası Olarak İndir (.css)
-                    </button>
-                </div>
-
-                <!-- İÇE AKTARMA (IMPORT JSON) -->
+                <!-- İÇE/DIŞA AKTARMA ARAÇLARI -->
                 <div style="display: flex; gap: 8px;">
                     <label class="lab-secondary-action-btn" style="flex: 1; cursor: pointer; text-align: center;">
                         📂 JSON Yükle
@@ -343,13 +351,10 @@
                     </button>
                 </div>
 
-                <!-- BİLDİRİM KUTUSU (TOAST) -->
-                <div class="lab-toast-msg" id="save-toast-msg" style="display: none;"></div>
-
                 <!-- KAYITLI ŞABLONLAR LİSTESİ -->
-                <div class="saved-presets-container">
+                <div class="saved-presets-container" style="max-height: 480px;">
                     <div class="control-label-row" style="margin-bottom: 8px;">
-                        <span>Kayıtlı Konfigürasyonlar & Notlar</span>
+                        <span>Çerezlerdeki Şablonlar & Notlar</span>
                         <span class="control-value" id="saved-presets-count">0 Kayıt</span>
                     </div>
                     <div class="saved-presets-list" id="saved-presets-list">
