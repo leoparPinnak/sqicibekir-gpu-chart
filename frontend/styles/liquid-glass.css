@@ -399,7 +399,7 @@ body, html {
     margin-top: 10px !important;
 }
 
-/* 💎 İpeksi Elmas Işıltısı & Zıt Yönlü Kenar Süzülmesi Katmanı */
+/* 💎 İpeksi Elmas Işıltısı & Dinamik Optik Kırılma Katmanı */
 .portal-card-btn::before,
 .portal-auth-submit-btn::before,
 .portal-input-capsule::before {
@@ -409,6 +409,17 @@ body, html {
     border-radius: inherit;
     padding: 1.5px;
     background: 
+        conic-gradient(
+            from var(--caustic-angle, 180deg) at var(--opp-mouse-x, 50%) var(--opp-mouse-y, 50%),
+            transparent 0deg,
+            rgba(56, 189, 248, 0.70) 15deg,
+            #ffffff 25deg,
+            rgba(255, 255, 255, 0.95) 30deg,
+            #ffffff 35deg,
+            rgba(96, 165, 250, 0.80) 48deg,
+            transparent 75deg,
+            transparent 360deg
+        ),
         radial-gradient(
             circle 120px at var(--opp-mouse-x, -400px) var(--opp-mouse-y, -400px),
             #ffffff 0%,

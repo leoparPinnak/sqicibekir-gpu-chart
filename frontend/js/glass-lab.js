@@ -254,7 +254,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // 🔦 CANLI İMLEÇ ZIT YÖNLÜ KENAR IŞIĞI TAKİPÇİSİ (OPPOSING CAUSTIC RIM TRACKER)
+    // 🔦 CANLI İMLEÇ ZIT YÖNLÜ DİNAMİK KIRILMA TAKİPÇİSİ (DYNAMIC SNELL CAUSTIC REFRACTION)
     function initSpotlightHoverTracker() {
         const interactiveTargets = document.querySelectorAll(
             '.dynamic-glass-btn, .dynamic-glass-input, .dynamic-glass-stepper, .dynamic-tab, .portal-card-btn, .portal-auth-submit-btn, .portal-input-capsule, .component-card'
@@ -264,18 +264,29 @@ document.addEventListener('DOMContentLoaded', () => {
                 const rect = el.getBoundingClientRect();
                 const x = e.clientX - rect.left;
                 const y = e.clientY - rect.top;
-                const oppX = rect.width - x;
-                const oppY = rect.height - y;
+                
+                const cx = rect.width / 2;
+                const cy = rect.height / 2;
+                const dx = x - cx;
+                const dy = y - cy;
+                const angleRad = Math.atan2(dy, dx);
+                const refractedDeg = ((angleRad * 180 / Math.PI) + 180) % 360;
+
+                const oppX = cx - (dx * 1.05);
+                const oppY = cy - (dy * 1.05);
+
                 el.style.setProperty('--mouse-x', `${x}px`);
                 el.style.setProperty('--mouse-y', `${y}px`);
-                el.style.setProperty('--opp-mouse-x', `${oppX}px`);
-                el.style.setProperty('--opp-mouse-y', `${oppY}px`);
+                el.style.setProperty('--opp-mouse-x', `${oppX.toFixed(1)}px`);
+                el.style.setProperty('--opp-mouse-y', `${oppY.toFixed(1)}px`);
+                el.style.setProperty('--caustic-angle', `${(refractedDeg - 25).toFixed(1)}deg`);
             });
             el.addEventListener('mouseleave', () => {
                 el.style.setProperty('--mouse-x', '-400px');
                 el.style.setProperty('--mouse-y', '-400px');
                 el.style.setProperty('--opp-mouse-x', '-400px');
                 el.style.setProperty('--opp-mouse-y', '-400px');
+                el.style.setProperty('--caustic-angle', '180deg');
             });
         });
     }

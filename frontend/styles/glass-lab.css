@@ -1100,7 +1100,7 @@ body.lab-body {
         0 6px 18px rgba(0, 0, 0, 0.30);
 }
 
-/* 💎 PRİZMATİK ELMAS IŞILTISI & ZIT YÖNLÜ KENAR SÜZÜLMESİ (OPPOSING CAUSTIC RIM REFRACTION) */
+/* 💎 PRİZMATİK ELMAS IŞILTISI & DİNAMİK OPTİK IŞIK KIRILMASI (DYNAMIC SNELL CAUSTIC REFRACTION) */
 .dynamic-glass-btn::before,
 .dynamic-glass-input::before,
 .dynamic-glass-stepper::before {
@@ -1110,7 +1110,19 @@ body.lab-body {
     border-radius: inherit;
     padding: var(--glass-specular-width, 1.5px);
     background: 
-        /* 1. Zıt Yönlü Dinamik Kenar Kırılması (Hareketin tersine köşelere süzülen fener parıltısı) */
+        /* 1. Dinamik Kırılma Işık Hüzmesi (Snell Refraksiyonu & Prizmatik Saçılma) */
+        conic-gradient(
+            from var(--caustic-angle, 180deg) at var(--opp-mouse-x, 50%) var(--opp-mouse-y, 50%),
+            transparent 0deg,
+            rgba(56, 189, 248, calc(var(--glass-spotlight-intensity, 0.65) * 0.75)) 15deg,
+            #ffffff 25deg,
+            rgba(255, 255, 255, calc(var(--glass-spotlight-intensity, 0.65) * 1.95)) 30deg,
+            #ffffff 35deg,
+            rgba(var(--glass-accent-rgb), calc(var(--glass-spotlight-intensity, 0.65) * 0.90)) 48deg,
+            transparent 75deg,
+            transparent 360deg
+        ),
+        /* 2. Zıt Yönlü Odaklı Kenar Parıltısı */
         radial-gradient(
             circle var(--glass-spotlight-radius, 120px) at var(--opp-mouse-x, -400px) var(--opp-mouse-y, -400px),
             #ffffff 0%,
@@ -1119,7 +1131,7 @@ body.lab-body {
             rgba(var(--glass-accent-rgb), 0.05) 75%,
             transparent 100%
         ),
-        /* 2. Statik Üst Kenar Elmas Işıltısı */
+        /* 3. Statik Üst Kenar Elmas Işıltısı */
         radial-gradient(
             ellipse var(--glass-specular-taper) 70% at 50% -5%,
             rgba(255, 255, 255, var(--glass-specular-alpha)) 0%,
