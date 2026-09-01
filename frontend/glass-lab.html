@@ -155,22 +155,22 @@
                     <input type="range" id="param-specular-taper" min="20" max="100" value="80" class="lab-slider">
                 </div>
 
-                <!-- 🔦 İMLEÇ FENER IŞIĞI / YANSIMA (SPOTLIGHT TORCH CURSOR FLARE) -->
+                <!-- İÇ IŞIK KIRILMASI / DERİNLİK (SUPERCHARGED INNER CAUSTIC GLOW - %200) -->
                 <div class="control-group">
                     <div class="control-label-row">
-                        <span>🔦 İmleç Fener Yansıması (Spotlight)</span>
-                        <span class="control-value" id="val-spotlight-intensity">45%</span>
-                    </div>
-                    <input type="range" id="param-spotlight-intensity" min="0" max="100" value="45" class="lab-slider">
-                </div>
-
-                <!-- İÇ GÖLGE / DERİNLİK (INNER CAUSTIC GLOW) -->
-                <div class="control-group">
-                    <div class="control-label-row">
-                        <span>İç Işık Kırılması (Inner Glow)</span>
+                        <span>İç Işık Kırılması (Inner Caustic Glow)</span>
                         <span class="control-value" id="val-inner-glow">65%</span>
                     </div>
-                    <input type="range" id="param-inner-glow" min="0" max="100" value="65" class="lab-slider">
+                    <input type="range" id="param-inner-glow" min="0" max="200" step="5" value="65" class="lab-slider">
+                </div>
+
+                <!-- İÇ IŞIK YAYILIMI & HACİM (INNER CAUSTIC SPREAD & VOLUME) -->
+                <div class="control-group">
+                    <div class="control-label-row">
+                        <span>İç Işık Hacmi / Dağılımı (Spread)</span>
+                        <span class="control-value" id="val-inner-glow-spread">6px</span>
+                    </div>
+                    <input type="range" id="param-inner-glow-spread" min="1" max="30" step="1" value="6" class="lab-slider">
                 </div>
 
                 <!-- KÖŞE YUVARLAKLIĞI (BORDER RADIUS) -->

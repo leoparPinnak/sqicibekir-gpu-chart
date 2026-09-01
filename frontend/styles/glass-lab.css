@@ -11,9 +11,8 @@
     --glass-specular-bloom: 4px;
     --glass-specular-taper: 80%;
     --glass-inner-glow-alpha: 0.65;
+    --glass-inner-glow-spread: 6px;
     --glass-radius: 9999px;
-    --glass-spotlight-intensity: 0.45;
-    --glass-spotlight-radius: 95px;
     --glass-accent-color: #2563eb;
     --glass-accent-rgb: 37, 99, 235;
 
@@ -1094,13 +1093,14 @@ body.lab-body {
     backdrop-filter: blur(var(--glass-blur)) saturate(200%);
     -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(200%);
     box-shadow: 
-        inset 0 1.5px 3px rgba(255, 255, 255, var(--glass-inner-glow-alpha)),
-        inset 0 -1px 1.5px rgba(0, 0, 0, 0.30),
+        inset 0 2px var(--glass-inner-glow-spread, 6px) rgba(255, 255, 255, var(--glass-inner-glow-alpha)),
+        inset 0 -2px calc(var(--glass-inner-glow-spread, 6px) * 0.75) rgba(0, 0, 0, 0.40),
+        inset 0 0 calc(var(--glass-inner-glow-spread, 6px) * 2.5) rgba(var(--glass-accent-rgb), calc(var(--glass-inner-glow-alpha) * 0.45)),
         0 0 20px rgba(var(--glass-accent-rgb), 0.30),
         0 6px 18px rgba(0, 0, 0, 0.30);
 }
 
-/* 💎 PRİZMATİK ELMAS IŞILTISI & DİNAMİK FRESNEL KENAR TAKİBİ (APPLE VISIONOS PHYSICAL BORDER CAUSTICS) */
+/* 💎 PRİZMATİK ELMAS IŞILTISI (İPEKSİ GEÇİŞLİ & AYARLANABİLİR KALINLIKLI SPECULAR CAUSTIC RIM) */
 .dynamic-glass-btn::before,
 .dynamic-glass-input::before,
 .dynamic-glass-stepper::before {
@@ -1109,32 +1109,14 @@ body.lab-body {
     inset: 0;
     border-radius: inherit;
     padding: var(--glass-specular-width, 1.5px);
-    background: 
-        /* 1. Doğrudan İmleci Takip Eden Prizmatik Kenar Elması (Direct Fresnel Bevel Specular) */
-        radial-gradient(
-            circle var(--glass-spotlight-radius, 130px) at var(--mouse-x, -400px) var(--mouse-y, -400px),
-            #ffffff 0%,
-            rgba(255, 255, 255, calc(var(--glass-spotlight-intensity, 0.65) * 1.85)) 20%,
-            rgba(56, 189, 248, calc(var(--glass-spotlight-intensity, 0.65) * 0.90)) 45%,
-            rgba(var(--glass-accent-rgb), calc(var(--glass-spotlight-intensity, 0.65) * 0.40)) 65%,
-            transparent 100%
-        ),
-        /* 2. Zıt Yöndeki İç Cam Kırılması ve Prizma Yansıması (Secondary Internal Caustic Bounce) */
-        radial-gradient(
-            circle calc(var(--glass-spotlight-radius, 130px) * 1.2) at var(--opp-mouse-x, -400px) var(--opp-mouse-y, -400px),
-            rgba(255, 255, 255, calc(var(--glass-spotlight-intensity, 0.65) * 0.75)) 0%,
-            rgba(var(--glass-accent-rgb), calc(var(--glass-spotlight-intensity, 0.65) * 0.45)) 40%,
-            transparent 75%
-        ),
-        /* 3. Statik Üst Kenar Elmas Işıltısı (Static Diamond Bevel Ambient) */
-        radial-gradient(
-            ellipse var(--glass-specular-taper) 70% at 50% -5%,
-            rgba(255, 255, 255, var(--glass-specular-alpha)) 0%,
-            rgba(255, 255, 255, calc(var(--glass-specular-alpha) * 0.70)) 25%,
-            rgba(255, 255, 255, calc(var(--glass-specular-alpha) * 0.20)) 60%,
-            rgba(255, 255, 255, 0.02) 85%,
-            transparent 100%
-        );
+    background: radial-gradient(
+        ellipse var(--glass-specular-taper) 70% at 50% -5%,
+        rgba(255, 255, 255, var(--glass-specular-alpha)) 0%,
+        rgba(255, 255, 255, calc(var(--glass-specular-alpha) * 0.70)) 25%,
+        rgba(255, 255, 255, calc(var(--glass-specular-alpha) * 0.20)) 60%,
+        rgba(255, 255, 255, 0.02) 85%,
+        transparent 100%
+    );
     -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
     -webkit-mask-composite: xor;
     mask-composite: exclude;
@@ -1148,8 +1130,9 @@ body.lab-body {
     transform: translateY(-2px) scale(1.015);
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.32) 0%, rgba(255, 255, 255, 0.08) 50%, rgba(255, 255, 255, 0.18) 100%), rgba(var(--glass-accent-rgb), calc(var(--glass-opacity) + 0.20));
     box-shadow: 
-        inset 0 2px 3.5px rgba(255, 255, 255, 0.95),
-        inset 0 -1px 2px rgba(0, 0, 0, 0.25),
+        inset 0 2px calc(var(--glass-inner-glow-spread, 6px) * 1.2) rgba(255, 255, 255, calc(var(--glass-inner-glow-alpha) * 1.2)),
+        inset 0 -2px calc(var(--glass-inner-glow-spread, 6px) * 0.9) rgba(0, 0, 0, 0.45),
+        inset 0 0 calc(var(--glass-inner-glow-spread, 6px) * 3) rgba(var(--glass-accent-rgb), calc(var(--glass-inner-glow-alpha) * 0.65)),
         0 0 28px rgba(var(--glass-accent-rgb), 0.55),
         0 8px 24px rgba(0, 0, 0, 0.40);
 }
