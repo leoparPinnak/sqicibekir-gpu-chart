@@ -2,6 +2,7 @@
  * 🧪 LIQUID GLASS UI STUDIO & COMPONENT LAB CONTROLLER
  * Real-time reactive parameter binding, Cookie sequence counter & JSON preset manager
  */
+import { CinematicCameraDirector } from './cinematic-camera.js';
 
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -1125,242 +1126,39 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // 🕯️ 60 FPS GPU-HIZLANDIRMALI CANLI MUM GRAFİĞİ & SİNEMATİK OTO-ZOOM MOTORU
-    function startLiveCandleChartEngine() {
-        const canvas = document.getElementById('lab-live-chart-canvas');
-        if (!canvas) return;
-        const ctx = canvas.getContext('2d');
-        if (!ctx) return;
+    // 🎬 60 FPS SİNEMATİK OTONOM KAMERA YÖNETMENİ (ANA SAYFA İLE AYNI ORİJİNAL DEMO GRAFİĞİ)
+    let cameraDirector = null;
+    const chartIframe = document.getElementById('chart-engine-frame');
 
-        let width = 0, height = 0;
-        function resize() {
-            width = window.innerWidth;
-            height = window.innerHeight;
-            canvas.width = width * (window.devicePixelRatio || 1);
-            canvas.height = height * (window.devicePixelRatio || 1);
-            ctx.scale(window.devicePixelRatio || 1, window.devicePixelRatio || 1);
+    function attachCameraDirector() {
+        if (cameraDirector && cameraDirector.isRunning) return;
+        try {
+            if (!chartIframe) return;
+            const chartWin = chartIframe.contentWindow;
+            if (chartWin) {
+                const checkReady = () => {
+                    const count = chartWin.totalCandles || (chartWin.candleDataBase ? chartWin.candleDataBase.length : 0);
+                    if (count > 0) {
+                        if (!cameraDirector) {
+                            cameraDirector = new CinematicCameraDirector(chartWin);
+                        }
+                        cameraDirector.start();
+                        console.log('🎬 [Glass Lab] Orijinal Sinematik Kamera Yönetmeni başarıyla bağlandı.');
+                    } else {
+                        setTimeout(checkReady, 100);
+                    }
+                };
+                checkReady();
+            }
+        } catch (e) {
+            console.warn('Iframe connect waiting:', e);
         }
-        window.addEventListener('resize', resize);
-        resize();
-
-        // 120 Canlı Mum Havuzu
-        const candles = [];
-        let curPrice = 78650;
-        for (let i = 0; i < 110; i++) {
-            const delta = (Math.random() - 0.48) * 110;
-            const open = curPrice;
-            const close = open + delta;
-            const high = Math.max(open, close) + Math.random() * 55;
-            const low = Math.min(open, close) - Math.random() * 55;
-            const vol = Math.random() * 40 + 10;
-            candles.push({ open, close, high, low, vol });
-            curPrice = close;
-        }
-
-        let scrollOffset = 0;
-        let tickCounter = 0;
-        let phaseTimer = 0;
-
-        // 🎥 Sinematik Kamera & Akıllı Zoom / Hız Evreleri
-        let currentZoom = 1.0;
-        let targetZoom = 1.0;
-        let currentScrollSpeed = 0.50;
-        let targetScrollSpeed = 0.50;
-        let smoothedMinP = 78000;
-        let smoothedMaxP = 79500;
-
-        const zoomModes = [
-            { zoom: 1.00, speed: 0.50, label: "Standart Akış" },
-            { zoom: 1.35, speed: 0.05, label: "Fiyat Aksiyonuna Yakınlaş (Zoom In & Yavaşla)" },
-            { zoom: 0.82, speed: 0.32, label: "Makro Genel Bakış (Zoom Out Panorama)" },
-            { zoom: 1.20, speed: 0.12, label: "Kırılım Odağı (Yumuşak Zoom)" },
-            { zoom: 0.92, speed: 0.58, label: "Trend Takip Akışı" }
-        ];
-        let modeIndex = 0;
-
-        function renderFrame() {
-            ctx.clearRect(0, 0, width, height);
-
-            // 1. Sinematik Kamera Evre Değişimi (Her ~7-9 saniyede bir yumuşakça evre değiştir)
-            phaseTimer++;
-            if (phaseTimer % 480 === 0) {
-                modeIndex = (modeIndex + 1) % zoomModes.length;
-                targetZoom = zoomModes[modeIndex].zoom;
-                targetScrollSpeed = zoomModes[modeIndex].speed;
-            }
-
-            // Ultra Yumuşak İnterpolasyon (Smooth Damping)
-            currentZoom += (targetZoom - currentZoom) * 0.007;
-            currentScrollSpeed += (targetScrollSpeed - currentScrollSpeed) * 0.012;
-
-            const baseCandleWidth = 14;
-            const baseCandleGap = 6;
-            const candleWidth = baseCandleWidth * currentZoom;
-            const candleGap = baseCandleGap * currentZoom;
-            const totalStep = candleWidth + candleGap;
-
-            // 2. Fiyat Min / Max Hesapla & Yumuşak Ölçeklendir
-            let minP = Infinity, maxP = -Infinity;
-            for (let c of candles) {
-                if (c.low < minP) minP = c.low;
-                if (c.high > maxP) maxP = c.high;
-            }
-            const pad = (maxP - minP) * 0.16 || 100;
-            const targetMinP = minP - pad;
-            const targetMaxP = maxP + pad;
-
-            smoothedMinP += (targetMinP - smoothedMinP) * 0.035;
-            smoothedMaxP += (targetMaxP - smoothedMaxP) * 0.035;
-
-            const getY = (val) => height - ((val - smoothedMinP) / (smoothedMaxP - smoothedMinP)) * (height * 0.80) - (height * 0.09);
-
-            // 3. Arka Plan Grid Çizgileri
-            ctx.strokeStyle = 'rgba(255, 255, 255, 0.04)';
-            ctx.lineWidth = 1;
-            const gridGapY = height / 10;
-            for (let y = gridGapY; y < height; y += gridGapY) {
-                ctx.beginPath();
-                ctx.moveTo(0, y);
-                ctx.lineTo(width, y);
-                ctx.stroke();
-            }
-
-            const gridGapX = 140 * currentZoom;
-            for (let x = (width - (scrollOffset % gridGapX)); x > 0; x -= gridGapX) {
-                ctx.beginPath();
-                ctx.moveTo(x, 0);
-                ctx.lineTo(x, height);
-                ctx.stroke();
-            }
-
-            // 4. EMA 20 & EMA 50 Eğrileri
-            const ema20Points = [];
-            const ema50Points = [];
-            let ema20 = candles[0].close, ema50 = candles[0].close;
-            const k20 = 2 / (20 + 1), k50 = 2 / (50 + 1);
-
-            candles.forEach((c, idx) => {
-                ema20 = c.close * k20 + ema20 * (1 - k20);
-                ema50 = c.close * k50 + ema50 * (1 - k50);
-                const x = width - (candles.length - idx) * totalStep + scrollOffset;
-                ema20Points.push({ x, y: getY(ema20) });
-                ema50Points.push({ x, y: getY(ema50) });
-            });
-
-            // Ichimoku Bulut Şeridi
-            ctx.beginPath();
-            if (ema20Points.length > 0) {
-                ctx.moveTo(ema20Points[0].x, ema20Points[0].y);
-                for (let i = 1; i < ema20Points.length; i++) ctx.lineTo(ema20Points[i].x, ema20Points[i].y);
-                for (let i = ema50Points.length - 1; i >= 0; i--) ctx.lineTo(ema50Points[i].x, ema50Points[i].y);
-                ctx.closePath();
-                const grad = ctx.createLinearGradient(0, 0, 0, height);
-                grad.addColorStop(0, 'rgba(16, 185, 129, 0.15)');
-                grad.addColorStop(1, 'rgba(59, 130, 246, 0.05)');
-                ctx.fillStyle = grad;
-                ctx.fill();
-            }
-
-            // EMA Çizgileri
-            ctx.strokeStyle = '#00f0ff';
-            ctx.lineWidth = Math.max(1.5, 2 * currentZoom);
-            ctx.beginPath();
-            ema20Points.forEach((p, i) => i === 0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y));
-            ctx.stroke();
-
-            ctx.strokeStyle = '#a855f7';
-            ctx.lineWidth = Math.max(1.2, 1.6 * currentZoom);
-            ctx.beginPath();
-            ema50Points.forEach((p, i) => i === 0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y));
-            ctx.stroke();
-
-            // 5. Mum Çubukları & Hacim Barları
-            candles.forEach((c, idx) => {
-                const x = width - (candles.length - idx) * totalStep + scrollOffset;
-                if (x < -60 || x > width + 60) return;
-
-                const isUp = c.close >= c.open;
-                const color = isUp ? '#10b981' : '#ef4444';
-                const bodyY = getY(Math.max(c.open, c.close));
-                const bodyH = Math.max(2, Math.abs(getY(c.open) - getY(c.close)));
-                const highY = getY(c.high);
-                const lowY = getY(c.low);
-
-                // Fitil
-                ctx.strokeStyle = color;
-                ctx.lineWidth = Math.max(1.2, 1.6 * currentZoom);
-                ctx.beginPath();
-                ctx.moveTo(x + candleWidth / 2, highY);
-                ctx.lineTo(x + candleWidth / 2, lowY);
-                ctx.stroke();
-
-                // Gövde
-                ctx.fillStyle = color;
-                ctx.fillRect(x, bodyY, candleWidth, bodyH);
-
-                // Hacim Sütunu
-                const volH = (c.vol / 50) * 60 * currentZoom;
-                ctx.fillStyle = isUp ? 'rgba(16, 185, 129, 0.25)' : 'rgba(239, 68, 68, 0.25)';
-                ctx.fillRect(x, height - volH - 10, candleWidth, volH);
-            });
-
-            // 6. Lazer Canlı Fiyat Çizgisi
-            const lastCandle = candles[candles.length - 1];
-            const lastY = getY(lastCandle.close);
-            const isUp = lastCandle.close >= lastCandle.open;
-            const pColor = isUp ? '#10b981' : '#ef4444';
-
-            ctx.setLineDash([4, 4]);
-            ctx.strokeStyle = pColor;
-            ctx.lineWidth = 1.5;
-            ctx.beginPath();
-            ctx.moveTo(0, lastY);
-            ctx.lineTo(width, lastY);
-            ctx.stroke();
-            ctx.setLineDash([]);
-
-            // Fiyat Rozeti
-            const badgeW = 95 * Math.min(1.15, Math.max(0.9, currentZoom));
-            ctx.fillStyle = pColor;
-            ctx.fillRect(width - badgeW, lastY - 11, badgeW, 22);
-            ctx.fillStyle = '#ffffff';
-            ctx.font = 'bold 11px JetBrains Mono, monospace';
-            ctx.textAlign = 'center';
-            ctx.fillText(`$${lastCandle.close.toFixed(2)}`, width - (badgeW / 2), lastY + 4);
-
-            // 7. Akıllı Panning & Kaydırma (Sabit değil, dinamik hız kontrollü)
-            scrollOffset -= currentScrollSpeed;
-            if (Math.abs(scrollOffset) >= totalStep) {
-                scrollOffset += totalStep;
-                const prev = candles[candles.length - 1];
-                const delta = (Math.random() - 0.48) * 85;
-                const open = prev.close;
-                const close = open + delta;
-                candles.push({
-                    open,
-                    close,
-                    high: Math.max(open, close) + Math.random() * 40,
-                    low: Math.min(open, close) - Math.random() * 40,
-                    vol: Math.random() * 40 + 10
-                });
-                if (candles.length > 140) candles.shift();
-            }
-
-            // Canlı titreşen son mum mikro-hareketi
-            tickCounter++;
-            if (tickCounter % 3 === 0) {
-                const last = candles[candles.length - 1];
-                const microDelta = (Math.random() - 0.49) * 8;
-                last.close += microDelta;
-                if (last.close > last.high) last.high = last.close;
-                if (last.close < last.low) last.low = last.close;
-            }
-
-            requestAnimationFrame(renderFrame);
-        }
-        renderFrame();
     }
-    startLiveCandleChartEngine();
+
+    if (chartIframe) {
+        chartIframe.addEventListener('load', attachCameraDirector);
+        attachCameraDirector();
+    }
 
     // ========================================================
     // 5. 💾 JSON & CSS KAYIT, AÇIKLAMA & ÇEREZ SAYACI YÖNETİMİ

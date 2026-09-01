@@ -18,9 +18,9 @@
 
     <!-- ARKA PLAN GÖRSEL / GRAFİK KATMANI (IŞIK KIRILMASINI TEST ETMEK İÇİN) -->
     <div class="lab-bg-stage" id="lab-bg-stage">
-        <!-- 1. CANLI VE AKICI 60 FPS MUM GRAFİĞİ DEMO MOTORU (GPU ACCELERATED HTML5 CANVAS) -->
+        <!-- 1. CANLI VE OTONOM SİNEMATİK GRAFİK SAHNESİ (ANA SAYFADAKİ ORİJİNAL İNDİKATÖR DEMOSU) -->
         <div class="lab-candle-bg-layer" id="lab-candle-bg-layer">
-            <canvas id="lab-live-chart-canvas"></canvas>
+            <iframe id="chart-engine-frame" src="../indikator_sablonu.html?demo=true" style="width: 100vw; height: 100vh; border: none; pointer-events: none; display: block;"></iframe>
         </div>
 
         <!-- 2. AURORA GALAXY IŞIK KANVASI -->
@@ -1179,6 +1179,6 @@
     </main>
 
     <!-- SCRIPTS -->
-    <script src="./js/glass-lab.js"></script>
+    <script type="module" src="./js/glass-lab.js"></script>
 </body>
 </html>
