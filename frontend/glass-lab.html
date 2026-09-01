@@ -67,10 +67,14 @@
         <!-- 🎛️ SOL PANEL: CANLI PARAMETRE AYARLAYICI (STUDIO CONTROLS) -->
         <aside class="lab-controls-panel">
             
-            <!-- PANEL SEKMELERİ (CAM FİZİĞİ & AURORA MOTORU) -->
+            <!-- PANEL SEKMELERİ (CAM FİZİĞİ, AURORA MOTORU, JSON KAYITLAR) -->
             <div class="panel-tab-switcher">
                 <button class="panel-tab-btn active" data-panel-tab="glass">🎛️ Cam Fiziği</button>
-                <button class="panel-tab-btn" data-panel-tab="aurora">🌌 Aurora Motoru</button>
+                <button class="panel-tab-btn" data-panel-tab="aurora">🌌 Aurora</button>
+                <button class="panel-tab-btn" data-panel-tab="saved" style="position: relative;">
+                    💾 JSON Kayıt 
+                    <span class="save-seq-badge" id="header-seq-badge">#1</span>
+                </button>
             </div>
 
             <!-- ======================================================== -->
@@ -277,6 +281,57 @@
                             <input type="checkbox" id="aurora-mouse-follow" checked>
                             <span class="switch-slider"></span>
                         </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ======================================================== -->
+            <!-- 3. SEKME: JSON KAYIT & ŞABLON KÜTÜPHANESİ                -->
+            <!-- ======================================================== -->
+            <div class="panel-tab-content" id="tab-content-saved">
+                <div class="panel-header">
+                    <div>
+                        <h3>💾 JSON Kayıt & Şablonlar</h3>
+                        <div style="font-size: 11px; color: #94a3b8; margin-top: 2px;">
+                            Sıradaki Kayıt: <strong id="current-cookie-seq-display" style="color: #60a5fa;">#1</strong> (Çerezde Tutulur)
+                        </div>
+                    </div>
+                    <button class="reset-btn" id="reset-cookie-seq-btn" title="Kayıt Sayacını ve Çerezleri Sıfırla">Sıfırla</button>
+                </div>
+
+                <!-- ŞABLON ADI VE KAYDETME FORMU -->
+                <div class="control-group">
+                    <label class="control-label">Şablon İsmi (Opsiyonel)</label>
+                    <input type="text" id="save-preset-name-input" class="lab-text-input" placeholder="Örn: Gece Modu Neon Tasarımım">
+                </div>
+
+                <!-- KAYDET VE İNDİR BUTONU -->
+                <button class="lab-primary-save-btn" id="save-json-btn">
+                    <span id="save-btn-label">💾 JSON Olarak Kaydet & İndir (#1)</span>
+                </button>
+
+                <!-- İÇE AKTARMA (IMPORT JSON) -->
+                <div style="display: flex; gap: 8px;">
+                    <label class="lab-secondary-action-btn" style="flex: 1; cursor: pointer; text-align: center;">
+                        📂 JSON Yükle
+                        <input type="file" id="import-json-input" accept=".json" style="display: none;">
+                    </label>
+                    <button class="lab-secondary-action-btn" id="export-all-json-btn" style="flex: 1;" title="Tüm Kayıtları Tek JSON Dosyası Olarak İndir">
+                        📦 Tümünü İndir
+                    </button>
+                </div>
+
+                <!-- BİLDİRİM KUTUSU (TOAST) -->
+                <div class="lab-toast-msg" id="save-toast-msg" style="display: none;"></div>
+
+                <!-- KAYITLI ŞABLONLAR LİSTESİ -->
+                <div class="saved-presets-container">
+                    <div class="control-label-row" style="margin-bottom: 8px;">
+                        <span>Kayıtlı Konfigürasyonlar</span>
+                        <span class="control-value" id="saved-presets-count">0 Kayıt</span>
+                    </div>
+                    <div class="saved-presets-list" id="saved-presets-list">
+                        <!-- JS ile doldurulacak -->
                     </div>
                 </div>
             </div>

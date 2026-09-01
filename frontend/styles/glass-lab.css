@@ -567,6 +567,213 @@ body.lab-body {
     box-shadow: 0 0 16px rgba(147, 51, 234, 0.45);
 }
 
+/* 💾 JSON KAYIT VE SAYAC STİLLERİ */
+.save-seq-badge {
+    background: #3b82f6;
+    color: #ffffff;
+    font-size: 10px;
+    font-weight: 800;
+    padding: 1px 6px;
+    border-radius: 9999px;
+    margin-left: 4px;
+}
+
+.lab-text-input {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.40);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-top: 1px solid rgba(255, 255, 255, 0.40);
+    border-radius: 10px;
+    padding: 9px 12px;
+    color: #ffffff;
+    font-size: 12.5px;
+    outline: none;
+    transition: all 0.2s ease;
+}
+
+.lab-text-input:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 12px rgba(59, 130, 246, 0.40);
+}
+
+.lab-primary-save-btn {
+    background: linear-gradient(135deg, rgba(37, 99, 235, 0.85) 0%, rgba(29, 78, 216, 0.90) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-top: 1.5px solid rgba(255, 255, 255, 0.80);
+    border-radius: 12px;
+    padding: 11px 16px;
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 
+        inset 0 1px 2px rgba(255, 255, 255, 0.50),
+        0 6px 20px rgba(37, 99, 235, 0.40);
+}
+
+.lab-primary-save-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 
+        inset 0 1px 2px rgba(255, 255, 255, 0.60),
+        0 8px 25px rgba(37, 99, 235, 0.60);
+}
+
+.lab-primary-save-btn:active {
+    transform: translateY(0);
+}
+
+.lab-secondary-action-btn {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-top: 1px solid rgba(255, 255, 255, 0.35);
+    border-radius: 10px;
+    padding: 8px 12px;
+    color: #cbd5e1;
+    font-size: 11.5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.lab-secondary-action-btn:hover {
+    background: rgba(255, 255, 255, 0.10);
+    color: #ffffff;
+}
+
+.lab-toast-msg {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.25) 0%, rgba(5, 150, 105, 0.30) 100%), rgba(6, 78, 59, 0.85);
+    border: 1px solid rgba(52, 211, 153, 0.40);
+    border-top: 1.5px solid #6ee7b7;
+    border-radius: 10px;
+    padding: 9px 12px;
+    color: #a7f3d0;
+    font-size: 11.5px;
+    font-weight: 600;
+    text-align: center;
+    animation: toastPop 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes toastPop {
+    from { opacity: 0; transform: translateY(-6px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.saved-presets-container {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 6px;
+    max-height: 280px;
+    overflow-y: auto;
+    padding-right: 4px;
+}
+
+.saved-preset-card {
+    background: rgba(0, 0, 0, 0.35);
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    border-top: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 12px;
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    transition: all 0.15s ease;
+}
+
+.saved-preset-card:hover {
+    background: rgba(255, 255, 255, 0.04);
+    border-color: rgba(255, 255, 255, 0.20);
+}
+
+.preset-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.preset-card-title {
+    font-size: 12.5px;
+    font-weight: 700;
+    color: #f8fafc;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.preset-card-seq {
+    background: #3b82f6;
+    color: #ffffff;
+    font-size: 10px;
+    font-weight: 800;
+    padding: 1px 6px;
+    border-radius: 9999px;
+}
+
+.preset-card-date {
+    font-size: 10px;
+    color: #64748b;
+}
+
+.preset-card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+
+.preset-tag {
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 4px;
+    padding: 2px 6px;
+    font-size: 10px;
+    color: #94a3b8;
+}
+
+.preset-card-actions {
+    display: flex;
+    gap: 6px;
+}
+
+.preset-action-btn {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 6px;
+    padding: 5px 8px;
+    color: #e2e8f0;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.15s ease;
+}
+
+.preset-action-btn:hover {
+    background: rgba(37, 99, 235, 0.40);
+    border-color: #3b82f6;
+    color: #ffffff;
+}
+
+.preset-delete-btn {
+    background: transparent;
+    border: 1px solid rgba(239, 68, 68, 0.25);
+    border-radius: 6px;
+    padding: 5px 8px;
+    color: #f87171;
+    font-size: 11px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.preset-delete-btn:hover {
+    background: rgba(239, 68, 68, 0.20);
+    border-color: #ef4444;
+}
+
 .panel-header {
     display: flex;
     align-items: center;
