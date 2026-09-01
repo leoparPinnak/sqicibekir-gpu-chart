@@ -167,11 +167,14 @@
                     </div>
                 </div>
 
-                <!-- CSS KOPYALAYICI -->
+                <!-- CSS KOPYALAYICI VE CSS İNDİRME ALANI -->
                 <div class="code-export-box">
                     <div class="code-export-header">
                         <span>CANLI CSS KODU</span>
-                        <button class="copy-css-btn" id="copy-css-btn">📋 Kopyala</button>
+                        <div style="display: flex; gap: 6px;">
+                            <button class="copy-css-btn" id="copy-css-btn">📋 Kopyala</button>
+                            <button class="copy-css-btn" id="download-live-css-btn" style="background: rgba(37, 99, 235, 0.40); border-color: #3b82f6;" title="Canlı CSS'i .css dosyası olarak kaydet">📥 CSS İndir</button>
+                        </div>
                     </div>
                     <pre class="code-display" id="css-output-preview"></pre>
                 </div>
@@ -295,12 +298,12 @@
             </div>
 
             <!-- ======================================================== -->
-            <!-- 3. SEKME: JSON KAYIT & ŞABLON KÜTÜPHANESİ                -->
+            <!-- 3. SEKME: JSON & CSS KAYIT, AÇIKLAMA VE ŞABLONLAR        -->
             <!-- ======================================================== -->
             <div class="panel-tab-content" id="tab-content-saved">
                 <div class="panel-header">
                     <div>
-                        <h3>💾 JSON Kayıt & Şablonlar</h3>
+                        <h3>💾 JSON & CSS Kayıt Kütüphanesi</h3>
                         <div style="font-size: 11px; color: #94a3b8; margin-top: 2px;">
                             Sıradaki Kayıt: <strong id="current-cookie-seq-display" style="color: #60a5fa;">#1</strong> (Çerezde Tutulur)
                         </div>
@@ -308,16 +311,26 @@
                     <button class="reset-btn" id="reset-cookie-seq-btn" title="Kayıt Sayacını ve Çerezleri Sıfırla">Sıfırla</button>
                 </div>
 
-                <!-- ŞABLON ADI VE KAYDETME FORMU -->
+                <!-- ŞABLON ADI VE AÇIKLAMA FORMU -->
                 <div class="control-group">
-                    <label class="control-label">Şablon İsmi (Opsiyonel)</label>
-                    <input type="text" id="save-preset-name-input" class="lab-text-input" placeholder="Örn: Gece Modu Neon Tasarımım">
+                    <label class="control-label">Şablon İsmi</label>
+                    <input type="text" id="save-preset-name-input" class="lab-text-input" placeholder="Örn: VisionOS Sapphire Giriş Butonu">
                 </div>
 
-                <!-- KAYDET VE İNDİR BUTONU -->
-                <button class="lab-primary-save-btn" id="save-json-btn">
-                    <span id="save-btn-label">💾 JSON Olarak Kaydet & İndir (#1)</span>
-                </button>
+                <div class="control-group">
+                    <label class="control-label">Tasarım Açıklaması / Notlar</label>
+                    <textarea id="save-preset-desc-input" class="lab-text-input" rows="2" style="resize: vertical; font-family: inherit; font-size: 12px;" placeholder="Örn: Giriş kartı ve arama alanları için %80 ipeksi elmas parıltısı ve derin cam bluru içeren stil."></textarea>
+                </div>
+
+                <!-- ÇİFT KAYIT BUTONLARI: JSON VE CSS -->
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <button class="lab-primary-save-btn" id="save-json-btn">
+                        <span id="save-btn-label">💾 JSON Olarak Kaydet & İndir (#1)</span>
+                    </button>
+                    <button class="lab-secondary-action-btn" id="save-css-file-btn" style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.40) 0%, rgba(5, 150, 105, 0.45) 100%); border-color: #10b981; color: #ffffff; font-weight: 700; text-align: center; padding: 10px;">
+                        🎨 Canlı CSS Dosyası Olarak İndir (.css)
+                    </button>
+                </div>
 
                 <!-- İÇE AKTARMA (IMPORT JSON) -->
                 <div style="display: flex; gap: 8px;">
@@ -336,7 +349,7 @@
                 <!-- KAYITLI ŞABLONLAR LİSTESİ -->
                 <div class="saved-presets-container">
                     <div class="control-label-row" style="margin-bottom: 8px;">
-                        <span>Kayıtlı Konfigürasyonlar</span>
+                        <span>Kayıtlı Konfigürasyonlar & Notlar</span>
                         <span class="control-value" id="saved-presets-count">0 Kayıt</span>
                     </div>
                     <div class="saved-presets-list" id="saved-presets-list">

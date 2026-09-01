@@ -435,7 +435,7 @@ document.addEventListener('DOMContentLoaded', () => {
     renderMouseParallax();
 
     // ========================================================
-    // 5. 💾 JSON KAYIT & ÇEREZ SAYACI YÖNETİMİ
+    // 5. 💾 JSON & CSS KAYIT, AÇIKLAMA & ÇEREZ SAYACI YÖNETİMİ
     // ========================================================
     const COOKIE_SEQ_KEY = 'liquid_glass_seq_num';
     const LOCAL_PRESETS_KEY = 'liquid_glass_presets_db';
@@ -444,7 +444,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const currentCookieSeqDisplay = document.getElementById('current-cookie-seq-display');
     const saveBtnLabel = document.getElementById('save-btn-label');
     const savePresetNameInput = document.getElementById('save-preset-name-input');
+    const savePresetDescInput = document.getElementById('save-preset-desc-input');
     const saveJsonBtn = document.getElementById('save-json-btn');
+    const saveCssFileBtn = document.getElementById('save-css-file-btn');
+    const downloadLiveCssBtn = document.getElementById('download-live-css-btn');
     const resetCookieSeqBtn = document.getElementById('reset-cookie-seq-btn');
     const importJsonInput = document.getElementById('import-json-input');
     const exportAllJsonBtn = document.getElementById('export-all-json-btn');
@@ -463,9 +466,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function updateSequenceUI() {
         const nextSeq = getNextSequenceNumber();
-        headerSeqBadge.textContent = `#${nextSeq}`;
-        currentCookieSeqDisplay.textContent = `#${nextSeq}`;
-        saveBtnLabel.textContent = `💾 JSON Olarak Kaydet & İndir (#${nextSeq})`;
+        if (headerSeqBadge) headerSeqBadge.textContent = `#${nextSeq}`;
+        if (currentCookieSeqDisplay) currentCookieSeqDisplay.textContent = `#${nextSeq}`;
+        if (saveBtnLabel) saveBtnLabel.textContent = `💾 JSON Olarak Kaydet & İndir (#${nextSeq})`;
     }
 
     function showToast(message) {
@@ -492,7 +495,41 @@ document.addEventListener('DOMContentLoaded', () => {
         renderSavedPresetsList();
     }
 
-    // Render Saved Presets Cards
+    // Generate Beautiful CSS File with Header & User Notes
+    function generateFormattedCssFile(config) {
+        const dateStr = config.formattedDate || new Date().toLocaleString('tr-TR');
+        const descComment = config.description ? `\n * 📝 AÇIKLAMA / NOTLAR:\n * ${config.description.replace(/\n/g, '\n * ')}\n *` : '';
+
+        return `/**
+ * =====================================================================
+ * 💎 LIQUID GLASS DESIGN SYSTEM - STYLESHEET
+ * =====================================================================
+ * 🏷️ ŞABLON ADI: ${config.name || 'Liquid Glass Preset'}
+ * 🔢 KAYIT SIRA NO: #${config.sequenceNumber || 1}
+ * 🆔 KONFİGÜRASYON ID: ${config.configId || 'LIQUID_GLASS_PRESET'}
+ * 📅 OLUŞTURULMA TARİHİ: ${dateStr}${descComment}
+ * 🌐 PLATFORM: TradeChart Pro Liquid Glass UI Studio
+ * =====================================================================
+ */
+
+${config.cssCode || cssOutputPreview.textContent}
+`;
+    }
+
+    // Helper: Trigger File Download
+    function triggerFileDownload(content, filename, mimeType = "text/plain") {
+        const blob = new Blob([content], { type: `${mimeType};charset=utf-8` });
+        const url = URL.createObjectURL(blob);
+        const downloadAnchor = document.createElement('a');
+        downloadAnchor.setAttribute("href", url);
+        downloadAnchor.setAttribute("download", filename);
+        document.body.appendChild(downloadAnchor);
+        downloadAnchor.click();
+        downloadAnchor.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+    }
+
+    // Render Saved Presets Cards with Description
     function renderSavedPresetsList() {
         const presets = getStoredPresets();
         savedPresetsCountEl.textContent = `${presets.length} Kayıt`;
@@ -500,12 +537,17 @@ document.addEventListener('DOMContentLoaded', () => {
         if (presets.length === 0) {
             savedPresetsListEl.innerHTML = `
                 <div style="text-align: center; color: #64748b; font-size: 11.5px; padding: 20px 0;">
-                    Henüz kayıtlı bir JSON şablonu bulunmuyor.<br>Yukarıdaki butona tıklayarak ilk şablonunu kaydet!
+                    Henüz kayıtlı bir JSON/CSS şablonu bulunmuyor.<br>Yukarıdaki butona tıklayarak ilk şablonunu ve tasarım notunu kaydet!
                 </div>`;
             return;
         }
 
         savedPresetsListEl.innerHTML = presets.map((p, index) => {
+            const descHtml = p.description ? `
+                <div style="font-size: 11px; color: #cbd5e1; font-style: italic; background: rgba(255,255,255,0.03); padding: 5px 8px; border-radius: 6px; border-left: 2px solid #3b82f6;">
+                    "${escapeHtml(p.description)}"
+                </div>` : '';
+
             return `
                 <div class="saved-preset-card" data-preset-id="${p.configId}">
                     <div class="preset-card-header">
@@ -515,14 +557,16 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                         <span class="preset-card-date">${p.formattedDate || ''}</span>
                     </div>
+                    ${descHtml}
                     <div class="preset-card-tags">
                         <span class="preset-tag" style="color: ${p.glassPhysics?.accentColor || '#60a5fa'};">● ${p.glassPhysics?.accentColor || '#2563eb'}</span>
                         <span class="preset-tag">Cam: %${Math.round((p.glassPhysics?.opacity || 0.35) * 100)}</span>
-                        <span class="preset-tag">Blur: ${p.glassPhysics?.blur || 20}px</span>
+                        <span class="preset-tag">Taper: %${p.glassPhysics?.specularTaper || 80}</span>
                         <span class="preset-tag">Mod: ${p.auroraGalaxy?.motionMode || 'galaxy'}</span>
                     </div>
                     <div class="preset-card-actions">
                         <button class="preset-action-btn btn-apply-preset" data-index="${index}">⚡ Yükle</button>
+                        <button class="preset-action-btn btn-download-css" data-index="${index}" style="background: rgba(16,185,129,0.25); border-color: #10b981; color: #6ee7b7;">🎨 CSS</button>
                         <button class="preset-action-btn btn-download-preset" data-index="${index}">📥 JSON</button>
                         <button class="preset-delete-btn btn-delete-preset" data-index="${index}" title="Sil">🗑️</button>
                     </div>
@@ -538,11 +582,23 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
 
+        savedPresetsListEl.querySelectorAll('.btn-download-css').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const idx = parseInt(btn.getAttribute('data-index'), 10);
+                const p = presets[idx];
+                if (p) {
+                    const cssContent = generateFormattedCssFile(p);
+                    triggerFileDownload(cssContent, `liquid_glass_style_#${String(p.sequenceNumber).padStart(3, '0')}.css`, 'text/css');
+                    showToast(`✓ #${p.sequenceNumber} Nolu CSS Dosyası İndirildi!`);
+                }
+            });
+        });
+
         savedPresetsListEl.querySelectorAll('.btn-download-preset').forEach(btn => {
             btn.addEventListener('click', () => {
                 const idx = parseInt(btn.getAttribute('data-index'), 10);
                 const p = presets[idx];
-                if (p) triggerJsonDownload(p, `liquid_glass_config_#${String(p.sequenceNumber).padStart(3, '0')}.json`);
+                if (p) triggerFileDownload(JSON.stringify(p, null, 2), `liquid_glass_config_#${String(p.sequenceNumber).padStart(3, '0')}.json`, 'application/json');
             });
         });
 
@@ -561,20 +617,13 @@ document.addEventListener('DOMContentLoaded', () => {
         return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
     }
 
-    // Helper: Trigger JSON file download in browser
-    function triggerJsonDownload(dataObj, filename) {
-        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(dataObj, null, 2));
-        const downloadAnchor = document.createElement('a');
-        downloadAnchor.setAttribute("href", dataStr);
-        downloadAnchor.setAttribute("download", filename);
-        document.body.appendChild(downloadAnchor);
-        downloadAnchor.click();
-        downloadAnchor.remove();
-    }
-
     // Helper: Apply loaded configuration to all sliders and engines
     function applyConfigurationPayload(config) {
         if (!config) return;
+
+        // Set inputs if present
+        if (savePresetNameInput && config.name) savePresetNameInput.value = config.name;
+        if (savePresetDescInput && config.description) savePresetDescInput.value = config.description;
 
         // 1. Glass Physics
         if (config.glassPhysics) {
@@ -625,16 +674,17 @@ document.addEventListener('DOMContentLoaded', () => {
         showToast(`✓ #${config.sequenceNumber || 1} Nolu Şablon Başarıyla Yüklendi!`);
     }
 
-    // Save JSON Action
-    saveJsonBtn.addEventListener('click', () => {
-        const seqNum = getNextSequenceNumber();
-        const customName = savePresetNameInput.value.trim() || `Sıvı Cam Konfigürasyonu #${seqNum}`;
+    // Build Current Configuration Object
+    function buildCurrentConfigPayload(seqNum) {
+        const customName = (savePresetNameInput && savePresetNameInput.value.trim()) || `Sıvı Cam Konfigürasyonu #${seqNum}`;
+        const customDesc = (savePresetDescInput && savePresetDescInput.value.trim()) || '';
         const now = new Date();
 
-        const configPayload = {
+        return {
             sequenceNumber: seqNum,
             configId: `LIQUID_GLASS_PRESET_${String(seqNum).padStart(3, '0')}`,
             name: customName,
+            description: customDesc,
             savedAt: now.toISOString(),
             formattedDate: now.toLocaleDateString('tr-TR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
             glassPhysics: {
@@ -662,6 +712,47 @@ document.addEventListener('DOMContentLoaded', () => {
             cssCode: cssOutputPreview.textContent,
             platform: "TradeChart Pro Liquid Glass Studio 2.0"
         };
+    }
+
+    // Direct Download Live CSS Button in Tab 1
+    if (downloadLiveCssBtn) {
+        downloadLiveCssBtn.addEventListener('click', () => {
+            const seqNum = getNextSequenceNumber();
+            const config = buildCurrentConfigPayload(seqNum);
+            const cssContent = generateFormattedCssFile(config);
+            triggerFileDownload(cssContent, `liquid_glass_live_#${String(seqNum).padStart(3, '0')}.css`, 'text/css');
+            showToast(`✓ Canlı CSS Dosyası İndirildi!`);
+        });
+    }
+
+    // Save CSS File Action in Tab 3
+    if (saveCssFileBtn) {
+        saveCssFileBtn.addEventListener('click', () => {
+            const seqNum = getNextSequenceNumber();
+            const config = buildCurrentConfigPayload(seqNum);
+
+            // Increment sequence
+            const nextSeq = seqNum + 1;
+            setCookie(COOKIE_SEQ_KEY, nextSeq.toString(), 365);
+            localStorage.setItem(COOKIE_SEQ_KEY, nextSeq.toString());
+            updateSequenceUI();
+
+            // Save to DB
+            const presets = getStoredPresets();
+            presets.unshift(config);
+            saveStoredPresets(presets);
+
+            // Download CSS
+            const cssContent = generateFormattedCssFile(config);
+            triggerFileDownload(cssContent, `liquid_glass_style_#${String(seqNum).padStart(3, '0')}.css`, 'text/css');
+            showToast(`✓ #${seqNum} Nolu CSS Dosyası ve Açıklaması Kaydedildi & İndirildi!`);
+        });
+    }
+
+    // Save JSON Action in Tab 3
+    saveJsonBtn.addEventListener('click', () => {
+        const seqNum = getNextSequenceNumber();
+        const configPayload = buildCurrentConfigPayload(seqNum);
 
         // 1. Increment and Save Sequence Counter to Cookies and LocalStorage
         const nextSeq = seqNum + 1;
@@ -676,10 +767,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // 3. Trigger JSON File Download
         const filename = `liquid_glass_config_#${String(seqNum).padStart(3, '0')}.json`;
-        triggerJsonDownload(configPayload, filename);
+        triggerFileDownload(JSON.stringify(configPayload, null, 2), filename, 'application/json');
 
         // 4. Feedback Toast
-        savePresetNameInput.value = '';
         showToast(`✓ #${seqNum} Nolu Konfigürasyon Çerezlere Kaydedildi & İndirildi!`);
     });
 
@@ -732,7 +822,7 @@ document.addEventListener('DOMContentLoaded', () => {
             alert('Henüz kayıtlı bir şablon bulunmuyor!');
             return;
         }
-        triggerJsonDownload(presets, `liquid_glass_presets_all_${Date.now()}.json`);
+        triggerFileDownload(JSON.stringify(presets, null, 2), `liquid_glass_presets_all_${Date.now()}.json`, 'application/json');
         showToast(`✓ Tüm şablonlar (${presets.length} adet) paketlendi!`);
     });
 
