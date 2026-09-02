@@ -590,44 +590,34 @@ body.lab-body.bg-dark .aurora-orb {
     z-index: 10;
 }
 
+/* 🛠️ LABORATUVAR BÖLÜM KAPSAYICILARI (STATİK KONTROL PANELLERİ - KART FİZİĞİNİ ASLA ETKİLEMEZ) */
 .studio-section-card {
     position: relative;
-    overflow: hidden;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.005) 100%), rgba(10, 15, 28, var(--card-glass-opacity, 0.20));
-    backdrop-filter: blur(var(--card-glass-blur, 0px)) saturate(200%);
-    -webkit-backdrop-filter: blur(var(--card-glass-blur, 0px)) saturate(200%);
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    border-radius: var(--card-glass-radius, 24px);
-    padding: 28px;
-    box-shadow: 
-        inset 0 2px var(--card-glass-inner-glow-spread, 8px) rgba(255, 255, 255, var(--card-glass-inner-glow-alpha, 0.40)),
-        inset 0 -2px calc(var(--card-glass-inner-glow-spread, 8px) * 0.75) rgba(0, 0, 0, 0.45),
-        inset 0 0 calc(var(--card-glass-inner-glow-spread, 8px) * 2.5) rgba(var(--card-glass-accent-rgb, 37, 99, 235), calc(var(--card-glass-inner-glow-alpha, 0.40) * 0.35)),
-        0 20px 50px rgba(0, 0, 0, 0.45);
-    transition: all 0.25s ease;
+    background: rgba(10, 15, 28, 0.65);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 20px;
+    padding: 24px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
 }
 
-.studio-section-card::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    padding: var(--card-glass-specular-width, 1.5px);
-    background: radial-gradient(
-        ellipse var(--card-glass-specular-taper, 80%) 80% at 50% -5%,
-        rgba(255, 255, 255, var(--card-glass-specular-alpha, 0.80)) 0%,
-        rgba(255, 255, 255, calc(var(--card-glass-specular-alpha, 0.80) * 0.75)) 25%,
-        rgba(255, 255, 255, calc(var(--card-glass-specular-alpha, 0.80) * 0.25)) 60%,
-        rgba(255, 255, 255, 0.02) 85%,
-        transparent 100%
-    );
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-    pointer-events: none;
-    z-index: 2;
-    filter: drop-shadow(0 0 var(--card-glass-specular-bloom, 0px) rgba(255, 255, 255, calc(var(--card-glass-specular-alpha, 0.80) * 0.5)));
-    transition: filter 0.25s cubic-bezier(0.16, 1, 0.3, 1), padding 0.25s ease;
+/* 🎯 KONTEYNIR & PİYASALAR BÖLÜMLERİ: ARKA PLANDA ÇİFT CAM FİLTRESİ OLMAMASI İÇİN TAM DİREKT VE ŞEFFAF SAHNE */
+#section-cards-studio,
+#section-markets-studio {
+    background: transparent !important;
+    border: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+}
+
+#section-cards-studio .studio-section-header,
+#section-markets-studio .studio-section-header {
+    background: rgba(10, 15, 28, 0.65);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    padding: 16px 20px;
+    margin-bottom: 20px;
 }
 
 .studio-section-header {

@@ -1994,5 +1994,11 @@ ${config.cssCode || cssOutputPreview.textContent}
     updateAuroraEngine();
     updateSequenceUI();
     renderSavedPresetsList();
+
+    // 🚀 URL parametresi ile otomatik önizleme modu açma (?preview=true)
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('preview') === 'true') {
+        openLandingPreviewMode();
+    }
 });
 

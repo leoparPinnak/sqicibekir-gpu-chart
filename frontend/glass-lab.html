@@ -1245,13 +1245,19 @@
     </main>
 
     <!-- ======================================================== -->
-    <!-- 👁️ SCROLL İLE TAKİP EDEN YÜZEN ÖNİZLEME BUTONU (FLOATING FAB) -->
+    <!-- 👁️ SCROLL İLE TAKİP EDEN YÜZEN ÖNİZLEME BUTONLARI (FLOATING FABS) -->
     <!-- ======================================================== -->
-    <button class="floating-preview-fab preview-mode-trigger-btn" id="floating-preview-fab" title="Mevcut Glass Ayarlarıyla Canlı Ana Sayfayı Önizle">
-        <span class="fab-live-dot"></span>
-        <span style="font-size: 16px;">👁️</span>
-        <span>Ana Sayfa Önizleme Modu</span>
-    </button>
+    <div style="position: fixed; bottom: 24px; right: 24px; z-index: 999; display: flex; align-items: center; gap: 10px;">
+        <a href="./glass-lab.html?preview=true" target="_blank" class="floating-preview-fab" style="background: rgba(15, 23, 42, 0.85); border: 1px solid rgba(255, 255, 255, 0.22); text-decoration: none; padding: 12px 18px; font-size: 13px;" title="Önizleme Modunu Başka Bir Sekmede Aç (Anlık Canlı Senkronizasyon)">
+            <span style="font-size: 15px;">↗</span>
+            <span>Yeni Sekmede Aç</span>
+        </a>
+        <button class="floating-preview-fab preview-mode-trigger-btn" id="floating-preview-fab" title="Mevcut Glass Ayarlarıyla Canlı Ana Sayfayı Önizle">
+            <span class="fab-live-dot"></span>
+            <span style="font-size: 16px;">👁️</span>
+            <span>Ana Sayfa Önizleme Modu</span>
+        </button>
+    </div>
 
     <!-- ======================================================== -->
     <!-- 📱 CANLI ANA SAYFA ÖNİZLEME MODU (FULLSCREEN LANDING OVERLAY) -->
