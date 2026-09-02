@@ -277,45 +277,6 @@
         window.reloadPortal = function() {
             closeTerminalAndReturn();
         };
-
-        // 🌐 GERÇEK ZAMANLI CAM FİZİĞİ SENKRONİZASYONU (LAB -> ANA SAYFA CANLI KÖPRÜSÜ)
-        (function initLiveGlassSync() {
-            function applyTokens(payload) {
-                if (!payload || !payload.tokens) return;
-                const root = document.documentElement;
-                const t = payload.tokens;
-                Object.keys(t).forEach(prop => {
-                    root.style.setProperty(prop, t[prop]);
-                });
-            }
-
-            // 1. Sayfa Açıldığında LocalStorage'dan Son Ayarları Çek
-            try {
-                const saved = localStorage.getItem('tradingchart_liquid_glass_sync_tokens');
-                if (saved) applyTokens(JSON.parse(saved));
-            } catch(e) {}
-
-            // 2. BroadcastChannel ile Canlı Sıfır-Gecikmeli Senkronizasyon
-            try {
-                if (typeof BroadcastChannel !== 'undefined') {
-                    const bc = new BroadcastChannel('tradingchart_liquid_glass_sync');
-                    bc.onmessage = (event) => {
-                        if (event.data && event.data.type === 'GLASS_ENGINE_SYNC') {
-                            applyTokens(event.data);
-                        }
-                    };
-                }
-            } catch(e) {}
-
-            // 3. Storage Event Güvenlik Ağı
-            window.addEventListener('storage', (e) => {
-                if (e.key === 'tradingchart_liquid_glass_sync_tokens' && e.newValue) {
-                    try {
-                        applyTokens(JSON.parse(e.newValue));
-                    } catch(err) {}
-                }
-            });
-        })();
     </script>
 
     <!-- MOBİL UYARI EKRANI -->
