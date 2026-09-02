@@ -238,17 +238,14 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
-        // Update glowing outline on preview element
-        const section = document.getElementById(`section-${comp === 'btn' ? 'buttons' : comp === 'input' ? 'inputs' : comp === 'tab' ? 'tabs' : 'cards'}-studio`);
-        if (section) {
-            section.querySelectorAll('[data-target-id]').forEach(el => {
-                if (targetId !== 'all' && el.getAttribute('data-target-id') === targetId) {
-                    el.setAttribute('data-element-selected', 'true');
-                } else {
-                    el.removeAttribute('data-element-selected');
-                }
-            });
-        }
+        // Update glowing outline on preview elements
+        document.querySelectorAll('[data-target-id]').forEach(el => {
+            if (targetId !== 'all' && el.getAttribute('data-target-id') === targetId) {
+                el.setAttribute('data-element-selected', 'true');
+            } else {
+                el.removeAttribute('data-element-selected');
+            }
+        });
 
         // Load targeted element's custom overrides into sliders if they exist
         if (targetId !== 'all' && elementCustomOverrides[targetId]) {
@@ -318,7 +315,7 @@ document.addEventListener('DOMContentLoaded', () => {
             let comp = 'btn';
             if (element.classList.contains('dynamic-glass-input') || element.classList.contains('dynamic-glass-stepper') || element.closest('.dynamic-glass-input') || element.closest('.dynamic-glass-stepper')) comp = 'input';
             else if (element.classList.contains('dynamic-tab') || element.classList.contains('dynamic-badge') || element.classList.contains('dynamic-glass-switch') || element.classList.contains('seg-item')) comp = 'tab';
-            else if (element.classList.contains('dynamic-glass-frame') || element.classList.contains('component-card') || element.classList.contains('studio-section-card')) comp = 'card';
+            else if (element.classList.contains('dynamic-glass-frame') || element.classList.contains('portal-glass-card') || element.classList.contains('component-card') || element.classList.contains('studio-section-card')) comp = 'card';
 
             selectTarget(comp, targetId, targetName);
             showToast(`🎯 Seçildi: ${targetName} — Yandaki panelden özelleştirebilirsin!`);
@@ -573,21 +570,23 @@ document.addEventListener('DOMContentLoaded', () => {
             root.style.setProperty('--card-glass-accent-color', compColors.card.hex);
             root.style.setProperty('--card-glass-accent-rgb', compColors.card.rgb);
         } else {
-            const el = document.querySelector(`[data-target-id="${activeTargets.card}"]`);
-            if (el) {
+            const els = document.querySelectorAll(`[data-target-id="${activeTargets.card}"]`);
+            if (els.length > 0) {
                 elementCustomOverrides[activeTargets.card] = { opacity: cardOp, blur: cardBl, specular: cardSp, specWidth: cardSpWidth, taper: cardTpr, innerGlow: cardIg, spread: cardIgSpread, radius: cardRd };
-                el.style.setProperty('--card-glass-opacity', (cardOp / 100).toFixed(2));
-                el.style.setProperty('--card-glass-blur', `${cardBl}px`);
-                el.style.setProperty('--card-glass-specular-alpha', cardSpecAlpha);
-                el.style.setProperty('--card-glass-specular-width', `${cardSpWidth}px`);
-                el.style.setProperty('--card-glass-specular-bloom', `${cardBloomPx}px`);
-                el.style.setProperty('--card-glass-specular-taper', `${cardTpr}%`);
-                el.style.setProperty('--card-glass-inner-glow-alpha', cardIgAlpha);
-                el.style.setProperty('--card-glass-inner-glow-spread', `${cardIgSpread}px`);
-                el.style.setProperty('--card-glass-radius', `${cardRd}px`);
-                el.style.setProperty('--card-glass-accent-color', compColors.card.hex);
-                el.style.setProperty('--card-glass-accent-rgb', compColors.card.rgb);
-                el.style.borderRadius = `${cardRd}px`;
+                els.forEach(el => {
+                    el.style.setProperty('--card-glass-opacity', (cardOp / 100).toFixed(2));
+                    el.style.setProperty('--card-glass-blur', `${cardBl}px`);
+                    el.style.setProperty('--card-glass-specular-alpha', cardSpecAlpha);
+                    el.style.setProperty('--card-glass-specular-width', `${cardSpWidth}px`);
+                    el.style.setProperty('--card-glass-specular-bloom', `${cardBloomPx}px`);
+                    el.style.setProperty('--card-glass-specular-taper', `${cardTpr}%`);
+                    el.style.setProperty('--card-glass-inner-glow-alpha', cardIgAlpha);
+                    el.style.setProperty('--card-glass-inner-glow-spread', `${cardIgSpread}px`);
+                    el.style.setProperty('--card-glass-radius', `${cardRd}px`);
+                    el.style.setProperty('--card-glass-accent-color', compColors.card.hex);
+                    el.style.setProperty('--card-glass-accent-rgb', compColors.card.rgb);
+                    el.style.borderRadius = `${cardRd}px`;
+                });
             }
         }
 

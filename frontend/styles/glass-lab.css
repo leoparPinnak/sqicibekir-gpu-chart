@@ -1940,28 +1940,37 @@ body.lab-body.bg-dark .aurora-orb {
 }
 
 /* 4. DİNAMİK ÇERÇEVE & KARTLAR */
-.dynamic-glass-frame {
+.dynamic-glass-frame,
+.portal-glass-card {
     position: relative;
     overflow: hidden;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.01) 60%, rgba(255, 255, 255, 0.04) 100%), rgba(10, 15, 28, var(--card-glass-opacity, 0.20));
-    backdrop-filter: blur(var(--card-glass-blur, 0px)) saturate(200%);
-    -webkit-backdrop-filter: blur(var(--card-glass-blur, 0px)) saturate(200%);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: var(--card-glass-radius, 24px);
-    padding: 20px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.01) 60%, rgba(255, 255, 255, 0.04) 100%), rgba(10, 15, 28, var(--card-glass-opacity, 0.20)) !important;
+    backdrop-filter: blur(var(--card-glass-blur, 0px)) saturate(200%) !important;
+    -webkit-backdrop-filter: blur(var(--card-glass-blur, 0px)) saturate(200%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    border-radius: var(--card-glass-radius, 24px) !important;
     box-shadow: 
         inset 0 2px var(--card-glass-inner-glow-spread, 8px) rgba(255, 255, 255, var(--card-glass-inner-glow-alpha, 0.40)),
         inset 0 -2px calc(var(--card-glass-inner-glow-spread, 8px) * 0.75) rgba(0, 0, 0, 0.45),
         inset 0 0 calc(var(--card-glass-inner-glow-spread, 8px) * 2.5) rgba(var(--card-glass-accent-rgb, 37, 99, 235), calc(var(--card-glass-inner-glow-alpha, 0.40) * 0.35)),
-        0 20px 45px rgba(0, 0, 0, 0.55);
+        0 20px 45px rgba(0, 0, 0, 0.55) !important;
     display: flex;
     flex-direction: column;
     gap: 14px;
     transition: all 0.25s ease;
 }
 
+.portal-glass-card {
+    padding: 28px !important;
+}
+
+.dynamic-glass-frame {
+    padding: 20px;
+}
+
 /* 💎 KONTEYNIR KARTLAR İPEKSİ ELMAS IŞILTI VE KENAR YUMUŞATMASI (SPECULAR CAUSTIC RIM & TAPER) */
-.dynamic-glass-frame::before {
+.dynamic-glass-frame::before,
+.portal-glass-card::before {
     content: '' !important;
     position: absolute !important;
     inset: 0 !important;

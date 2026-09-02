@@ -681,6 +681,7 @@
                         </div>
                         <div class="target-pill-selector" id="target-pills-card">
                             <button class="target-pill active" data-target="all">Tüm Konteynırlar</button>
+                            <button class="target-pill" data-target="card-portal">🔐 Canlı Ana Sayfa Kartı</button>
                             <button class="target-pill" data-target="card-asset">BTC/USDT Kartı</button>
                             <button class="target-pill" data-target="card-settings">Gösterge Ayarları Kartı</button>
                         </div>
@@ -783,6 +784,41 @@
                     </div>
                     
                     <div class="demo-grid-2">
+                        <!-- CANLI ANA SAYFA MERKEZİ KARTI VİTRİNİ -->
+                        <div class="portal-glass-card dynamic-glass-frame" data-target-id="card-portal" data-target-name="Canlı Ana Sayfa Kartı" style="grid-column: 1 / -1; max-width: 100%;">
+                            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px;">
+                                <div style="display: flex; align-items: center; gap: 10px;">
+                                    <span style="font-size: 16px;">🔐</span>
+                                    <div>
+                                        <div style="font-weight: 800; color: #fff; font-size: 14px;">Canlı Ana Sayfa Kartı (Portal Glass Frame)</div>
+                                        <div style="font-size: 11px; color: #94a3b8;">Giriş Portalı & Merkezi Cam Kapsayıcı</div>
+                                    </div>
+                                </div>
+                                <span class="dynamic-badge pro">CANLI ANA SAYFA KARTI</span>
+                            </div>
+                            
+                            <div style="background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 14px; padding: 10px 14px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+                                <div style="display: flex; align-items: center; gap: 10px;">
+                                    <div style="width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, #f59e0b, #d97706); display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 800; color: #fff; box-shadow: 0 0 12px rgba(245,158,11,0.4);">₿</div>
+                                    <div>
+                                        <div style="font-size: 13.5px; font-weight: 700; color: #fff;">BTC / USDT</div>
+                                        <div style="font-size: 11px; color: #94a3b8;">Bitcoin · Binance Canlı</div>
+                                    </div>
+                                </div>
+                                <div style="text-align: right;">
+                                    <div style="font-size: 13.5px; font-weight: 700; color: #fff; font-family: var(--font-mono);">$78,650.00</div>
+                                    <span class="dynamic-badge positive" style="padding: 1px 6px; font-size: 10px;">▲ +4.18%</span>
+                                </div>
+                            </div>
+
+                            <div style="display: grid; grid-template-columns: 1fr 140px; gap: 10px;">
+                                <div class="dynamic-glass-input" style="padding: 8px 12px;">
+                                    <input type="text" value="pro.trader@tradingchart.com" readonly style="font-size: 12px;">
+                                </div>
+                                <button class="dynamic-glass-btn btn-sm">Giriş Yap</button>
+                            </div>
+                        </div>
+
                         <div class="dynamic-glass-frame" data-target-id="card-asset" data-target-name="BTC/USDT Varlık Kartı">
                             <div class="frame-top-bar">
                                 <div class="frame-asset-meta">
@@ -883,7 +919,7 @@
 
                 <!-- SAĞ: MERKEZİ GİRİŞ KARTI CANLI ÖNİZLEMESİ -->
                 <div class="studio-preview-box" style="display: flex; align-items: center; justify-content: center;">
-                    <div class="portal-glass-card" style="width: 100%; max-width: 440px; margin: 0 auto;">
+                    <div class="portal-glass-card dynamic-glass-frame" data-target-id="card-portal" data-target-name="Canlı Ana Sayfa Kartı" style="width: 100%; max-width: 440px; margin: 0 auto;">
                         <!-- PARİTE VE LOGO GÖSTERGESİ -->
                         <div style="background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 16px; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
                             <div style="display: flex; align-items: center; gap: 12px;">
@@ -1268,7 +1304,7 @@
                 <p class="portal-subheadline" style="font-size: 16px; color: #94a3b8; max-width: 620px; margin: 0 auto 36px;">Borsa İstanbul, Kripto Para ve Dünya Borsalarını sıfır gecikmeli canlı grafikler ve akıllı göstergelerle takip edin.</p>
 
                 <!-- SIVI CAM MERKEZİ GİRİŞ KARTI -->
-                <div class="portal-glass-card" style="max-width: 460px; margin: 0 auto; text-align: left;">
+                <div class="portal-glass-card dynamic-glass-frame" data-target-id="card-portal" data-target-name="Canlı Ana Sayfa Kartı" style="max-width: 460px; margin: 0 auto; text-align: left;">
                     
                     <!-- PARİTE & MARKA GÖSTERGESİ -->
                     <div style="background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 16px; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
