@@ -841,14 +841,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Mock Market Table Dynamic Filtering
     const mockMarketData = [
-        { id: 1, symbol: 'THYAO', name: 'Türk Hava Yolları', exchange: 'BIST', cat: 'bist', price: '₺314.50', change: '+3.75%', isPos: true, vol: '₺4.82 M', icon: 'THY', bg: '#dc2626', spark: 'M0 24 L20 20 L40 22 L60 14 L80 16 L100 8 L120 4' },
-        { id: 2, symbol: 'EREGL', name: 'Ereğli Demir Çelik', exchange: 'BIST', cat: 'bist', price: '₺52.40', change: '+1.85%', isPos: true, vol: '₺2.15 M', icon: 'ERE', bg: '#0284c7', spark: 'M0 20 L25 18 L50 12 L75 14 L100 8 L120 5' },
-        { id: 3, symbol: 'BTC / USDT', name: 'Bitcoin', exchange: 'Binance', cat: 'crypto', price: '$78,650.00', change: '+4.18%', isPos: true, vol: '$24.5 B', icon: '₿', bg: '#f59e0b', spark: 'M0 22 L20 18 L40 19 L60 12 L80 15 L100 6 L120 2' },
-        { id: 4, symbol: 'ETH / USDT', name: 'Ethereum', exchange: 'Binance', cat: 'crypto', price: '$3,420.50', change: '+2.90%', isPos: true, vol: '$12.8 B', icon: 'Ξ', bg: '#6366f1', spark: 'M0 20 L20 16 L40 18 L60 10 L80 14 L100 8 L120 3' },
-        { id: 5, symbol: 'NVDA', name: 'NVIDIA Corp', exchange: 'NASDAQ', cat: 'stocks', price: '$142.80', change: '+2.80%', isPos: true, vol: '$18.2 B', icon: 'NVDA', bg: '#16a34a', spark: 'M0 20 L25 16 L50 18 L75 10 L100 12 L120 5' },
-        { id: 6, symbol: 'AAPL', name: 'Apple Inc', exchange: 'NASDAQ', cat: 'stocks', price: '$232.15', change: '+1.15%', isPos: true, vol: '$11.4 B', icon: 'AAPL', bg: '#475569', spark: 'M0 18 L25 15 L50 14 L75 12 L100 8 L120 4' },
-        { id: 7, symbol: 'XAU / USD', name: 'Ons Altın Spot', exchange: 'Forex', cat: 'fx', price: '$2,748.60', change: '-0.42%', isPos: false, vol: '$9.45 B', icon: 'AU', bg: '#d97706', spark: 'M0 6 L25 8 L50 14 L75 12 L100 20 L120 22' },
-        { id: 8, symbol: 'EUR / USD', name: 'Euro / Dolar', exchange: 'Forex', cat: 'fx', price: '1.0845', change: '+0.12%', isPos: true, vol: '$32.1 B', icon: '€', bg: '#2563eb', spark: 'M0 16 L25 15 L50 13 L75 14 L100 11 L120 8' }
+        { id: 1, symbol: 'BTC / USDT', name: 'Bitcoin', exchange: 'BINANCE', cat: 'crypto', price: '$78,650.00', change: '+4.18%', isPos: true, vol: '$24.5 Milyar', icon: '₿', bg: 'linear-gradient(135deg, #f59e0b, #d97706)', spark: 'M0,20 Q25,24 45,12 T90,4' },
+        { id: 2, symbol: 'THYAO', name: 'Türk Hava Yolları A.O.', exchange: 'BIST', cat: 'bist', price: '₺312.50', change: '+2.46%', isPos: true, vol: '₺5.84 Milyar', icon: '🇹🇷', bg: '#ef4444', spark: 'M0,22 Q25,18 55,8 T90,3' },
+        { id: 3, symbol: 'NVDA', name: 'NVIDIA Corporation', exchange: 'NASDAQ', cat: 'stocks', price: '$138.25', change: '+3.82%', isPos: true, vol: '$9.15 Milyar', icon: 'NV', bg: '#10b981', spark: 'M0,24 Q20,16 50,8 T90,2' },
+        { id: 4, symbol: 'ASELS', name: 'Aselsan Elektronik', exchange: 'BIST', cat: 'bist', price: '₺62.40', change: '+4.18%', isPos: true, vol: '₺3.20 Milyar', icon: '🛡️', bg: '#0284c7', spark: 'M0,20 Q30,22 60,14 T90,6' },
+        { id: 5, symbol: 'ETH / USDT', name: 'Ethereum', exchange: 'BINANCE', cat: 'crypto', price: '$2,480.50', change: '+2.15%', isPos: true, vol: '$2.45 Milyar', icon: 'Ξ', bg: '#6366f1', spark: 'M0,21 Q30,19 60,11 T90,5' },
+        { id: 6, symbol: 'AAPL', name: 'Apple Inc.', exchange: 'NASDAQ', cat: 'stocks', price: '$224.30', change: '+1.45%', isPos: true, vol: '$7.80 Milyar', icon: '', bg: '#475569', spark: 'M0,18 Q35,16 65,10 T90,4' },
+        { id: 7, symbol: 'XAU / USD', name: 'Ons Altın Spot', exchange: 'FOREX', cat: 'fx', price: '$2,684.20', change: '+0.85%', isPos: true, vol: '$14.2 Milyar', icon: '🥇', bg: 'linear-gradient(135deg, #fbbf24, #d97706)', spark: 'M0,16 Q30,14 60,8 T90,2' }
     ];
 
     let currentMarketTab = 'all';
@@ -866,32 +865,32 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         tbody.innerHTML = filtered.map((item, idx) => `
-            <tr style="border-bottom: 1px solid rgba(255,255,255,0.06); transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.03)'" onmouseout="this.style.background='transparent'">
+            <tr class="explore-table-row">
                 <td style="padding: 14px 16px; text-align: center; color: #64748b; font-weight: 600;">${idx + 1}</td>
                 <td style="padding: 14px 16px;">
-                    <div style="display: flex; align-items: center; gap: 10px;">
-                        <div style="width: 32px; height: 32px; border-radius: 50%; background: ${item.bg}; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 12px; box-shadow: 0 0 10px ${item.bg}55;">
-                            ${item.icon}
-                        </div>
-                        <div>
-                            <div style="font-weight: 700; color: #fff;">${item.symbol}</div>
-                            <div style="font-size: 11px; color: #94a3b8;">${item.name} · <span style="color: #60a5fa;">${item.exchange}</span></div>
+                    <div class="explore-asset-cell">
+                        <div class="explore-asset-icon" style="background: ${item.bg};">${item.icon}</div>
+                        <div class="explore-asset-meta">
+                            <div class="explore-asset-symbol">${item.symbol}</div>
+                            <div class="explore-asset-name">${item.name} · <span class="explore-exchange-tag">${item.exchange}</span></div>
                         </div>
                     </div>
                 </td>
-                <td style="padding: 14px 16px; text-align: right; font-weight: 700; color: #fff; font-family: var(--font-mono);">${item.price}</td>
+                <td style="padding: 14px 16px; text-align: right; font-weight: 700; color: #fff; font-family: var(--font-mono); font-size: 14px;">${item.price}</td>
                 <td style="padding: 14px 16px; text-align: right;">
-                    <span class="dynamic-badge ${item.isPos ? 'positive' : 'negative'}">${item.isPos ? '▲' : '▼'} ${item.change}</span>
+                    <span class="explore-change-badge ${item.isPos ? 'positive' : 'negative'}">${item.isPos ? '▲' : '▼'} ${item.change}</span>
                 </td>
-                <td style="padding: 14px 16px; text-align: right; color: #cbd5e1; font-weight: 600;">${item.vol}</td>
+                <td style="padding: 14px 16px; text-align: right; color: #94a3b8; font-size: 13px; font-weight: 600;">${item.vol}</td>
                 <td style="padding: 14px 16px; text-align: center;">
-                    <svg width="120" height="28" viewBox="0 0 120 28" fill="none">
-                        <path d="${item.spark}" stroke="${item.isPos ? '#10b981' : '#ef4444'}" stroke-width="2" stroke-linecap="round"/>
-                        <path d="${item.spark} V 28 H 0 Z" fill="${item.isPos ? 'rgba(16, 185, 129, 0.12)' : 'rgba(239, 68, 68, 0.12)'}"/>
+                    <svg width="90" height="26" viewBox="0 0 90 26">
+                        <path d="${item.spark}" stroke="${item.isPos ? '#10b981' : '#ef4444'}" stroke-width="2" fill="none"/>
                     </svg>
                 </td>
                 <td style="padding: 14px 16px; text-align: right;">
-                    <button class="dynamic-glass-btn btn-sm"><span>İncele</span> <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></button>
+                    <button class="explore-action-btn">
+                        <span>İncele</span>
+                        <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+                    </button>
                 </td>
             </tr>
         `).join('');
@@ -1805,7 +1804,9 @@ ${config.cssCode || cssOutputPreview.textContent}
 
     function openLandingPreviewMode() {
         if (!previewOverlay) return;
+        document.body.classList.add('in-preview-mode');
         previewOverlay.classList.add('active');
+        previewOverlay.scrollTop = 0;
         document.body.style.overflow = 'hidden';
 
         if (previewPresetNameEl) {
@@ -1819,6 +1820,7 @@ ${config.cssCode || cssOutputPreview.textContent}
     function closeLandingPreviewMode() {
         if (!previewOverlay) return;
         previewOverlay.classList.remove('active');
+        document.body.classList.remove('in-preview-mode');
         document.body.style.overflow = 'auto';
     }
 

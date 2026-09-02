@@ -2098,6 +2098,13 @@ body.lab-body.bg-dark .aurora-orb {
 /* ============================================================ */
 /* 📱 CANLI ANA SAYFA ÖNİZLEME MODU (FULLSCREEN LANDING OVERLAY) */
 /* ============================================================ */
+body.in-preview-mode .studio-main-container,
+body.in-preview-mode .studio-subnav-dock,
+body.in-preview-mode .lab-header,
+body.in-preview-mode .floating-preview-fab {
+    display: none !important;
+}
+
 .lab-landing-preview-overlay {
     position: fixed;
     top: 0;
@@ -2107,7 +2114,7 @@ body.lab-body.bg-dark .aurora-orb {
     z-index: 10000;
     overflow-y: auto;
     overflow-x: hidden;
-    background: #060913;
+    background: transparent;
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1), transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
@@ -2125,6 +2132,7 @@ body.lab-body.bg-dark .aurora-orb {
     z-index: 5;
     width: 100%;
     min-height: 100vh;
+    background: transparent;
 }
 
 /* ÜST DÖNÜŞ VE KONTROL BARI */
@@ -2183,4 +2191,158 @@ body.lab-body.bg-dark .aurora-orb {
     color: #6ee7b7;
     font-size: 11.5px;
     font-weight: 700;
+}
+
+/* ============================================================ */
+/* 📊 PİYASALAR TABLOSU & İNCELE BUTONLARI (EXPLORE STYLES)      */
+/* ============================================================ */
+.explore-table-card {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%), rgba(10, 15, 25, 0.55);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 24px;
+    backdrop-filter: blur(28px) saturate(190%);
+    -webkit-backdrop-filter: blur(28px) saturate(190%);
+    box-shadow: 
+        inset 0 1px 1px rgba(255, 255, 255, 0.20),
+        0 16px 40px rgba(0, 0, 0, 0.40);
+    overflow: hidden;
+}
+
+.explore-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.explore-table th {
+    padding: 14px 20px;
+    color: #94a3b8;
+    font-size: 12.5px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.explore-table-row {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    transition: background 0.2s ease;
+}
+
+.explore-table-row:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.explore-table td {
+    padding: 14px 20px;
+    vertical-align: middle;
+}
+
+.explore-asset-cell {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.explore-asset-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 14px;
+    color: #ffffff;
+    flex-shrink: 0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.30);
+}
+
+.explore-asset-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.explore-asset-symbol {
+    font-size: 14.5px;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+.explore-asset-name {
+    font-size: 12px;
+    color: #94a3b8;
+}
+
+.explore-exchange-tag {
+    color: #64748b;
+    font-size: 11px;
+}
+
+.explore-change-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    border-radius: 9999px;
+    font-size: 12px;
+    font-weight: 700;
+    font-family: var(--font-mono);
+}
+
+.explore-change-badge.positive {
+    background: rgba(16, 185, 129, 0.15);
+    border: 1px solid rgba(16, 185, 129, 0.35);
+    color: #34d399;
+}
+
+.explore-change-badge.negative {
+    background: rgba(239, 68, 68, 0.15);
+    border: 1px solid rgba(239, 68, 68, 0.35);
+    color: #f87171;
+}
+
+/* 💎 İNCELE BUTONU (APPLE VISIONOS CAUSTIC SPECULAR GLASS PILL) */
+.explore-action-btn {
+    position: relative;
+    background: linear-gradient(135deg, rgba(255, 255, 255, var(--btn-glass-opacity, 0.22)) 0%, rgba(255, 255, 255, 0.04) 50%, rgba(255, 255, 255, 0.12) 100%), rgba(var(--btn-glass-rgb, 37, 99, 235), 0.25);
+    border: var(--btn-glass-border-width, 1.5px) solid rgba(255, 255, 255, var(--btn-glass-specular-alpha, 0.60));
+    border-radius: var(--btn-glass-radius, 9999px);
+    backdrop-filter: blur(var(--btn-glass-blur, 16px));
+    -webkit-backdrop-filter: blur(var(--btn-glass-blur, 16px));
+    color: #ffffff;
+    padding: 7px 18px;
+    font-size: 12.5px;
+    font-weight: 700;
+    font-family: var(--font-ui);
+    letter-spacing: 0.2px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    box-shadow: 
+        inset 0 1.5px 2px rgba(255, 255, 255, var(--btn-glass-specular-alpha, 0.60)),
+        inset 0 0 var(--btn-glass-glow-spread, 6px) rgba(var(--btn-glass-rgb, 37, 99, 235), calc(var(--btn-glass-glow-alpha, 0.65) * 0.4)),
+        0 4px 14px rgba(0, 0, 0, 0.30);
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    white-space: nowrap;
+}
+
+.explore-action-btn:hover {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.35) 0%, rgba(255, 255, 255, 0.08) 50%, rgba(255, 255, 255, 0.22) 100%), rgba(var(--btn-glass-rgb, 37, 99, 235), 0.50);
+    transform: translateY(-1.5px) scale(1.03);
+    box-shadow: 
+        inset 0 2px 3px rgba(255, 255, 255, 0.90),
+        0 0 20px rgba(var(--btn-glass-rgb, 37, 99, 235), 0.55),
+        0 6px 20px rgba(0, 0, 0, 0.40);
+    border-color: #ffffff;
+}
+
+.explore-action-btn:active {
+    transform: translateY(0) scale(0.97);
 }

@@ -980,25 +980,23 @@
             </div>
 
             <!-- SIVI CAM TABLOSU -->
-            <div class="dynamic-glass-frame" style="padding: 0; overflow: hidden;">
-                <div style="overflow-x: auto;">
-                    <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 13px;">
-                        <thead>
-                            <tr style="border-bottom: 1px solid rgba(255,255,255,0.10); background: rgba(0,0,0,0.25);">
-                                <th style="padding: 12px 16px; width: 40px; text-align: center; color: #64748b; font-size: 11px; text-transform: uppercase;">#</th>
-                                <th style="padding: 12px 16px; color: #94a3b8; font-size: 11px; text-transform: uppercase;">Varlık / Şirket</th>
-                                <th style="padding: 12px 16px; text-align: right; color: #94a3b8; font-size: 11px; text-transform: uppercase;">Fiyat</th>
-                                <th style="padding: 12px 16px; text-align: right; color: #94a3b8; font-size: 11px; text-transform: uppercase;">24s Değişim</th>
-                                <th style="padding: 12px 16px; text-align: right; color: #94a3b8; font-size: 11px; text-transform: uppercase;">24s Hacim</th>
-                                <th style="padding: 12px 16px; text-align: center; width: 140px; color: #94a3b8; font-size: 11px; text-transform: uppercase;">7G Trend</th>
-                                <th style="padding: 12px 16px; text-align: right; width: 110px; color: #94a3b8; font-size: 11px; text-transform: uppercase;">Aksiyon</th>
-                            </tr>
-                        </thead>
-                        <tbody id="mock-market-tbody">
-                            <!-- JS ile doldurulacak -->
-                        </tbody>
-                    </table>
-                </div>
+            <div class="explore-table-card" style="margin-top: 10px;">
+                <table class="explore-table">
+                    <thead>
+                        <tr>
+                            <th style="padding: 12px 16px; width: 40px; text-align: center;">#</th>
+                            <th style="padding: 12px 16px;">Varlık / Şirket</th>
+                            <th style="padding: 12px 16px; text-align: right;">Fiyat</th>
+                            <th style="padding: 12px 16px; text-align: right;">24s Değişim</th>
+                            <th style="padding: 12px 16px; text-align: right;">24s Hacim</th>
+                            <th style="padding: 12px 16px; text-align: center; width: 140px;">7G Trend</th>
+                            <th style="padding: 12px 16px; text-align: right; width: 120px;">Aksiyon</th>
+                        </tr>
+                    </thead>
+                    <tbody id="mock-market-tbody">
+                        <!-- JS ile dinamik olarak doldurulacak -->
+                    </tbody>
+                </table>
             </div>
         </section>
 
@@ -1362,62 +1360,110 @@
                     <button class="dynamic-tab">Emtia & Forex</button>
                 </div>
 
-                <div class="dynamic-glass-frame" style="padding: 0; overflow: hidden;">
-                    <div style="overflow-x: auto;">
-                        <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 13px;">
-                            <thead>
-                                <tr style="border-bottom: 1px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.02);">
-                                    <th style="padding: 12px 16px; color: #94a3b8; font-weight: 600;">Varlık / Parite</th>
-                                    <th style="padding: 12px 16px; color: #94a3b8; font-weight: 600;">Piyasa</th>
-                                    <th style="padding: 12px 16px; color: #94a3b8; font-weight: 600; text-align: right;">Son Fiyat</th>
-                                    <th style="padding: 12px 16px; color: #94a3b8; font-weight: 600; text-align: right;">24S Değişim</th>
-                                    <th style="padding: 12px 16px; color: #94a3b8; font-weight: 600; text-align: center;">Mini Grafik</th>
-                                    <th style="padding: 12px 16px; color: #94a3b8; font-weight: 600; text-align: center;">İşlem</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr style="border-bottom: 1px solid rgba(255,255,255,0.04);">
-                                    <td style="padding: 14px 16px;">
-                                        <div style="display: flex; align-items: center; gap: 10px;">
-                                            <div style="width: 28px; height: 28px; border-radius: 50%; background: #f59e0b; color: #000; font-weight: 800; display: flex; align-items: center; justify-content: center; font-size: 13px;">₿</div>
-                                            <div><div style="font-weight: 700; color: #fff;">BTC/USDT</div><div style="font-size: 11px; color: #94a3b8;">Bitcoin</div></div>
+                <div class="explore-table-card">
+                    <table class="explore-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 40px; text-align: center;">#</th>
+                                <th>Varlık / Şirket</th>
+                                <th style="text-align: right;">Fiyat</th>
+                                <th style="text-align: right;">24s Değişim</th>
+                                <th style="text-align: right;">24s Hacim</th>
+                                <th style="text-align: center; width: 140px;">7G Trend</th>
+                                <th style="text-align: right; width: 120px;">Grafik</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="explore-table-row">
+                                <td style="text-align: center; color: #64748b; font-weight: 600;">1</td>
+                                <td>
+                                    <div class="explore-asset-cell">
+                                        <div class="explore-asset-icon" style="background: linear-gradient(135deg, #f59e0b, #d97706); box-shadow: 0 0 14px rgba(245,158,11,0.4);">₿</div>
+                                        <div class="explore-asset-meta">
+                                            <div class="explore-asset-symbol">BTC / USDT</div>
+                                            <div class="explore-asset-name">Bitcoin · <span class="explore-exchange-tag">BINANCE</span></div>
                                         </div>
-                                    </td>
-                                    <td style="padding: 14px 16px;"><span class="dynamic-badge neutral">Kripto</span></td>
-                                    <td style="padding: 14px 16px; text-align: right; font-family: var(--font-mono); font-weight: 700;">$78,650.00</td>
-                                    <td style="padding: 14px 16px; text-align: right;"><span class="dynamic-badge positive">+4.18%</span></td>
-                                    <td style="padding: 14px 16px; text-align: center;"><svg width="60" height="20" viewBox="0 0 60 20"><path d="M0,15 Q15,18 30,8 T60,3" fill="none" stroke="#10b981" stroke-width="2"/></svg></td>
-                                    <td style="padding: 14px 16px; text-align: center;"><button class="dynamic-glass-btn btn-xs">İncele</button></td>
-                                </tr>
-                                <tr style="border-bottom: 1px solid rgba(255,255,255,0.04);">
-                                    <td style="padding: 14px 16px;">
-                                        <div style="display: flex; align-items: center; gap: 10px;">
-                                            <div style="width: 28px; height: 28px; border-radius: 50%; background: #ef4444; color: #fff; font-weight: 800; display: flex; align-items: center; justify-content: center; font-size: 12px;">🇹🇷</div>
-                                            <div><div style="font-weight: 700; color: #fff;">THYAO</div><div style="font-size: 11px; color: #94a3b8;">Türk Hava Yolları</div></div>
+                                    </div>
+                                </td>
+                                <td style="text-align: right; font-weight: 700; color: #ffffff; font-family: var(--font-mono); font-size: 14px;">$78,650.00</td>
+                                <td style="text-align: right;"><span class="explore-change-badge positive">▲ +4.18%</span></td>
+                                <td style="text-align: right; color: #94a3b8; font-size: 13px; font-weight: 600;">$4.28 Milyar</td>
+                                <td style="text-align: center;"><svg width="90" height="26" viewBox="0 0 90 26"><path d="M0,20 Q25,24 45,12 T90,4" fill="none" stroke="#10b981" stroke-width="2"/></svg></td>
+                                <td style="text-align: right;">
+                                    <button class="explore-action-btn">
+                                        <span>İncele</span>
+                                        <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr class="explore-table-row">
+                                <td style="text-align: center; color: #64748b; font-weight: 600;">2</td>
+                                <td>
+                                    <div class="explore-asset-cell">
+                                        <div class="explore-asset-icon" style="background: #ef4444;">🇹🇷</div>
+                                        <div class="explore-asset-meta">
+                                            <div class="explore-asset-symbol">THYAO</div>
+                                            <div class="explore-asset-name">Türk Hava Yolları A.O. · <span class="explore-exchange-tag">BIST</span></div>
                                         </div>
-                                    </td>
-                                    <td style="padding: 14px 16px;"><span class="dynamic-badge neutral">BIST</span></td>
-                                    <td style="padding: 14px 16px; text-align: right; font-family: var(--font-mono); font-weight: 700;">₺312.50</td>
-                                    <td style="padding: 14px 16px; text-align: right;"><span class="dynamic-badge positive">+2.46%</span></td>
-                                    <td style="padding: 14px 16px; text-align: center;"><svg width="60" height="20" viewBox="0 0 60 20"><path d="M0,16 Q20,14 40,6 T60,2" fill="none" stroke="#10b981" stroke-width="2"/></svg></td>
-                                    <td style="padding: 14px 16px; text-align: center;"><button class="dynamic-glass-btn btn-xs">İncele</button></td>
-                                </tr>
-                                <tr>
-                                    <td style="padding: 14px 16px;">
-                                        <div style="display: flex; align-items: center; gap: 10px;">
-                                            <div style="width: 28px; height: 28px; border-radius: 50%; background: #10b981; color: #000; font-weight: 800; display: flex; align-items: center; justify-content: center; font-size: 11px;">NV</div>
-                                            <div><div style="font-weight: 700; color: #fff;">NVDA</div><div style="font-size: 11px; color: #94a3b8;">NVIDIA Corporation</div></div>
+                                    </div>
+                                </td>
+                                <td style="text-align: right; font-weight: 700; color: #ffffff; font-family: var(--font-mono); font-size: 14px;">₺312.50</td>
+                                <td style="text-align: right;"><span class="explore-change-badge positive">▲ +2.46%</span></td>
+                                <td style="text-align: right; color: #94a3b8; font-size: 13px; font-weight: 600;">₺5.84 Milyar</td>
+                                <td style="text-align: center;"><svg width="90" height="26" viewBox="0 0 90 26"><path d="M0,22 Q25,18 55,8 T90,3" fill="none" stroke="#10b981" stroke-width="2"/></svg></td>
+                                <td style="text-align: right;">
+                                    <button class="explore-action-btn">
+                                        <span>İncele</span>
+                                        <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr class="explore-table-row">
+                                <td style="text-align: center; color: #64748b; font-weight: 600;">3</td>
+                                <td>
+                                    <div class="explore-asset-cell">
+                                        <div class="explore-asset-icon" style="background: #10b981; color: #000;">NV</div>
+                                        <div class="explore-asset-meta">
+                                            <div class="explore-asset-symbol">NVDA</div>
+                                            <div class="explore-asset-name">NVIDIA Corporation · <span class="explore-exchange-tag">NASDAQ</span></div>
                                         </div>
-                                    </td>
-                                    <td style="padding: 14px 16px;"><span class="dynamic-badge neutral">NASDAQ</span></td>
-                                    <td style="padding: 14px 16px; text-align: right; font-family: var(--font-mono); font-weight: 700;">$138.25</td>
-                                    <td style="padding: 14px 16px; text-align: right;"><span class="dynamic-badge positive">+3.82%</span></td>
-                                    <td style="padding: 14px 16px; text-align: center;"><svg width="60" height="20" viewBox="0 0 60 20"><path d="M0,17 Q15,12 35,6 T60,1" fill="none" stroke="#10b981" stroke-width="2"/></svg></td>
-                                    <td style="padding: 14px 16px; text-align: center;"><button class="dynamic-glass-btn btn-xs">İncele</button></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                                    </div>
+                                </td>
+                                <td style="text-align: right; font-weight: 700; color: #ffffff; font-family: var(--font-mono); font-size: 14px;">$138.25</td>
+                                <td style="text-align: right;"><span class="explore-change-badge positive">▲ +3.82%</span></td>
+                                <td style="text-align: right; color: #94a3b8; font-size: 13px; font-weight: 600;">$9.15 Milyar</td>
+                                <td style="text-align: center;"><svg width="90" height="26" viewBox="0 0 90 26"><path d="M0,24 Q20,16 50,8 T90,2" fill="none" stroke="#10b981" stroke-width="2"/></svg></td>
+                                <td style="text-align: right;">
+                                    <button class="explore-action-btn">
+                                        <span>İncele</span>
+                                        <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr class="explore-table-row">
+                                <td style="text-align: center; color: #64748b; font-weight: 600;">4</td>
+                                <td>
+                                    <div class="explore-asset-cell">
+                                        <div class="explore-asset-icon" style="background: #0284c7;">Ξ</div>
+                                        <div class="explore-asset-meta">
+                                            <div class="explore-asset-symbol">ETH / USDT</div>
+                                            <div class="explore-asset-name">Ethereum · <span class="explore-exchange-tag">BINANCE</span></div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td style="text-align: right; font-weight: 700; color: #ffffff; font-family: var(--font-mono); font-size: 14px;">$2,480.50</td>
+                                <td style="text-align: right;"><span class="explore-change-badge positive">▲ +2.15%</span></td>
+                                <td style="text-align: right; color: #94a3b8; font-size: 13px; font-weight: 600;">$2.45 Milyar</td>
+                                <td style="text-align: center;"><svg width="90" height="26" viewBox="0 0 90 26"><path d="M0,21 Q30,19 60,11 T90,5" fill="none" stroke="#10b981" stroke-width="2"/></svg></td>
+                                <td style="text-align: right;">
+                                    <button class="explore-action-btn">
+                                        <span>İncele</span>
+                                        <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </section>
 
