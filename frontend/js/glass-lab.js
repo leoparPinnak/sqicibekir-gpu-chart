@@ -361,6 +361,78 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
+    // 🌐 GERÇEK ZAMANLI SEKMELER ARASI SENKRONİZASYON MOTORU (CROSS-TAB INSTANT SYNC)
+    let _syncChannel = null;
+    try {
+        if (typeof BroadcastChannel !== 'undefined') {
+            _syncChannel = new BroadcastChannel('tradingchart_liquid_glass_sync');
+            _syncChannel.onmessage = (event) => {
+                if (event.data && event.data.type === 'GLASS_ENGINE_SYNC') {
+                    applyIncomingSync(event.data);
+                }
+            };
+        }
+    } catch(e) {}
+
+    window.addEventListener('storage', (e) => {
+        if (e.key === 'tradingchart_liquid_glass_sync_tokens' && e.newValue) {
+            try {
+                const data = JSON.parse(e.newValue);
+                applyIncomingSync(data);
+            } catch(err) {}
+        }
+    });
+
+    let _isSyncingInternally = false;
+    function broadcastLiveSync(tokensPayload) {
+        if (_isSyncingInternally) return;
+        const payload = {
+            type: 'GLASS_ENGINE_SYNC',
+            timestamp: Date.now(),
+            tokens: tokensPayload,
+            elementCustomOverrides: elementCustomOverrides,
+            activeTargets: activeTargets
+        };
+
+        if (_syncChannel) {
+            try {
+                _syncChannel.postMessage(payload);
+            } catch(e) {}
+        }
+
+        try {
+            localStorage.setItem('tradingchart_liquid_glass_sync_tokens', JSON.stringify(payload));
+        } catch(e) {}
+    }
+
+    function applyIncomingSync(data) {
+        if (!data || !data.tokens) return;
+        _isSyncingInternally = true;
+        const root = document.documentElement;
+        const t = data.tokens;
+
+        Object.keys(t).forEach(prop => {
+            root.style.setProperty(prop, t[prop]);
+        });
+
+        // Also update custom element overrides if present
+        if (data.elementCustomOverrides) {
+            Object.keys(data.elementCustomOverrides).forEach(targetId => {
+                const ov = data.elementCustomOverrides[targetId];
+                const els = document.querySelectorAll(`[data-target-id="${targetId}"]`);
+                els.forEach(el => {
+                    if (ov.opacity !== undefined) el.style.setProperty('--card-glass-opacity', (ov.opacity / 100).toFixed(2));
+                    if (ov.blur !== undefined) el.style.setProperty('--card-glass-blur', `${ov.blur}px`);
+                    if (ov.radius !== undefined) {
+                        el.style.setProperty('--card-glass-radius', `${ov.radius}px`);
+                        el.style.borderRadius = `${ov.radius}px`;
+                    }
+                });
+            });
+        }
+        _isSyncingInternally = false;
+    }
+
     function updateGlassEngine() {
         // 1. BUTONLAR (8 PARAMETRE)
         const btnOp = parseInt(paramBtnOpacity ? paramBtnOpacity.value : 35, 10);
@@ -608,6 +680,67 @@ document.addEventListener('DOMContentLoaded', () => {
         root.style.setProperty('--glass-radius', btnRadiusStr);
         root.style.setProperty('--glass-accent-color', compColors.btn.hex);
         root.style.setProperty('--glass-accent-rgb', compColors.btn.rgb);
+
+        // 🌐 GERÇEK ZAMANLI SEKMELER ARASI SENKRONİZASYON (CROSS-TAB SYNC BROADCAST)
+        broadcastLiveSync({
+            '--btn-glass-opacity': (btnOp / 100).toFixed(2),
+            '--btn-glass-blur': `${btnBl}px`,
+            '--btn-glass-specular-alpha': btnSpecAlpha,
+            '--btn-glass-specular-width': `${btnSpWidth}px`,
+            '--btn-glass-specular-bloom': `${btnBloomPx}px`,
+            '--btn-glass-specular-taper': `${btnTpr}%`,
+            '--btn-glass-inner-glow-alpha': btnIgAlpha,
+            '--btn-glass-inner-glow-spread': `${btnIgSpread}px`,
+            '--btn-glass-radius': btnRadiusStr,
+            '--btn-glass-accent-color': compColors.btn.hex,
+            '--btn-glass-accent-rgb': compColors.btn.rgb,
+            '--btn-glass-rgb': compColors.btn.rgb,
+
+            '--input-glass-opacity': (inputOp / 100).toFixed(2),
+            '--input-glass-blur': `${inputBl}px`,
+            '--input-glass-specular-alpha': inputSpecAlpha,
+            '--input-glass-specular-width': `${inputSpWidth}px`,
+            '--input-glass-specular-bloom': `${inputBloomPx}px`,
+            '--input-glass-specular-taper': `${inputTpr}%`,
+            '--input-glass-inner-glow-alpha': inputIgAlpha,
+            '--input-glass-inner-glow-spread': `${inputIgSpread}px`,
+            '--input-glass-radius': inputRadiusStr,
+            '--input-glass-accent-color': compColors.input.hex,
+            '--input-glass-accent-rgb': compColors.input.rgb,
+            '--input-glass-rgb': compColors.input.rgb,
+
+            '--tab-glass-opacity': (tabOp / 100).toFixed(2),
+            '--tab-glass-blur': `${tabBl}px`,
+            '--tab-glass-specular-alpha': tabSpecAlpha,
+            '--tab-glass-specular-width': `${tabSpWidth}px`,
+            '--tab-glass-specular-bloom': `${tabBloomPx}px`,
+            '--tab-glass-specular-taper': `${tabTpr}%`,
+            '--tab-glass-inner-glow-alpha': tabIgAlpha,
+            '--tab-glass-inner-glow-spread': `${tabIgSpread}px`,
+            '--tab-glass-radius': tabRadiusStr,
+            '--tab-glass-accent-color': compColors.tab.hex,
+            '--tab-glass-accent-rgb': compColors.tab.rgb,
+            '--tab-glass-rgb': compColors.tab.rgb,
+
+            '--card-glass-opacity': (cardOp / 100).toFixed(2),
+            '--card-glass-blur': `${cardBl}px`,
+            '--card-glass-specular-alpha': cardSpecAlpha,
+            '--card-glass-specular-width': `${cardSpWidth}px`,
+            '--card-glass-specular-bloom': `${cardBloomPx}px`,
+            '--card-glass-specular-taper': `${cardTpr}%`,
+            '--card-glass-inner-glow-alpha': cardIgAlpha,
+            '--card-glass-inner-glow-spread': `${cardIgSpread}px`,
+            '--card-glass-radius': `${cardRd}px`,
+            '--card-glass-accent-color': compColors.card.hex,
+            '--card-glass-accent-rgb': compColors.card.rgb,
+            '--card-glass-rgb': compColors.card.rgb,
+
+            '--glass-opacity': (btnOp / 100).toFixed(2),
+            '--glass-blur': `${btnBl}px`,
+            '--glass-radius': btnRadiusStr,
+            '--glass-accent-color': compColors.btn.hex,
+            '--glass-accent-rgb': compColors.btn.rgb
+        });
 
         // Master CSS Code Block
         const cssCode = `/* 🎯 1. SIVI CAM BUTONLAR (LIQUID GLASS BUTTONS) */

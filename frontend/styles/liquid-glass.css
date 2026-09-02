@@ -2,6 +2,60 @@
 /* 🍎 APPLE LIQUID GLASS & UNISWAP V4 MODERN PORTAL THEME      */
 /* ============================================================ */
 
+:root {
+    --btn-glass-opacity: 0.35;
+    --btn-glass-blur: 20px;
+    --btn-glass-specular-alpha: 1.0;
+    --btn-glass-specular-width: 1.5px;
+    --btn-glass-specular-bloom: 0px;
+    --btn-glass-specular-taper: 80%;
+    --btn-glass-inner-glow-alpha: 0.65;
+    --btn-glass-inner-glow-spread: 6px;
+    --btn-glass-radius: 9999px;
+    --btn-glass-accent-color: #2563eb;
+    --btn-glass-accent-rgb: 37, 99, 235;
+    --btn-glass-rgb: 37, 99, 235;
+
+    --card-glass-opacity: 0.20;
+    --card-glass-blur: 0px;
+    --card-glass-specular-alpha: 0.80;
+    --card-glass-specular-width: 1.5px;
+    --card-glass-specular-bloom: 0px;
+    --card-glass-specular-taper: 80%;
+    --card-glass-inner-glow-alpha: 0.40;
+    --card-glass-inner-glow-spread: 8px;
+    --card-glass-radius: 24px;
+    --card-glass-accent-color: #2563eb;
+    --card-glass-accent-rgb: 37, 99, 235;
+    --card-glass-rgb: 37, 99, 235;
+
+    --tab-glass-opacity: 0.40;
+    --tab-glass-blur: 16px;
+    --tab-glass-specular-alpha: 0.90;
+    --tab-glass-specular-width: 1.5px;
+    --tab-glass-specular-bloom: 0px;
+    --tab-glass-specular-taper: 80%;
+    --tab-glass-inner-glow-alpha: 0.60;
+    --tab-glass-inner-glow-spread: 6px;
+    --tab-glass-radius: 9999px;
+    --tab-glass-accent-color: #2563eb;
+    --tab-glass-accent-rgb: 37, 99, 235;
+    --tab-glass-rgb: 37, 99, 235;
+
+    --input-glass-opacity: 0.25;
+    --input-glass-blur: 16px;
+    --input-glass-specular-alpha: 0.70;
+    --input-glass-specular-width: 1.5px;
+    --input-glass-specular-bloom: 0px;
+    --input-glass-specular-taper: 80%;
+    --input-glass-inner-glow-alpha: 0.35;
+    --input-glass-inner-glow-spread: 4px;
+    --input-glass-radius: 14px;
+    --input-glass-accent-color: #2563eb;
+    --input-glass-accent-rgb: 37, 99, 235;
+    --input-glass-rgb: 37, 99, 235;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -222,29 +276,60 @@ body.portal-locked, html.portal-locked {
 }
 
 .portal-btn-primary {
-    background: rgba(255, 255, 255, 0.08) !important;
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.20) 0%, rgba(255, 255, 255, 0.04) 50%, rgba(255, 255, 255, 0.10) 100%), rgba(var(--btn-glass-accent-rgb, 37, 99, 235), var(--btn-glass-opacity, 0.35)) !important;
     border: 1px solid rgba(255, 255, 255, 0.18) !important;
-    border-top: 1px solid rgba(255, 255, 255, 0.32) !important;
-    backdrop-filter: blur(18px) saturate(180%) !important;
-    -webkit-backdrop-filter: blur(18px) saturate(180%) !important;
-    color: #ffffff;
-    padding: 10px 22px;
-    font-size: 13px;
-    font-weight: 700;
-    border-radius: 20px;
+    border-radius: var(--btn-glass-radius, 9999px) !important;
+    backdrop-filter: blur(var(--btn-glass-blur, 20px)) saturate(200%) !important;
+    -webkit-backdrop-filter: blur(var(--btn-glass-blur, 20px)) saturate(200%) !important;
+    color: #ffffff !important;
+    padding: 10px 22px !important;
+    font-size: 13px !important;
+    font-weight: 700 !important;
     cursor: pointer;
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25), 0 8px 24px rgba(0, 0, 0, 0.35);
-    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 
+        inset 0 2px var(--btn-glass-inner-glow-spread, 6px) rgba(255, 255, 255, var(--btn-glass-inner-glow-alpha, 0.65)),
+        inset 0 -2px calc(var(--btn-glass-inner-glow-spread, 6px) * 0.75) rgba(0, 0, 0, 0.40),
+        inset 0 0 calc(var(--btn-glass-inner-glow-spread, 6px) * 2.5) rgba(var(--btn-glass-accent-rgb, 37, 99, 235), calc(var(--btn-glass-inner-glow-alpha, 0.65) * 0.45)),
+        0 0 20px rgba(var(--btn-glass-accent-rgb, 37, 99, 235), 0.30),
+        0 8px 24px rgba(0, 0, 0, 0.35) !important;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
     display: inline-flex;
     align-items: center;
     gap: 10px;
 }
 
+.portal-btn-primary::before {
+    content: '' !important;
+    position: absolute !important;
+    inset: 0 !important;
+    border-radius: inherit !important;
+    padding: var(--btn-glass-specular-width, 1.5px) !important;
+    background: radial-gradient(
+        ellipse var(--btn-glass-specular-taper, 80%) 70% at 50% -5%,
+        rgba(255, 255, 255, var(--btn-glass-specular-alpha, 1.0)) 0%,
+        rgba(255, 255, 255, calc(var(--btn-glass-specular-alpha, 1.0) * 0.70)) 25%,
+        rgba(255, 255, 255, calc(var(--btn-glass-specular-alpha, 1.0) * 0.20)) 60%,
+        rgba(255, 255, 255, 0.02) 85%,
+        transparent 100%
+    ) !important;
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0) !important;
+    -webkit-mask-composite: xor !important;
+    mask-composite: exclude !important;
+    pointer-events: none !important;
+    z-index: 2 !important;
+    filter: drop-shadow(0 0 var(--btn-glass-specular-bloom, 0px) rgba(255, 255, 255, calc(var(--btn-glass-specular-alpha, 1.0) * 0.5))) !important;
+    transition: filter 0.25s cubic-bezier(0.16, 1, 0.3, 1), padding 0.25s ease !important;
+}
+
 .portal-btn-primary:hover {
-    background: rgba(255, 255, 255, 0.16) !important;
-    border-color: rgba(255, 255, 255, 0.35) !important;
-    transform: translateY(-1px);
-    box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.40), 0 10px 30px rgba(0, 0, 0, 0.50);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.32) 0%, rgba(255, 255, 255, 0.08) 50%, rgba(255, 255, 255, 0.18) 100%), rgba(var(--btn-glass-accent-rgb, 37, 99, 235), calc(var(--btn-glass-opacity, 0.35) + 0.20)) !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 
+        inset 0 2px calc(var(--btn-glass-inner-glow-spread, 6px) * 1.2) rgba(255, 255, 255, calc(var(--btn-glass-inner-glow-alpha, 0.65) * 1.2)),
+        0 0 28px rgba(var(--btn-glass-accent-rgb, 37, 99, 235), 0.55),
+        0 10px 30px rgba(0, 0, 0, 0.50) !important;
 }
 
 /* ============================================================ */
@@ -314,16 +399,18 @@ body.portal-locked, html.portal-locked {
     overflow: hidden;
     width: 100%;
     max-width: 480px;
-    background: rgba(15, 23, 42, 0.78);
-    backdrop-filter: blur(36px) saturate(200%) contrast(105%);
-    -webkit-backdrop-filter: blur(36px) saturate(200%) contrast(105%);
-    border: 1px solid rgba(255, 255, 255, 0.16);
-    border-radius: 24px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.01) 60%, rgba(255, 255, 255, 0.04) 100%), rgba(15, 23, 42, var(--card-glass-opacity, 0.20)) !important;
+    backdrop-filter: blur(var(--card-glass-blur, 0px)) saturate(200%) !important;
+    -webkit-backdrop-filter: blur(var(--card-glass-blur, 0px)) saturate(200%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.16) !important;
+    border-radius: var(--card-glass-radius, 24px) !important;
     padding: 24px;
     box-shadow: 
-        inset 0 1px 1px 0 rgba(255, 255, 255, 0.30),
+        inset 0 2px var(--card-glass-inner-glow-spread, 8px) rgba(255, 255, 255, var(--card-glass-inner-glow-alpha, 0.40)),
+        inset 0 -2px calc(var(--card-glass-inner-glow-spread, 8px) * 0.75) rgba(0, 0, 0, 0.45),
+        inset 0 0 calc(var(--card-glass-inner-glow-spread, 8px) * 2.5) rgba(var(--card-glass-accent-rgb, 37, 99, 235), calc(var(--card-glass-inner-glow-alpha, 0.40) * 0.35)),
         0 30px 80px -15px rgba(0, 0, 0, 0.80),
-        0 0 40px rgba(41, 98, 255, 0.15);
+        0 0 40px rgba(var(--card-glass-accent-rgb, 37, 99, 235), 0.20) !important;
     text-align: left;
 }
 
@@ -382,33 +469,44 @@ body.portal-locked, html.portal-locked {
     border-color: rgba(255, 255, 255, 0.30);
 }
 
-.portal-card-btn {
+.portal-card-btn,
+.portal-auth-submit-btn {
     position: relative;
     overflow: hidden;
     width: 100%;
     padding: 13px 22px !important;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0.06) 45%, rgba(255, 255, 255, 0.02) 100%), rgba(20, 28, 45, 0.65) !important;
-    backdrop-filter: blur(32px) saturate(220%) contrast(108%) brightness(1.12) !important;
-    -webkit-backdrop-filter: blur(32px) saturate(220%) contrast(108%) brightness(1.12) !important;
-    border: 1px solid rgba(255, 255, 255, 0.16) !important;
-    border-radius: 9999px;
-    color: #ffffff;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.20) 0%, rgba(255, 255, 255, 0.04) 50%, rgba(255, 255, 255, 0.10) 100%), rgba(var(--btn-glass-accent-rgb, 37, 99, 235), var(--btn-glass-opacity, 0.35)) !important;
+    backdrop-filter: blur(var(--btn-glass-blur, 20px)) saturate(200%) !important;
+    -webkit-backdrop-filter: blur(var(--btn-glass-blur, 20px)) saturate(200%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.18) !important;
+    border-radius: var(--btn-glass-radius, 9999px) !important;
+    color: #ffffff !important;
     font-size: 14px !important;
     font-weight: 700 !important;
     letter-spacing: 0.3px;
     cursor: pointer;
     box-shadow: 
-        inset 0 2px 6px 0 rgba(255, 255, 255, 0.75),
-        inset 0 -2px 4px 0 rgba(0, 0, 0, 0.40),
-        inset 0 0 20px 0 rgba(16, 185, 129, 0.35),
-        0 14px 35px -5px rgba(0, 0, 0, 0.55),
-        0 0 25px 0 rgba(16, 185, 129, 0.20);
-    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        inset 0 2px var(--btn-glass-inner-glow-spread, 6px) rgba(255, 255, 255, var(--btn-glass-inner-glow-alpha, 0.65)),
+        inset 0 -2px calc(var(--btn-glass-inner-glow-spread, 6px) * 0.75) rgba(0, 0, 0, 0.40),
+        inset 0 0 calc(var(--btn-glass-inner-glow-spread, 6px) * 2.5) rgba(var(--btn-glass-accent-rgb, 37, 99, 235), calc(var(--btn-glass-inner-glow-alpha, 0.65) * 0.45)),
+        0 0 20px rgba(var(--btn-glass-accent-rgb, 37, 99, 235), 0.30),
+        0 14px 35px -5px rgba(0, 0, 0, 0.55) !important;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 10px !important;
     margin-top: 10px !important;
+}
+
+.portal-card-btn:hover,
+.portal-auth-submit-btn:hover {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.32) 0%, rgba(255, 255, 255, 0.08) 50%, rgba(255, 255, 255, 0.18) 100%), rgba(var(--btn-glass-accent-rgb, 37, 99, 235), calc(var(--btn-glass-opacity, 0.35) + 0.20)) !important;
+    transform: translateY(-2px) scale(1.015) !important;
+    box-shadow: 
+        inset 0 2px calc(var(--btn-glass-inner-glow-spread, 6px) * 1.2) rgba(255, 255, 255, calc(var(--btn-glass-inner-glow-alpha, 0.65) * 1.2)),
+        0 0 28px rgba(var(--btn-glass-accent-rgb, 37, 99, 235), 0.55),
+        0 18px 45px rgba(0, 0, 0, 0.65) !important;
 }
 
 /* 💎 İpeksi Elmas Işıltısı Katmanı */
@@ -1640,40 +1738,68 @@ body.portal-locked, html.portal-locked {
     color: #f87171;
 }
 
-/* İNCELE BUTONU (APPLE VISIONOS CAUSTIC SPECULAR GLASS PILL) */
+/* 💎 İNCELE BUTONU (APPLE VISIONOS CAUSTIC SPECULAR GLASS PILL) */
 .explore-action-btn {
     position: relative;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0.04) 50%, rgba(255, 255, 255, 0.12) 100%), rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    border-top: 1.5px solid #ffffff;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
-    color: #ffffff;
-    padding: 6px 16px;
-    border-radius: 9999px;
-    font-size: 12px;
-    font-weight: 700;
+    overflow: hidden;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.20) 0%, rgba(255, 255, 255, 0.04) 50%, rgba(255, 255, 255, 0.10) 100%), rgba(var(--btn-glass-accent-rgb, 37, 99, 235), var(--btn-glass-opacity, 0.35)) !important;
+    border: 1px solid rgba(255, 255, 255, 0.18) !important;
+    border-radius: var(--btn-glass-radius, 9999px) !important;
+    backdrop-filter: blur(var(--btn-glass-blur, 20px)) saturate(200%) !important;
+    -webkit-backdrop-filter: blur(var(--btn-glass-blur, 20px)) saturate(200%) !important;
+    color: #ffffff !important;
+    padding: 7px 18px !important;
+    font-size: 12.5px !important;
+    font-weight: 700 !important;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 6px;
     box-shadow: 
-        inset 0 1.5px 2px rgba(255, 255, 255, 0.65),
-        inset 0 -1px 1px rgba(0, 0, 0, 0.25),
-        0 4px 14px rgba(0, 0, 0, 0.25);
-    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-    overflow: hidden;
+        inset 0 2px var(--btn-glass-inner-glow-spread, 6px) rgba(255, 255, 255, var(--btn-glass-inner-glow-alpha, 0.65)),
+        inset 0 -2px calc(var(--btn-glass-inner-glow-spread, 6px) * 0.75) rgba(0, 0, 0, 0.40),
+        inset 0 0 calc(var(--btn-glass-inner-glow-spread, 6px) * 2.5) rgba(var(--btn-glass-accent-rgb, 37, 99, 235), calc(var(--btn-glass-inner-glow-alpha, 0.65) * 0.45)),
+        0 0 20px rgba(var(--btn-glass-accent-rgb, 37, 99, 235), 0.30),
+        0 6px 18px rgba(0, 0, 0, 0.30) !important;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    white-space: nowrap;
+}
+
+.explore-action-btn::before {
+    content: '' !important;
+    position: absolute !important;
+    inset: 0 !important;
+    border-radius: inherit !important;
+    padding: var(--btn-glass-specular-width, 1.5px) !important;
+    background: radial-gradient(
+        ellipse var(--btn-glass-specular-taper, 80%) 70% at 50% -5%,
+        rgba(255, 255, 255, var(--btn-glass-specular-alpha, 1.0)) 0%,
+        rgba(255, 255, 255, calc(var(--btn-glass-specular-alpha, 1.0) * 0.70)) 25%,
+        rgba(255, 255, 255, calc(var(--btn-glass-specular-alpha, 1.0) * 0.20)) 60%,
+        rgba(255, 255, 255, 0.02) 85%,
+        transparent 100%
+    ) !important;
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0) !important;
+    -webkit-mask-composite: xor !important;
+    mask-composite: exclude !important;
+    pointer-events: none !important;
+    z-index: 2 !important;
+    filter: drop-shadow(0 0 var(--btn-glass-specular-bloom, 0px) rgba(255, 255, 255, calc(var(--btn-glass-specular-alpha, 1.0) * 0.5))) !important;
+    transition: filter 0.25s cubic-bezier(0.16, 1, 0.3, 1), padding 0.25s ease !important;
 }
 
 .explore-action-btn:hover {
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.35) 0%, rgba(255, 255, 255, 0.08) 50%, rgba(255, 255, 255, 0.22) 100%), rgba(41, 98, 255, 0.55);
-    border-color: rgba(255, 255, 255, 0.40);
-    border-top-color: #ffffff;
-    transform: translateY(-1.5px) scale(1.02);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.32) 0%, rgba(255, 255, 255, 0.08) 50%, rgba(255, 255, 255, 0.18) 100%), rgba(var(--btn-glass-accent-rgb, 37, 99, 235), calc(var(--btn-glass-opacity, 0.35) + 0.20)) !important;
+    transform: translateY(-2px) scale(1.02) !important;
     box-shadow: 
-        inset 0 2px 2.5px rgba(255, 255, 255, 0.90),
-        inset 0 -1px 2px rgba(0, 0, 0, 0.30),
-        0 0 22px rgba(41, 98, 255, 0.55),
-        0 6px 20px rgba(0, 0, 0, 0.45);
+        inset 0 2px calc(var(--btn-glass-inner-glow-spread, 6px) * 1.2) rgba(255, 255, 255, calc(var(--btn-glass-inner-glow-alpha, 0.65) * 1.2)),
+        0 0 28px rgba(var(--btn-glass-accent-rgb, 37, 99, 235), 0.55),
+        0 8px 24px rgba(0, 0, 0, 0.40) !important;
+}
+
+.explore-action-btn:active {
+    transform: translateY(0) scale(0.97) !important;
 }
 
 .explore-empty-state {
