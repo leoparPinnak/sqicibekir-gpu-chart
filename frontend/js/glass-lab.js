@@ -473,22 +473,26 @@ document.addEventListener('DOMContentLoaded', () => {
             root.style.setProperty('--btn-glass-radius', btnRadiusStr);
             root.style.setProperty('--btn-glass-accent-color', compColors.btn.hex);
             root.style.setProperty('--btn-glass-accent-rgb', compColors.btn.rgb);
+            root.style.setProperty('--btn-glass-rgb', compColors.btn.rgb);
         } else {
-            const el = document.querySelector(`[data-target-id="${activeTargets.btn}"]`);
-            if (el) {
+            const els = document.querySelectorAll(`[data-target-id="${activeTargets.btn}"]`);
+            if (els.length > 0) {
                 elementCustomOverrides[activeTargets.btn] = { opacity: btnOp, blur: btnBl, specular: btnSp, specWidth: btnSpWidth, taper: btnTpr, innerGlow: btnIg, spread: btnIgSpread, radius: btnRd };
-                el.style.setProperty('--btn-glass-opacity', (btnOp / 100).toFixed(2));
-                el.style.setProperty('--btn-glass-blur', `${btnBl}px`);
-                el.style.setProperty('--btn-glass-specular-alpha', btnSpecAlpha);
-                el.style.setProperty('--btn-glass-specular-width', `${btnSpWidth}px`);
-                el.style.setProperty('--btn-glass-specular-bloom', `${btnBloomPx}px`);
-                el.style.setProperty('--btn-glass-specular-taper', `${btnTpr}%`);
-                el.style.setProperty('--btn-glass-inner-glow-alpha', btnIgAlpha);
-                el.style.setProperty('--btn-glass-inner-glow-spread', `${btnIgSpread}px`);
-                el.style.setProperty('--btn-glass-radius', btnRadiusStr);
-                el.style.setProperty('--btn-glass-accent-color', compColors.btn.hex);
-                el.style.setProperty('--btn-glass-accent-rgb', compColors.btn.rgb);
-                el.style.borderRadius = btnRadiusStr;
+                els.forEach(el => {
+                    el.style.setProperty('--btn-glass-opacity', (btnOp / 100).toFixed(2));
+                    el.style.setProperty('--btn-glass-blur', `${btnBl}px`);
+                    el.style.setProperty('--btn-glass-specular-alpha', btnSpecAlpha);
+                    el.style.setProperty('--btn-glass-specular-width', `${btnSpWidth}px`);
+                    el.style.setProperty('--btn-glass-specular-bloom', `${btnBloomPx}px`);
+                    el.style.setProperty('--btn-glass-specular-taper', `${btnTpr}%`);
+                    el.style.setProperty('--btn-glass-inner-glow-alpha', btnIgAlpha);
+                    el.style.setProperty('--btn-glass-inner-glow-spread', `${btnIgSpread}px`);
+                    el.style.setProperty('--btn-glass-radius', btnRadiusStr);
+                    el.style.setProperty('--btn-glass-accent-color', compColors.btn.hex);
+                    el.style.setProperty('--btn-glass-accent-rgb', compColors.btn.rgb);
+                    el.style.setProperty('--btn-glass-rgb', compColors.btn.rgb);
+                    el.style.borderRadius = btnRadiusStr;
+                });
             }
         }
 
@@ -505,22 +509,26 @@ document.addEventListener('DOMContentLoaded', () => {
             root.style.setProperty('--input-glass-radius', inputRadiusStr);
             root.style.setProperty('--input-glass-accent-color', compColors.input.hex);
             root.style.setProperty('--input-glass-accent-rgb', compColors.input.rgb);
+            root.style.setProperty('--input-glass-rgb', compColors.input.rgb);
         } else {
-            const el = document.querySelector(`[data-target-id="${activeTargets.input}"]`);
-            if (el) {
+            const els = document.querySelectorAll(`[data-target-id="${activeTargets.input}"]`);
+            if (els.length > 0) {
                 elementCustomOverrides[activeTargets.input] = { opacity: inputOp, blur: inputBl, specular: inputSp, specWidth: inputSpWidth, taper: inputTpr, innerGlow: inputIg, spread: inputIgSpread, radius: inputRd };
-                el.style.setProperty('--input-glass-opacity', (inputOp / 100).toFixed(2));
-                el.style.setProperty('--input-glass-blur', `${inputBl}px`);
-                el.style.setProperty('--input-glass-specular-alpha', inputSpecAlpha);
-                el.style.setProperty('--input-glass-specular-width', `${inputSpWidth}px`);
-                el.style.setProperty('--input-glass-specular-bloom', `${inputBloomPx}px`);
-                el.style.setProperty('--input-glass-specular-taper', `${inputTpr}%`);
-                el.style.setProperty('--input-glass-inner-glow-alpha', inputIgAlpha);
-                el.style.setProperty('--input-glass-inner-glow-spread', `${inputIgSpread}px`);
-                el.style.setProperty('--input-glass-radius', inputRadiusStr);
-                el.style.setProperty('--input-glass-accent-color', compColors.input.hex);
-                el.style.setProperty('--input-glass-accent-rgb', compColors.input.rgb);
-                el.style.borderRadius = inputRadiusStr;
+                els.forEach(el => {
+                    el.style.setProperty('--input-glass-opacity', (inputOp / 100).toFixed(2));
+                    el.style.setProperty('--input-glass-blur', `${inputBl}px`);
+                    el.style.setProperty('--input-glass-specular-alpha', inputSpecAlpha);
+                    el.style.setProperty('--input-glass-specular-width', `${inputSpWidth}px`);
+                    el.style.setProperty('--input-glass-specular-bloom', `${inputBloomPx}px`);
+                    el.style.setProperty('--input-glass-specular-taper', `${inputTpr}%`);
+                    el.style.setProperty('--input-glass-inner-glow-alpha', inputIgAlpha);
+                    el.style.setProperty('--input-glass-inner-glow-spread', `${inputIgSpread}px`);
+                    el.style.setProperty('--input-glass-radius', inputRadiusStr);
+                    el.style.setProperty('--input-glass-accent-color', compColors.input.hex);
+                    el.style.setProperty('--input-glass-accent-rgb', compColors.input.rgb);
+                    el.style.setProperty('--input-glass-rgb', compColors.input.rgb);
+                    el.style.borderRadius = inputRadiusStr;
+                });
             }
         }
 
@@ -537,22 +545,26 @@ document.addEventListener('DOMContentLoaded', () => {
             root.style.setProperty('--tab-glass-radius', tabRadiusStr);
             root.style.setProperty('--tab-glass-accent-color', compColors.tab.hex);
             root.style.setProperty('--tab-glass-accent-rgb', compColors.tab.rgb);
+            root.style.setProperty('--tab-glass-rgb', compColors.tab.rgb);
         } else {
-            const el = document.querySelector(`[data-target-id="${activeTargets.tab}"]`);
-            if (el) {
+            const els = document.querySelectorAll(`[data-target-id="${activeTargets.tab}"]`);
+            if (els.length > 0) {
                 elementCustomOverrides[activeTargets.tab] = { opacity: tabOp, blur: tabBl, specular: tabSp, specWidth: tabSpWidth, taper: tabTpr, innerGlow: tabIg, spread: tabIgSpread, radius: tabRd };
-                el.style.setProperty('--tab-glass-opacity', (tabOp / 100).toFixed(2));
-                el.style.setProperty('--tab-glass-blur', `${tabBl}px`);
-                el.style.setProperty('--tab-glass-specular-alpha', tabSpecAlpha);
-                el.style.setProperty('--tab-glass-specular-width', `${tabSpWidth}px`);
-                el.style.setProperty('--tab-glass-specular-bloom', `${tabBloomPx}px`);
-                el.style.setProperty('--tab-glass-specular-taper', `${tabTpr}%`);
-                el.style.setProperty('--tab-glass-inner-glow-alpha', tabIgAlpha);
-                el.style.setProperty('--tab-glass-inner-glow-spread', `${tabIgSpread}px`);
-                el.style.setProperty('--tab-glass-radius', tabRadiusStr);
-                el.style.setProperty('--tab-glass-accent-color', compColors.tab.hex);
-                el.style.setProperty('--tab-glass-accent-rgb', compColors.tab.rgb);
-                el.style.borderRadius = tabRadiusStr;
+                els.forEach(el => {
+                    el.style.setProperty('--tab-glass-opacity', (tabOp / 100).toFixed(2));
+                    el.style.setProperty('--tab-glass-blur', `${tabBl}px`);
+                    el.style.setProperty('--tab-glass-specular-alpha', tabSpecAlpha);
+                    el.style.setProperty('--tab-glass-specular-width', `${tabSpWidth}px`);
+                    el.style.setProperty('--tab-glass-specular-bloom', `${tabBloomPx}px`);
+                    el.style.setProperty('--tab-glass-specular-taper', `${tabTpr}%`);
+                    el.style.setProperty('--tab-glass-inner-glow-alpha', tabIgAlpha);
+                    el.style.setProperty('--tab-glass-inner-glow-spread', `${tabIgSpread}px`);
+                    el.style.setProperty('--tab-glass-radius', tabRadiusStr);
+                    el.style.setProperty('--tab-glass-accent-color', compColors.tab.hex);
+                    el.style.setProperty('--tab-glass-accent-rgb', compColors.tab.rgb);
+                    el.style.setProperty('--tab-glass-rgb', compColors.tab.rgb);
+                    el.style.borderRadius = tabRadiusStr;
+                });
             }
         }
 
