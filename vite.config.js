@@ -4,7 +4,7 @@ export default defineConfig({
   server: {
     host: true, // '0.0.0.0' tüm ağlardan ve domainlerden erişime açar
     port: 5173,
-    open: true,
+    open: '/frontend/index.html',
     cors: true,
     // Vite Host Guvenlik Korumasini Ac / Izin Ver
     allowedHosts: [
@@ -33,5 +33,24 @@ export default defineConfig({
         rewrite: (path) => path.replace(/^\/ottonline-proxy/, '')
       }
     }
-  }
+  },
+  plugins: [
+    {
+      name: 'root-landing-router',
+      configureServer(server) {
+        server.middlewares.use((req, res, next) => {
+          const rawUrl = req.url || '/';
+          const [pathname, search] = rawUrl.split('?');
+          if (pathname === '/' || pathname === '/index.html') {
+            res.writeHead(302, {
+              Location: '/frontend/index.html' + (search ? '?' + search : '')
+            });
+            res.end();
+            return;
+          }
+          next();
+        });
+      }
+    }
+  ]
 });
