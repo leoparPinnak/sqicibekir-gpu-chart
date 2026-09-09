@@ -3279,8 +3279,8 @@
                 </span>
 
                 <div class="scale-mode-segmented-group" id="scale-mode-group" title="Fiyat Ölçekleme Modu">
-                    <button class="scale-mode-btn active mode-free" id="mode-btn-free" onclick="setScaleMode('free', event)" title="Serbest (Manuel) Mod">SERBEST</button>
-                    <button class="scale-mode-btn mode-locked" id="mode-btn-locked" onclick="setScaleMode('locked', event)" title="Kilitli (Otomatik Mum Takip) Mod">KİLİTLİ</button>
+                    <button class="scale-mode-btn mode-free" id="mode-btn-free" onclick="setScaleMode('free', event)" title="Serbest (Manuel) Mod">SERBEST</button>
+                    <button class="scale-mode-btn active mode-locked" id="mode-btn-locked" onclick="setScaleMode('locked', event)" title="Kilitli (Otomatik Mum Takip) Mod">KİLİTLİ</button>
                 </div>
 
                 <button class="fit-all-btn" onclick="triggerSpaceAutoFit()" title="Görünür mumları dikeyde yumuşakça sığdır [Space]">SPACE: SIGDIR</button>
@@ -25192,7 +25192,7 @@
 
         let priceOffset = 0; // Dikey serbest kaydırma ofseti
         let origPriceOffset = 0;
-        let isAutoPriceScale = false; // Otomatik Fiyat Ölçekleme (OTO Modu)
+        let isAutoPriceScale = true; // Otomatik Fiyat Ölçekleme (Varsayılan: OTO KİLİTLİ)
         let dragAxisLocked = null; // 'horizontal' | 'vertical' | null
         Object.defineProperty(window, 'isAutoPriceScale', {
             get() { return isAutoPriceScale; },
@@ -25339,7 +25339,7 @@
             if (pop) pop.classList.toggle('open');
         };
 
-        let scaleMode = 'free';
+        let scaleMode = 'locked'; // Varsayılan KİLİTLİ Mod
         window.scaleMode = scaleMode;
 
         window.setScaleMode = function(mode, e) {
@@ -25522,6 +25522,8 @@
                 livePill.className = isAutoPriceScale ? 'status-pill locked' : 'status-pill free';
             }
         }
+        updateScaleModeUI();
+        updateOtoButtonState();
 
         // KESİN VE ANINDA OTO KİLİT KAPATMA (Global Window Mousedown Capture)
         window.addEventListener('mousedown', (e) => {
