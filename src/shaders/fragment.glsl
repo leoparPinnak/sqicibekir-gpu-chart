@@ -101,9 +101,9 @@ void main() {
             float crossDown4H = crossData.g;
 
             bool isBull = closePrice >= openPrice;
-            // Direct Pure Primary Palette (Zero yellow/orange tint, 100% solid contrast)
-            vec3 bullColor = vec3(0.0, 0.85, 0.42); // Pure Primary Green #00D66C
-            vec3 bearColor = vec3(0.96, 0.15, 0.25); // Pure Primary Red #F52640
+            // High-Contrast Authentic Binance Palette
+            vec3 bullColor = vec3(0.055, 0.796, 0.506); // Binance Green #0ECB81
+            vec3 bearColor = vec3(0.965, 0.275, 0.365); // Binance Red #F6465D
             vec3 candleCol = isBull ? bullColor : bearColor;
 
             // A) 4H EMA Kırılım Dikey Çizgileri
@@ -146,7 +146,8 @@ void main() {
             float highY = clamp(priceToY(highPrice), bottomBound, topBound);
             float lowY = clamp(priceToY(lowPrice), bottomBound, topBound);
             if (uv.y >= lowY && uv.y <= highY && candleDistX <= wickThreshold) {
-                col = candleCol;
+                col = mix(col, candleCol, 0.9);
+                col += candleCol * 0.2;
             }
 
             // E) Gövde (Body)
@@ -156,6 +157,10 @@ void main() {
 
             if (uv.y >= bodyBottom && uv.y <= bodyTop && candleDistX < candleWidth * 0.5) {
                 col = candleCol;
+                if (candleSlotPx > 6.0) {
+                    float edge = smoothstep(candleWidth * 0.5, candleWidth * 0.4, candleDistX);
+                    col += vec3(1.0) * (1.0 - edge) * 0.15;
+                }
             }
 
             // F) Canlı 4H EMA26 Çizgisi (Neon Turuncu)

@@ -285,7 +285,7 @@ canvas {
 .price-axis-sidebar:hover { background: #000000; }
 .price-scale-label {
     font-family: -apple-system, BlinkMacSystemFont, 'Trebuchet MS', Roboto, Ubuntu, sans-serif;
-    font-size: 13.5px;
+    font-size: 14px;
     font-weight: 700;
     color: #ffffff;
     position: absolute;
@@ -316,7 +316,7 @@ canvas {
     font-variant-numeric: tabular-nums;
     color: #ffffff;
     font-weight: 700;
-    font-size: 13.5px;
+    font-size: 14px;
 }
 
 .crosshair-price-tag {
@@ -344,7 +344,7 @@ canvas {
     position: absolute;
     left: 0;
     width: 100%;
-    background: #00c076;
+    background: #0ecb81;
     color: #ffffff;
     font-family: -apple-system, BlinkMacSystemFont, 'Trebuchet MS', Roboto, Ubuntu, sans-serif;
     font-size: 13px;

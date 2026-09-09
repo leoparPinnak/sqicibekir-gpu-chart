@@ -845,7 +845,7 @@
         .price-axis-sidebar:hover { background: #000000; }
         .price-scale-label {
             font-family: -apple-system, BlinkMacSystemFont, 'Trebuchet MS', Roboto, Ubuntu, sans-serif;
-            font-size: 13.5px;
+            font-size: 14px;
             font-weight: 700;
             color: #ffffff;
             position: absolute;
@@ -876,7 +876,7 @@
             font-variant-numeric: tabular-nums;
             color: #ffffff;
             font-weight: 700;
-            font-size: 13.5px;
+            font-size: 14px;
         }
 
         .crosshair-price-tag {
@@ -904,7 +904,7 @@
             position: absolute;
             left: 0;
             width: 100%;
-            background: #00c076;
+            background: #0ecb81;
             color: #ffffff;
             font-family: -apple-system, BlinkMacSystemFont, 'Trebuchet MS', Roboto, Ubuntu, sans-serif;
             font-size: 13px;
@@ -3470,15 +3470,16 @@
                 float closePrice = mix(centerPrice, rawClose, growthVal);
 
                 bool isBull = closePrice >= openPrice;
-                // Direct Pure Primary Palette (Zero yellow/orange tint, 100% solid contrast)
-                vec3 bullColor = vec3(0.0, 0.85, 0.42); // Pure Primary Green #00D66C
-                vec3 bearColor = vec3(0.96, 0.15, 0.25); // Pure Primary Red #F52640
+                // High-Contrast Authentic Binance Palette
+                vec3 bullColor = vec3(0.055, 0.796, 0.506); // Binance Green #0ECB81
+                vec3 bearColor = vec3(0.965, 0.275, 0.365); // Binance Red #F6465D
                 vec3 candleCol = isBull ? bullColor : bearColor;
 
                 float highY = clamp(priceToY(highPrice), bottomBound, topBound);
                 float lowY = clamp(priceToY(lowPrice), bottomBound, topBound);
                 if (uv.y >= lowY && uv.y <= highY && candleDistX <= wickThreshold) {
                     col = candleCol;
+                    col += candleCol * 0.25;
                 }
 
                 float bodyTop = clamp(priceToY(max(openPrice, closePrice)), bottomBound, topBound);
@@ -3487,6 +3488,10 @@
 
                 if (uv.y >= bodyBottom && uv.y <= bodyTop && candleDistX < candleWidth * 0.5) {
                     col = candleCol;
+                    if (candleSlotPx > 6.0) {
+                        float edge = smoothstep(candleWidth * 0.5, candleWidth * 0.4, candleDistX);
+                        col += vec3(1.0) * (1.0 - edge) * 0.15;
+                    }
                 }
 
                 if (u_show_ema == 1 && ema4HLive > 0.0) {
@@ -5628,7 +5633,7 @@
                 const lowY = getY(c.low);
 
                 const isUp = c.close >= c.open;
-                const color = isUp ? '#00c076' : '#f52640';
+                const color = isUp ? '#0ecb81' : '#f6465d';
 
                 // Fitil
                 ctx.strokeStyle = color;
@@ -6076,7 +6081,7 @@
                     const isCandleBull = candle.close >= candle.open;
 
                     // Fitil (Wick)
-                    ctx2d.strokeStyle = isCandleBull ? '#00c076' : '#f52640';
+                    ctx2d.strokeStyle = isCandleBull ? '#0ecb81' : '#f6465d';
                     ctx2d.lineWidth = 2.0 + 2.2 * prog;
                     ctx2d.beginPath();
                     ctx2d.moveTo(screenX, highY);
@@ -6084,7 +6089,7 @@
                     ctx2d.stroke();
 
                     // Gövde (Body)
-                    ctx2d.fillStyle = isCandleBull ? '#00c076' : '#f52640';
+                    ctx2d.fillStyle = isCandleBull ? '#0ecb81' : '#f6465d';
                     ctx2d.strokeStyle = '#ffffff';
                     ctx2d.lineWidth = 1.5 + 1.5 * prog;
                     ctx2d.fillRect(screenX - candleW / 2, bodyTop, candleW, bodyHeight);
@@ -26260,7 +26265,7 @@
                 currentPriceBadge.style.top = `${lastCloseTop}%`;
                 currentPriceBadge.innerText = formatAxisPrice(lastClose);
                 const isUp = lastClose >= lastCandle.open;
-                currentPriceBadge.style.background = isUp ? '#00c076' : '#f52640';
+                currentPriceBadge.style.background = isUp ? '#0ecb81' : '#f6465d';
                 currentPriceBadge.style.boxShadow = 'none';
             }
         }
