@@ -105,8 +105,9 @@ void main() {
             float crossDown4H = crossData.g;
 
             bool isBull = closePrice >= openPrice;
-            vec3 bullColor = vec3(0.06, 0.85, 0.55);
-            vec3 bearColor = vec3(0.96, 0.24, 0.38);
+            // High-Contrast Authentic Binance Palette
+            vec3 bullColor = vec3(0.055, 0.796, 0.506); // Binance Green #0ECB81
+            vec3 bearColor = vec3(0.965, 0.275, 0.365); // Binance Red #F6465D
             vec3 candleCol = isBull ? bullColor : bearColor;
 
             // A) 4H EMA Kırılım Dikey Çizgileri
@@ -159,7 +160,7 @@ void main() {
             bodyTop = max(bodyTop, bodyBottom + 0.0015);
 
             if (uv.y >= bodyBottom && uv.y <= bodyTop && candleDistX < candleWidth * 0.5) {
-                col = mix(col, candleCol, 0.95);
+                col = candleCol;
                 if (candleSlotPx > 6.0) {
                     float edge = smoothstep(candleWidth * 0.5, candleWidth * 0.4, candleDistX);
                     col += vec3(1.0) * (1.0 - edge) * 0.15;

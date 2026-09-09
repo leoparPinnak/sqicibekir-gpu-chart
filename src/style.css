@@ -272,7 +272,7 @@ canvas {
 
 /* SAĞ FİYAT SKALASI */
 .price-axis-sidebar {
-    width: 82px;
+    width: 96px;
     height: 100%;
     background: #090e1e;
     border-left: 1px solid #1e293b;
@@ -284,13 +284,15 @@ canvas {
 .price-axis-sidebar:hover { background: #0d1428; }
 .price-scale-label {
     font-family: 'Consolas', monospace;
-    font-size: 11px;
-    color: #64748b;
+    font-size: 13.5px;
+    font-weight: 700;
+    color: #cbd5e1;
     padding-left: 8px;
     position: absolute;
     transform: translateY(-50%);
     white-space: nowrap;
     pointer-events: none;
+    letter-spacing: -0.2px;
 }
 
 .crosshair-price-tag {
@@ -300,38 +302,42 @@ canvas {
     background: #38bdf8;
     color: #0f172a;
     font-family: 'Consolas', monospace;
-    font-size: 11px;
-    font-weight: 700;
-    padding: 3px 6px;
+    font-size: 13px;
+    font-weight: 800;
+    padding: 4px 8px;
+    border-radius: 3px;
     transform: translateY(-50%);
     pointer-events: none;
     display: none;
     z-index: 20;
-    box-shadow: 0 0 10px rgba(56, 189, 248, 0.4);
+    box-shadow: 0 0 12px rgba(56, 189, 248, 0.5);
+    letter-spacing: -0.2px;
 }
 
 .current-price-badge {
     position: absolute;
     left: 0;
     width: 100%;
-    background: #10b981;
+    background: #0ecb81;
     color: #ffffff;
     font-family: 'Consolas', monospace;
-    font-size: 11px;
-    font-weight: 700;
-    padding: 3px 6px;
+    font-size: 13px;
+    font-weight: 800;
+    padding: 4px 8px;
+    border-radius: 3px;
     transform: translateY(-50%);
     pointer-events: none;
     z-index: 15;
-    box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+    box-shadow: 0 0 14px rgba(14, 203, 129, 0.65);
     transition: top 0.15s ease-out;
+    letter-spacing: -0.2px;
 }
 
 .axis-corner-reset {
     position: absolute;
     bottom: 0;
     right: 0;
-    width: 82px;
+    width: 96px;
     height: 26px;
     background: #0b1122;
     border-left: 1px solid #1e293b;
@@ -339,9 +345,9 @@ canvas {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 10px;
-    font-weight: 700;
-    color: #64748b;
+    font-size: 11px;
+    font-weight: 800;
+    color: #7e90aa;
     cursor: pointer;
     z-index: 25;
 }

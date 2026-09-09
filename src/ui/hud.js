@@ -151,6 +151,12 @@ export class HUDManager {
             const lastCloseTop = (1 - lastCloseNorm) * 100;
             this.dom.currentPriceBadge.style.top = `${lastCloseTop}%`;
             this.dom.currentPriceBadge.innerText = lastClose.toFixed(2);
+            if (candleData && candleData.length > 0) {
+                const lastCandle = candleData[candleData.length - 1];
+                const isUp = lastClose >= (lastCandle.open || lastClose);
+                this.dom.currentPriceBadge.style.background = isUp ? '#0ecb81' : '#f6465d';
+                this.dom.currentPriceBadge.style.boxShadow = isUp ? '0 0 14px rgba(14, 203, 129, 0.75)' : '0 0 14px rgba(246, 70, 93, 0.75)';
+            }
         }
     }
 
