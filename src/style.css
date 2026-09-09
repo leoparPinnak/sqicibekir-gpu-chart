@@ -346,21 +346,23 @@ canvas {
     position: absolute;
     left: 0;
     width: 100%;
-    background: #0ecb81;
-    color: #ffffff;
+    background: #087d60;
+    color: #ffffff !important;
     font-family: -apple-system, BlinkMacSystemFont, 'Trebuchet MS', Roboto, Ubuntu, sans-serif;
-    font-size: 13px;
+    font-size: 13.5px;
     font-weight: 800;
-    padding: 4px 6px;
+    padding: 3px 6px;
     border-radius: 2px;
     transform: translateY(-50%);
     pointer-events: none;
-    z-index: 15;
+    z-index: 20;
     box-shadow: none;
     transition: top 0.15s ease-out;
     letter-spacing: -0.1px;
     font-variant-numeric: tabular-nums;
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
 }
 
 .axis-corner-reset {
