@@ -225,8 +225,18 @@
         iframe.onload = attachCameraDirector;
         setTimeout(attachCameraDirector, 200);
 
-        window.launchTerminal = function() {
-            if (isTerminalActive) return;
+        window.launchTerminal = function(symbolId) {
+            if (isTerminalActive) {
+                if (symbolId) {
+                    try {
+                        const chartWin = iframe.contentWindow;
+                        if (chartWin && typeof chartWin.changeSymbol === 'function') {
+                            chartWin.changeSymbol(symbolId);
+                        }
+                    } catch(e) {}
+                }
+                return;
+            }
             isTerminalActive = true;
 
             if (cameraDirector) {
@@ -238,6 +248,9 @@
                 const chartWin = iframe.contentWindow;
                 if (chartWin && typeof chartWin.setDemoMode === 'function') {
                     chartWin.setDemoMode(false);
+                }
+                if (symbolId && chartWin && typeof chartWin.changeSymbol === 'function') {
+                    chartWin.changeSymbol(symbolId);
                 }
             } catch(e) {}
 

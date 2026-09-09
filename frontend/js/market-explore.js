@@ -553,7 +553,7 @@ export class MarketExploreDirector {
                         </thead>
                         <tbody>
                             ${filtered.map((item, idx) => `
-                                <tr class="explore-table-row" onclick="launchTerminal();">
+                                <tr class="explore-table-row" onclick="launchTerminal('${item.symbol}');">
                                     <td style="text-align: center; color: #64748b; font-size: 13px; font-weight: 600;">${idx + 1}</td>
                                     <td>
                                         <div class="explore-asset-cell">
@@ -581,7 +581,7 @@ export class MarketExploreDirector {
                                         ${this.generateSparklineSvg(item.sparkline, item.isPositive, item.color)}
                                     </td>
                                     <td style="text-align: right;">
-                                        <button class="explore-action-btn" onclick="launchTerminal(); event.stopPropagation();">
+                                        <button class="explore-action-btn" onclick="launchTerminal('${item.symbol}'); event.stopPropagation();">
                                             <span>İncele</span>
                                             <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
                                         </button>

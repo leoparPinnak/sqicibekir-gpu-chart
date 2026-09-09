@@ -9,5 +9,7 @@ dist/
 .DS_Store
 Thumbs.db
 *.backup
+*.real_api_backup
+scripts/screenshot_*.png
 .vscode/
 .idea/
