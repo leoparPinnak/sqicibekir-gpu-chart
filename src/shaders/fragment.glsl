@@ -62,11 +62,7 @@ void main() {
         }
     }
 
-    // Izgara Çizgileri
-    float gridY = fract(uv.y * 8.0);
-    float hLine = smoothstep(0.025, 0.0, abs(gridY - 0.5) * 2.0);
-    col += vec3(0.12, 0.18, 0.28) * hLine * 0.35;
-
+    // Dikey Izgara Çizgileri (Yatay ızgara dinamik olarak overlay canvas'ta fiyat etiketleriyle birebir çizilir)
     float gridX = fract(uv.x * 10.0);
     float vLine = smoothstep(0.025, 0.0, abs(gridX - 0.5) * 2.0);
     col += vec3(0.12, 0.18, 0.28) * vLine * 0.25;

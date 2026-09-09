@@ -142,7 +142,7 @@ export class HUDManager {
             const pct = i / levels;
             const priceAtLevel = minPrice + pct * (maxPrice - minPrice);
             const topPct = (1 - pct) * 100;
-            html += `<div class="price-scale-label" style="top: ${topPct}%;">${priceAtLevel.toFixed(2)}</div>`;
+            html += `<div class="price-scale-label" style="top: ${topPct}%;"><span class="price-scale-tick"></span><span class="price-scale-val">${priceAtLevel.toFixed(2)}</span></div>`;
         }
         this.dom.priceLabelsContainer.innerHTML = html;
 
@@ -155,9 +155,10 @@ export class HUDManager {
                 const lastCandle = candleData[candleData.length - 1];
                 const isUp = lastClose >= (lastCandle.open || lastClose);
                 this.dom.currentPriceBadge.style.background = isUp ? '#0ecb81' : '#f6465d';
-                this.dom.currentPriceBadge.style.boxShadow = isUp ? '0 0 14px rgba(14, 203, 129, 0.75)' : '0 0 14px rgba(246, 70, 93, 0.75)';
+                this.dom.currentPriceBadge.style.boxShadow = 'none';
             }
         }
+
     }
 
     updateTimeScaleLabels(candleData, viewStart, viewEnd) {

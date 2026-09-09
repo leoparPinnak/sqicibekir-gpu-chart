@@ -283,16 +283,38 @@ canvas {
 }
 .price-axis-sidebar:hover { background: #0d1428; }
 .price-scale-label {
-    font-family: 'Consolas', monospace;
-    font-size: 13.5px;
-    font-weight: 700;
-    color: #cbd5e1;
-    padding-left: 8px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Trebuchet MS', Roboto, Ubuntu, sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    color: #f0f3fa;
     position: absolute;
+    left: 0;
+    width: 100%;
     transform: translateY(-50%);
-    white-space: nowrap;
+    display: flex;
+    align-items: center;
     pointer-events: none;
-    letter-spacing: -0.2px;
+    white-space: nowrap;
+    letter-spacing: -0.1px;
+    font-variant-numeric: tabular-nums;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+}
+
+.price-scale-tick {
+    display: inline-block;
+    width: 7px;
+    height: 1px;
+    background: #475569;
+    margin-right: 6px;
+    flex-shrink: 0;
+}
+
+.price-scale-val {
+    font-variant-numeric: tabular-nums;
+    color: #f0f3fa;
+    font-weight: 600;
 }
 
 .crosshair-price-tag {
@@ -301,17 +323,19 @@ canvas {
     width: 100%;
     background: #38bdf8;
     color: #0f172a;
-    font-family: 'Consolas', monospace;
-    font-size: 13px;
-    font-weight: 800;
-    padding: 4px 8px;
-    border-radius: 3px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Trebuchet MS', Roboto, Ubuntu, sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 3px 6px;
+    border-radius: 2px;
     transform: translateY(-50%);
     pointer-events: none;
     display: none;
     z-index: 20;
-    box-shadow: 0 0 12px rgba(56, 189, 248, 0.5);
-    letter-spacing: -0.2px;
+    box-shadow: none;
+    letter-spacing: -0.1px;
+    font-variant-numeric: tabular-nums;
+    -webkit-font-smoothing: antialiased;
 }
 
 .current-price-badge {
@@ -320,17 +344,19 @@ canvas {
     width: 100%;
     background: #0ecb81;
     color: #ffffff;
-    font-family: 'Consolas', monospace;
-    font-size: 13px;
-    font-weight: 800;
-    padding: 4px 8px;
-    border-radius: 3px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Trebuchet MS', Roboto, Ubuntu, sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 3px 6px;
+    border-radius: 2px;
     transform: translateY(-50%);
     pointer-events: none;
     z-index: 15;
-    box-shadow: 0 0 14px rgba(14, 203, 129, 0.65);
+    box-shadow: none;
     transition: top 0.15s ease-out;
-    letter-spacing: -0.2px;
+    letter-spacing: -0.1px;
+    font-variant-numeric: tabular-nums;
+    -webkit-font-smoothing: antialiased;
 }
 
 .axis-corner-reset {

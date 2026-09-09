@@ -844,16 +844,38 @@
         }
         .price-axis-sidebar:hover { background: #0d1428; }
         .price-scale-label {
-            font-family: 'SF Pro Text', 'Segoe UI', -apple-system, sans-serif;
-            font-size: 13.5px;
-            font-weight: 700;
-            color: #cbd5e1;
-            padding-left: 8px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Trebuchet MS', Roboto, Ubuntu, sans-serif;
+            font-size: 12px;
+            font-weight: 500;
+            color: #f0f3fa;
             position: absolute;
+            left: 0;
+            width: 100%;
             transform: translateY(-50%);
-            white-space: nowrap;
+            display: flex;
+            align-items: center;
             pointer-events: none;
-            letter-spacing: -0.2px;
+            white-space: nowrap;
+            letter-spacing: -0.1px;
+            font-variant-numeric: tabular-nums;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
+        }
+
+        .price-scale-tick {
+            display: inline-block;
+            width: 7px;
+            height: 1px;
+            background: #475569;
+            margin-right: 6px;
+            flex-shrink: 0;
+        }
+
+        .price-scale-val {
+            font-variant-numeric: tabular-nums;
+            color: #f0f3fa;
+            font-weight: 600;
         }
 
         .crosshair-price-tag {
@@ -862,17 +884,19 @@
             width: 100%;
             background: #38bdf8;
             color: #0f172a;
-            font-family: 'SF Pro Text', 'Segoe UI', -apple-system, sans-serif;
-            font-size: 13px;
-            font-weight: 800;
-            padding: 4px 8px;
-            border-radius: 3px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Trebuchet MS', Roboto, Ubuntu, sans-serif;
+            font-size: 12px;
+            font-weight: 700;
+            padding: 3px 6px;
+            border-radius: 2px;
             transform: translateY(-50%);
             pointer-events: none;
             display: none;
             z-index: 20;
-            box-shadow: 0 0 12px rgba(56, 189, 248, 0.5);
-            letter-spacing: -0.2px;
+            box-shadow: none;
+            letter-spacing: -0.1px;
+            font-variant-numeric: tabular-nums;
+            -webkit-font-smoothing: antialiased;
         }
 
         .current-price-badge {
@@ -881,17 +905,19 @@
             width: 100%;
             background: #0ecb81;
             color: #ffffff;
-            font-family: 'SF Pro Text', 'Segoe UI', -apple-system, sans-serif;
-            font-size: 13px;
-            font-weight: 800;
-            padding: 4px 8px;
-            border-radius: 3px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Trebuchet MS', Roboto, Ubuntu, sans-serif;
+            font-size: 12px;
+            font-weight: 700;
+            padding: 3px 6px;
+            border-radius: 2px;
             transform: translateY(-50%);
             pointer-events: none;
             z-index: 15;
-            box-shadow: 0 0 14px rgba(14, 203, 129, 0.65);
+            box-shadow: none;
             transition: top 0.15s ease-out;
-            letter-spacing: -0.2px;
+            letter-spacing: -0.1px;
+            font-variant-numeric: tabular-nums;
+            -webkit-font-smoothing: antialiased;
         }
 
         .axis-corner-reset {
@@ -3359,10 +3385,8 @@
             }
         }
 
-        float gridY = fract(uv.y * 8.0);
-        float hLine = smoothstep(0.025, 0.0, abs(gridY - 0.5) * 2.0);
+        // Horizontal grid is dynamically drawn on overlay canvas aligned exactly with price scale
         vec3 gridCol = (u_is_light_theme == 1) ? vec3(0.85, 0.88, 0.92) : vec3(0.12, 0.18, 0.28);
-        col = mix(col, gridCol, hLine * (u_is_light_theme == 1 ? 0.35 : 0.4));
 
         float gridX = fract(uv.x * 10.0);
         float vLine = smoothstep(0.025, 0.0, abs(gridX - 0.5) * 2.0);
@@ -5645,6 +5669,26 @@
                 if (diff <= 0.0001) return cssH / 2;
                 return Math.round(cssH - ((price - minPrice) / diff) * cssH);
             }
+
+            // ============================================================
+            // 0. YATAY FİYAT IZGARA VE KILAVUZ ÇİZGİLERİ (TRADINGVIEW GRID)
+            // ============================================================
+            const gridLevels = 8;
+            ctx2d.save();
+            ctx2d.strokeStyle = 'rgba(255, 255, 255, 0.06)';
+            ctx2d.lineWidth = 1;
+            ctx2d.setLineDash([4, 4]);
+            ctx2d.beginPath();
+            for (let i = 0; i <= gridLevels; i++) {
+                const pct = i / gridLevels;
+                const priceAtLevel = minPrice + pct * (maxPrice - minPrice);
+                const gy = getY(priceAtLevel);
+                ctx2d.moveTo(0, gy);
+                ctx2d.lineTo(cssW, gy);
+            }
+            ctx2d.stroke();
+            ctx2d.setLineDash([]);
+            ctx2d.restore();
 
             // ============================================================
             //  CANLI MUM FİYAT ÇİZGİSİ (TRADINGVIEW DİNAMİK KESİKLİ ÇİZGİ)
@@ -26208,7 +26252,7 @@
                 const pct = i / levels;
                 const priceAtLevel = minPrice + pct * (maxPrice - minPrice);
                 const topPct = (1 - pct) * 100;
-                html += `<div class="price-scale-label" style="top: ${topPct}%;">${formatAxisPrice(priceAtLevel)}</div>`;
+                html += `<div class="price-scale-label" style="top: ${topPct}%;"><span class="price-scale-tick"></span><span class="price-scale-val">${formatAxisPrice(priceAtLevel)}</span></div>`;
             }
             priceLabelsContainer.innerHTML = html;
 
@@ -26221,7 +26265,7 @@
                 currentPriceBadge.innerText = formatAxisPrice(lastClose);
                 const isUp = lastClose >= lastCandle.open;
                 currentPriceBadge.style.background = isUp ? '#0ecb81' : '#f6465d';
-                currentPriceBadge.style.boxShadow = isUp ? '0 0 14px rgba(14, 203, 129, 0.75)' : '0 0 14px rgba(246, 70, 93, 0.75)';
+                currentPriceBadge.style.boxShadow = 'none';
             }
         }
 
