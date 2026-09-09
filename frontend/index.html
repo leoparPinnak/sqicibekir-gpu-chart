@@ -200,30 +200,14 @@
         }
 
         function attachCameraDirector() {
-            if (cameraDirector && cameraDirector.isRunning) return;
-            try {
-                const chartWin = iframe.contentWindow;
-                if (chartWin) {
-                    const checkReady = () => {
-                        const count = chartWin.totalCandles || (chartWin.candleDataBase ? chartWin.candleDataBase.length : 0);
-                        if (count > 0) {
-                            if (!cameraDirector) {
-                                cameraDirector = new CinematicCameraDirector(chartWin);
-                            }
-                            cameraDirector.start();
-                        } else {
-                            setTimeout(checkReady, 100);
-                        }
-                    };
-                    checkReady();
-                }
-            } catch (e) {
-                console.warn('Iframe bridge warning:', e);
+            // 🛑 DEMO OTONOM KAMERA HAREKETLERİ GEÇİCİ OLARAK DURDURULDU
+            if (cameraDirector) {
+                cameraDirector.stop();
             }
+            return;
         }
 
         iframe.onload = attachCameraDirector;
-        setTimeout(attachCameraDirector, 200);
 
         window.launchTerminal = function(symbolId) {
             if (isTerminalActive) {
@@ -281,9 +265,9 @@
             // Hide return button
             returnBtn.style.display = 'none';
 
-            // Resume autonomous camera director
+            // Autonomous camera director temporarily disabled
             if (cameraDirector) {
-                cameraDirector.start();
+                cameraDirector.stop();
             }
         };
 

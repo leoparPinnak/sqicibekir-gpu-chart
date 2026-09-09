@@ -63,7 +63,7 @@ export default defineConfig({
   server: {
     host: true, // '0.0.0.0' tüm ağlardan ve domainlerden erişime açar
     port: 5173,
-    open: '/frontend/index.html',
+    open: '/index.html',
     cors: true,
     // Vite Host Guvenlik Korumasini Ac / Izin Ver
     allowedHosts: [
@@ -120,13 +120,7 @@ export default defineConfig({
             return;
           }
 
-          if (pathname === '/' || pathname === '/index.html') {
-            res.writeHead(302, {
-              Location: '/frontend/index.html' + (search ? '?' + search : '')
-            });
-            res.end();
-            return;
-          }
+          // Demo redirect geçici olarak devre dışı bırakıldı - doğrudan ana terminal açılır
           next();
         });
       },
@@ -145,13 +139,7 @@ export default defineConfig({
             return;
           }
 
-          if (pathname === '/' || pathname === '/index.html') {
-            res.writeHead(302, {
-              Location: '/frontend/index.html' + (search ? '?' + search : '')
-            });
-            res.end();
-            return;
-          }
+          // Demo redirect geçici olarak devre dışı bırakıldı - doğrudan ana terminal açılır
           next();
         });
       }

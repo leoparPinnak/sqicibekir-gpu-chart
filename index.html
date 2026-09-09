@@ -2,12 +2,6 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <script>
-        // 🚀 TradingChart Root Router: Direct domain / root path to Liquid Glass Landing Portal
-        if (window.location.pathname === '/' || window.location.pathname === '/index.html') {
-            window.location.replace('/frontend/index.html' + window.location.search + window.location.hash);
-        }
-    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>TradingChart // Canlı Borsa, Kripto Para ve Finansal Grafik Platformu</title>
     
@@ -27655,13 +27649,15 @@
             }
         };
 
-        // Otomatik Demo Mod Tespiti (Iframe veya URL Parametresi)
+        // Otomatik Demo Mod Tespiti (Iframe veya URL Parametresi) - GEÇİCİ OLARAK DURDURULDU
+        /*
         try {
             const urlParams = new URLSearchParams(window.location.search);
             if (urlParams.get('demo') === 'true' || urlParams.get('demo') === '1' || window.self !== window.top) {
                 document.body.classList.add('demo-mode');
             }
         } catch(e) {}
+        */
     </script>
 
     <!-- ============================================================ -->

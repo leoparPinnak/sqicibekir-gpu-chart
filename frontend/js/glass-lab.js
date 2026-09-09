@@ -1274,28 +1274,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const chartIframe = document.getElementById('chart-engine-frame');
 
     function attachCameraDirector() {
-        if (cameraDirector && cameraDirector.isRunning) return;
-        try {
-            if (!chartIframe) return;
-            const chartWin = chartIframe.contentWindow;
-            if (chartWin) {
-                const checkReady = () => {
-                    const count = chartWin.totalCandles || (chartWin.candleDataBase ? chartWin.candleDataBase.length : 0);
-                    if (count > 0) {
-                        if (!cameraDirector) {
-                            cameraDirector = new CinematicCameraDirector(chartWin);
-                        }
-                        cameraDirector.start();
-                        console.log('🎬 [Glass Lab] Orijinal Sinematik Kamera Yönetmeni başarıyla bağlandı.');
-                    } else {
-                        setTimeout(checkReady, 100);
-                    }
-                };
-                checkReady();
-            }
-        } catch (e) {
-            console.warn('Iframe connect waiting:', e);
+        // 🛑 DEMO OTONOM KAMERA HAREKETLERİ GEÇİCİ OLARAK DURDURULDU
+        if (cameraDirector) {
+            cameraDirector.stop();
         }
+        return;
     }
 
     if (chartIframe) {
