@@ -154,7 +154,7 @@ export class HUDManager {
             if (candleData && candleData.length > 0) {
                 const lastCandle = candleData[candleData.length - 1];
                 const isUp = lastClose >= (lastCandle.open || lastClose);
-                this.dom.currentPriceBadge.style.background = isUp ? '#0ecb81' : '#f6465d';
+                this.dom.currentPriceBadge.style.background = isUp ? '#00c076' : '#f52640';
                 this.dom.currentPriceBadge.style.boxShadow = 'none';
             }
         }

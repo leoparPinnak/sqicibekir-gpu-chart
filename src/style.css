@@ -270,23 +270,24 @@ canvas {
     white-space: nowrap;
 }
 
-/* SAĞ FİYAT SKALASI */
+/* SAĞ FİYAT SKALASI (PITCH BLACK / MAKSİMUM KONTRAST) */
 .price-axis-sidebar {
     width: 96px;
     height: 100%;
-    background: #090e1e;
+    background: #000000;
     border-left: 1px solid #1e293b;
     position: relative;
     flex-shrink: 0;
     overflow: hidden;
     cursor: ns-resize;
+    z-index: 15;
 }
-.price-axis-sidebar:hover { background: #0d1428; }
+.price-axis-sidebar:hover { background: #000000; }
 .price-scale-label {
     font-family: -apple-system, BlinkMacSystemFont, 'Trebuchet MS', Roboto, Ubuntu, sans-serif;
-    font-size: 12px;
-    font-weight: 500;
-    color: #f0f3fa;
+    font-size: 13.5px;
+    font-weight: 700;
+    color: #ffffff;
     position: absolute;
     left: 0;
     width: 100%;
@@ -304,17 +305,18 @@ canvas {
 
 .price-scale-tick {
     display: inline-block;
-    width: 7px;
-    height: 1px;
-    background: #475569;
+    width: 8px;
+    height: 1.5px;
+    background: #64748b;
     margin-right: 6px;
     flex-shrink: 0;
 }
 
 .price-scale-val {
     font-variant-numeric: tabular-nums;
-    color: #f0f3fa;
-    font-weight: 600;
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 13.5px;
 }
 
 .crosshair-price-tag {
@@ -324,9 +326,9 @@ canvas {
     background: #38bdf8;
     color: #0f172a;
     font-family: -apple-system, BlinkMacSystemFont, 'Trebuchet MS', Roboto, Ubuntu, sans-serif;
-    font-size: 12px;
-    font-weight: 700;
-    padding: 3px 6px;
+    font-size: 13px;
+    font-weight: 800;
+    padding: 4px 6px;
     border-radius: 2px;
     transform: translateY(-50%);
     pointer-events: none;
@@ -342,12 +344,12 @@ canvas {
     position: absolute;
     left: 0;
     width: 100%;
-    background: #0ecb81;
+    background: #00c076;
     color: #ffffff;
     font-family: -apple-system, BlinkMacSystemFont, 'Trebuchet MS', Roboto, Ubuntu, sans-serif;
-    font-size: 12px;
-    font-weight: 700;
-    padding: 3px 6px;
+    font-size: 13px;
+    font-weight: 800;
+    padding: 4px 6px;
     border-radius: 2px;
     transform: translateY(-50%);
     pointer-events: none;
@@ -365,19 +367,19 @@ canvas {
     right: 0;
     width: 96px;
     height: 26px;
-    background: #0b1122;
+    background: #000000;
     border-left: 1px solid #1e293b;
     border-top: 1px solid #1e293b;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 11px;
+    font-size: 11.5px;
     font-weight: 800;
-    color: #7e90aa;
+    color: #ffffff;
     cursor: pointer;
     z-index: 25;
 }
-.axis-corner-reset:hover { color: #38bdf8; background: #1e293b; }
+.axis-corner-reset:hover { color: #38bdf8; background: #111111; }
 
 .loading-overlay {
     position: absolute;

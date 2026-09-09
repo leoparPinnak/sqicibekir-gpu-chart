@@ -830,11 +830,11 @@
             white-space: nowrap;
         }
 
-        /* SAĞ FİYAT SKALASI */
+        /* SAĞ FİYAT SKALASI (PITCH BLACK / MAKSİMUM KONTRAST) */
         .price-axis-sidebar {
             width: 96px;
             height: 100%;
-            background: #090e1e;
+            background: #000000;
             border-left: 1px solid #1e293b;
             position: relative;
             flex-shrink: 0;
@@ -842,12 +842,12 @@
             cursor: ns-resize;
             z-index: 15;
         }
-        .price-axis-sidebar:hover { background: #0d1428; }
+        .price-axis-sidebar:hover { background: #000000; }
         .price-scale-label {
             font-family: -apple-system, BlinkMacSystemFont, 'Trebuchet MS', Roboto, Ubuntu, sans-serif;
-            font-size: 12px;
-            font-weight: 500;
-            color: #f0f3fa;
+            font-size: 13.5px;
+            font-weight: 700;
+            color: #ffffff;
             position: absolute;
             left: 0;
             width: 100%;
@@ -865,17 +865,18 @@
 
         .price-scale-tick {
             display: inline-block;
-            width: 7px;
-            height: 1px;
-            background: #475569;
+            width: 8px;
+            height: 1.5px;
+            background: #64748b;
             margin-right: 6px;
             flex-shrink: 0;
         }
 
         .price-scale-val {
             font-variant-numeric: tabular-nums;
-            color: #f0f3fa;
-            font-weight: 600;
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 13.5px;
         }
 
         .crosshair-price-tag {
@@ -885,9 +886,9 @@
             background: #38bdf8;
             color: #0f172a;
             font-family: -apple-system, BlinkMacSystemFont, 'Trebuchet MS', Roboto, Ubuntu, sans-serif;
-            font-size: 12px;
-            font-weight: 700;
-            padding: 3px 6px;
+            font-size: 13px;
+            font-weight: 800;
+            padding: 4px 6px;
             border-radius: 2px;
             transform: translateY(-50%);
             pointer-events: none;
@@ -903,12 +904,12 @@
             position: absolute;
             left: 0;
             width: 100%;
-            background: #0ecb81;
+            background: #00c076;
             color: #ffffff;
             font-family: -apple-system, BlinkMacSystemFont, 'Trebuchet MS', Roboto, Ubuntu, sans-serif;
-            font-size: 12px;
-            font-weight: 700;
-            padding: 3px 6px;
+            font-size: 13px;
+            font-weight: 800;
+            padding: 4px 6px;
             border-radius: 2px;
             transform: translateY(-50%);
             pointer-events: none;
@@ -926,19 +927,19 @@
             right: 0;
             width: 96px;
             height: 26px;
-            background: #0b1122;
+            background: #000000;
             border-left: 1px solid #1e293b;
             border-top: 1px solid #1e293b;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 11px;
+            font-size: 11.5px;
             font-weight: 800;
-            color: #7e90aa;
+            color: #ffffff;
             cursor: pointer;
             z-index: 25;
         }
-        .axis-corner-reset:hover { color: #38bdf8; background: #1e293b; }
+        .axis-corner-reset:hover { color: #38bdf8; background: #111111; }
 
         .loading-overlay {
             position: absolute;
@@ -3469,16 +3470,15 @@
                 float closePrice = mix(centerPrice, rawClose, growthVal);
 
                 bool isBull = closePrice >= openPrice;
-                // High-Contrast Authentic Binance Palette
-                vec3 bullColor = vec3(0.055, 0.796, 0.506); // Binance Green #0ECB81
-                vec3 bearColor = vec3(0.965, 0.275, 0.365); // Binance Red #F6465D
+                // Direct Pure Primary Palette (Zero yellow/orange tint, 100% solid contrast)
+                vec3 bullColor = vec3(0.0, 0.85, 0.42); // Pure Primary Green #00D66C
+                vec3 bearColor = vec3(0.96, 0.15, 0.25); // Pure Primary Red #F52640
                 vec3 candleCol = isBull ? bullColor : bearColor;
 
                 float highY = clamp(priceToY(highPrice), bottomBound, topBound);
                 float lowY = clamp(priceToY(lowPrice), bottomBound, topBound);
                 if (uv.y >= lowY && uv.y <= highY && candleDistX <= wickThreshold) {
                     col = candleCol;
-                    col += candleCol * 0.25;
                 }
 
                 float bodyTop = clamp(priceToY(max(openPrice, closePrice)), bottomBound, topBound);
@@ -3487,10 +3487,6 @@
 
                 if (uv.y >= bodyBottom && uv.y <= bodyTop && candleDistX < candleWidth * 0.5) {
                     col = candleCol;
-                    if (candleSlotPx > 6.0) {
-                        float edge = smoothstep(candleWidth * 0.5, candleWidth * 0.4, candleDistX);
-                        col += vec3(1.0) * (1.0 - edge) * 0.15;
-                    }
                 }
 
                 if (u_show_ema == 1 && ema4HLive > 0.0) {
@@ -5632,7 +5628,7 @@
                 const lowY = getY(c.low);
 
                 const isUp = c.close >= c.open;
-                const color = isUp ? '#0ecb81' : '#f6465d';
+                const color = isUp ? '#00c076' : '#f52640';
 
                 // Fitil
                 ctx.strokeStyle = color;
@@ -6080,7 +6076,7 @@
                     const isCandleBull = candle.close >= candle.open;
 
                     // Fitil (Wick)
-                    ctx2d.strokeStyle = isCandleBull ? '#0ecb81' : '#f6465d';
+                    ctx2d.strokeStyle = isCandleBull ? '#00c076' : '#f52640';
                     ctx2d.lineWidth = 2.0 + 2.2 * prog;
                     ctx2d.beginPath();
                     ctx2d.moveTo(screenX, highY);
@@ -6088,7 +6084,7 @@
                     ctx2d.stroke();
 
                     // Gövde (Body)
-                    ctx2d.fillStyle = isCandleBull ? '#0ecb81' : '#f6465d';
+                    ctx2d.fillStyle = isCandleBull ? '#00c076' : '#f52640';
                     ctx2d.strokeStyle = '#ffffff';
                     ctx2d.lineWidth = 1.5 + 1.5 * prog;
                     ctx2d.fillRect(screenX - candleW / 2, bodyTop, candleW, bodyHeight);
@@ -26264,7 +26260,7 @@
                 currentPriceBadge.style.top = `${lastCloseTop}%`;
                 currentPriceBadge.innerText = formatAxisPrice(lastClose);
                 const isUp = lastClose >= lastCandle.open;
-                currentPriceBadge.style.background = isUp ? '#0ecb81' : '#f6465d';
+                currentPriceBadge.style.background = isUp ? '#00c076' : '#f52640';
                 currentPriceBadge.style.boxShadow = 'none';
             }
         }
